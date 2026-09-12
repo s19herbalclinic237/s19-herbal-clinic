@@ -5,7 +5,8 @@ import { useSearchParams } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { AuthShell } from "@/components/auth/auth-shell";
-import { Field, Input } from "@/components/ui/form";
+import { Field } from "@/components/ui/form";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Button } from "@/components/ui/button";
 
 export function ResetPasswordForm() {
@@ -76,9 +77,8 @@ export function ResetPasswordForm() {
       ) : (
         <form onSubmit={submit} className="space-y-4">
           <Field label="New Password" hint="At least 8 characters.">
-            <Input
+            <PasswordInput
               required
-              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
@@ -86,9 +86,8 @@ export function ResetPasswordForm() {
             />
           </Field>
           <Field label="Confirm New Password" required>
-            <Input
+            <PasswordInput
               required
-              type="password"
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
               placeholder="••••••••"

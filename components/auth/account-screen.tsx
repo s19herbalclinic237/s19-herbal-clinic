@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { Field, Input } from "@/components/ui/form";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Button } from "@/components/ui/button";
 import { FaCheck, FaRegCircleXmark } from "react-icons/fa6";
 
@@ -163,9 +164,8 @@ export function AccountScreen() {
                 />
               </Field>
               <Field label="Password" hint={mode === "register" ? "At least 8 characters." : undefined}>
-                <Input
+                <PasswordInput
                   required
-                  type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
@@ -174,9 +174,8 @@ export function AccountScreen() {
               </Field>
               {mode === "register" ? (
                 <Field label="Confirm Password" required>
-                  <Input
+                  <PasswordInput
                     required
-                    type="password"
                     value={confirm}
                     onChange={(e) => setConfirm(e.target.value)}
                     placeholder="••••••••"

@@ -1,7 +1,7 @@
 import { forwardRef, type InputHTMLAttributes, type SelectHTMLAttributes, type TextareaHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
-const fieldBase =
+export const fieldBase =
   "w-full rounded-md border border-line-strong bg-white px-3 py-2 text-sm text-ink placeholder:text-muted/60 focus:border-forest-500 focus:outline-none focus:ring-2 focus:ring-forest-500/20 transition-colors";
 
 export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(
