@@ -33,7 +33,7 @@ export function PageHero({
         className={`relative z-10 w-full ${compact ? "py-14 md:py-20" : "py-20 md:py-28"}`}
       >
         {eyebrow ? <Kicker dark>{eyebrow}</Kicker> : null}
-        <h1 className="mt-5 max-w-3xl text-balance text-[#dcf2e7] drop-shadow-sm">{title}</h1>
+        <h1 className="mt-5 max-w-3xl text-balance text-white drop-shadow-sm">{title}</h1>
         {lead ? (
           <p className="mt-6 max-w-2xl text-base text-forest-100/90 md:text-lg">{lead}</p>
         ) : null}

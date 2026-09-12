@@ -74,7 +74,7 @@ export async function sendOrderConfirmation(order: IOrder) {
     </p>
     <p style="margin:20px 0 0;font-size:14px">Our team will contact you to confirm your order and payment. For fast assistance, message us on WhatsApp.</p>
     <a href="https://wa.me/237672595989?text=${encodeURIComponent(`Hello S19, I have a question about my order ${order.orderReference}.`)}" style="display:inline-block;margin-top:14px;background:#1a624c;color:#ffffff;padding:10px 18px;border-radius:6px;text-decoration:none;font-size:13px">Contact us on WhatsApp</a>`;
-  await sendMail(customer.email, `Order received — ${order.orderReference}`, wrap(body));
+  await sendMail(customer.email, `Order received - ${order.orderReference}`, wrap(body));
   if (ADMIN_EMAIL) {
     const adminBody = `<h2 style="margin:0;color:#124034">New order ${order.orderReference}</h2>
       <p style="margin:0">From ${customer.fullName} · ${customer.phone} · ${customer.email}</p>
@@ -98,7 +98,7 @@ export async function sendBookingNotification(data: {
     ${data.email ? `<strong>Email:</strong> ${data.email}<br/>` : ""}
     ${data.mode ? `<strong>Mode:</strong> ${data.mode}<br/>` : ""}
     ${data.concern ? `<strong>Concern:</strong> ${data.concern}<br/>` : ""}</p>
-    <p><strong>Message:</strong> ${data.message || "—"}</p>`;
+    <p><strong>Message:</strong> ${data.message || "-"}</p>`;
   if (data.email) await sendMail(data.email, "We received your health assessment request", wrap(body));
   if (ADMIN_EMAIL) await sendMail(ADMIN_EMAIL, "New health assessment request from web", wrap(body));
 }

@@ -4,14 +4,30 @@ import { CTABand } from "@/components/sections/cta-band";
 import { PageHero } from "@/components/ui/page-hero";
 import { Reveal } from "@/components/ui/motion";
 import { buttonLinkClasses } from "@/components/ui/button";
-import { clinicalPrinciples } from "@/lib/data/programs";
+import OrbitImages from "@/components/ui/orbit-images";
+import { clinicalPrinciples, coreStrengths } from "@/lib/data/programs";
 import { CLINIC } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
-import { FaRegCircleCheck, FaArrowRight } from "react-icons/fa6";
+import {
+  FaMicroscope,
+  FaGlobe,
+  FaFlask,
+  FaShieldHalved,
+  FaLeaf,
+  FaRegCircleCheck,
+  FaArrowRight,
+} from "react-icons/fa6";
 import Link from "next/link";
 
 const HERO_IMG = S19_ASSETS.photos.labBeakers;
 const STORY_IMG = S19_ASSETS.photos.labTransfer;
+
+const strengthIcons = [
+  <FaMicroscope key="ind" className="h-5 w-5" aria-hidden />,
+  <FaGlobe key="tel" className="h-5 w-5" aria-hidden />,
+  <FaFlask key="std" className="h-5 w-5" aria-hidden />,
+  <FaShieldHalved key="ww" className="h-5 w-5" aria-hidden />,
+];
 
 const pillars = [
   {
@@ -43,7 +59,7 @@ export default function AboutPage() {
     <>
       <PageHero
         eyebrow="Our Approach"
-        title="Understanding the root factors of illness — not masking symptoms."
+        title="Understanding the root factors of illness - not masking symptoms."
         lead={`${CLINIC.brand} is a Bafoussam-based herbal and integrative wellness clinic focused on science-based herbalism, individualized health assessments, nutrition, and lifestyle medicine.`}
         image={HERO_IMG}
         alt="Fresh botanical herbs used at S19 Herbal Clinic"
@@ -57,7 +73,7 @@ export default function AboutPage() {
             <h2 className="mt-4">Root-cause care, one patient at a time.</h2>
             <p className="mt-5 text-[15px] leading-relaxed text-muted">
               Our clinical philosophy centers on thoroughly understanding the biological,
-              lifestyle, and physiological factors contributing to each patient&apos;s condition —
+              lifestyle, and physiological factors contributing to each patient&apos;s condition -
               rather than prescribing generic cures blindly.
             </p>
             <p className="mt-3 text-[15px] leading-relaxed text-muted">
@@ -81,6 +97,72 @@ export default function AboutPage() {
               <div className="absolute inset-0 bg-gradient-to-t from-forest-950/50 to-transparent" />
             </div>
           </Reveal>
+        </div>
+      </Section>
+
+      {/* Approach - no image background */}
+      <Section className="bg-white">
+        <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
+          <div className="lg:col-span-5">
+            <Reveal>
+              <Kicker>Understanding root factors</Kicker>
+              <h2 className="mt-4">Not masking symptoms - treating the root cause.</h2>
+              <p className="mt-5 text-[15px] leading-relaxed text-muted">
+                We begin every treatment with a thorough assessment of your medical history,
+                laboratory workups, and lifestyle. Instead of prescribing generic cures blindly, we
+                build a protocol around the biological and physiological factors behind your
+                condition.
+              </p>
+              <Link href="/programs" className={buttonLinkClasses("primary", "lg", "mt-8")}>
+                Explore treatment programs
+                <FaArrowRight className="h-3.5 w-3.5" aria-hidden />
+              </Link>
+            </Reveal>
+          </div>
+          <div className="hidden lg:col-span-7 lg:block">
+            <OrbitImages
+              items={coreStrengths.map((s, i) => (
+                <div
+                  key={s.title}
+                  className="flex h-full w-full flex-col items-start justify-center overflow-hidden rounded-lg border border-forest-100 bg-white p-5 shadow-card"
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-forest-200 bg-forest-50 text-forest-800">
+                    {strengthIcons[i]}
+                  </div>
+                  <h3 className="mt-3 text-[15px] font-bold text-ink">{s.title}</h3>
+                  <p className="mt-1 text-xs leading-relaxed text-muted">{s.text}</p>
+                </div>
+              ))}
+              shape="ellipse"
+              responsive
+              baseWidth={1400}
+              radiusX={470}
+              radiusY={130}
+              rotation={-6}
+              duration={46}
+              itemSize={230}
+              direction="normal"
+              fill
+              centerContent={
+                <div className="flex h-28 w-28 items-center justify-center rounded-full border border-gold-400 bg-forest-800 shadow-lift">
+                  <FaLeaf className="h-9 w-9 text-gold-400" aria-hidden />
+                </div>
+              }
+            />
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:hidden">
+            {coreStrengths.map((s, i) => (
+              <Reveal key={s.title} delay={i * 0.07}>
+                <div className="h-full rounded-lg border border-line bg-cream p-6 shadow-card">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-forest-200 bg-forest-50 text-forest-800">
+                    {strengthIcons[i]}
+                  </div>
+                  <h3 className="mt-4 text-lg font-bold text-ink">{s.title}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-muted">{s.text}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </Section>
 

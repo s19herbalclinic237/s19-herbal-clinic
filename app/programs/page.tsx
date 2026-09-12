@@ -132,7 +132,7 @@ export default function ProgramsPage() {
                 <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-forest-100/90">
                   Beyond herbal medicine, S19 offers supportive and alternative therapies inspired
                   by traditional healing practices and complemented by modern scientific wellness
-                  devices and instruments — including in-clinic electrolysis and therapy sessions —
+                  devices and instruments - including in-clinic electrolysis and therapy sessions -
                   with the aim of supporting patient well-being and improving overall care
                   outcomes.
                 </p>

@@ -62,7 +62,7 @@ export default function TelehealthPage() {
             {
               step: "04",
               title: "Anywhere, Anytime",
-              text: "WhatsApp, phone, or secure messaging — structured care that fits around your life.",
+              text: "WhatsApp, phone, or secure messaging - structured care that fits around your life.",
             },
           ].map((t, i) => (
             <Reveal key={t.step} delay={i * 0.06}>

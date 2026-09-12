@@ -213,7 +213,7 @@ export function CheckoutView() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-semibold">{item.name}</p>
-                      <p className="text-xs text-muted">Qty {item.quantity} Ã— {formatFcfa(item.price)}</p>
+                      <p className="text-xs text-muted">Qty {item.quantity} × {formatFcfa(item.price)}</p>
                     </div>
                     <span className="text-sm font-semibold">{formatFcfa(item.price * item.quantity)}</span>
                   </li>

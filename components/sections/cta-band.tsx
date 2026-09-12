@@ -62,7 +62,7 @@ export function CTABand({
       <div className="pointer-events-none absolute bottom-0 left-1/4 h-64 w-64 rounded-full bg-emerald-400/10 blur-3xl" />
       <Container className="relative z-10 py-16 md:py-20">
         <div className="max-w-2xl">
-          <h2 className="text-[#dcf2e7]">{title}</h2>
+          <h2 className="text-white drop-shadow-sm">{title}</h2>
           <p className="mt-3 text-[15px] leading-relaxed text-forest-100/90">{text}</p>
         </div>
         <div className="mt-8 flex flex-wrap items-center gap-3">

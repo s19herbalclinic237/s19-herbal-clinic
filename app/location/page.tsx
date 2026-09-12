@@ -44,7 +44,7 @@ const info = [
     title: "Dispatch / Logistics",
     lines: [
       "Fast dispatch of prescribed herbal packs anywhere in Cameroon",
-      "Worldwide delivery via express courier — fees based on destination",
+      "Worldwide delivery via express courier - fees based on destination",
       "Local clinic pickup available",
     ],
   },
@@ -56,7 +56,7 @@ export default function LocationPage() {
       <PageHero
         eyebrow="Visit Our Physical Facility"
         title="S19 Herbal Clinic, Bafoussam."
-        lead="In-house consultation, pharmacy pickup, and dispatch logistics — at the heart of Bafoussam, Cameroon."
+        lead="In-house consultation, pharmacy pickup, and dispatch logistics - at the heart of Bafoussam, Cameroon."
         image={HERO_IMG}
         alt="S19 Herbal Clinic location in Bafoussam, Cameroon"
       />
@@ -133,7 +133,7 @@ export default function LocationPage() {
         </Reveal>
       </Section>
 
-      <CTABand title="Visit us in Bafoussam or consult remotely" text="In-clinic consultations, Tele-health, and worldwide herbal dispatch — however far you are." />
+      <CTABand title="Visit us in Bafoussam or consult remotely" text="In-clinic consultations, Tele-health, and worldwide herbal dispatch - however far you are." />
     </>
   );
 }

@@ -31,8 +31,17 @@ const companyLinks = [
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-forest-900 bg-forest-950 text-forest-200">
-      <Container className="grid gap-10 py-12 md:py-16 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
+    <footer className="relative border-t border-forest-900 bg-forest-950 text-forest-200">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-40"
+        style={{
+          backgroundImage: "url('/s19-pattern.png')",
+          backgroundRepeat: "repeat",
+        }}
+      />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-forest-950/55 via-forest-950/70 to-forest-950/80" />
+      <Container className="relative z-10 grid gap-10 py-12 md:py-16 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
         <div>
           <img
             src={S19_ASSETS.logos.fullDark}
@@ -132,7 +141,7 @@ export function SiteFooter() {
         </div>
       </Container>
 
-      <div className="border-t border-forest-900/80">
+      <div className="relative z-10 border-t border-forest-900/80">
         <Container className="flex flex-col gap-2 py-5 text-xs text-forest-400 sm:flex-row sm:items-center sm:justify-between">
           <p>&copy; {new Date().getFullYear()} {CLINIC.brand} ({CLINIC.slogan}). All rights reserved.</p>
           <p>Science-Based Herbalism · Bafoussam · Worldwide Tele-Health</p>

@@ -6,11 +6,9 @@ import { ProductCard } from "@/components/ui/product-card";
 import { BookingForm } from "@/components/sections/booking-form";
 import { CTABand } from "@/components/sections/cta-band";
 import { Reveal } from "@/components/ui/motion";
-import OrbitImages from "@/components/ui/orbit-images";
 import { getFeaturedProducts } from "@/lib/catalog";
 import {
   treatmentPrograms,
-  coreStrengths,
   clinicalPrinciples,
   telehealthSteps,
   faqs,
@@ -20,27 +18,16 @@ import { S19_ASSETS } from "@/lib/site-assets";
 import { testimonials } from "@/lib/data/testimonials";
 import {
   FaWhatsapp,
-  FaFlask,
   FaGlobe,
   FaMapLocationDot,
   FaClock,
   FaArrowRight,
   FaChevronDown,
   FaStar,
-  FaShieldHalved,
-  FaMicroscope,
   FaRegCircleCheck,
-  FaLeaf,
 } from "react-icons/fa6";
 
 const STORY_IMG = S19_ASSETS.photos.nutritionBasket;
-
-const strengthIcons = [
-  <FaMicroscope key="ind" className="h-5 w-5" aria-hidden />,
-  <FaGlobe key="tel" className="h-5 w-5" aria-hidden />,
-  <FaFlask key="std" className="h-5 w-5" aria-hidden />,
-  <FaShieldHalved key="ww" className="h-5 w-5" aria-hidden />,
-];
 
 const focus = [
   {
@@ -53,7 +40,7 @@ const focus = [
   {
     icon: S19_ASSETS.icons.trustedCare,
     title: "Tele-Health",
-    desc: "Structured remote consultations, lab result review, and scheduled follow-ups — anywhere in the world via phone and WhatsApp.",
+    desc: "Structured remote consultations, lab result review, and scheduled follow-ups - anywhere in the world via phone and WhatsApp.",
     href: "/telehealth",
     label: "Book Virtual Visit",
   },
@@ -67,7 +54,7 @@ const focus = [
 ];
 
 const bookingSteps = [
-  { n: "01", title: "Assess", text: "Book an assessment — in clinic or remotely." },
+  { n: "01", title: "Assess", text: "Book an assessment - in clinic or remotely." },
   { n: "02", title: "Protocol", text: "We tailor a root-cause herbal protocol." },
   { n: "03", title: "Dispatch", text: "Your pack is shipped to your door." },
   { n: "04", title: "Follow-up", text: "Scheduled check-ins on your progress." },
@@ -90,13 +77,13 @@ export default async function HomePage() {
 
 <Container className="relative z-10 w-full py-24 md:py-32">
           <Reveal>
-            <h1 className="mt-6 max-w-3xl text-balance text-[#dcf2e7]">
+            <h1 className="mt-6 max-w-3xl text-balance text-white drop-shadow-sm">
               Natural healing,
               <span className="block text-gold-400">lasting wellness.</span>
             </h1>
             <p className="mt-7 max-w-xl text-base leading-relaxed text-forest-100/90 md:text-lg">
               Welcome to {CLINIC.brand} in Bafoussam. Our mission is to provide safe, natural and
-              effective herbal solutions that support long-term health and wellbeing —
+              effective herbal solutions that support long-term health and wellbeing -
               science-based assessment, individualized formulations, and Tele-Health, one clinic
               with a worldwide reach.
             </p>
@@ -119,79 +106,6 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      {/* OUR APPROACH — full-bleed image band */}
-      <section className="relative overflow-hidden py-24 md:py-32">
-        <img
-          src={S19_ASSETS.photos.pipetteReading}
-          alt="S19 lab expert reading a pipette during formulation work"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-forest-950/95 via-forest-950/80 to-forest-950/40" />
-        <Container className="relative z-10">
-          <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
-            <Reveal className="lg:col-span-5">
-              <h2 className="mt-5 text-balance text-[#dcf2e7]">
-                Understanding root factors — not masking symptoms.
-              </h2>
-              <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-forest-100/90">
-                We begin every treatment with a thorough assessment of your medical history,
-                laboratory workups, and lifestyle. Instead of prescribing generic cures blindly, we
-                build a protocol around the biological and physiological factors behind your
-                condition.
-              </p>
-              <Link href="/about" className={buttonLinkClasses("secondary", "lg", "mt-8")}>
-                Learn about our approach
-                <FaArrowRight className="h-3.5 w-3.5" aria-hidden />
-              </Link>
-            </Reveal>
-            <div className="hidden lg:col-span-7 lg:block">
-              <OrbitImages
-                items={coreStrengths.map((s, i) => (
-                  <div
-                    key={s.title}
-                    className="flex h-full w-full flex-col items-start justify-center overflow-hidden rounded-lg border border-white/25 bg-forest-950/75 p-5 backdrop-blur-md"
-                  >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/25 bg-white/10 text-gold-400">
-                      {strengthIcons[i]}
-                    </div>
-                    <h3 className="mt-3 text-[15px] font-bold text-white">{s.title}</h3>
-                    <p className="mt-1 text-xs leading-relaxed text-forest-100/80">{s.text}</p>
-                  </div>
-                ))}
-                shape="ellipse"
-                responsive
-                baseWidth={1400}
-                radiusX={470}
-                radiusY={130}
-                rotation={-6}
-                duration={46}
-                itemSize={230}
-                direction="normal"
-                fill
-                centerContent={
-                  <div className="flex h-28 w-28 items-center justify-center rounded-full border border-gold-400/70 bg-forest-950/80 shadow-[0_0_40px_rgba(212,175,55,0.25)] backdrop-blur-sm">
-                    <FaLeaf className="h-9 w-9 text-gold-400" aria-hidden />
-                  </div>
-                }
-              />
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2 lg:hidden">
-              {coreStrengths.map((s, i) => (
-                <Reveal key={s.title} delay={i * 0.07}>
-                  <div className="h-full rounded-lg border border-white/20 bg-forest-950/60 p-6 backdrop-blur-sm">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-white/25 bg-white/10 text-gold-400">
-                      {strengthIcons[i]}
-                    </div>
-                    <h3 className="mt-4 text-lg font-bold text-white">{s.title}</h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-forest-100/85">{s.text}</p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </Container>
-      </section>
-
       {/* CORE FOCUS */}
       <Section className="bg-white">
         <Reveal>
@@ -199,7 +113,7 @@ export default async function HomePage() {
             <Kicker center>What we offer</Kicker>
             <h2 className="mt-4">Three ways to care.</h2>
             <p className="mt-4 text-[15px] text-muted">
-              One clinic, a worldwide reach — in-clinic care, remote Tele-Health, and a
+              One clinic, a worldwide reach - in-clinic care, remote Tele-Health, and a
               standardized herbal catalog delivered to your door.
             </p>
           </div>
@@ -267,7 +181,7 @@ export default async function HomePage() {
         </div>
       </Section>
 
-      {/* PRINCIPLES — editorial split */}
+      {/* PRINCIPLES - editorial split */}
       <Section className="bg-white">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <Reveal className="order-2 lg:order-1">
@@ -282,8 +196,8 @@ export default async function HomePage() {
               <h2 className="mt-4">Built on review, reason, and follow-through.</h2>
               <p className="mt-5 text-[15px] leading-relaxed text-muted">
                 {CLINIC.brand} is a Bafoussam-based herbal and integrative wellness clinic. Our
-                clinical philosophy starts with the individual — their history, their labs, their
-                daily reality — before any remedy is prescribed.
+                clinical philosophy starts with the individual - their history, their labs, their
+                daily reality - before any remedy is prescribed.
               </p>
               <div className="mt-8 space-y-5">
                 {clinicalPrinciples.map((p) => (
@@ -329,7 +243,7 @@ export default async function HomePage() {
         </p>
       </Section>
 
-      {/* TELEHEALTH — full-bleed image band */}
+      {/* TELEHEALTH - full-bleed image band */}
       <section className="relative overflow-hidden py-24 md:py-32">
         <img
           src={S19_ASSETS.photos.patientRecords}
@@ -346,8 +260,8 @@ export default async function HomePage() {
                   Remote consultations &amp; follow-ups, anywhere.
                 </h2>
                 <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-forest-100/90">
-                  Cannot make it to Bafoussam? We run structured online assessments — symptoms,
-                  medical history, and lab reports — then dispatch your protocol and stay with you
+                  Cannot make it to Bafoussam? We run structured online assessments - symptoms,
+                  medical history, and lab reports - then dispatch your protocol and stay with you
                   through scheduled follow-ups.
                 </p>
                 <a
@@ -477,7 +391,7 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      {/* LOCATION — full-bleed image band */}
+      {/* LOCATION - full-bleed image band */}
       <section className="relative overflow-hidden py-24 md:py-28">
         <img
           src={S19_ASSETS.photos.bloodPressure}
