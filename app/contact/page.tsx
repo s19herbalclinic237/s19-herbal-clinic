@@ -91,43 +91,43 @@ export default function ContactPage() {
                 {CLINIC.phone}
               </a>
             </div>
+            <ul className="mt-8 divide-y divide-line overflow-hidden rounded-lg border border-line bg-white shadow-card">
+              {rows.map((r) => {
+                const inner = (
+                  <li className="flex items-start gap-4 px-5 py-4">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-forest-950">
+                      {r.icon}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+                        {r.label}
+                      </p>
+                      <p className="mt-0.5 text-[15px] font-bold text-ink">{r.value}</p>
+                      <p className="text-sm text-muted">{r.sub}</p>
+                    </div>
+                  </li>
+                );
+                return r.href ? (
+                  <a
+                    key={r.label}
+                    href={r.href}
+                    target={r.href.startsWith("http") ? "_blank" : undefined}
+                    rel={r.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    className="block transition-colors hover:bg-cream"
+                  >
+                    {inner}
+                  </a>
+                ) : (
+                  <div key={r.label}>{inner}</div>
+                );
+              })}
+            </ul>
           </Reveal>
           <Reveal delay={0.1}>
             <div className="space-y-6">
               <div className="rounded-lg border border-line bg-cream p-6 shadow-card md:p-9">
                 <BookingForm />
               </div>
-              <ul className="divide-y divide-line rounded-lg border border-line bg-white shadow-card">
-                {rows.map((r) => {
-                  const inner = (
-                    <li className="flex items-start gap-4 px-5 py-4">
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-forest-950">
-                        {r.icon}
-                      </span>
-                      <div className="min-w-0">
-                        <p className="text-xs font-semibold uppercase tracking-wide text-muted">
-                          {r.label}
-                        </p>
-                        <p className="mt-0.5 text-[15px] font-bold text-ink">{r.value}</p>
-                        <p className="text-sm text-muted">{r.sub}</p>
-                      </div>
-                    </li>
-                  );
-                  return r.href ? (
-                    <a
-                      key={r.label}
-                      href={r.href}
-                      target={r.href.startsWith("http") ? "_blank" : undefined}
-                      rel={r.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                      className="block transition-colors hover:bg-cream"
-                    >
-                      {inner}
-                    </a>
-                  ) : (
-                    <div key={r.label}>{inner}</div>
-                  );
-                })}
-              </ul>
             </div>
           </Reveal>
         </div>
