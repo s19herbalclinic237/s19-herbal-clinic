@@ -10,6 +10,12 @@ export function formatFcfa(value: number): string {
   return `${new Intl.NumberFormat("fr-FR").format(Math.round(value))} ${CLINIC.currency}`;
 }
 
+export function formatPrice(price: number, unit?: string): string {
+  if (price <= 0) return "Contact S19 for pricing";
+  const base = formatFcfa(price);
+  return unit ? `${unit} - ${base}` : base;
+}
+
 export function waLink(message: string): string {
   return `https://wa.me/${CLINIC.whatsappNumber}?text=${encodeURIComponent(message)}`;
 }

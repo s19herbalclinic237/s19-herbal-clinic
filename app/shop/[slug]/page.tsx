@@ -7,8 +7,8 @@ import { Badge } from "@/components/ui/heading";
 import { AddToCart } from "@/components/shop/add-to-cart";
 import { Button } from "@/components/ui/button";
 import { getProductBySlug, getProducts } from "@/lib/catalog";
-import { formatFcfa } from "@/lib/utils";
-import { FaChevronRight, FaLeaf, FaRegCircleCheck } from "react-icons/fa6";
+import { formatPrice, waLink } from "@/lib/utils";
+import { FaChevronRight, FaLeaf, FaRegCircleCheck, FaWhatsapp } from "react-icons/fa6";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -72,10 +72,28 @@ export default async function ProductPage({ params }: Props) {
               </span>
             </div>
             <h1 className="mt-3 text-3xl">{product.name}</h1>
-            <p className="mt-3 text-lg font-bold text-forest-800">{formatFcfa(product.price)}</p>
+            <p className="mt-3 text-lg font-bold text-forest-800">{formatPrice(product.price, product.unit)}</p>
             <p className="mt-4 text-muted">{product.description}</p>
 
-            <AddToCart product={product} />
+            {product.price > 0 ? (
+              <AddToCart product={product} />
+            ) : (
+              <div className="mt-6 rounded-lg border border-line bg-cream p-5">
+                <p className="text-sm leading-relaxed text-muted">
+                  This package is personalized to your assessment. Contact S19 to discuss your
+                  condition and receive your individual protocol and pricing.
+                </p>
+                <a
+                  href={waLink(`Hello S19, I would like more information about the ${product.name}.`)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-forest-800 px-5 text-sm font-semibold text-white transition-colors hover:bg-forest-900"
+                >
+                  <FaWhatsapp className="h-4 w-4 text-gold-400" aria-hidden />
+                  Contact S19 on WhatsApp
+                </a>
+              </div>
+            )}
           </div>
         </div>
 
@@ -145,7 +163,7 @@ export default async function ProductPage({ params }: Props) {
                     />
                   </div>
                   <p className="mt-3 text-sm font-semibold leading-snug">{p.name}</p>
-                  <p className="mt-0.5 text-xs font-semibold text-forest-700">{formatFcfa(p.price)}</p>
+                  <p className="mt-0.5 text-xs font-semibold text-forest-700">{formatPrice(p.price, p.unit)}</p>
                 </Link>
               ))}
             </div>

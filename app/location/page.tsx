@@ -109,6 +109,16 @@ export default function LocationPage() {
                     </li>
                   ))}
                 </ul>
+                <div className="mt-6 rounded-lg border border-white/15 bg-white/10 p-4 backdrop-blur-sm">
+                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-gold-400">
+                    Delivery information
+                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-forest-100">
+                    S19 can arrange delivery of herbal products within Cameroon and worldwide.
+                    Delivery fees are based on destination and transport/courier charges. Pickup can
+                    also be arranged where applicable.
+                  </p>
+                </div>
                 <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                   <a
                     href={waLink("Hello S19, I need directions to your Bafoussam clinic.")}
