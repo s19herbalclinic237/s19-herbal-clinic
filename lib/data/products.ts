@@ -70,7 +70,7 @@ export const seedProducts: SiteProduct[] = [
   },
   {
     id: "p-vision-drops",
-    name: "S19 Vision - Herbal Eye Drops",
+    name: "S19 Vision — Herbal Eye Drops",
     slug: "s19-vision-herbal-eye-drops",
     category: "Wellness Essentials",
     categorySlug: "wellness-essentials",
@@ -82,7 +82,7 @@ export const seedProducts: SiteProduct[] = [
     description:
       "A natural herbal eye drop for vision support, including support for glaucoma, cataracts, conjunctivitis, and tired or irritated eyes. Fits into a daily eye-care routine under guidance.",
     usage: "Use as recommended during your consultation. Avoid contact with the dropper tip.",
-    image: productImage("S19 Vision - Herbal Eye Drops.png"),
+    image: productImage("S19 Vision — Herbal Eye Drops.png"),
     featured: false,
     stock: 60,
   },
