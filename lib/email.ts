@@ -11,6 +11,15 @@ const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
 let transporter: nodemailer.Transporter | null = null;
 
+export function siteOrigin(): string {
+  const raw = process.env.NEXT_PUBLIC_SITE_URL;
+  const fallback = "http://localhost:3000";
+  const trimmed = raw?.trim();
+  if (!trimmed) return fallback;
+  const withScheme = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+  return withScheme.replace(/\/+$/, "");
+}
+
 function getTransporter() {
   if (transporter) return transporter;
   if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) return null;
@@ -82,6 +91,27 @@ export async function sendOrderConfirmation(order: IOrder) {
       <p><strong>Total:</strong> ${formatFcfa(order.total)}<br/><strong>Delivery:</strong> ${shipping.mode} · ${shipping.address}<br/><strong>Payment:</strong> ${payment.method}</p>`;
     await sendMail(ADMIN_EMAIL, `New order ${order.orderReference}`, wrap(adminBody));
   }
+}
+
+export async function sendVerificationEmail(to: string, name: string, link: string) {
+  const firstName = name.trim().split(/\s+/)[0] || "friend";
+  const body = `<h2 style="margin:0 0 6px;color:#124034">Welcome to S19 Herbal Clinic, ${firstName}</h2>
+    <p style="margin:0 0 18px;color:#6b7a74">You created an account with the email address ${to}.</p>
+    <p style="margin:0 0 22px">Please confirm your email address to activate your account and keep it secure.</p>
+    <a href="${link}" style="display:inline-block;background:#1a624c;color:#ffffff;padding:12px 22px;border-radius:6px;text-decoration:none;font-size:14px">Verify my email address</a>
+    <p style="margin:24px 0 0;font-size:13px;color:#6b7a74">If the button does not work, copy and paste this link into your browser:<br/>${link}</p>
+    <p style="margin:12px 0 0;font-size:12px;color:#6b7a74">This link expires within 24 hours. If you did not create this account, you can ignore this email.</p>`;
+  await sendMail(to, "Verify your S19 account email", wrap(body));
+}
+
+export async function sendPasswordResetEmail(to: string, name: string, link: string) {
+  const firstName = name.trim().split(/\s+/)[0] || "friend";
+  const body = `<h2 style="margin:0 0 6px;color:#124034">Reset your password, ${firstName}</h2>
+    <p style="margin:0 0 18px;color:#6b7a74">We received a request to reset the password for your S19 Herbal Clinic account.</p>
+    <a href="${link}" style="display:inline-block;background:#1a624c;color:#ffffff;padding:12px 22px;border-radius:6px;text-decoration:none;font-size:14px">Choose a new password</a>
+    <p style="margin:24px 0 0;font-size:13px;color:#6b7a74">If the button does not work, copy and paste this link into your browser:<br/>${link}</p>
+    <p style="margin:12px 0 0;font-size:12px;color:#6b7a74">This link expires within 1 hour. If you did not request this, you can safely ignore this email and your password will stay unchanged.</p>`;
+  await sendMail(to, "Reset your S19 account password", wrap(body));
 }
 
 export async function sendBookingNotification(data: {

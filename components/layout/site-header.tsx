@@ -16,6 +16,7 @@ import {
   FaPhone,
   FaInstagram,
   FaFacebookF,
+  FaRegUser,
 } from "react-icons/fa6";
 
 const subscribe = () => () => {};
@@ -137,6 +138,13 @@ export function SiteHeader() {
               </span>
             ) : null}
           </Link>
+          <Link
+            href="/account"
+            aria-label="Account"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-line-strong bg-white text-ink shadow-sm transition-colors hover:border-forest-500 hover:text-forest-700"
+          >
+            <FaRegUser className="h-4 w-4" aria-hidden />
+          </Link>
           <Link href="/contact" className={cn(buttonLinkClasses("primary", "sm"), "hidden sm:inline-flex")}>
             Book Assessment
           </Link>
@@ -169,6 +177,10 @@ export function SiteHeader() {
             ))}
             <Link href="/contact" onClick={() => setOpen(false)} className={cn(buttonLinkClasses("primary", "md"), "mt-3")}>
               Book Assessment
+            </Link>
+            <Link href="/account" onClick={() => setOpen(false)} className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-forest-800">
+              <FaRegUser className="h-4 w-4" aria-hidden />
+              My Account
             </Link>
           </Container>
         </div>
