@@ -2,13 +2,15 @@ import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { buttonLinkClasses } from "@/components/ui/button";
 import GradientWaves from "@/components/ui/gradient-waves";
-import { CLINIC } from "@/lib/site";
+import { CLINIC, waLink } from "@/lib/site";
 import { FaWhatsapp } from "react-icons/fa6";
 
 export function WhatsAppFloat() {
   return (
     <Link
-      href={`https://wa.me/${CLINIC.whatsappNumber}`}
+      href={waLink(
+        "Hello S19 Herbal Clinic, I would like more information about your treatments and consultations."
+      )}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat with S19 on WhatsApp"

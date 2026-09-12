@@ -20,8 +20,20 @@ const libreBaskerville = Libre_Baskerville({
   display: "swap",
 });
 
+function normalizeSiteUrl(raw: string | undefined): URL {
+  const fallback = "https://s19herbalclinic.com";
+  const trimmed = raw?.trim();
+  if (!trimmed) return new URL(fallback);
+  const withScheme = /^[a-z][a-z\d+.-]*:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+  try {
+    return new URL(withScheme);
+  } catch {
+    return new URL(fallback);
+  }
+}
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://s19herbalclinic.com"),
+  metadataBase: normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL),
   title: {
     default: `${CLINIC.brand} | ${CLINIC.tagline}`,
     template: `%s | ${CLINIC.brand}`,
