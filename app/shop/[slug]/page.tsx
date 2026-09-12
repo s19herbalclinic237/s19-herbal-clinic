@@ -87,7 +87,7 @@ export default async function ProductPage({ params }: Props) {
                   href={waLink(`Hello S19, I would like more information about the ${product.name}.`)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-4 inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-forest-800 px-5 text-sm font-semibold text-white transition-colors hover:bg-forest-900"
+                  className="mt-4 inline-flex h-14 items-center justify-center gap-2 rounded-lg bg-forest-800 px-5 text-sm font-semibold text-white transition-colors hover:bg-forest-900 sm:h-12"
                 >
                   <FaWhatsapp className="h-4 w-4 text-gold-400" aria-hidden />
                   Contact S19 on WhatsApp

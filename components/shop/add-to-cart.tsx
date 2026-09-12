@@ -36,7 +36,7 @@ export function AddToCart({ product }: { product: SiteProduct }) {
         </div>
       </div>
       <div className="mt-5 flex flex-col gap-2 sm:flex-row">
-        <Button size="lg" className="flex-1" onClick={() => addItem(product, qty)}>
+        <Button size="lg" className="h-14 flex-1 sm:h-12" onClick={() => addItem(product, qty)}>
           <FaBagShopping className="h-4 w-4" aria-hidden />
           Add to Cart
         </Button>
@@ -44,7 +44,7 @@ export function AddToCart({ product }: { product: SiteProduct }) {
           href={waLink(`Hello S19, I am interested in ordering the ${product.name}.`)}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-md border border-line-strong bg-white px-4 text-sm font-semibold text-ink hover:border-forest-500 hover:text-forest-800"
+          className="inline-flex h-14 flex-1 items-center justify-center gap-2 rounded-md border border-line-strong bg-white px-4 text-sm font-semibold text-ink hover:border-forest-500 hover:text-forest-800 sm:h-12"
         >
           <FaWhatsapp className="h-4 w-4 text-forest-600" aria-hidden />
           Order via WhatsApp

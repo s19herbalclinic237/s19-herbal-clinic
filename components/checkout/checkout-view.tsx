@@ -129,8 +129,8 @@ export function CheckoutView() {
       <PageHero eyebrow="Checkout" title="Complete Your Order" compact image="https://images.unsplash.com/photo-1544787219-7f47ccb76574?q=80&w=1600&auto=format&fit=crop" />
       <div className="border-t border-line bg-mist">
         <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-          <form onSubmit={submit} className="grid items-start gap-8 lg:grid-cols-[1.6fr_1fr]">
-            <div className="space-y-6">
+          <form onSubmit={submit} className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+            <div className="min-w-0 space-y-6">
               <div className="rounded-lg border border-line bg-white p-5">
                 <h2 className="text-base font-bold">Contact & Delivery</h2>
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -203,7 +203,7 @@ export function CheckoutView() {
               </p>
             </div>
 
-            <aside className="h-fit rounded-lg border border-line bg-white p-5">
+            <aside className="h-fit min-w-0 rounded-lg border border-line bg-white p-5">
               <h2 className="text-base font-bold">Order Summary</h2>
               <ul className="mt-4 divide-y divide-line">
                 {items.map((item) => (
