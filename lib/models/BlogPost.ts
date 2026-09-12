@@ -1,0 +1,38 @@
+import { Schema, model, models, type Model } from "mongoose";
+
+export type BlogStatus = "draft" | "published";
+
+export interface IBlogPost {
+  _id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  body: string;
+  cover?: string;
+  author: string;
+  status: BlogStatus;
+  featured: boolean;
+  publishedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const BlogPostSchema = new Schema<IBlogPost>(
+  {
+    title: { type: String, required: true, trim: true },
+    slug: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    excerpt: { type: String, required: true, trim: true },
+    body: { type: String, required: true, trim: true },
+    cover: { type: String },
+    author: { type: String, default: "S19 Herbal Clinic", trim: true },
+    status: { type: String, enum: ["draft", "published"], default: "draft" },
+    featured: { type: Boolean, default: false },
+    publishedAt: { type: Date },
+  },
+  { timestamps: true }
+);
+
+BlogPostSchema.index({ status: 1, publishedAt: -1 });
+
+export const BlogPost: Model<IBlogPost> =
+  (models.BlogPost as Model<IBlogPost>) || model<IBlogPost>("BlogPost", BlogPostSchema);

@@ -23,6 +23,7 @@ const companyLinks = [
   { label: "Home", href: "/" },
   { label: "Our Approach", href: "/about" },
   { label: "Herbal Catalog", href: "/shop" },
+  { label: "Health Blog", href: "/blog" },
   { label: "Contact Us", href: "/contact" },
   { label: "Track Your Order", href: "/track" },
   { label: "Refund & Returns", href: "/refund-and-returns" },

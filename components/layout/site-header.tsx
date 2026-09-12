@@ -34,6 +34,7 @@ const nav = [
   { label: "Programs", href: "/programs" },
   { label: "Tele-Health", href: "/telehealth" },
   { label: "Shop", href: "/shop" },
+  { label: "Blog", href: "/blog" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];

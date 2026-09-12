@@ -10,6 +10,8 @@ import { ProductsTab } from "@/components/admin/products-tab";
 import { AdminOrdersTab } from "@/components/admin/orders-tab";
 import { AdminTestimonialsTab } from "@/components/admin/testimonials-tab";
 import { MessagingTab } from "@/components/admin/messaging-tab";
+import { PostsTab } from "@/components/admin/posts-tab";
+import { SubscribersTab } from "@/components/admin/subscribers-tab";
 import {
   FaBoxOpen,
   FaCheck,
@@ -17,11 +19,13 @@ import {
   FaCommentDots,
   FaEnvelope,
   FaGear,
+  FaNewspaper,
   FaRegCircleXmark,
   FaShieldHalved,
   FaTags,
   FaTruckFast,
   FaUserGear,
+  FaUsers,
 } from "react-icons/fa6";
 
 type TabId =
@@ -33,7 +37,9 @@ type TabId =
   | "admin-products"
   | "admin-orders"
   | "admin-testimonials"
-  | "admin-messaging";
+  | "admin-messaging"
+  | "admin-posts"
+  | "admin-subscribers";
 
 const tabList: { id: TabId; label: string; icon: ReactNode }[] = [
   { id: "overview", label: "Overview", icon: <FaCircleUser className="h-4 w-4" aria-hidden /> },
@@ -48,6 +54,8 @@ const adminTabList: { id: TabId; label: string; icon: ReactNode }[] = [
   { id: "admin-orders", label: "Orders", icon: <FaTruckFast className="h-4 w-4" aria-hidden /> },
   { id: "admin-testimonials", label: "Testimonials", icon: <FaCommentDots className="h-4 w-4" aria-hidden /> },
   { id: "admin-messaging", label: "Users & Messages", icon: <FaUserGear className="h-4 w-4" aria-hidden /> },
+  { id: "admin-posts", label: "Blog", icon: <FaNewspaper className="h-4 w-4" aria-hidden /> },
+  { id: "admin-subscribers", label: "Subscribers", icon: <FaUsers className="h-4 w-4" aria-hidden /> },
 ];
 
 function OverviewTab({ onNavigate }: { onNavigate: (tab: TabId) => void }) {
@@ -224,6 +232,8 @@ export function DashboardScreen() {
             {isAdmin && tab === "admin-orders" ? <AdminOrdersTab /> : null}
             {isAdmin && tab === "admin-testimonials" ? <AdminTestimonialsTab /> : null}
             {isAdmin && tab === "admin-messaging" ? <MessagingTab /> : null}
+            {isAdmin && tab === "admin-posts" ? <PostsTab /> : null}
+            {isAdmin && tab === "admin-subscribers" ? <SubscribersTab /> : null}
           </div>
         </div>
       </div>
