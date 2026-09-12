@@ -3,15 +3,15 @@
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { useAuth } from "@/lib/auth-context";
+import { DashboardScreen } from "@/components/account/dashboard-screen";
 import { Field, Input } from "@/components/ui/form";
-import { PasswordInput } from "@/components/ui/password-input";
 import { Button } from "@/components/ui/button";
-import { FaCheck, FaRegCircleXmark } from "react-icons/fa6";
+import { PasswordInput } from "@/components/ui/password-input";
 
 type Mode = "login" | "register";
 
 export function AccountScreen() {
-  const { user, loading, login, register, logout, resendVerification } = useAuth();
+  const { user, loading, login, register } = useAuth();
   const [mode, setMode] = useState<Mode>("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -19,7 +19,6 @@ export function AccountScreen() {
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [resent, setResent] = useState(false);
 
   if (loading) {
     return (
@@ -46,61 +45,7 @@ export function AccountScreen() {
   }
 
   if (user) {
-    return (
-      <div className="mx-auto w-full max-w-md px-4 py-12 md:py-20">
-        <div className="overflow-hidden rounded-xl border border-line bg-white shadow-lift">
-          <div className="bg-forest-950 px-6 py-6 text-center">
-            <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-gold-400">
-              Your account
-            </p>
-            <h1 className="mt-2 text-2xl text-white">Welcome, {user.name.split(" ")[0]}</h1>
-            <p className="mt-1 text-sm text-forest-200">{user.email}</p>
-          </div>
-          <div className="space-y-4 p-6 md:p-8">
-            <div
-              className={
-                user.emailVerified
-                  ? "flex items-center gap-2 rounded-lg border border-forest-200 bg-forest-50 px-4 py-3 text-sm text-forest-800"
-                  : "flex items-start gap-2 rounded-lg border border-gold-300 bg-gold-50 px-4 py-3 text-sm text-ink"
-              }
-            >
-              {user.emailVerified ? (
-                <>
-                  <FaCheck className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
-                  <span>Email verified. Thank you!</span>
-                </>
-              ) : (
-                <>
-                  <FaRegCircleXmark className="mt-0.5 h-4 w-4 shrink-0 text-gold-600" aria-hidden />
-                  <span>
-                    Your email is not verified yet. Check your inbox for the verification link, or{" "}
-                    <button
-                      type="button"
-                      onClick={async () => {
-                        await resendVerification(user.email);
-                        setResent(true);
-                      }}
-                      className="font-semibold text-forest-800 underline underline-offset-2"
-                    >
-                      resend it
-                    </button>
-                    {resent ? " (sent - check your inbox)" : ""}
-                  </span>
-                </>
-              )}
-            </div>
-
-            <div className="rounded-lg border border-line bg-cream px-4 py-3 text-sm text-muted">
-              Your dashboard with order history, messages, and more is coming in the next step.
-            </div>
-
-            <Button variant="dark" className="w-full" onClick={() => logout()}>
-              Sign out
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
+    return <DashboardScreen />;
   }
 
   return (

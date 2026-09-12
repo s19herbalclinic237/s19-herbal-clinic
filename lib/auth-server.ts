@@ -9,13 +9,14 @@ import type { IUser } from "@/lib/models/User";
 
 export type { AuthUser } from "@/lib/auth";
 
-export function toAuthUser(u: Pick<IUser, "_id" | "name" | "email" | "role" | "emailVerified" | "createdAt">): AuthUser {
+export function toAuthUser(u: Pick<IUser, "_id" | "name" | "email" | "role" | "emailVerified" | "phone" | "createdAt">): AuthUser {
   return {
     id: String(u._id),
     name: u.name,
     email: u.email,
     role: u.role,
     emailVerified: u.emailVerified,
+    phone: u.phone,
     createdAt: (u.createdAt as unknown as Date).toISOString(),
   };
 }
@@ -57,9 +58,9 @@ export async function getSessionUser(): Promise<AuthUser | null> {
       await Session.deleteOne({ _id: session._id }).exec();
       return null;
     }
-    const u = session.user as (Pick<IUser, "_id" | "name" | "email" | "role" | "emailVerified" | "createdAt"> & { _id: unknown });
+    const u = session.user as (Pick<IUser, "_id" | "name" | "email" | "role" | "emailVerified" | "phone" | "createdAt"> & { _id: unknown });
     if (!u || !u._id) return null;
-    return toAuthUser({ _id: String(u._id), name: u.name, email: u.email, role: u.role, emailVerified: u.emailVerified, createdAt: u.createdAt });
+    return toAuthUser({ _id: String(u._id), name: u.name, email: u.email, role: u.role, emailVerified: u.emailVerified, phone: u.phone, createdAt: u.createdAt });
   } catch (error) {
     console.error("[auth] getSessionUser error:", error);
     return null;

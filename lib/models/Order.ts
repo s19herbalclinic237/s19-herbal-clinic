@@ -1,4 +1,5 @@
 import { Schema, model, models, type Model } from "mongoose";
+import type { IUser } from "@/lib/models/User";
 
 export type OrderStatus =
   | "Pending"
@@ -20,6 +21,7 @@ export interface IOrderItem {
 export interface IOrder {
   _id: string;
   orderReference: string;
+  user?: string | IUser;
   items: IOrderItem[];
   subtotal: number;
   shippingFee: number;
@@ -47,6 +49,7 @@ export interface IOrder {
 const OrderSchema = new Schema<IOrder>(
   {
     orderReference: { type: String, required: true, unique: true, trim: true },
+    user: { type: Schema.Types.ObjectId, ref: "User" },
     items: [
       {
         productId: { type: Schema.Types.ObjectId, ref: "Product" },
@@ -97,6 +100,7 @@ const OrderSchema = new Schema<IOrder>(
 );
 
 OrderSchema.index({ "customer.email": 1, orderReference: 1 });
+OrderSchema.index({ user: 1, createdAt: -1 });
 
 export const Order: Model<IOrder> =
   (models.Order as Model<IOrder>) || model<IOrder>("Order", OrderSchema);

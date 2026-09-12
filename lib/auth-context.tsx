@@ -39,6 +39,7 @@ interface AuthContextValue {
   forgotPassword: (email: string) => Promise<string | null>;
   resetPassword: (token: string, password: string) => Promise<string | null>;
   refreshUser: () => Promise<void>;
+  updateAuthUser: (user: AuthUser) => void;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -188,6 +189,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         forgotPassword,
         resetPassword,
         refreshUser,
+        updateAuthUser: setUser,
       }}
     >
       {children}

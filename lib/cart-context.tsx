@@ -6,10 +6,12 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
 import toast from "react-hot-toast";
+import { useAuth } from "@/lib/auth-context";
 
 export interface CartItem {
   slug: string;
@@ -33,20 +35,40 @@ const CartContext = createContext<CartContextValue | null>(null);
 
 const STORAGE_KEY = "s19-cart";
 
+function readLocalItems(): CartItem[] {
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw) as CartItem[];
+      if (Array.isArray(parsed)) return parsed;
+    }
+  } catch {
+    // ignore malformed storage
+  }
+  return [];
+}
+
 export function CartProvider({ children }: { children: ReactNode }) {
+  const { user } = useAuth();
   const [items, setItems] = useState<CartItem[]>(() => {
     if (typeof window === "undefined") return [];
-    try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw) as CartItem[];
-        if (Array.isArray(parsed)) return parsed;
-      }
-    } catch {
-      // ignore malformed storage
-    }
-    return [];
+    return readLocalItems();
   });
+  const itemsRef = useRef<CartItem[]>([]);
+  useEffect(() => {
+    itemsRef.current = items;
+  });
+
+  const [hydrated, setHydrated] = useState(false);
+
+  const saveCart = useCallback((cartItems: CartItem[]) => {
+    fetch("/api/cart", {
+      method: "PUT",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ items: cartItems }),
+    }).catch(() => {});
+  }, []);
 
   useEffect(() => {
     try {
@@ -56,12 +78,43 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [items]);
 
+  useEffect(() => {
+    if (!user?.id) return;
+    let active = true;
+    fetch("/api/cart", { credentials: "include" })
+      .then((r) => r.json())
+      .then((data) => {
+        if (!active) return;
+        const serverItems = Array.isArray(data.items) ? (data.items as CartItem[]) : [];
+        setItems((local) => (serverItems.length > 0 ? serverItems : local));
+        if (serverItems.length === 0) {
+          saveCart(itemsRef.current);
+        }
+        setHydrated(true);
+      })
+      .catch(() => {
+        if (active) setHydrated(true);
+      });
+    return () => {
+      active = false;
+      setHydrated(false);
+    };
+  }, [user?.id, saveCart]);
+
+  useEffect(() => {
+    if (!user?.id || !hydrated) return;
+    const timer = setTimeout(() => {
+      saveCart(itemsRef.current);
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [items, user?.id, hydrated, saveCart]);
+
   const addItem = useCallback((item: Omit<CartItem, "quantity">, quantity = 1) => {
     setItems((prev) => {
       const existing = prev.find((i) => i.slug === item.slug);
       if (existing) {
         return prev.map((i) =>
-          i.slug === item.slug ? { ...i, quantity: i.quantity + quantity } : i
+          i.slug === item.slug ? { ...i, quantity: Math.min(99, i.quantity + quantity) } : i
         );
       }
       return [...prev, { ...item, quantity }];
@@ -77,7 +130,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems((prev) =>
       quantity <= 0
         ? prev.filter((i) => i.slug !== slug)
-        : prev.map((i) => (i.slug === slug ? { ...i, quantity } : i))
+        : prev.map((i) => (i.slug === slug ? { ...i, quantity: Math.min(99, quantity) } : i))
     );
   }, []);
 

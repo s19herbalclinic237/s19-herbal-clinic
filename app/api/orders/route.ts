@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/db";
+import { getSessionUser } from "@/lib/auth-server";
 import { Order, type IOrder } from "@/lib/models/Order";
 import { sendOrderConfirmation } from "@/lib/email";
 import { generateOrderReference } from "@/lib/utils";
@@ -7,6 +8,29 @@ import type { CartItem } from "@/lib/cart-context";
 
 const validModes = ["Pickup", "Cameroon Delivery", "Worldwide Delivery"];
 const validPayments = ["MTN Mobile Money", "Orange Money", "Bank Transfer", "Pay on Pickup or Delivery"];
+
+export async function GET() {
+  const user = await getSessionUser();
+  if (!user) {
+    return NextResponse.json({ error: "Sign in to view your orders." }, { status: 401 });
+  }
+
+  const conn = await connectDb();
+  if (!conn) {
+    return NextResponse.json({ error: "Order history is temporarily unavailable." }, { status: 503 });
+  }
+
+  try {
+    const orders = await Order.find({ user: user.id })
+      .sort({ createdAt: -1 })
+      .limit(50)
+      .lean();
+    return NextResponse.json({ orders });
+  } catch (error) {
+    console.error("[orders] list failed:", error);
+    return NextResponse.json({ error: "Could not load your orders." }, { status: 500 });
+  }
+}
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -45,9 +69,19 @@ export async function POST(request: Request) {
   const subtotal = payload.items.reduce((n, i) => n + i.price * i.quantity, 0);
   const fee = Math.max(0, Number(payload.fee) || 0);
 
+  const conn = await connectDb();
+  if (!conn) {
+    return NextResponse.json(
+      { error: "Our ordering service is temporarily unavailable. Please order via WhatsApp." },
+      { status: 503 }
+    );
+  }
+
+  const sessionUser = await getSessionUser();
   const orderReference = generateOrderReference();
   const orderData: Omit<IOrder, "_id" | "createdAt"> = {
     orderReference,
+    user: sessionUser?.id,
     items: payload.items.map((i) => ({
       productSlug: i.slug,
       name: i.name,
@@ -72,14 +106,6 @@ export async function POST(request: Request) {
     payment: { method: payload.payment.method, status: "Unpaid" },
     status: "Pending",
   };
-
-  const conn = await connectDb();
-  if (!conn) {
-    return NextResponse.json(
-      { error: "Our ordering service is temporarily unavailable. Please order via WhatsApp." },
-      { status: 503 }
-    );
-  }
 
   try {
     const order = await Order.create(orderData);

@@ -12,6 +12,7 @@ export interface AuthUser {
   email: string;
   role: "admin" | "user";
   emailVerified: boolean;
+  phone?: string;
   createdAt: string;
 }
 
