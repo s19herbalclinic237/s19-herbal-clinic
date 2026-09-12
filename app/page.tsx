@@ -16,6 +16,8 @@ import {
 import { CLINIC, waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { testimonials } from "@/lib/data/testimonials";
+
+export const revalidate = 60;
 import {
   FaWhatsapp,
   FaGlobe,

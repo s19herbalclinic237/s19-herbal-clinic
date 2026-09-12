@@ -6,6 +6,10 @@ import { OrdersTab } from "@/components/account/orders-tab";
 import { MessagesTab } from "@/components/account/messages-tab";
 import { TestimonialsTab } from "@/components/account/testimonials-tab";
 import { SettingsTab } from "@/components/account/settings-tab";
+import { ProductsTab } from "@/components/admin/products-tab";
+import { AdminOrdersTab } from "@/components/admin/orders-tab";
+import { AdminTestimonialsTab } from "@/components/admin/testimonials-tab";
+import { MessagingTab } from "@/components/admin/messaging-tab";
 import {
   FaBoxOpen,
   FaCheck,
@@ -14,9 +18,22 @@ import {
   FaEnvelope,
   FaGear,
   FaRegCircleXmark,
+  FaShieldHalved,
+  FaTags,
+  FaTruckFast,
+  FaUserGear,
 } from "react-icons/fa6";
 
-type TabId = "overview" | "orders" | "messages" | "testimonials" | "settings";
+type TabId =
+  | "overview"
+  | "orders"
+  | "messages"
+  | "testimonials"
+  | "settings"
+  | "admin-products"
+  | "admin-orders"
+  | "admin-testimonials"
+  | "admin-messaging";
 
 const tabList: { id: TabId; label: string; icon: ReactNode }[] = [
   { id: "overview", label: "Overview", icon: <FaCircleUser className="h-4 w-4" aria-hidden /> },
@@ -24,6 +41,13 @@ const tabList: { id: TabId; label: string; icon: ReactNode }[] = [
   { id: "messages", label: "Messages", icon: <FaEnvelope className="h-4 w-4" aria-hidden /> },
   { id: "testimonials", label: "My Testimonials", icon: <FaCommentDots className="h-4 w-4" aria-hidden /> },
   { id: "settings", label: "Settings", icon: <FaGear className="h-4 w-4" aria-hidden /> },
+];
+
+const adminTabList: { id: TabId; label: string; icon: ReactNode }[] = [
+  { id: "admin-products", label: "Products", icon: <FaTags className="h-4 w-4" aria-hidden /> },
+  { id: "admin-orders", label: "Orders", icon: <FaTruckFast className="h-4 w-4" aria-hidden /> },
+  { id: "admin-testimonials", label: "Testimonials", icon: <FaCommentDots className="h-4 w-4" aria-hidden /> },
+  { id: "admin-messaging", label: "Users & Messages", icon: <FaUserGear className="h-4 w-4" aria-hidden /> },
 ];
 
 function OverviewTab({ onNavigate }: { onNavigate: (tab: TabId) => void }) {
@@ -120,6 +144,7 @@ function OverviewTab({ onNavigate }: { onNavigate: (tab: TabId) => void }) {
 export function DashboardScreen() {
   const { user } = useAuth();
   const [tab, setTab] = useState<TabId>("overview");
+  const isAdmin = user?.role === "admin";
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-8 md:py-12">
@@ -131,12 +156,20 @@ export function DashboardScreen() {
               <h1 className="mt-1 text-2xl text-white">{user?.name || "Welcome"}</h1>
               <p className="mt-0.5 break-all text-sm text-forest-200">{user?.email}</p>
             </div>
-            {user?.emailVerified ? (
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-forest-600 bg-forest-900 px-3 py-1 text-xs font-semibold text-forest-100">
-                <FaCheck className="h-3 w-3 text-gold-400" aria-hidden />
-                Email verified
-              </span>
-            ) : null}
+            <div className="flex flex-wrap gap-2">
+              {isAdmin ? (
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-gold-500/60 bg-gold-500/10 px-3 py-1 text-xs font-semibold text-gold-300">
+                  <FaShieldHalved className="h-3 w-3" aria-hidden />
+                  Clinic admin
+                </span>
+              ) : null}
+              {user?.emailVerified ? (
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-forest-600 bg-forest-900 px-3 py-1 text-xs font-semibold text-forest-100">
+                  <FaCheck className="h-3 w-3 text-gold-400" aria-hidden />
+                  Email verified
+                </span>
+              ) : null}
+            </div>
           </div>
         </div>
 
@@ -157,6 +190,28 @@ export function DashboardScreen() {
                 {t.label}
               </button>
             ))}
+            {isAdmin ? (
+              <>
+                <p className="mt-2 hidden px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-muted md:block md:border-t md:border-line md:pt-3">
+                  Clinic admin
+                </p>
+                {adminTabList.map((t) => (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => setTab(t.id)}
+                    className={
+                      tab === t.id
+                        ? "flex shrink-0 items-center gap-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-forest-800 shadow-sm"
+                        : "flex shrink-0 items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-muted hover:text-ink"
+                    }
+                  >
+                    {t.icon}
+                    {t.label}
+                  </button>
+                ))}
+              </>
+            ) : null}
           </nav>
 
           <div className="min-w-0 flex-1 p-5 md:p-6">
@@ -165,6 +220,10 @@ export function DashboardScreen() {
             {tab === "messages" ? <MessagesTab /> : null}
             {tab === "testimonials" ? <TestimonialsTab /> : null}
             {tab === "settings" ? <SettingsTab /> : null}
+            {isAdmin && tab === "admin-products" ? <ProductsTab /> : null}
+            {isAdmin && tab === "admin-orders" ? <AdminOrdersTab /> : null}
+            {isAdmin && tab === "admin-testimonials" ? <AdminTestimonialsTab /> : null}
+            {isAdmin && tab === "admin-messaging" ? <MessagingTab /> : null}
           </div>
         </div>
       </div>

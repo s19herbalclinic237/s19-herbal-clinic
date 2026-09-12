@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
 import { getCloudinary } from "@/lib/cloudinary";
+import { adminGuard } from "@/lib/admin-guard";
 
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
+  const denied = await adminGuard();
+  if (denied) return denied;
+
   const cloudinary = getCloudinary();
   if (!cloudinary) {
     return NextResponse.json({ error: "Cloudinary is not configured." }, { status: 501 });

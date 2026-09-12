@@ -11,6 +11,8 @@ export const metadata: Metadata = {
     "Browse the S19 Herbal Clinic standardized product catalog - treatment packs, herbal teas, extracts and oils, and wellness essentials. Pickup in Bafoussam and worldwide delivery.",
 };
 
+export const revalidate = 60;
+
 export default async function ShopPage() {
   const [products, categories] = await Promise.all([getProducts(), getCategories()]);
 
