@@ -82,7 +82,7 @@ export default async function ProductPage({ params }: Props) {
             ) : (
               <div className="mt-6 rounded-lg border border-line bg-cream p-5">
                 <p className="text-sm leading-relaxed text-muted">
-                  This package is personalized to your assessment. Contact S19 to discuss your
+                  This package is personalized to your consultation. Contact S19 to discuss your
                   condition and receive your individual protocol and pricing.
                 </p>
                 <a
@@ -130,11 +130,11 @@ export default async function ProductPage({ params }: Props) {
             <p className="text-[15px] leading-relaxed text-forest-100">
               <strong className="text-white">A note on care:</strong> S19 herbal remedies are
               standardized and individually prescribed. For best results and correct dosage,
-              complete a health assessment before starting any program.
+              complete a consultation before starting any program.
             </p>
             <div className="mt-5 flex flex-wrap gap-2">
               <Link href="/contact">
-                <Button variant="gold" size="md">Book a Health Assessment</Button>
+                <Button variant="gold" size="md">Book a Consultation</Button>
               </Link>
               <Link href="/track">
                 <Button variant="glass" size="md">Track an Order</Button>

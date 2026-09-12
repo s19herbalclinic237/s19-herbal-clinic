@@ -35,7 +35,7 @@ const focus = [
   {
     icon: S19_ASSETS.icons.herbalMedicine,
     title: "Clinical Care",
-    desc: "In-clinic health assessments and individualized herbal treatment plans reviewed around your medical history and lab results.",
+    desc: "In-clinic consultations and individualized herbal treatment plans reviewed around your medical history and lab results.",
     href: "/programs",
     label: "Clinical Programs",
   },
@@ -56,7 +56,7 @@ const focus = [
 ];
 
 const bookingSteps = [
-  { n: "01", title: "Assess", text: "Book an assessment - in clinic or remotely." },
+  { n: "01", title: "Book", text: "Book a consultation - in clinic or remotely." },
   { n: "02", title: "Protocol", text: "We tailor a root-cause herbal protocol." },
   { n: "03", title: "Dispatch", text: "Your pack is shipped to your door." },
   { n: "04", title: "Follow-up", text: "Scheduled check-ins on your progress." },
@@ -87,12 +87,12 @@ export default async function HomePage() {
             <p className="mt-7 max-w-xl text-base leading-relaxed text-forest-100/90 md:text-lg">
               Welcome to {CLINIC.brand} in Bafoussam. Our mission is to provide safe, natural and
               effective herbal solutions that support long-term health and wellbeing -
-              science-based assessment, individualized formulations, and Tele-Health, one clinic
+              science-based consultations, individualized formulations, and Tele-Health, one clinic
               with a worldwide reach.
             </p>
             <div className="mt-10 flex flex-wrap items-center gap-3">
               <Link href="/contact" className={buttonLinkClasses("gold", "xl")}>
-                Book Health Assessment
+                Book Consultation
                 <FaArrowRight className="h-4 w-4" aria-hidden />
               </Link>
               <a
@@ -154,7 +154,7 @@ export default async function HomePage() {
               <Kicker>Clinical care focus</Kicker>
               <h2 className="mt-4">Integrative Treatment Programs.</h2>
               <p className="mt-5 text-[15px] leading-relaxed text-muted">
-                Every plan is customized after your individual assessment. Pricing is confirmed per
+                Every plan is customized after your initial consultation. Pricing is confirmed per
                 patient after your evaluation.
               </p>
               <Link href="/programs" className={buttonLinkClasses("primary", "lg", "mt-8")}>
@@ -263,7 +263,7 @@ export default async function HomePage() {
                   Remote consultations &amp; follow-ups, anywhere.
                 </h2>
                 <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-forest-100/90">
-                  Cannot make it to Bafoussam? We run structured online assessments - symptoms,
+                  Cannot make it to Bafoussam? We run structured online consultations - symptoms,
                   medical history, and lab reports - then dispatch your protocol and stay with you
                   through scheduled follow-ups.
                 </p>
@@ -364,10 +364,10 @@ export default async function HomePage() {
             <div>
               <Reveal>
                 <Kicker dark>Direct consultation</Kicker>
-                <h2 className="mt-4 text-white">Book your health assessment.</h2>
+                <h2 className="mt-4 text-white">Book your consultation.</h2>
                 <p className="mt-5 max-w-md text-[15px] leading-relaxed text-forest-200">
                   Fill the form to request a priority in-clinic appointment or a Tele-Health
-                  consultation. Our clinical team confirms your assessment by phone or WhatsApp.
+                  consultation. Our clinical team confirms your booking by phone or WhatsApp.
                 </p>
                 <ul className="mt-8 space-y-4 text-sm text-forest-200">
                   <li className="flex items-start gap-3">

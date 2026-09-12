@@ -15,9 +15,9 @@ import {
 } from "react-icons/fa6";
 
 export const metadata: Metadata = {
-  title: "Contact & Book an Assessment",
+  title: "Contact & Book a Consultation",
   description:
-    "Book a health assessment or Tele-health consultation with S19 Herbal Clinic. Contact us by WhatsApp, phone, or email.",
+    "Book a consultation or Tele-health session with S19 Herbal Clinic. Contact us by WhatsApp, phone, or email.",
 };
 
 const HERO_IMG = S19_ASSETS.photos.cupboardProducts;
@@ -58,8 +58,8 @@ export default function ContactPage() {
     <>
       <PageHero
         eyebrow="Contact & Consultations"
-        title="Book your health assessment."
-        lead="Generate a priority in-clinic appointment or a Tele-Health consultation. A member of our clinical team confirms your assessment by phone or WhatsApp."
+        title="Book your consultation."
+        lead="Generate a priority in-clinic appointment or a Tele-Health consultation. A member of our clinical team confirms your booking by phone or WhatsApp."
         image={HERO_IMG}
         alt="S19 Herbal Clinic remedy shelves and products"
       />
@@ -67,11 +67,11 @@ export default function ContactPage() {
       <Section className="bg-white">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           <Reveal>
-            <Kicker>Assessment form</Kicker>
+            <Kicker>Consultation form</Kicker>
             <h2 className="mt-4">Tell us about your health.</h2>
             <p className="mt-4 max-w-md text-[15px] leading-relaxed text-muted">
               Fill in the form to request a priority appointment or Tele-Health consultation. Our
-              clinical team confirms your assessment by phone or WhatsApp.
+              clinical team confirms your booking by phone or WhatsApp.
             </p>
             <div className="mt-8 flex flex-col gap-3">
               <a

@@ -37,7 +37,7 @@ const FILTERS: { id: StatusFilter; label: string }[] = [
 
 export function AdminTestimonialsTab() {
   const [items, setItems] = useState<AdminTestimonial[] | null>(null);
-  const [filter, setFilter] = useState<StatusFilter>("pending");
+  const [filter, setFilter] = useState<StatusFilter>("all");
   const [error, setError] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -175,7 +175,7 @@ export function AdminTestimonialsTab() {
         <div className="rounded-lg border border-line bg-white p-8 text-center">
           <FaCommentMedical className="mx-auto h-7 w-7 text-forest-300" aria-hidden />
           <p className="mt-3 text-sm text-muted">
-            {filter === "pending" ? "No testimonials awaiting review." : "No testimonials in this list."}
+            {filter === "pending" ? "No testimonials awaiting review." : "No testimonials in this list yet - try another filter or add one."}
           </p>
         </div>
       ) : (

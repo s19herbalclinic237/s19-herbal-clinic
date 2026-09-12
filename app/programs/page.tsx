@@ -18,7 +18,7 @@ export default function ProgramsPage() {
       <PageHero
         eyebrow="Clinical Care Focus"
         title="Integrative Treatment Programs"
-        lead="Each treatment plan is customized according to individual patient evaluation. Pricing is confirmed after your assessment and personalized treatment plan cost."
+        lead="Each treatment plan is customized according to individual patient evaluation. Pricing is confirmed after your consultation and personalized treatment plan cost."
         image={HERO_IMG}
         alt="Healthy green leaves representing herbal treatment programs"
       />
@@ -29,7 +29,7 @@ export default function ProgramsPage() {
             <Kicker>Programs</Kicker>
             <h2 className="mt-3">Choose the program closest to your situation.</h2>
             <p className="mt-4 text-[15px] leading-relaxed text-muted">
-              Start with a health assessment and we will build the right protocol around you.
+              Start with a consultation and we will build the right protocol around you.
             </p>
           </div>
         </Reveal>
@@ -84,7 +84,7 @@ export default function ProgramsPage() {
                     href="/contact"
                     className="inline-flex h-10 items-center gap-1.5 text-sm font-semibold text-forest-800 transition-colors hover:text-forest-900"
                   >
-                    Book an assessment
+                    Book a consultation
                     <FaArrowRight className="h-3 w-3" aria-hidden />
                   </Link>
                 </div>
@@ -100,7 +100,7 @@ export default function ProgramsPage() {
               <div>
                 <h3 className="text-xl font-bold text-white">Not sure where to start?</h3>
                 <p className="mt-2 max-w-xl text-sm leading-relaxed text-forest-200">
-                  Book a general health assessment and we will recommend the right program for you.
+                  Book a general consultation and we will recommend the right program for you.
                   {CLINIC.brand} · {CLINIC.phone}
                 </p>
               </div>
@@ -108,7 +108,7 @@ export default function ProgramsPage() {
                 href="/contact"
                 className="inline-flex h-11 items-center rounded-lg bg-gold-500 px-5 text-sm font-bold text-forest-950 transition-colors hover:bg-gold-400"
               >
-                Book a Health Assessment
+                Book a Consultation
               </Link>
             </div>
           </div>

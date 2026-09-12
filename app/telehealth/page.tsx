@@ -53,7 +53,7 @@ export default function TelehealthPage() {
         <Reveal>
           <div className="mx-auto max-w-2xl text-center">
             <Kicker center>How remote care works</Kicker>
-            <h2 className="mt-4">From assessment to follow-up, wherever you are.</h2>
+            <h2 className="mt-4">From consultation to follow-up, wherever you are.</h2>
           </div>
         </Reveal>
         <div className="mx-auto mt-12 max-w-3xl">

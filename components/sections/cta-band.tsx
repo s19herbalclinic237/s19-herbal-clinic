@@ -22,9 +22,9 @@ export function WhatsAppFloat() {
 }
 
 export function CTABand({
-  title = "Start your health assessment",
+  title = "Start your consultation",
   text = "Book a priority in-clinic appointment or a Tele-health consultation with the S19 clinic today.",
-  primaryLabel = "Book an Assessment",
+  primaryLabel = "Book a Consultation",
   primaryHref = "/contact",
   secondaryLabel = "WhatsApp: +237 672 595 989",
 }: {

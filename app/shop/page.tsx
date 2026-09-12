@@ -32,7 +32,7 @@ export default async function ShopPage() {
           <a href={waLink("Hello S19, I want to inquire about your herbal products catalog.")} target="_blank" rel="noopener noreferrer" className="font-semibold text-forest-700 hover:text-forest-800">
             Order direct via WhatsApp
           </a>
-          . Personalized treatment packs and programs are priced after your health assessment.
+          . Personalized treatment packs and programs are priced after your consultation.
         </div>
       </div>
     </>

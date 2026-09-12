@@ -523,7 +523,7 @@ export default function AboutPage() {
 
       <CTABand
         title="Ready for a root-cause approach to your health?"
-        text="Book an in-clinic assessment at our Bafoussam headquarters or a remote Tele-health consultation. Investigate, understand, then treat - never blindly."
+        text="Book an in-clinic consultation at our Bafoussam headquarters, or a remote Tele-health session. Investigate, understand, then treat - never blindly."
       />
     </>
   );

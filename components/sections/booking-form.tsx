@@ -15,7 +15,7 @@ const concerns = [
   "Gastritis / Digestion / Hemorrhoids",
   "Liver / Kidney Detox",
   "Integrative Cancer Care",
-  "General Health Assessment",
+  "General Health Consultation",
 ];
 
 export function BookingForm() {
@@ -66,7 +66,7 @@ export function BookingForm() {
         </p>
         <a
           href={waLink(
-            `Hello S19 Herbal Clinic, I just submitted a health assessment request${
+            `Hello S19 Herbal Clinic, I just submitted a consultation request${
               form.concern ? ` regarding ${form.concern}` : ""
             }. Name: ${form.fullName}.`
           )}

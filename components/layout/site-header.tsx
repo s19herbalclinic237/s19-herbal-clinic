@@ -147,7 +147,7 @@ export function SiteHeader() {
             <FaRegUser className="h-4 w-4" aria-hidden />
           </Link>
           <Link href="/contact" className={cn(buttonLinkClasses("primary", "sm"), "hidden sm:inline-flex")}>
-            Book Assessment
+            Book Consultation
           </Link>
           <button
             type="button"
@@ -177,7 +177,7 @@ export function SiteHeader() {
               </Link>
             ))}
             <Link href="/contact" onClick={() => setOpen(false)} className={cn(buttonLinkClasses("primary", "md"), "mt-3")}>
-              Book Assessment
+              Book Consultation
             </Link>
             <Link href="/account" onClick={() => setOpen(false)} className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-forest-800">
               <FaRegUser className="h-4 w-4" aria-hidden />
