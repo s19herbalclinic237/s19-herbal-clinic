@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint .",
     "seed": "tsx scripts/seed.ts",
+    "seed:testimonials": "tsx scripts/seed-testimonials.ts",
     "create-admin": "tsx scripts/create-admin.ts"
   },
   "dependencies": {

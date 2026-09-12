@@ -7,6 +7,7 @@ import { BookingForm } from "@/components/sections/booking-form";
 import { CTABand } from "@/components/sections/cta-band";
 import { Reveal } from "@/components/ui/motion";
 import { getFeaturedProducts } from "@/lib/catalog";
+import { getApprovedTestimonials } from "@/lib/testimonials";
 import {
   treatmentPrograms,
   clinicalPrinciples,
@@ -15,7 +16,6 @@ import {
 } from "@/lib/data/programs";
 import { CLINIC, waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
-import { testimonials } from "@/lib/data/testimonials";
 
 export const revalidate = 60;
 import {
@@ -64,6 +64,7 @@ const bookingSteps = [
 
 export default async function HomePage() {
   const featured = await getFeaturedProducts();
+  const testimonials = await getApprovedTestimonials();
 
   return (
     <>
