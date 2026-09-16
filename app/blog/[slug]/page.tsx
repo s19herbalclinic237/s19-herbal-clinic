@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container, Section } from "@/components/ui/container";
-import { formatDate } from "@/components/account/badges";
+import { formatDate } from "@/lib/format-date";
+import { ArticleBody, readingTime } from "@/components/blog/article-body";
 import { NewsletterForm } from "@/components/blog/newsletter-form";
-import { FaArrowLeft, FaRegNewspaper, FaUserPen } from "react-icons/fa6";
+import { FaArrowLeft, FaClock, FaRegNewspaper, FaUserPen } from "react-icons/fa6";
 
 export const revalidate = 60;
 
@@ -81,10 +82,17 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               {post.publishedAt ? formatDate(post.publishedAt) : ""} · S19 Health Blog
             </p>
             <h1 className="mt-3 font-display text-3xl font-bold leading-tight text-ink sm:text-4xl">{post.title}</h1>
-            <p className="mt-4 flex items-center gap-2 text-sm text-muted">
-              <FaUserPen className="h-4 w-4 text-forest-400" aria-hidden />
-              By {post.author}
-            </p>
+            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted">
+              <p className="flex items-center gap-2">
+                <FaUserPen className="h-4 w-4 text-forest-400" aria-hidden />
+                By {post.author}
+              </p>
+              <span className="hidden h-4 w-px bg-line-strong sm:block" aria-hidden />
+              <p className="flex items-center gap-2">
+                <FaClock className="h-3.5 w-3.5 text-forest-400" aria-hidden />
+                {readingTime(post.body)} min read
+              </p>
+            </div>
 
             {post.cover ? (
               <div className="mt-8 overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
@@ -92,7 +100,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               </div>
             ) : null}
 
-            <div className="mt-8 whitespace-pre-line font-body text-[15px] leading-7 text-ink/90">{post.body}</div>
+            <div className="mt-8">
+              <ArticleBody body={post.body} />
+            </div>
           </article>
 
           <div className="mt-12 rounded-xl border border-forest-200 bg-forest-50/60 p-6 sm:p-8">

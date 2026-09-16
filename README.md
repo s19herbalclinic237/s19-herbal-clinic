@@ -42,3 +42,4 @@ Patient portal / staff dashboard (auth + role-based portal) is a separate phase 
 - `npm run dev` / `npm run build` / `npm start`
 - `npm run lint` - ESLint
 - `npm run seed` - seed MongoDB from `lib/data/products.ts`
+- `npm run seed:blog` - seed blog posts from `lib/data/blog-posts.ts`
