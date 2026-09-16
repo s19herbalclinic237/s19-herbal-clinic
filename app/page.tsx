@@ -64,7 +64,7 @@ const bookingSteps = [
 
 export default async function HomePage() {
   const featured = await getFeaturedProducts();
-  const testimonials = await getApprovedTestimonials();
+  const testimonials = await getApprovedTestimonials(12);
 
   return (
     <>
@@ -317,7 +317,7 @@ export default async function HomePage() {
         </div>
       </Section>
 
-      {/* TESTIMONIALS */}
+      {/* TESTIMONIALS - marquee */}
       <Section>
         <Reveal>
           <div className="mx-auto max-w-2xl text-center">
@@ -325,34 +325,48 @@ export default async function HomePage() {
             <h2 className="mt-4">Care that people talk about.</h2>
           </div>
         </Reveal>
-        <div className="mt-12 grid gap-5 md:grid-cols-3">
-          {testimonials.slice(0, 6).map((t, i) => (
-            <Reveal key={t.name} delay={i * 0.08}>
-              <figure className="flex h-full flex-col rounded-lg border border-line bg-white p-7 shadow-card transition-shadow hover:shadow-lift">
-                <div className="flex items-center gap-1 text-gold-500">
-                  {Array.from({ length: 5 }).map((_, j) => (
-                    <FaStar key={j} className="h-3.5 w-3.5" aria-hidden />
+        <Reveal className="mt-12">
+          <div className="relative overflow-hidden">
+            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-cream to-transparent sm:w-24" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-cream to-transparent sm:w-24" />
+            <div
+              className="marquee-track flex w-max animate-marquee hover:[animation-play-state:paused]"
+              style={{ animationDuration: "60s" }}
+            >
+              {[0, 1].map((copy) => (
+                <div key={copy} className="flex shrink-0" aria-hidden={copy === 1}>
+                  {testimonials.map((t) => (
+                    <figure
+                      key={`${copy}-${t.name}`}
+                      className="mx-2.5 flex h-full w-[300px] flex-col rounded-lg border border-line bg-white p-7 shadow-card transition-shadow hover:shadow-lift sm:w-[340px]"
+                    >
+                      <div className="flex items-center gap-1 text-gold-500">
+                        {Array.from({ length: 5 }).map((_, j) => (
+                          <FaStar key={j} className="h-3.5 w-3.5" aria-hidden />
+                        ))}
+                      </div>
+                      <blockquote className="mt-4 flex-1 text-[15px] leading-relaxed text-ink/80">
+                        &ldquo;{t.text}&rdquo;
+                      </blockquote>
+                      <figcaption className="mt-6 border-t border-line pt-4 text-sm">
+                        <span className="font-bold text-ink">{t.name}</span>
+                        <span className="mx-1.5 text-muted">·</span>
+                        <span className="text-muted">{t.city}</span>
+                        {t.country ? (
+                          <>
+                            <span className="mx-1.5 text-muted">·</span>
+                            <span className="text-forest-600">{t.country}</span>
+                          </>
+                        ) : null}
+                        <span className="mt-1 block text-xs font-medium italic text-muted">{t.program}</span>
+                      </figcaption>
+                    </figure>
                   ))}
                 </div>
-                <blockquote className="mt-4 flex-1 text-[15px] leading-relaxed text-ink/80">
-                  &ldquo;{t.text}&rdquo;
-                </blockquote>
-                <figcaption className="mt-6 border-t border-line pt-4 text-sm">
-                  <span className="font-bold text-ink">{t.name}</span>
-                  <span className="mx-1.5 text-muted">·</span>
-                  <span className="text-muted">{t.city}</span>
-                  {t.country ? (
-                    <>
-                      <span className="mx-1.5 text-muted">·</span>
-                      <span className="text-forest-600">{t.country}</span>
-                    </>
-                  ) : null}
-                  <span className="mt-1 block text-xs font-medium italic text-muted">{t.program}</span>
-                </figcaption>
-              </figure>
-            </Reveal>
-          ))}
-        </div>
+              ))}
+            </div>
+          </div>
+        </Reveal>
       </Section>
 
       {/* BOOKING */}
