@@ -1,5 +1,6 @@
 import { Container } from "@/components/ui/container";
 import { Kicker } from "@/components/ui/heading";
+import { BlurIn } from "@/components/ui/motion";
 
 export function PageHero({
   eyebrow,
@@ -32,12 +33,14 @@ export function PageHero({
       <Container
         className={`relative z-10 w-full ${compact ? "py-14 md:py-20" : "py-20 md:py-28"}`}
       >
-        {eyebrow ? <Kicker dark>{eyebrow}</Kicker> : null}
-        <h1 className="mt-5 max-w-3xl text-balance text-white drop-shadow-sm">{title}</h1>
-        {lead ? (
-          <p className="mt-6 max-w-2xl text-base text-forest-100/90 md:text-lg">{lead}</p>
-        ) : null}
-        {children ? <div className="mt-9">{children}</div> : null}
+        <BlurIn>
+          {eyebrow ? <Kicker dark>{eyebrow}</Kicker> : null}
+          <h1 className="mt-5 max-w-3xl text-balance text-white drop-shadow-sm">{title}</h1>
+          {lead ? (
+            <p className="mt-6 max-w-2xl text-base text-forest-100/90 md:text-lg">{lead}</p>
+          ) : null}
+          {children ? <div className="mt-9">{children}</div> : null}
+        </BlurIn>
       </Container>
     </section>
   );

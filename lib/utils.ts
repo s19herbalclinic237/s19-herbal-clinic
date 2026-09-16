@@ -10,6 +10,26 @@ export function formatFcfa(value: number): string {
   return `${new Intl.NumberFormat("fr-FR").format(Math.round(value))} ${CLINIC.currency}`;
 }
 
+export const EXCHANGE = {
+  fcfaPerUsd: 600,
+  nairaPerFcfa: 2.5,
+};
+
+export function formatUsd(fcfa: number): string {
+  if (fcfa <= 0) return "";
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+  }).format(fcfa / EXCHANGE.fcfaPerUsd);
+}
+
+export function formatNaira(fcfa: number): string {
+  if (fcfa <= 0) return "";
+  return `₦${new Intl.NumberFormat("en-NG").format(fcfa * EXCHANGE.nairaPerFcfa)}`;
+}
+
 export function formatPrice(price: number, unit?: string): string {
   if (price <= 0) return "Contact S19 for pricing";
   const base = formatFcfa(price);

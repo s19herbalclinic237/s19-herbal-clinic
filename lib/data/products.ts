@@ -46,7 +46,7 @@ export const seedProducts: SiteProduct[] = [
       "A natural oral-care powder for daily brushing. It cleanses the mouth, freshens breath, whitens teeth, supports healthy gums, and helps prevent cavities - a gentle alternative to abrasive commercial toothpastes.",
     usage: "Apply a little to a damp brush and brush as usual, twice daily.",
     image: productImage("S19 Oral Miracle.png"),
-    featured: true,
+    featured: false,
     stock: 80,
   },
   {
@@ -152,7 +152,7 @@ export const seedProducts: SiteProduct[] = [
       "Supports prostate and kidney health, including men's wellness needs related to prostate enlargement (BPH) and prostatitis. A pleasant standardized tea for daily use.",
     usage: "Steep one sachet in hot water for 10 minutes. Drink 1-2 cups daily, morning and evening.",
     image: productImage("S19 Prostate Tea.png"),
-    featured: true,
+    featured: false,
     stock: 100,
   },
   {
@@ -169,7 +169,7 @@ export const seedProducts: SiteProduct[] = [
       "Personalized herbal, nutrition, and lifestyle support for blood-sugar management. Each package is built around your individual assessment, lab results, and treatment goals. Contact S19 for more information and personalized pricing.",
     usage: "A personalized program is designed after your health assessment.",
     image: productImage("S19 Diabetes Support Package.png"),
-    featured: true,
+    featured: false,
     stock: 0,
   },
   {
@@ -221,7 +221,7 @@ export const seedProducts: SiteProduct[] = [
       "Supports women's reproductive health and may help improve fertility. 500 mL bottle for sustained daily use as part of a reproductive wellness plan.",
     usage: "Take as recommended during your consultation.",
     image: productImage("S19 Feminine Fertility Booster.png"),
-    featured: true,
+    featured: false,
     stock: 50,
   },
   {
@@ -240,7 +240,7 @@ export const seedProducts: SiteProduct[] = [
     usage: "One teaspoon daily, directly or with food or warm water.",
     ingredients: "100% cold-pressed Nigella Sativa (black seed) oil.",
     image: productImage("S19 Black Seed Oil (BSO).png"),
-    featured: true,
+    featured: false,
     stock: 60,
   },
   {
@@ -258,7 +258,7 @@ export const seedProducts: SiteProduct[] = [
     usage: "Apply a small amount to skin or hair as needed.",
     ingredients: "100% pure shea butter.",
     image: productImage("S19 Shea Butter (Beurre de Karité).png"),
-    featured: false,
+    featured: true,
     stock: 70,
   },
   {
@@ -292,7 +292,7 @@ export const seedProducts: SiteProduct[] = [
       "A 100% natural herbal digestive tonic to enjoy before or after meals for comfortable digestion. Also supports natural body cleansing, kidney and liver health, memory, healthy blood-sugar control, and hair growth.",
     usage: "One small glass before or after meals. Not for people avoiding alcohol.",
     image: productImage("S19 Herbal Wine Reserve.png"),
-    featured: false,
+    featured: true,
     stock: 60,
   },
   {

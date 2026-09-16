@@ -1,16 +1,5 @@
-import type { Metadata } from "next";
-import { Suspense } from "react";
-import { ResetPasswordForm } from "@/components/auth/reset-password-form";
-
-export const metadata: Metadata = {
-  title: "Reset password",
-  description: "Choose a new password for your S19 Herbal Clinic account.",
-};
+import { redirect } from "next/navigation";
 
 export default function ResetPasswordPage() {
-  return (
-    <Suspense fallback={null}>
-      <ResetPasswordForm />
-    </Suspense>
-  );
+  redirect("/account");
 }

@@ -2,7 +2,7 @@
 import { Kicker } from "@/components/ui/heading";
 import { PageHero } from "@/components/ui/page-hero";
 import { CTABand } from "@/components/sections/cta-band";
-import { Reveal } from "@/components/ui/motion";
+import { Reveal, RevealLeft, StaggerGroup, StaggerItem } from "@/components/ui/motion";
 import { buttonLinkClasses } from "@/components/ui/button";
 import { treatmentPrograms } from "@/lib/data/programs";
 import { CLINIC, waLink } from "@/lib/site";
@@ -24,7 +24,7 @@ export default function ProgramsPage() {
       />
 
       <Section>
-        <Reveal>
+        <RevealLeft>
           <div className="max-w-2xl">
             <Kicker>Programs</Kicker>
             <h2 className="mt-3">Choose the program closest to your situation.</h2>
@@ -32,11 +32,11 @@ export default function ProgramsPage() {
               Start with a consultation and we will build the right protocol around you.
             </p>
           </div>
-        </Reveal>
+        </RevealLeft>
 
-        <div className="mt-12 grid gap-5 lg:grid-cols-2">
+        <StaggerGroup className="mt-12 grid gap-5 lg:grid-cols-2">
           {treatmentPrograms.map((p, i) => (
-            <Reveal key={p.slug} delay={(i % 2) * 0.06}>
+            <StaggerItem key={p.slug}>
               <article
                 id={p.slug}
                 className="group flex h-full scroll-mt-28 flex-col rounded-lg border border-line bg-white p-7 shadow-card transition-all hover:border-forest-300 hover:shadow-lift md:p-9"
@@ -89,9 +89,9 @@ export default function ProgramsPage() {
                   </Link>
                 </div>
               </article>
-            </Reveal>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerGroup>
 
         <Reveal delay={0.1}>
           <div className="relative mt-12 overflow-hidden rounded-lg bg-forest-950 p-8 md:p-10">

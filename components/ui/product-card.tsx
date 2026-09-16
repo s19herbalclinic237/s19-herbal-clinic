@@ -3,7 +3,8 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/heading";
 import { buttonLinkClasses } from "@/components/ui/button";
 import type { SiteProduct } from "@/lib/site";
-import { formatPrice, waLink } from "@/lib/utils";
+import { waLink } from "@/lib/utils";
+import { MultiCurrencyPrice } from "@/components/ui/price";
 import { FaBagShopping } from "react-icons/fa6";
 
 export function ProductCard({ product }: { product: SiteProduct }) {
@@ -29,8 +30,8 @@ export function ProductCard({ product }: { product: SiteProduct }) {
           </Link>
         </h3>
         <p className="text-sm text-muted">{product.shortDescription}</p>
-        <div className="mt-auto flex items-center justify-between gap-2 pt-3">
-          <span className="text-sm font-bold text-forest-800">{formatPrice(product.price, product.unit)}</span>
+        <div className="mt-auto flex items-start justify-between gap-2 pt-3">
+          <MultiCurrencyPrice price={product.price} unit={product.unit} size="sm" />
           <Link href={`/shop/${product.slug}`} className={buttonLinkClasses("secondary", "sm")}>
             <FaBagShopping className="h-3 w-3" aria-hidden />
             View

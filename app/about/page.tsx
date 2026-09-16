@@ -2,7 +2,7 @@ import { Container, Section } from "@/components/ui/container";
 import { Kicker } from "@/components/ui/heading";
 import { CTABand } from "@/components/sections/cta-band";
 import { PageHero } from "@/components/ui/page-hero";
-import { Reveal } from "@/components/ui/motion";
+import { Reveal, RevealLeft, RevealRight, ScaleIn } from "@/components/ui/motion";
 import { buttonLinkClasses } from "@/components/ui/button";
 import OrbitImages from "@/components/ui/orbit-images";
 import { coreStrengths } from "@/lib/data/programs";
@@ -88,7 +88,7 @@ export default function AboutPage() {
       {/* THE S19 PHILOSOPHY */}
       <Section>
         <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
-          <Reveal>
+          <RevealLeft>
             <Kicker>The S19 philosophy</Kicker>
             <p className="mt-4 font-display text-2xl font-semibold leading-snug text-ink">
               {philosophyQuote}
@@ -111,9 +111,9 @@ export default function AboutPage() {
               Explore treatment programs
               <FaArrowRight className="h-3.5 w-3.5" aria-hidden />
             </Link>
-          </Reveal>
+          </RevealLeft>
 
-          <Reveal delay={0.1}>
+          <RevealRight delay={0.1}>
             <div className="rounded-lg border border-line bg-white p-6 shadow-card md:p-8">
               <h3 className="flex items-center gap-2.5 text-lg font-bold text-ink">
                 <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-forest-800 text-gold-400">
@@ -130,7 +130,7 @@ export default function AboutPage() {
                 ))}
               </ul>
             </div>
-          </Reveal>
+          </RevealRight>
         </div>
       </Section>
 
@@ -456,7 +456,7 @@ export default function AboutPage() {
         </Reveal>
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {differentiators.map((d, i) => (
-            <Reveal key={d.title} delay={i * 0.05}>
+            <ScaleIn key={d.title} delay={i * 0.05}>
               <div className="group h-full rounded-lg border border-line bg-white p-6 transition-all hover:border-forest-300 hover:shadow-lift">
                 <div className="flex h-10 w-10 items-center justify-center rounded-md border border-gold-300 bg-gold-50 text-forest-800 transition-transform group-hover:scale-110">
                   <FaRegCircleCheck className="h-4 w-4" aria-hidden />
@@ -464,7 +464,7 @@ export default function AboutPage() {
                 <h3 className="mt-4 text-base font-bold text-ink">{d.title}</h3>
                 <p className="mt-1.5 text-sm leading-relaxed text-muted">{d.text}</p>
               </div>
-            </Reveal>
+            </ScaleIn>
           ))}
         </div>
       </Section>

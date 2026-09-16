@@ -7,7 +7,8 @@ import { Badge } from "@/components/ui/heading";
 import { AddToCart } from "@/components/shop/add-to-cart";
 import { Button } from "@/components/ui/button";
 import { getProductBySlug, getProducts } from "@/lib/catalog";
-import { formatPrice, waLink } from "@/lib/utils";
+import { formatFcfa, formatNaira, formatUsd, waLink } from "@/lib/utils";
+import { MultiCurrencyPrice } from "@/components/ui/price";
 import { FaChevronRight, FaLeaf, FaRegCircleCheck, FaWhatsapp } from "react-icons/fa6";
 
 interface Props {
@@ -74,7 +75,7 @@ export default async function ProductPage({ params }: Props) {
               </span>
             </div>
             <h1 className="mt-3 text-3xl">{product.name}</h1>
-            <p className="mt-3 text-lg font-bold text-forest-800">{formatPrice(product.price, product.unit)}</p>
+            <MultiCurrencyPrice price={product.price} unit={product.unit} size="lg" className="mt-3" />
             <p className="mt-4 text-muted">{product.description}</p>
 
             {product.price > 0 ? (
@@ -165,7 +166,9 @@ export default async function ProductPage({ params }: Props) {
                     />
                   </div>
                   <p className="mt-3 text-sm font-semibold leading-snug">{p.name}</p>
-                  <p className="mt-0.5 text-xs font-semibold text-forest-700">{formatPrice(p.price, p.unit)}</p>
+                  <p className="mt-0.5 text-xs font-semibold text-forest-700">
+                    {p.price > 0 ? `${formatFcfa(p.price)} · ${formatUsd(p.price)} · ${formatNaira(p.price)}` : "Contact S19 for pricing"}
+                  </p>
                 </Link>
               ))}
             </div>

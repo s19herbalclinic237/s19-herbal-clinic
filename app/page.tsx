@@ -5,8 +5,8 @@ import { buttonLinkClasses } from "@/components/ui/button";
 import { ProductCard } from "@/components/ui/product-card";
 import { BookingForm } from "@/components/sections/booking-form";
 import { CTABand } from "@/components/sections/cta-band";
-import { Reveal } from "@/components/ui/motion";
-import { getFeaturedProducts } from "@/lib/catalog";
+import { BlurIn, Reveal, RevealLeft, RevealRight, ScaleIn, StaggerGroup, StaggerItem } from "@/components/ui/motion";
+import { getProducts } from "@/lib/catalog";
 import { getApprovedTestimonials } from "@/lib/testimonials";
 import {
   treatmentPrograms,
@@ -62,8 +62,13 @@ const bookingSteps = [
   { n: "04", title: "Follow-up", text: "Scheduled check-ins on your progress." },
 ];
 
+const FEATURED_SLUGS = ["s19-herbal-wine-reserve", "s19-shea-butter", "s19-malaria-typhoid-combo"];
+
 export default async function HomePage() {
-  const featured = await getFeaturedProducts();
+  const products = await getProducts();
+  const featured = FEATURED_SLUGS
+    .map((slug) => products.find((p) => p.slug === slug))
+    .filter((p): p is NonNullable<typeof p> => typeof p !== "undefined");
   const testimonials = await getApprovedTestimonials(12);
 
   return (
@@ -79,7 +84,7 @@ export default async function HomePage() {
         <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-forest-950/90 via-transparent to-transparent" />
 
 <Container className="relative z-10 w-full py-24 md:py-32">
-          <Reveal>
+          <BlurIn>
             <h1 className="mt-6 max-w-3xl text-balance text-white drop-shadow-sm">
               Natural healing,
               <span className="block text-gold-400">lasting wellness.</span>
@@ -105,13 +110,13 @@ export default async function HomePage() {
                 WhatsApp the Clinic
               </a>
             </div>
-          </Reveal>
+          </BlurIn>
         </Container>
       </section>
 
       {/* CORE FOCUS */}
       <Section className="bg-white">
-        <Reveal>
+        <ScaleIn>
           <div className="mx-auto max-w-2xl text-center">
             <Kicker center>What we offer</Kicker>
             <h2 className="mt-4">Three ways to care.</h2>
@@ -120,10 +125,10 @@ export default async function HomePage() {
               standardized herbal catalog delivered to your door.
             </p>
           </div>
-        </Reveal>
-        <div className="mt-12 grid gap-5 md:grid-cols-3">
-          {focus.map((f, i) => (
-            <Reveal key={f.title} delay={i * 0.08}>
+        </ScaleIn>
+        <StaggerGroup className="mt-12 grid gap-5 md:grid-cols-3">
+          {focus.map((f) => (
+            <StaggerItem key={f.title}>
               <Link
                 href={f.href}
                 className="group relative block h-full overflow-hidden rounded-lg border border-line bg-cream p-8 transition-all hover:border-forest-300 hover:shadow-lift"
@@ -141,16 +146,16 @@ export default async function HomePage() {
                   </span>
                 </div>
               </Link>
-            </Reveal>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerGroup>
       </Section>
 
       {/* TREATMENT PROGRAMS */}
       <Section>
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="lg:sticky lg:top-28 lg:col-span-5 lg:self-start">
-            <Reveal>
+            <RevealLeft>
               <Kicker>Clinical care focus</Kicker>
               <h2 className="mt-4">Integrative Treatment Programs.</h2>
               <p className="mt-5 text-[15px] leading-relaxed text-muted">
@@ -161,24 +166,26 @@ export default async function HomePage() {
                 View all programs
                 <FaArrowRight className="h-3.5 w-3.5" aria-hidden />
               </Link>
-            </Reveal>
+            </RevealLeft>
           </div>
           <div className="lg:col-span-7">
-            {treatmentPrograms.slice(0, 6).map((p, i) => (
-              <div key={p.slug} className="group border-b border-line">
-                <Link href={`/programs#${p.slug}`} className="flex items-start gap-5 py-6 transition-colors">
-                  <span className="font-display text-3xl font-semibold text-forest-200 transition-colors group-hover:text-gold-500">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <div className="flex-1">
-                    <h3 className="text-lg font-bold text-ink transition-colors group-hover:text-forest-800">
-                      {p.title}
-                    </h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-muted">{p.short}</p>
-                  </div>
-                  <FaArrowRight className="mt-2 h-4 w-4 shrink-0 text-forest-400 transition-transform group-hover:translate-x-1 group-hover:text-forest-700" aria-hidden />
-                </Link>
-              </div>
+            {treatmentPrograms.slice(0, 3).map((p, i) => (
+              <ScaleIn key={p.slug} delay={i * 0.08}>
+                <div className="group border-b border-line">
+                  <Link href={`/programs#${p.slug}`} className="flex items-start gap-5 py-6 transition-colors">
+                    <span className="font-display text-3xl font-semibold text-forest-200 transition-colors group-hover:text-gold-500">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold text-ink transition-colors group-hover:text-forest-800">
+                        {p.title}
+                      </h3>
+                      <p className="mt-1.5 text-sm leading-relaxed text-muted">{p.short}</p>
+                    </div>
+                    <FaArrowRight className="mt-2 h-4 w-4 shrink-0 text-forest-400 transition-transform group-hover:translate-x-1 group-hover:text-forest-700" aria-hidden />
+                  </Link>
+                </div>
+              </ScaleIn>
             ))}
           </div>
         </div>
@@ -187,14 +194,14 @@ export default async function HomePage() {
       {/* PRINCIPLES - editorial split */}
       <Section className="bg-white">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          <Reveal className="order-2 lg:order-1">
+          <RevealLeft className="order-2 lg:order-1">
             <div className="relative overflow-hidden rounded-lg shadow-lift">
               <img src={STORY_IMG} alt="The S19 Herbal Clinic care environment" className="h-[420px] w-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-forest-950/40 to-transparent" />
             </div>
-          </Reveal>
+          </RevealLeft>
           <div className="order-1 lg:order-2">
-            <Reveal>
+            <RevealRight>
               <Kicker>Why S19</Kicker>
               <h2 className="mt-4">Built on review, reason, and follow-through.</h2>
               <p className="mt-5 text-[15px] leading-relaxed text-muted">
@@ -215,7 +222,7 @@ export default async function HomePage() {
                   </div>
                 ))}
               </div>
-            </Reveal>
+            </RevealRight>
           </div>
         </div>
       </Section>
@@ -235,14 +242,16 @@ export default async function HomePage() {
             View full catalog
           </Link>
         </div>
-        <div className="mt-10 grid grid-cols-2 gap-4 lg:grid-cols-4">
-          {featured.slice(0, 8).map((p) => (
-            <ProductCard key={p.id} product={p} />
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {featured.slice(0, 3).map((p, i) => (
+            <ScaleIn key={p.id} delay={i * 0.08}>
+              <ProductCard product={p} />
+            </ScaleIn>
           ))}
         </div>
         <p className="mt-6 text-sm text-muted">
-          Also available in clinic: S19 Malaria &amp; Typhoid Tea, Activated Charcoal, Toothpaste
-          Powder, Castor Oil, Weight-loss Tea, and Herbal Wine.
+          Also available in clinic: Malaria &amp; Typhoid Tea, Activated Charcoal, Oral Powder,
+          Castor Oil, and Weight-loss Tea.
         </p>
       </Section>
 
@@ -278,9 +287,9 @@ export default async function HomePage() {
                 </a>
               </Reveal>
             </div>
-            <div className="space-y-0 lg:col-span-6">
-              {telehealthSteps.map((t, i) => (
-                <Reveal key={t.step} delay={i * 0.08}>
+            <StaggerGroup className="space-y-0 lg:col-span-6">
+              {telehealthSteps.map((t) => (
+                <StaggerItem key={t.step}>
                   <div className="flex items-start gap-5 border-b border-white/15 py-6 first:pt-0 last:border-0">
                     <span className="font-display text-4xl font-semibold text-gold-400">{t.step}</span>
                     <div>
@@ -288,9 +297,9 @@ export default async function HomePage() {
                       <p className="mt-1 text-sm leading-relaxed text-forest-100/85">{t.text}</p>
                     </div>
                   </div>
-                </Reveal>
+                </StaggerItem>
               ))}
-            </div>
+            </StaggerGroup>
           </div>
         </Container>
       </section>
@@ -306,15 +315,15 @@ export default async function HomePage() {
             <h2 className="mt-4">Four steps, start to follow-up.</h2>
           </div>
         </Reveal>
-        <div className="mt-12 grid gap-px overflow-hidden rounded-lg border border-line bg-cream sm:grid-cols-2 lg:grid-cols-4">
+        <StaggerGroup className="mt-12 grid gap-px overflow-hidden rounded-lg border border-line bg-cream sm:grid-cols-2 lg:grid-cols-4">
           {bookingSteps.map((s) => (
-            <div key={s.n} className="relative bg-white p-7">
+            <StaggerItem key={s.n} className="relative bg-white p-7">
               <span className="font-display text-4xl font-semibold text-forest-200">{s.n}</span>
               <h3 className="mt-3 text-lg font-bold text-ink">{s.title}</h3>
               <p className="mt-1.5 text-sm leading-relaxed text-muted">{s.text}</p>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerGroup>
       </Section>
 
       {/* TESTIMONIALS - marquee */}
@@ -439,7 +448,7 @@ export default async function HomePage() {
                 lines: ["Cameroon: Douala, Yaoundé, Bamenda, Buea", "International: worldwide express"],
               },
             ].map((c, i) => (
-              <Reveal key={c.title} delay={i * 0.08}>
+              <ScaleIn key={c.title} delay={i * 0.08}>
                 <div className="h-full rounded-lg border border-white/20 bg-white/10 p-7 backdrop-blur-sm">
                   <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-white/25 bg-white/10">
                     {c.icon}
@@ -451,7 +460,7 @@ export default async function HomePage() {
                     </p>
                   ))}
                 </div>
-              </Reveal>
+              </ScaleIn>
             ))}
           </div>
           <Reveal delay={0.15}>

@@ -1,12 +1,20 @@
 import type { Metadata } from "next";
-import { AccountScreen } from "@/components/auth/account-screen";
+import { ComingSoon } from "@/components/auth/coming-soon";
+import { CTABand } from "@/components/sections/cta-band";
 
 export const metadata: Metadata = {
   title: "Your account",
   description:
-    "Sign in to your S19 Herbal Clinic account to track orders, manage testimonials, read messages, and receive updates.",
+    "The S19 Herbal Clinic patient portal is coming soon. Track orders, manage testimonials, and receive clinic messages in one place.",
 };
 
 export default function AccountPage() {
-  return <AccountScreen />;
+  return (
+    <>
+      <ComingSoon />
+      <div className="border-t border-line bg-white">
+        <CTABand />
+      </div>
+    </>
+  );
 }

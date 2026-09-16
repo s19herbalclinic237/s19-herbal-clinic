@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { ProductCard } from "@/components/ui/product-card";
 import { Input } from "@/components/ui/form";
+import { StaggerGroup, StaggerItem } from "@/components/ui/motion";
 import type { SiteProduct, SiteCategory } from "@/lib/site";
 import { FaMagnifyingGlass, FaFilter } from "react-icons/fa6";
 
@@ -99,11 +100,13 @@ export function ShopClient({
             No products match your search. Try a different term or category.
           </div>
         ) : (
-          <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <StaggerGroup className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
             {filtered.map((p) => (
-              <ProductCard key={p.id} product={p} />
+              <StaggerItem key={p.id}>
+                <ProductCard product={p} />
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerGroup>
         )}
       </div>
     </div>
