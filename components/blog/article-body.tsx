@@ -68,7 +68,7 @@ export function readingTime(body: string): number {
   return Math.max(1, Math.round(words / 200));
 }
 
-export function ArticleBody({ body }: { body: string }) {
+export function ArticleBody({ body, cover }: { body: string; cover?: string }) {
   const blocks = body
     .split(/\n\s*\n/)
     .map((block) => block.trim())
@@ -80,7 +80,7 @@ export function ArticleBody({ body }: { body: string }) {
         const key = `block-${index}`;
 
         const image = IMAGE_LINE.exec(block);
-        if (image) {
+        if (image && image[2] !== cover) {
           return (
             <figure key={key} className="my-2 overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
               <img src={image[2]} alt={image[1] || ""} className="w-full object-cover" loading="lazy" />

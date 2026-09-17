@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/heading";
 import { AddToCart } from "@/components/shop/add-to-cart";
 import { Button } from "@/components/ui/button";
 import { getProductBySlug, getProducts } from "@/lib/catalog";
-import { formatFcfa, formatNaira, formatUsd, waLink } from "@/lib/utils";
+import { formatEur, formatFcfa, formatUsd, waLink } from "@/lib/utils";
 import { MultiCurrencyPrice } from "@/components/ui/price";
 import { FaChevronRight, FaLeaf, FaRegCircleCheck, FaWhatsapp } from "react-icons/fa6";
 
@@ -167,7 +167,7 @@ export default async function ProductPage({ params }: Props) {
                   </div>
                   <p className="mt-3 text-sm font-semibold leading-snug">{p.name}</p>
                   <p className="mt-0.5 text-xs font-semibold text-forest-700">
-                    {p.price > 0 ? `${formatFcfa(p.price)} · ${formatUsd(p.price)} · ${formatNaira(p.price)}` : "Contact S19 for pricing"}
+                    {p.price > 0 ? `${formatFcfa(p.price)} · ${formatUsd(p.price)} · ${formatEur(p.price)}` : "Contact S19 for pricing"}
                   </p>
                 </Link>
               ))}

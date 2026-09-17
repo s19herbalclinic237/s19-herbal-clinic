@@ -101,7 +101,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             ) : null}
 
             <div className="mt-8">
-              <ArticleBody body={post.body} />
+              <ArticleBody body={post.body} cover={post.cover} />
             </div>
           </article>
 

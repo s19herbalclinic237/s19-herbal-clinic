@@ -1,4 +1,4 @@
-import { cn, formatFcfa, formatNaira, formatUsd } from "@/lib/utils";
+import { cn, formatEur, formatFcfa, formatUsd } from "@/lib/utils";
 
 export function MultiCurrencyPrice({
   price,
@@ -25,7 +25,7 @@ export function MultiCurrencyPrice({
         {formatFcfa(price)}
       </p>
       <p className={cn("text-muted", size === "lg" ? "text-[13px]" : "text-[11px]")}>
-        ≈ {formatUsd(price)} · {formatNaira(price)}
+        ≈ {formatUsd(price)} · {formatEur(price)}
       </p>
     </div>
   );

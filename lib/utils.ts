@@ -12,7 +12,7 @@ export function formatFcfa(value: number): string {
 
 export const EXCHANGE = {
   fcfaPerUsd: 600,
-  nairaPerFcfa: 2.5,
+  fcfaPerEur: 655.96,
 };
 
 export function formatUsd(fcfa: number): string {
@@ -25,9 +25,14 @@ export function formatUsd(fcfa: number): string {
   }).format(fcfa / EXCHANGE.fcfaPerUsd);
 }
 
-export function formatNaira(fcfa: number): string {
+export function formatEur(fcfa: number): string {
   if (fcfa <= 0) return "";
-  return `₦${new Intl.NumberFormat("en-NG").format(fcfa * EXCHANGE.nairaPerFcfa)}`;
+  return new Intl.NumberFormat("en-IE", {
+    style: "currency",
+    currency: "EUR",
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+  }).format(fcfa / EXCHANGE.fcfaPerEur);
 }
 
 export function formatPrice(price: number, unit?: string): string {
