@@ -5,6 +5,7 @@ import { ProductCard } from "@/components/ui/product-card";
 import { Input } from "@/components/ui/form";
 import { StaggerGroup, StaggerItem } from "@/components/ui/motion";
 import type { SiteProduct, SiteCategory } from "@/lib/site";
+import { useLocale } from "@/components/i18n/locale-provider";
 import { FaMagnifyingGlass, FaFilter } from "react-icons/fa6";
 
 type SortKey = "featured" | "price-asc" | "price-desc" | "name";
@@ -16,6 +17,7 @@ export function ShopClient({
   products: SiteProduct[];
   categories: SiteCategory[];
 }) {
+  const { t } = useLocale();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("all");
   const [sort, setSort] = useState<SortKey>("featured");
@@ -45,7 +47,7 @@ export function ShopClient({
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search the catalog..."
+              placeholder={t("shop.search.placeholder")}
               className="pl-9"
             />
           </div>
@@ -56,10 +58,10 @@ export function ShopClient({
               onChange={(e) => setSort(e.target.value as SortKey)}
               className="h-9 rounded-md border border-line-strong bg-white px-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-forest-500/20"
             >
-              <option value="featured">Featured</option>
-              <option value="price-asc">Price: Low to High</option>
-              <option value="price-desc">Price: High to Low</option>
-              <option value="name">Name: A to Z</option>
+              <option value="featured">{t("shop.sort.featured")}</option>
+              <option value="price-asc">{t("shop.sort.priceAsc")}</option>
+              <option value="price-desc">{t("shop.sort.priceDesc")}</option>
+              <option value="name">{t("shop.sort.name")}</option>
             </select>
           </div>
         </div>
@@ -74,7 +76,7 @@ export function ShopClient({
                 : "h-8 rounded-sm border border-line-strong bg-white px-3 text-xs font-semibold text-ink hover:border-forest-400"
             }
           >
-            All ({products.length})
+            {t("shop.filter.all", { count: products.length })}
           </button>
           {categories.map((c) => {
             const count = products.filter((p) => p.categorySlug === c.slug).length;
@@ -97,7 +99,7 @@ export function ShopClient({
 
         {filtered.length === 0 ? (
           <div className="mt-10 rounded-lg border border-line bg-white p-10 text-center text-sm text-muted">
-            No products match your search. Try a different term or category.
+            {t("shop.empty")}
           </div>
         ) : (
           <StaggerGroup className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">

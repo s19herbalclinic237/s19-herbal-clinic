@@ -9,26 +9,27 @@ import { PageHero } from "@/components/ui/page-hero";
 import { buttonLinkClasses } from "@/components/ui/button";
 import { Field, Input, Textarea, RadioCard } from "@/components/ui/form";
 import { useCart } from "@/lib/cart-context";
+import { useLocale } from "@/components/i18n/locale-provider";
 import { formatFcfa } from "@/lib/utils";
 import { FaArrowRight, FaLock, FaWhatsapp, FaBagShopping } from "react-icons/fa6";
 
 const deliveryModes = [
   {
     value: "Pickup" as const,
-    title: "Clinic Pickup (Bafoussam)",
-    description: "Collect your order at Cathedrale Market Entrance B, Bafoussam. Free.",
+    titleKey: "checkout.mode1.title" as const,
+    descriptionKey: "checkout.mode1.desc" as const,
     fee: 0,
   },
   {
     value: "Cameroon Delivery" as const,
-    title: "Cameroon Nationwide",
-    description: "Courier delivery to Douala, Yaounde, Bamenda, Buea and more.",
+    titleKey: "checkout.mode2.title" as const,
+    descriptionKey: "checkout.mode2.desc" as const,
     fee: 2500,
   },
   {
     value: "Worldwide Delivery" as const,
-    title: "Worldwide",
-    description: "Express courier internationally. Fee confirmed by our team after ordering.",
+    titleKey: "checkout.mode3.title" as const,
+    descriptionKey: "checkout.mode3.desc" as const,
     fee: 0,
   },
 ];
@@ -51,7 +52,10 @@ interface CheckoutData {
   notes: string;
 }
 
+const CHECKOUT_HERO_IMG = "https://images.unsplash.com/photo-1544787219-7f47ccb76574?q=80&w=1600&auto=format&fit=crop";
+
 export function CheckoutView() {
+  const { t } = useLocale();
   const router = useRouter();
   const { items, subtotal, clearCart } = useCart();
   const [submitting, setSubmitting] = useState(false);
@@ -78,12 +82,12 @@ export function CheckoutView() {
   if (items.length === 0) {
     return (
       <>
-        <PageHero eyebrow="Checkout" title="Checkout" compact image="https://images.unsplash.com/photo-1544787219-7f47ccb76574?q=80&w=1600&auto=format&fit=crop" />
+        <PageHero eyebrow={t("checkout.hero.eyebrow")} title={t("checkout.hero.eyebrow")} compact image={CHECKOUT_HERO_IMG} alt={t("cart.hero.alt")} />
         <div className="mx-auto w-full max-w-6xl px-4 py-16 text-center sm:px-6 lg:px-8">
           <FaBagShopping className="mx-auto h-8 w-8 text-forest-300" aria-hidden />
-          <p className="mt-4 text-sm text-muted">Your cart is empty. Add products before checking out.</p>
+          <p className="mt-4 text-sm text-muted">{t("checkout.empty.text")}</p>
           <Link href="/shop" className={buttonLinkClasses("primary", "md", "mt-4")}>
-            Browse the Catalog
+            {t("cart.browse")}
           </Link>
         </div>
       </>
@@ -119,34 +123,34 @@ export function CheckoutView() {
       clearCart();
       router.push(`/order/${json.orderReference}`);
     } catch {
-      toast.error("We could not place your order. Please try again or order via WhatsApp.");
+      toast.error(t("checkout.orderFailed"));
       setSubmitting(false);
     }
   }
 
   return (
     <>
-      <PageHero eyebrow="Checkout" title="Complete Your Order" compact image="https://images.unsplash.com/photo-1544787219-7f47ccb76574?q=80&w=1600&auto=format&fit=crop" />
+      <PageHero eyebrow={t("checkout.hero.eyebrow")} title={t("checkout.hero.title")} compact image={CHECKOUT_HERO_IMG} alt={t("cart.hero.alt")} />
       <div className="border-t border-line bg-mist">
         <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
           <form onSubmit={submit} className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
             <div className="min-w-0 space-y-6">
               <div className="rounded-lg border border-line bg-white p-5">
-                <h2 className="text-base font-bold">Contact & Delivery</h2>
+                <h2 className="text-base font-bold">{t("checkout.contactTitle")}</h2>
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                  <Field label="Full Name" required>
-                    <Input required value={data.fullName} onChange={set("fullName")} placeholder="Your full name" autoComplete="name" />
+                  <Field label={t("checkout.fullName")} required>
+                    <Input required value={data.fullName} onChange={set("fullName")} placeholder={t("checkout.fullNamePh")} autoComplete="name" />
                   </Field>
-                  <Field label="Phone / WhatsApp" required>
+                  <Field label={t("checkout.phone")} required>
                     <Input required type="tel" value={data.phone} onChange={set("phone")} placeholder="+237 ..." autoComplete="tel" />
                   </Field>
-                  <Field label="Email" required className="sm:col-span-2">
-                    <Input required type="email" value={data.email} onChange={set("email")} placeholder="you@example.com" autoComplete="email" />
+                  <Field label={t("contact.emailLabel")} required className="sm:col-span-2">
+                    <Input required type="email" value={data.email} onChange={set("email")} placeholder={t("checkout.emailPh")} autoComplete="email" />
                   </Field>
                 </div>
 
                 <div className="mt-5 space-y-2">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-ink">Delivery Mode</p>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-ink">{t("checkout.deliveryMode")}</p>
                   {deliveryModes.map((m) => (
                     <RadioCard
                       key={m.value}
@@ -154,26 +158,26 @@ export function CheckoutView() {
                       value={m.value}
                       checked={data.mode === m.value}
                       onChange={(v) => setData((d) => ({ ...d, mode: v }))}
-                      title={m.title}
-                      description={`${m.description}${m.fee ? ` Fee: ${formatFcfa(m.fee)}` : ""}`}
+                      title={t(m.titleKey)}
+                      description={`${t(m.descriptionKey)}${m.fee ? t("checkout.fee", { fee: formatFcfa(m.fee) }) : ""}`}
                     />
                   ))}
                 </div>
 
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
                   {data.mode !== "Pickup" ? (
-                    <Field label="City / Country" required>
-                      <Input required value={data.city} onChange={set("city")} placeholder="e.g. Yaounde / France" />
+                    <Field label={t("checkout.city")} required>
+                      <Input required value={data.city} onChange={set("city")} placeholder={t("checkout.cityPh")} />
                     </Field>
                   ) : null}
-                  <Field label="Delivery Address" required className={data.mode === "Pickup" ? "sm:col-span-2" : ""} hint={data.mode === "Pickup" ? "Optional note for clinic pickup coordination." : undefined}>
-                    <Input required={data.mode !== "Pickup"} value={data.address} onChange={set("address")} placeholder="Street, landmark, neighborhood" />
+                  <Field label={t("checkout.address")} required className={data.mode === "Pickup" ? "sm:col-span-2" : ""} hint={data.mode === "Pickup" ? t("checkout.addressHint") : undefined}>
+                    <Input required={data.mode !== "Pickup"} value={data.address} onChange={set("address")} placeholder={t("checkout.addressPh")} />
                   </Field>
                 </div>
               </div>
 
               <div className="rounded-lg border border-line bg-white p-5">
-                <h2 className="text-base font-bold">Payment Method</h2>
+                <h2 className="text-base font-bold">{t("checkout.paymentTitle")}</h2>
                 <div className="mt-4 grid gap-2 sm:grid-cols-2">
                   {paymentMethods.map((m) => (
                     <RadioCard
@@ -187,24 +191,24 @@ export function CheckoutView() {
                   ))}
                 </div>
                 <div className="mt-4">
-                  <Field label="Order Notes (optional)">
-                    <Textarea rows={3} value={data.notes} onChange={set("notes")} placeholder="Anything the clinic should know about this order." />
+                  <Field label={t("checkout.notes")}>
+                    <Textarea rows={3} value={data.notes} onChange={set("notes")} placeholder={t("checkout.notesPh")} />
                   </Field>
                 </div>
               </div>
 
               <button type="submit" disabled={submitting} className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-forest-700 bg-forest-700 px-6 text-sm font-semibold text-white transition-colors hover:bg-forest-800 disabled:opacity-60 sm:w-auto">
-                {submitting ? "Placing order..." : "Place Order"}
+                {submitting ? t("checkout.placing") : t("checkout.placeOrder")}
                 {!submitting ? <FaArrowRight className="h-3.5 w-3.5" aria-hidden /> : null}
               </button>
               <p className="flex items-center gap-1.5 text-xs text-muted">
                 <FaLock className="h-3 w-3" aria-hidden />
-                Your details are kept private and only used to fulfil this order.
+                {t("checkout.privacy")}
               </p>
             </div>
 
             <aside className="h-fit min-w-0 rounded-lg border border-line bg-white p-5">
-              <h2 className="text-base font-bold">Order Summary</h2>
+              <h2 className="text-base font-bold">{t("cart.summary")}</h2>
               <ul className="mt-4 divide-y divide-line">
                 {items.map((item) => (
                   <li key={item.slug} className="flex items-center gap-3 py-3">
@@ -213,7 +217,7 @@ export function CheckoutView() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-semibold">{item.name}</p>
-                      <p className="text-xs text-muted">Qty {item.quantity} × {formatFcfa(item.price)}</p>
+                      <p className="text-xs text-muted">{t("checkout.qty", { qty: item.quantity, price: formatFcfa(item.price) })}</p>
                     </div>
                     <span className="text-sm font-semibold">{formatFcfa(item.price * item.quantity)}</span>
                   </li>
@@ -221,20 +225,20 @@ export function CheckoutView() {
               </ul>
               <dl className="mt-2 space-y-2 border-t border-line pt-3 text-sm">
                 <div className="flex justify-between text-muted">
-                  <dt>Subtotal</dt>
+                  <dt>{t("checkout.subtotal")}</dt>
                   <dd>{formatFcfa(subtotal)}</dd>
                 </div>
                 <div className="flex justify-between text-muted">
-                  <dt>Delivery ({data.mode})</dt>
-                  <dd>{data.mode === "Worldwide Delivery" ? "Confirmed after order" : formatFcfa(mode.fee)}</dd>
+                  <dt>{t("cart.delivery")} ({t(mode.titleKey)})</dt>
+                  <dd>{data.mode === "Worldwide Delivery" ? t("checkout.deliveryConfirmed") : formatFcfa(mode.fee)}</dd>
                 </div>
                 <div className="flex justify-between border-t border-line pt-3 text-base font-bold">
-                  <dt>Total</dt>
+                  <dt>{t("cart.total")}</dt>
                   <dd className="text-forest-800">{formatFcfa(total)}</dd>
                 </div>
               </dl>
               <p className="mt-3 text-xs text-muted">
-                Our clinic will contact you on WhatsApp to confirm payment and delivery.{" "}
+                {t("checkout.whatsappNote")}{" "}
                 <a
                   href="https://wa.me/237672595989"
                   target="_blank"
@@ -242,7 +246,7 @@ export function CheckoutView() {
                   className="inline-flex items-center gap-1 font-semibold text-forest-700 hover:text-forest-800"
                 >
                   <FaWhatsapp className="h-3 w-3" aria-hidden />
-                  Contact us
+                  {t("checkout.contactUs")}
                 </a>
               </p>
             </aside>

@@ -3,11 +3,22 @@ import { Container } from "@/components/ui/container";
 import { PageHero } from "@/components/ui/page-hero";
 import { CLINIC } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
+import { serverT } from "@/lib/i18n-server";
 import Link from "next/link";
 
-export const metadata: Metadata = {
-  title: "Terms of Use",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await serverT();
+  return { title: t("terms.metaTitle") };
+}
+
+const sectionKeys = [
+  "terms.section.general",
+  "terms.section.healthDisclaimer",
+  "terms.section.orders",
+  "terms.section.shipping",
+  "terms.section.returns",
+  "terms.section.liability",
+] as const;
 
 const sections = [
   {
@@ -36,30 +47,29 @@ const sections = [
   },
 ];
 
-export default function TermsPage() {
+export default async function TermsPage() {
+  const t = await serverT();
   return (
     <>
-      <PageHero eyebrow="Legal" title="Terms of Use" lead="Last updated: September 2026" compact image={S19_ASSETS.photos.labBeakers} />
+      <PageHero eyebrow={t("legal.eyebrow")} title={t("terms.metaTitle")} lead={t("terms.lead")} compact image={S19_ASSETS.photos.labBeakers} />
       <Container className="max-w-3xl py-10 md:py-14">
         <div className="space-y-6">
-          {sections.map((s) => (
+          {sections.map((s, i) => (
             <div key={s.title}>
-              <h2 className="text-lg font-semibold">{s.title}</h2>
+              <h2 className="text-lg font-semibold">{t(sectionKeys[i])}</h2>
               <p className="mt-2 text-sm leading-relaxed text-muted">{s.body}</p>
             </div>
           ))}
         </div>
         <div className="mt-10 rounded-lg border border-line bg-mist p-5 text-sm text-muted">
-          Contact us at{" "}
-          <a href={`mailto:${CLINIC.email}`} className="font-semibold text-forest-700">{CLINIC.email}</a>{" "}
-          or {CLINIC.phone} with any questions about these terms.
+          {t("terms.contact", { email: CLINIC.email, phone: CLINIC.phone })}
         </div>
         <p className="mt-6 text-sm text-muted">
-          Read our{" "}
+          {t("terms.readRefundBefore")}{" "}
           <Link href="/refund-and-returns" className="font-semibold text-forest-700 hover:text-forest-800">
-            Refund, Return &amp; Exchange Policy
-          </Link>
-          {" "}for details on returns and refunds.
+            {t("terms.refundPolicy")}
+          </Link>{" "}
+          {t("terms.readRefundAfter")}
         </p>
       </Container>
     </>

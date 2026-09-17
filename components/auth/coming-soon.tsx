@@ -3,9 +3,11 @@ import { Container } from "@/components/ui/container";
 import { Kicker } from "@/components/ui/heading";
 import { buttonLinkClasses } from "@/components/ui/button";
 import { S19_ASSETS } from "@/lib/site-assets";
+import { serverT } from "@/lib/i18n-server";
 import { FaLock, FaArrowRight } from "react-icons/fa6";
 
-export function ComingSoon() {
+export async function ComingSoon() {
+  const t = await serverT();
   return (
     <section className="relative flex min-h-[70vh] items-center overflow-hidden bg-forest-950">
       <img
@@ -21,21 +23,19 @@ export function ComingSoon() {
             <FaLock className="h-6 w-6" aria-hidden />
           </div>
           <Kicker center dark>
-            User Portal
+            {t("account.kicker")}
           </Kicker>
-          <h1 className="mt-4 text-balance text-white">Coming Soon.</h1>
+          <h1 className="mt-4 text-balance text-white">{t("account.title")}</h1>
           <p className="mt-5 text-[15px] leading-relaxed text-forest-100/90 md:text-base">
-            The S19 patient portal is being prepared for you. Soon you will be able to track
-            orders, manage your testimonials, receive clinic messages, and more - all in one
-            place. Follow our WhatsApp for early access.
+            {t("account.text")}
           </p>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
             <Link href="/contact" className={buttonLinkClasses("gold", "lg")}>
-              Book a Consultation
+              {t("account.bookConsultation")}
               <FaArrowRight className="h-4 w-4" aria-hidden />
             </Link>
             <Link href="/" className={buttonLinkClasses("glass", "lg")}>
-              Back to Home
+              {t("account.backHome")}
             </Link>
           </div>
         </div>

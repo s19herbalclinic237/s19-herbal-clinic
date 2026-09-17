@@ -4,12 +4,31 @@ import { PageHero } from "@/components/ui/page-hero";
 import { CLINIC, waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { FaWhatsapp } from "react-icons/fa6";
+import { serverT } from "@/lib/i18n-server";
 
-export const metadata: Metadata = {
-  title: "Refund, Return & Exchange Policy",
-  description:
-    "How S19 Herbal Clinic handles refunds, returns, and exchanges for herbal products and consultations.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await serverT();
+  return {
+    title: t("refund.metaTitle"),
+    description: t("refund.metaDescription"),
+  };
+}
+
+const sectionKeys = [
+  "refund.section1",
+  "refund.section2",
+  "refund.section3",
+  "refund.section4",
+  "refund.section5",
+  "refund.section6",
+  "refund.section7",
+  "refund.section8",
+  "refund.section9",
+  "refund.section10",
+  "refund.section11",
+  "refund.section12",
+  "refund.section13",
+] as const;
 
 const sections = [
   {
@@ -66,34 +85,33 @@ const sections = [
   },
 ];
 
-export default function RefundReturnsPage() {
+export default async function RefundReturnsPage() {
+  const t = await serverT();
   return (
     <>
       <PageHero
-        eyebrow="Policy"
-        title="Refund, Return & Exchange Policy"
-        lead="How S19 Herbal Clinic handles refunds, returns, and exchanges for herbal products and professional services."
+        eyebrow={t("refund.hero.eyebrow")}
+        title={t("refund.metaTitle")}
+        lead={t("refund.hero.lead")}
         compact
         image={S19_ASSETS.photos.cupboardProducts}
       />
       <Container className="max-w-3xl py-10 md:py-14">
         <p className="text-sm text-muted">
-          Last updated: September 2026. At {CLINIC.brand} we are committed to providing quality
-          herbal products and professional services. All requests are subject to verification, this
-          policy, and applicable law.
+          {t("refund.intro", { brand: CLINIC.brand })}
         </p>
         <div className="mt-8 space-y-6">
-          {sections.map((s) => (
-            <div key={s.title}>
-              <h2 className="text-lg font-semibold">{s.title}</h2>
+          {sections.map((s, i) => (
+            <div key={i}>
+              <h2 className="text-lg font-semibold">{t(sectionKeys[i])}</h2>
               <p className="mt-2 text-sm leading-relaxed text-muted">{s.body}</p>
             </div>
           ))}
         </div>
         <div className="mt-10 rounded-lg border border-line bg-mist p-5 text-sm text-muted">
-          <p className="font-semibold text-ink">How to reach customer service</p>
+          <p className="font-semibold text-ink">{t("refund.serviceTitle")}</p>
           <p className="mt-2">
-            WhatsApp / Phone:{" "}
+            {t("refund.whatsappPhone")}{" "}
             <span className="font-semibold text-forest-700">{CLINIC.phone}</span> · Email:{" "}
             <a href={`mailto:${CLINIC.email}`} className="font-semibold text-forest-700">
               {CLINIC.email}
@@ -106,7 +124,7 @@ export default function RefundReturnsPage() {
             className="mt-4 inline-flex h-11 items-center gap-2 rounded-lg bg-forest-800 px-5 text-sm font-semibold text-white transition-colors hover:bg-forest-900"
           >
             <FaWhatsapp className="h-4 w-4 text-gold-400" aria-hidden />
-            Open a request on WhatsApp
+            {t("refund.openRequest")}
           </a>
         </div>
       </Container>

@@ -25,6 +25,12 @@ export const productCategories: SiteCategory[] = [
     slug: "wellness-essentials",
     blurb: "Everyday natural health products for the whole home.",
   },
+  {
+    id: "cat-merch",
+    name: "Merch & Branded",
+    slug: "merchandise",
+    blurb: "Official S19-branded merchandise. Experience S19 in style.",
+  },
 ];
 
 const productImage = (file: string) =>
@@ -345,6 +351,42 @@ export const seedProducts: SiteProduct[] = [
     image: productImage("S19 Flat Tummy & Weight Loss Herbal Tea.png"),
     featured: false,
     stock: 0,
+  },
+  {
+    id: "p-experience-hoodie-men",
+    name: "Experience S19 Hoodie (Men)",
+    slug: "s19-experience-hoodie-men",
+    category: "Merch & Branded",
+    categorySlug: "merchandise",
+    price: 10000,
+    badge: "Merch",
+    shortDescription:
+      "Official Experience S19 hoodie for men. Available in Black, White, Red, Sky Blue, Purple and Pink. Wear the S19 brand wherever you go.",
+    description:
+      "Show your support for S19 with the official 'Experience S19' hoodie for men. The bold Experience S19 print with the machine-style graphic makes it a standout piece. Available in six colors - Black, White, Red, Sky Blue, Purple and Pink - so you can choose your favourite. Made for everyday comfort and built to last.",
+    usage: "Machine wash cold, inside out. Do not bleach. Tumble dry low or hang to dry.",
+    ingredients: "Colors: Black, White, Red, Sky Blue, Purple, Pink.",
+    image: "/s19-assets/merche/male.jpg",
+    featured: true,
+    stock: 50,
+  },
+  {
+    id: "p-experience-hoodie-women",
+    name: "Experience S19 Hoodie (Women)",
+    slug: "s19-experience-hoodie-women",
+    category: "Merch & Branded",
+    categorySlug: "merchandise",
+    price: 10000,
+    badge: "Merch",
+    shortDescription:
+      "Official Experience S19 hoodie for women. Available in Black, White, Red, Sky Blue, Purple and Pink. Wear the S19 brand wherever you go.",
+    description:
+      "Show your support for S19 with the official 'Experience S19' hoodie for women. The bold Experience S19 print with the machine-style graphic makes it a standout piece. Available in six colors - Black, White, Red, Sky Blue, Purple and Pink - so you can choose your favourite. Designed for a comfortable everyday fit that lasts.",
+    usage: "Machine wash cold, inside out. Do not bleach. Tumble dry low or hang to dry.",
+    ingredients: "Colors: Black, White, Red, Sky Blue, Purple, Pink.",
+    image: "/s19-assets/merche/female.jpg",
+    featured: true,
+    stock: 50,
   },
 ];
 

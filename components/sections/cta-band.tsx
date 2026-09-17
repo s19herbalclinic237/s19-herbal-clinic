@@ -3,6 +3,7 @@ import { Container } from "@/components/ui/container";
 import { buttonLinkClasses } from "@/components/ui/button";
 import GradientWaves from "@/components/ui/gradient-waves";
 import { CLINIC, waLink } from "@/lib/site";
+import { serverT } from "@/lib/i18n-server";
 import { FaWhatsapp } from "react-icons/fa6";
 
 export function WhatsAppFloat() {
@@ -21,19 +22,22 @@ export function WhatsAppFloat() {
   );
 }
 
-export function CTABand({
-  title = "Start your consultation",
-  text = "Book a priority in-clinic appointment or a Tele-health consultation with the S19 clinic today.",
-  primaryLabel = "Book a Consultation",
-  primaryHref = "/contact",
-  secondaryLabel = "WhatsApp: +237 672 595 989",
-}: {
+interface CTABandProps {
   title?: string;
   text?: string;
   primaryLabel?: string;
   primaryHref?: string;
   secondaryLabel?: string;
-}) {
+}
+
+export async function CTABand({
+  title,
+  text,
+  primaryLabel,
+  primaryHref = "/contact",
+  secondaryLabel,
+}: CTABandProps) {
+  const t = await serverT();
   return (
     <section className="relative overflow-hidden border-y border-forest-900 bg-forest-950">
       <div className="pointer-events-none absolute inset-0 opacity-70">
@@ -64,19 +68,19 @@ export function CTABand({
       <div className="pointer-events-none absolute bottom-0 left-1/4 h-64 w-64 rounded-full bg-emerald-400/10 blur-3xl" />
       <Container className="relative z-10 py-16 md:py-20">
         <div className="max-w-2xl">
-          <h2 className="text-white drop-shadow-sm">{title}</h2>
-          <p className="mt-3 text-[15px] leading-relaxed text-forest-100/90">{text}</p>
+          <h2 className="text-white drop-shadow-sm">{title ?? t("cta.title")}</h2>
+          <p className="mt-3 text-[15px] leading-relaxed text-forest-100/90">{text ?? t("cta.text")}</p>
         </div>
         <div className="mt-8 flex flex-wrap items-center gap-3">
           <Link href={primaryHref} className={buttonLinkClasses("gold", "xl")}>
-            {primaryLabel}
+            {primaryLabel ?? t("cta.primary")}
           </Link>
           <a
             href={CLINIC.phoneHref}
             className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-white/25 bg-white/10 px-6 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/15"
           >
             <FaWhatsapp className="h-4 w-4 text-gold-400" aria-hidden />
-            {secondaryLabel}
+            {secondaryLabel ?? t("cta.secondary")}
           </a>
         </div>
       </Container>

@@ -5,6 +5,7 @@ import { AnnouncementBar, SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { WhatsAppFloat } from "@/components/sections/cta-band";
 import { CLINIC } from "@/lib/site";
+import { getServerLocale } from "@/lib/i18n-server";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -82,11 +83,12 @@ export const viewport: Viewport = {
   themeColor: "#0F5D2E",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = await getServerLocale();
   return (
-    <html lang="en" className={`${montserrat.variable} ${libreBaskerville.variable}`}>
+    <html lang={locale} className={`${montserrat.variable} ${libreBaskerville.variable}`}>
       <body>
-        <Providers>
+        <Providers initialLocale={locale}>
           <AnnouncementBar />
           <SiteHeader />
           <main>{children}</main>

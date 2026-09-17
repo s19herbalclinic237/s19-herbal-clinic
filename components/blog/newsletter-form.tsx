@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
+import { useLocale } from "@/components/i18n/locale-provider";
 import { FaEnvelope, FaRegCircleCheck } from "react-icons/fa6";
 
 export function NewsletterForm({ compact = false }: { compact?: boolean }) {
+  const { t } = useLocale();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [message, setMessage] = useState<string | null>(null);
@@ -22,13 +24,13 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
         body: JSON.stringify({ email }),
       });
       const data = (await res.json().catch(() => ({}))) as { error?: string };
-      if (!res.ok) throw new Error(data.error || "Could not subscribe.");
+      if (!res.ok) throw new Error(data.error || t("newsletter.errorDefault"));
       setEmail("");
       setStatus("done");
-      setMessage("You are subscribed. We will send health updates and new articles.");
+      setMessage(t("newsletter.success"));
     } catch (e) {
       setStatus("error");
-      setMessage((e as Error).message || "Could not subscribe right now.");
+      setMessage((e as Error).message || t("newsletter.errorDefault"));
     }
   };
 
@@ -40,17 +42,17 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@example.com"
-          aria-label="Email address"
+          placeholder={t("newsletter.placeholder")}
+          aria-label={t("newsletter.aria")}
           disabled={status === "sending"}
         />
         <Button type="submit" disabled={status === "sending"} className="shrink-0">
           {status === "sending" ? (
-            "Subscribing…"
+            t("newsletter.submitting")
           ) : (
             <>
               <FaEnvelope className="h-3.5 w-3.5" aria-hidden />
-              Subscribe
+              {t("newsletter.subscribe")}
             </>
           )}
         </Button>

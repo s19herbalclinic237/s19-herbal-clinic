@@ -7,53 +7,54 @@ import { telehealthSteps } from "@/lib/data/programs";
 import { CLINIC, waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { FaWhatsapp, FaShieldHalved, FaFlask, FaClock, FaPaperPlane } from "react-icons/fa6";
+import { serverT } from "@/lib/i18n-server";
 
 const HERO_IMG = S19_ASSETS.photos.patientRecords;
 
-const modalities = [
-  {
-    title: "Online Consultation",
-    text: "A structured call or WhatsApp session covering your symptoms, medical history, and lab results.",
-    icon: <FaPaperPlane className="h-5 w-5 text-white" aria-hidden />,
-    tile: "from-forest-600 to-forest-900",
-  },
-  {
-    title: "Lab & Document Review",
-    text: "Send us your lab reports and previous treatment records for a detailed herbal strategy review.",
-    icon: <FaFlask className="h-5 w-5 text-white" aria-hidden />,
-    tile: "from-gold-500 to-gold-600",
-  },
-  {
-    title: "Scheduled Follow-Ups",
-    text: "Regular check-ins on symptom progression, lifestyle adjustment, and dosage.",
-    icon: <FaClock className="h-5 w-5 text-white" aria-hidden />,
-    tile: "from-forest-500 to-forest-800",
-  },
-  {
-    title: "Private & Confidential",
-    text: "Your health details are kept strictly private and only shared with authorized clinic staff.",
-    icon: <FaShieldHalved className="h-5 w-5 text-white" aria-hidden />,
-    tile: "from-forest-700 to-forest-950",
-  },
-];
-
-export default function TelehealthPage() {
+export default async function TelehealthPage() {
+  const t = await serverT();
+  const modalities = [
+    {
+      title: t("tele.modality1.title"),
+      text: t("tele.modality1.text"),
+      icon: <FaPaperPlane className="h-5 w-5 text-white" aria-hidden />,
+      tile: "from-forest-600 to-forest-900",
+    },
+    {
+      title: t("tele.modality2.title"),
+      text: t("tele.modality2.text"),
+      icon: <FaFlask className="h-5 w-5 text-white" aria-hidden />,
+      tile: "from-gold-500 to-gold-600",
+    },
+    {
+      title: t("tele.modality3.title"),
+      text: t("tele.modality3.text"),
+      icon: <FaClock className="h-5 w-5 text-white" aria-hidden />,
+      tile: "from-forest-500 to-forest-800",
+    },
+    {
+      title: t("tele.modality4.title"),
+      text: t("tele.modality4.text"),
+      icon: <FaShieldHalved className="h-5 w-5 text-white" aria-hidden />,
+      tile: "from-forest-700 to-forest-950",
+    },
+  ];
   return (
     <>
       <PageHero
-        eyebrow="Virtual Medical Care Available"
-        title="S19 Tele-Health: remote consultations & follow-ups anywhere."
-        lead="Cannot make it to our physical clinic in Bafoussam? We provide structured online consultations, evaluation of your laboratory results, and scheduled treatment follow-ups via phone and secure messaging."
+        eyebrow={t("tele.hero.eyebrow")}
+        title={t("tele.hero.title")}
+        lead={t("tele.hero.lead")}
         image={HERO_IMG}
-        alt="Doctor preparing for a remote Tele-Health consultation"
+        alt={t("tele.hero.alt")}
       />
 
       {/* Steps */}
       <Section>
         <Reveal>
           <div className="mx-auto max-w-2xl text-center">
-            <Kicker center>How remote care works</Kicker>
-            <h2 className="mt-4">From consultation to follow-up, wherever you are.</h2>
+            <Kicker center>{t("tele.steps.kicker")}</Kicker>
+            <h2 className="mt-4">{t("tele.steps.title")}</h2>
           </div>
         </Reveal>
         <div className="mx-auto mt-12 max-w-3xl">
@@ -61,8 +62,8 @@ export default function TelehealthPage() {
             ...telehealthSteps,
             {
               step: "04",
-              title: "Anywhere, Anytime",
-              text: "WhatsApp, phone, or secure messaging - structured care that fits around your life.",
+              title: t("tele.step4.title"),
+              text: t("tele.step4.text"),
             },
           ].map((t, i) => (
             <Reveal key={t.step} delay={i * 0.06}>
@@ -82,10 +83,10 @@ export default function TelehealthPage() {
       <Section className="bg-white">
         <Reveal>
           <div className="mx-auto max-w-2xl text-center">
-            <Kicker center>What you can expect</Kicker>
-            <h2 className="mt-4">A complete remote consultation.</h2>
+            <Kicker center>{t("tele.modalities.kicker")}</Kicker>
+            <h2 className="mt-4">{t("tele.modalities.title")}</h2>
             <p className="mt-4 text-[15px] text-muted">
-              Everything you would get from an in-clinic visit, delivered wherever you are.
+              {t("tele.modalities.text")}
             </p>
           </div>
         </Reveal>
@@ -112,7 +113,7 @@ export default function TelehealthPage() {
             className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-forest-800 px-6 text-[15px] font-semibold text-white transition-colors hover:bg-forest-900"
           >
             <FaWhatsapp className="h-4 w-4 text-gold-400" aria-hidden />
-            Book Virtual Consult Now
+            {t("tele.bookVirtual")}
           </a>
           <a
             href={`tel:${CLINIC.phoneHref}`}
@@ -123,7 +124,7 @@ export default function TelehealthPage() {
         </Container>
       </Section>
 
-      <CTABand title="Consult S19 specialists from anywhere" text="Connect directly with S19 Herbal Clinic specialists right now, from Cameroon or anywhere in the world." />
+      <CTABand title={t("tele.cta.title")} text={t("tele.cta.text")} />
     </>
   );
 }

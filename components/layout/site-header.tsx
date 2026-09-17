@@ -9,6 +9,8 @@ import { useCart } from "@/lib/cart-context";
 import { CLINIC } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { cn } from "@/lib/utils";
+import { useLocale } from "@/components/i18n/locale-provider";
+import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 import {
   FaBagShopping,
   FaBars,
@@ -30,16 +32,17 @@ function useMounted() {
 }
 
 const nav = [
-  { label: "Home", href: "/" },
-  { label: "Programs", href: "/programs" },
-  { label: "Tele-Health", href: "/telehealth" },
-  { label: "Shop", href: "/shop" },
-  { label: "Blog", href: "/blog" },
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
-];
+  { key: "nav.home", href: "/" },
+  { key: "nav.programs", href: "/programs" },
+  { key: "nav.telehealth", href: "/telehealth" },
+  { key: "nav.shop", href: "/shop" },
+  { key: "nav.blog", href: "/blog" },
+  { key: "nav.about", href: "/about" },
+  { key: "nav.contact", href: "/contact" },
+] as const;
 
 export function AnnouncementBar() {
+  const { t } = useLocale();
   return (
     <div className="border-b border-forest-900 bg-forest-950">
       <Container className="flex h-9 items-center justify-between gap-4 text-xs text-forest-100">
@@ -48,9 +51,7 @@ export function AnnouncementBar() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-400 opacity-75" />
             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-gold-400" />
           </span>
-          <span className="hidden truncate text-forest-300 sm:inline">
-            {CLINIC.slogan} · Bafoussam, Cameroon
-          </span>
+          <span className="hidden truncate text-forest-300 sm:inline">{t("announcement.tagline")}</span>
         </div>
         <div className="flex items-center gap-4">
           <div className="hidden items-center gap-2 sm:flex">
@@ -58,7 +59,7 @@ export function AnnouncementBar() {
               href={CLINIC.instagram}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="S19 on Instagram"
+              aria-label={t("aria.instagram")}
               className="flex h-6 w-6 items-center justify-center rounded-full border border-forest-700 text-forest-300 transition-colors hover:border-gold-400 hover:text-gold-400"
             >
               <FaInstagram className="h-3 w-3" aria-hidden />
@@ -67,7 +68,7 @@ export function AnnouncementBar() {
               href={CLINIC.facebook}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="S19 on Facebook"
+              aria-label={t("aria.facebook")}
               className="flex h-6 w-6 items-center justify-center rounded-full border border-forest-700 text-forest-300 transition-colors hover:border-gold-400 hover:text-gold-400"
             >
               <FaFacebookF className="h-3 w-3" aria-hidden />
@@ -98,6 +99,7 @@ function Logo() {
 export function SiteHeader() {
   const pathname = usePathname();
   const { count } = useCart();
+  const { t } = useLocale();
   const [open, setOpen] = useState(false);
   const mounted = useMounted();
 
@@ -121,15 +123,16 @@ export function SiteHeader() {
                   : "text-ink/80 hover:bg-forest-50 hover:text-forest-800"
               )}
             >
-              {item.label}
+              {t(item.key)}
             </Link>
           ))}
         </nav>
 
         <div className="flex items-center gap-2">
+          <LanguageSwitcher className="hidden md:inline-flex" />
           <Link
             href="/cart"
-            aria-label="Shopping cart"
+            aria-label={t("nav.cart")}
             className="relative flex h-10 w-10 items-center justify-center rounded-lg border border-line-strong bg-white text-ink shadow-sm transition-colors hover:border-forest-500 hover:text-forest-700"
           >
             <FaBagShopping className="h-4 w-4" aria-hidden />
@@ -141,17 +144,17 @@ export function SiteHeader() {
           </Link>
           <Link
             href="/account"
-            aria-label="Account"
+            aria-label={t("aria.account")}
             className="flex h-10 w-10 items-center justify-center rounded-lg border border-line-strong bg-white text-ink shadow-sm transition-colors hover:border-forest-500 hover:text-forest-700"
           >
             <FaRegUser className="h-4 w-4" aria-hidden />
           </Link>
           <Link href="/contact" className={cn(buttonLinkClasses("primary", "sm"), "hidden sm:inline-flex")}>
-            Book Consultation
+            {t("common.bookConsultation")}
           </Link>
           <button
             type="button"
-            aria-label={open ? "Close menu" : "Open menu"}
+            aria-label={open ? t("aria.closeMenu") : t("aria.openMenu")}
             onClick={() => setOpen((v) => !v)}
             className="flex h-10 w-10 items-center justify-center rounded-lg border border-line-strong bg-white text-ink xl:hidden"
           >
@@ -173,15 +176,19 @@ export function SiteHeader() {
                   isActive(item.href) ? "text-forest-800" : "text-ink/80"
                 )}
               >
-                {item.label}
+                {t(item.key)}
               </Link>
             ))}
+            <div className="flex items-center justify-between gap-3 border-b border-line py-3">
+              <span className="text-sm font-semibold text-ink/70">{t("nav.language")}</span>
+              <LanguageSwitcher />
+            </div>
             <Link href="/contact" onClick={() => setOpen(false)} className={cn(buttonLinkClasses("primary", "md"), "mt-3")}>
-              Book Consultation
+              {t("common.bookConsultation")}
             </Link>
             <Link href="/account" onClick={() => setOpen(false)} className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-forest-800">
               <FaRegUser className="h-4 w-4" aria-hidden />
-              My Account
+              {t("nav.account")}
             </Link>
           </Container>
         </div>

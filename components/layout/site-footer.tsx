@@ -2,6 +2,9 @@ import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { CLINIC, waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
+import { serverT } from "@/lib/i18n-server";
+import type { TranslationKey } from "@/lib/i18n";
+import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 import {
   FaWhatsapp,
   FaMapLocationDot,
@@ -11,26 +14,28 @@ import {
   FaFacebookF,
 } from "react-icons/fa6";
 
-const treatmentLinks = [
-  { label: "Diabetes & Metabolic Health", href: "/programs#diabetes-metabolic" },
-  { label: "Hypertension & Heart Health", href: "/programs#hypertension-cardiovascular" },
-  { label: "Prostate & Men's Health", href: "/programs#prostate-mens-health" },
-  { label: "Women's Reproductive Wellness", href: "/programs#womens-health-hormones" },
-  { label: "Gastritis & Digestive Disorders", href: "/programs#digestive-gut-health" },
+const treatmentLinks: { key: TranslationKey; href: string }[] = [
+  { key: "footer.diabetes", href: "/programs#diabetes-metabolic" },
+  { key: "footer.hypertension", href: "/programs#hypertension-cardiovascular" },
+  { key: "footer.prostate", href: "/programs#prostate-mens-health" },
+  { key: "footer.womens", href: "/programs#womens-health-hormones" },
+  { key: "footer.gastritis", href: "/programs#digestive-gut-health" },
 ];
 
-const companyLinks = [
-  { label: "Home", href: "/" },
-  { label: "Our Approach", href: "/about" },
-  { label: "Herbal Catalog", href: "/shop" },
-  { label: "Health Blog", href: "/blog" },
-  { label: "Contact Us", href: "/contact" },
-  { label: "Track Your Order", href: "/track" },
-  { label: "Refund & Returns", href: "/refund-and-returns" },
-  { label: "Privacy Policy", href: "/privacy" },
+const companyLinks: { key: TranslationKey; href: string }[] = [
+  { key: "footer.home", href: "/" },
+  { key: "footer.approach", href: "/about" },
+  { key: "footer.catalog", href: "/shop" },
+  { key: "footer.blog", href: "/blog" },
+  { key: "footer.contactUs", href: "/contact" },
+  { key: "footer.trackOrder", href: "/track" },
+  { key: "footer.refundReturns", href: "/refund-and-returns" },
+  { key: "footer.privacy", href: "/privacy" },
+  { key: "footer.terms", href: "/terms" },
 ];
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const t = await serverT();
   return (
     <footer className="relative border-t border-forest-900 bg-forest-950 text-forest-200">
       <div
@@ -58,7 +63,7 @@ export function SiteFooter() {
               href={CLINIC.instagram}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="S19 on Instagram"
+              aria-label={t("aria.instagram")}
               className="flex h-9 w-9 items-center justify-center rounded-full border border-forest-700 text-forest-300 transition-colors hover:border-gold-400 hover:text-gold-400"
             >
               <FaInstagram className="h-3.5 w-3.5" aria-hidden />
@@ -67,7 +72,7 @@ export function SiteFooter() {
               href={CLINIC.facebook}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="S19 on Facebook"
+              aria-label={t("aria.facebook")}
               className="flex h-9 w-9 items-center justify-center rounded-full border border-forest-700 text-forest-300 transition-colors hover:border-gold-400 hover:text-gold-400"
             >
               <FaFacebookF className="h-3.5 w-3.5" aria-hidden />
@@ -83,12 +88,12 @@ export function SiteFooter() {
         </div>
 
         <div>
-          <h3 className="text-xs font-bold uppercase tracking-wide text-gold-400">Treatment Focus</h3>
+          <h3 className="text-xs font-bold uppercase tracking-wide text-gold-400">{t("footer.treatment")}</h3>
           <ul className="mt-4 space-y-2.5 text-sm">
             {treatmentLinks.map((l) => (
               <li key={l.href}>
                 <Link href={l.href} className="text-forest-300 hover:text-gold-400">
-                  {l.label}
+                  {t(l.key)}
                 </Link>
               </li>
             ))}
@@ -96,7 +101,7 @@ export function SiteFooter() {
         </div>
 
         <div>
-          <h3 className="text-xs font-bold uppercase tracking-wide text-gold-400">Clinic & Contact</h3>
+          <h3 className="text-xs font-bold uppercase tracking-wide text-gold-400">{t("footer.clinicContact")}</h3>
           <ul className="mt-4 space-y-2.5 text-sm text-forest-300">
             <li className="flex gap-2">
               <FaMapLocationDot className="mt-1 h-3.5 w-3.5 shrink-0 text-gold-400" aria-hidden />
@@ -122,19 +127,19 @@ export function SiteFooter() {
                 className="flex items-center gap-2 hover:text-gold-400"
               >
                 <FaWhatsapp className="h-3.5 w-3.5 text-gold-400" aria-hidden />
-                WhatsApp / Dr Consultation
+                {t("common.whatsappDr")}
               </a>
             </li>
           </ul>
         </div>
 
         <div>
-          <h3 className="text-xs font-bold uppercase tracking-wide text-gold-400">Explore</h3>
+          <h3 className="text-xs font-bold uppercase tracking-wide text-gold-400">{t("footer.explore")}</h3>
           <ul className="mt-4 space-y-2.5 text-sm">
             {companyLinks.map((l) => (
               <li key={l.href}>
                 <Link href={l.href} className="text-forest-300 hover:text-gold-400">
-                  {l.label}
+                  {t(l.key)}
                 </Link>
               </li>
             ))}
@@ -143,9 +148,12 @@ export function SiteFooter() {
       </Container>
 
       <div className="relative z-10 border-t border-forest-900/80">
-        <Container className="flex flex-col gap-2 py-5 text-xs text-forest-400 sm:flex-row sm:items-center sm:justify-between">
-          <p>&copy; {new Date().getFullYear()} {CLINIC.brand} ({CLINIC.slogan}). All rights reserved.</p>
-          <p>Science-Based Herbalism · Bafoussam · Worldwide Tele-Health</p>
+        <Container className="flex flex-col gap-3 py-5 text-xs text-forest-400 sm:flex-row sm:items-center sm:justify-between">
+          <p>{t("footer.rights", { year: new Date().getFullYear(), brand: CLINIC.brand, slogan: CLINIC.slogan })}</p>
+          <p className="flex items-center gap-3">
+            <span>{t("footer.bottom")}</span>
+            <LanguageSwitcher />
+          </p>
         </Container>
       </div>
     </footer>

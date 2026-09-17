@@ -16,6 +16,7 @@ import {
 } from "@/lib/data/programs";
 import { CLINIC, waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
+import { serverT } from "@/lib/i18n-server";
 
 export const revalidate = 60;
 import {
@@ -31,45 +32,46 @@ import {
 
 const STORY_IMG = S19_ASSETS.photos.nutritionBasket;
 
-const focus = [
-  {
-    icon: S19_ASSETS.icons.herbalMedicine,
-    title: "Clinical Care",
-    desc: "In-clinic consultations and individualized herbal treatment plans reviewed around your medical history and lab results.",
-    href: "/programs",
-    label: "Clinical Programs",
-  },
-  {
-    icon: S19_ASSETS.icons.trustedCare,
-    title: "Tele-Health",
-    desc: "Structured remote consultations, lab result review, and scheduled follow-ups - anywhere in the world via phone and WhatsApp.",
-    href: "/telehealth",
-    label: "Book Virtual Visit",
-  },
-  {
-    icon: S19_ASSETS.icons.naturalIngredients,
-    title: "Herbal Catalog",
-    desc: "Standardized herbal teas, extracts, and detox packs. Available for pickup in Bafoussam and worldwide delivery.",
-    href: "/shop",
-    label: "Browse Catalog",
-  },
-];
-
-const bookingSteps = [
-  { n: "01", title: "Book", text: "Book a consultation - in clinic or remotely." },
-  { n: "02", title: "Protocol", text: "We tailor a root-cause herbal protocol." },
-  { n: "03", title: "Dispatch", text: "Your pack is shipped to your door." },
-  { n: "04", title: "Follow-up", text: "Scheduled check-ins on your progress." },
-];
-
 const FEATURED_SLUGS = ["s19-herbal-wine-reserve", "s19-shea-butter", "s19-malaria-typhoid-combo"];
 
 export default async function HomePage() {
+  const t = await serverT();
   const products = await getProducts();
   const featured = FEATURED_SLUGS
     .map((slug) => products.find((p) => p.slug === slug))
     .filter((p): p is NonNullable<typeof p> => typeof p !== "undefined");
   const testimonials = await getApprovedTestimonials(12);
+
+  const focus = [
+    {
+      icon: S19_ASSETS.icons.herbalMedicine,
+      title: t("home.focus.clinical.title"),
+      desc: t("home.focus.clinical.desc"),
+      href: "/programs",
+      label: t("home.focus.clinical.label"),
+    },
+    {
+      icon: S19_ASSETS.icons.trustedCare,
+      title: t("home.focus.tele.title"),
+      desc: t("home.focus.tele.desc"),
+      href: "/telehealth",
+      label: t("home.focus.tele.label"),
+    },
+    {
+      icon: S19_ASSETS.icons.naturalIngredients,
+      title: t("home.focus.catalog.title"),
+      desc: t("home.focus.catalog.desc"),
+      href: "/shop",
+      label: t("home.focus.catalog.label"),
+    },
+  ];
+
+  const bookingSteps = [
+    { n: "01", title: t("home.steps.1.title"), text: t("home.steps.1.text") },
+    { n: "02", title: t("home.steps.2.title"), text: t("home.steps.2.text") },
+    { n: "03", title: t("home.steps.3.title"), text: t("home.steps.3.text") },
+    { n: "04", title: t("home.steps.4.title"), text: t("home.steps.4.text") },
+  ];
 
   return (
     <>
@@ -86,18 +88,15 @@ export default async function HomePage() {
 <Container className="relative z-10 w-full py-24 md:py-32">
           <BlurIn>
             <h1 className="mt-6 max-w-3xl text-balance text-white drop-shadow-sm">
-              Natural healing,
-              <span className="block text-gold-400">lasting wellness.</span>
+              {t("home.hero.titleA")}
+              <span className="block text-gold-400">{t("home.hero.titleB")}</span>
             </h1>
             <p className="mt-7 max-w-xl text-base leading-relaxed text-forest-100/90 md:text-lg">
-              Welcome to {CLINIC.brand} in Bafoussam. Our mission is to provide safe, natural and
-              effective herbal solutions that support long-term health and wellbeing -
-              science-based consultations, individualized formulations, and Tele-Health, one clinic
-              with a worldwide reach.
+              {t("home.hero.lead", { brand: CLINIC.brand })}
             </p>
             <div className="mt-10 flex flex-wrap items-center gap-3">
               <Link href="/contact" className={buttonLinkClasses("gold", "xl")}>
-                Book Consultation
+                {t("common.bookConsultation")}
                 <FaArrowRight className="h-4 w-4" aria-hidden />
               </Link>
               <a
@@ -107,7 +106,7 @@ export default async function HomePage() {
                 className={buttonLinkClasses("glass", "xl")}
               >
                 <FaWhatsapp className="h-4 w-4 text-gold-400" aria-hidden />
-                WhatsApp the Clinic
+                {t("home.hero.whatsapp")}
               </a>
             </div>
           </BlurIn>
@@ -118,11 +117,10 @@ export default async function HomePage() {
       <Section className="bg-white">
         <ScaleIn>
           <div className="mx-auto max-w-2xl text-center">
-            <Kicker center>What we offer</Kicker>
-            <h2 className="mt-4">Three ways to care.</h2>
+            <Kicker center>{t("home.focus.kicker")}</Kicker>
+            <h2 className="mt-4">{t("home.focus.title")}</h2>
             <p className="mt-4 text-[15px] text-muted">
-              One clinic, a worldwide reach - in-clinic care, remote Tele-Health, and a
-              standardized herbal catalog delivered to your door.
+              {t("home.focus.lead")}
             </p>
           </div>
         </ScaleIn>
@@ -156,14 +154,13 @@ export default async function HomePage() {
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="lg:sticky lg:top-28 lg:col-span-5 lg:self-start">
             <RevealLeft>
-              <Kicker>Clinical care focus</Kicker>
-              <h2 className="mt-4">Integrative Treatment Programs.</h2>
+              <Kicker>{t("home.programs.kicker")}</Kicker>
+              <h2 className="mt-4">{t("home.programs.title")}</h2>
               <p className="mt-5 text-[15px] leading-relaxed text-muted">
-                Every plan is customized after your initial consultation. Pricing is confirmed per
-                patient after your evaluation.
+                {t("home.programs.lead")}
               </p>
               <Link href="/programs" className={buttonLinkClasses("primary", "lg", "mt-8")}>
-                View all programs
+                {t("common.viewAllPrograms")}
                 <FaArrowRight className="h-3.5 w-3.5" aria-hidden />
               </Link>
             </RevealLeft>
@@ -202,12 +199,10 @@ export default async function HomePage() {
           </RevealLeft>
           <div className="order-1 lg:order-2">
             <RevealRight>
-              <Kicker>Why S19</Kicker>
-              <h2 className="mt-4">Built on review, reason, and follow-through.</h2>
+              <Kicker>{t("home.why.kicker")}</Kicker>
+              <h2 className="mt-4">{t("home.why.title")}</h2>
               <p className="mt-5 text-[15px] leading-relaxed text-muted">
-                {CLINIC.brand} is a Bafoussam-based herbal and integrative wellness clinic. Our
-                clinical philosophy starts with the individual - their history, their labs, their
-                daily reality - before any remedy is prescribed.
+                {t("home.why.lead", { brand: CLINIC.brand })}
               </p>
               <div className="mt-8 space-y-5">
                 {clinicalPrinciples.map((p) => (
@@ -231,15 +226,14 @@ export default async function HomePage() {
       <Section>
         <div className="flex flex-wrap items-end justify-between gap-6">
           <Reveal>
-            <Kicker>Standardized formulas</Kicker>
-            <h2 className="mt-3">S19 Herbal Catalog</h2>
+            <Kicker>{t("home.catalog.kicker")}</Kicker>
+            <h2 className="mt-3">{t("home.catalog.title")}</h2>
             <p className="mt-3 max-w-xl text-[15px] text-muted">
-              Carefully formulated botanical solutions, available for pickup in Bafoussam and
-              worldwide delivery.
+              {t("home.catalog.lead")}
             </p>
           </Reveal>
           <Link href="/shop" className={buttonLinkClasses("primary", "md")}>
-            View full catalog
+            {t("common.viewCatalog")}
           </Link>
         </div>
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -250,8 +244,7 @@ export default async function HomePage() {
           ))}
         </div>
         <p className="mt-6 text-sm text-muted">
-          Also available in clinic: Malaria &amp; Typhoid Tea, Activated Charcoal, Oral Powder,
-          Castor Oil, and Weight-loss Tea.
+          {t("home.catalog.note")}
         </p>
       </Section>
 
@@ -267,14 +260,12 @@ export default async function HomePage() {
           <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-6">
               <Reveal>
-                <Kicker dark>Virtual care</Kicker>
+                <Kicker dark>{t("home.tele.kicker")}</Kicker>
                 <h2 className="mt-5 text-balance text-white">
-                  Remote consultations &amp; follow-ups, anywhere.
+                  {t("home.tele.title")}
                 </h2>
                 <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-forest-100/90">
-                  Cannot make it to Bafoussam? We run structured online consultations - symptoms,
-                  medical history, and lab reports - then dispatch your protocol and stay with you
-                  through scheduled follow-ups.
+                  {t("home.tele.lead")}
                 </p>
                 <a
                   href={waLink("Hello S19 Herbal Clinic, I would like to book a Tele-health online consultation.")}
@@ -283,7 +274,7 @@ export default async function HomePage() {
                   className={buttonLinkClasses("gold", "xl", "mt-8")}
                 >
                   <FaGlobe className="h-4 w-4" aria-hidden />
-                  Book Virtual Consult
+                  {t("home.tele.cta")}
                 </a>
               </Reveal>
             </div>
@@ -311,8 +302,8 @@ export default async function HomePage() {
             <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg border border-forest-200 bg-forest-50 shadow-sm">
               <img src={S19_ASSETS.icons.wellnessAndCare} alt="" className="h-6 w-6" aria-hidden />
             </div>
-            <Kicker center>Getting care</Kicker>
-            <h2 className="mt-4">Four steps, start to follow-up.</h2>
+            <Kicker center>{t("home.steps.kicker")}</Kicker>
+            <h2 className="mt-4">{t("home.steps.title")}</h2>
           </div>
         </Reveal>
         <StaggerGroup className="mt-12 grid gap-px overflow-hidden rounded-lg border border-line bg-cream sm:grid-cols-2 lg:grid-cols-4">
@@ -330,8 +321,8 @@ export default async function HomePage() {
       <Section>
         <Reveal>
           <div className="mx-auto max-w-2xl text-center">
-            <Kicker center>Patient stories</Kicker>
-            <h2 className="mt-4">Care that people talk about.</h2>
+            <Kicker center>{t("home.testimonials.kicker")}</Kicker>
+            <h2 className="mt-4">{t("home.testimonials.title")}</h2>
           </div>
         </Reveal>
         <Reveal className="mt-12">
@@ -386,20 +377,19 @@ export default async function HomePage() {
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
             <div>
               <Reveal>
-                <Kicker dark>Direct consultation</Kicker>
-                <h2 className="mt-4 text-white">Book your consultation.</h2>
+                <Kicker dark>{t("home.booking.kicker")}</Kicker>
+                <h2 className="mt-4 text-white">{t("home.booking.title")}</h2>
                 <p className="mt-5 max-w-md text-[15px] leading-relaxed text-forest-200">
-                  Fill the form to request a priority in-clinic appointment or a Tele-Health
-                  consultation. Our clinical team confirms your booking by phone or WhatsApp.
+                  {t("home.booking.lead")}
                 </p>
                 <ul className="mt-8 space-y-4 text-sm text-forest-200">
                   <li className="flex items-start gap-3">
                     <FaWhatsapp className="mt-1 h-4 w-4 shrink-0 text-gold-400" aria-hidden />
-                    <span>Prefer WhatsApp? Chat directly at {CLINIC.phone}.</span>
+                    <span>{t("home.booking.whatsapp", { phone: CLINIC.phone })}</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <FaClock className="mt-1 h-4 w-4 shrink-0 text-gold-400" aria-hidden />
-                    <span>{CLINIC.hours} · In-clinic, or book a remote Tele-Health visit.</span>
+                    <span>{t("home.booking.hours", { hours: CLINIC.hours })}</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <FaMapLocationDot className="mt-1 h-4 w-4 shrink-0 text-gold-400" aria-hidden />
@@ -427,24 +417,24 @@ export default async function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-r from-forest-950/95 via-forest-950/75 to-forest-950/35" />
         <Container className="relative z-10">
           <Reveal>
-            <Kicker dark>Find the clinic</Kicker>
-            <h2 className="mt-4 max-w-xl text-balance text-white">Care across Cameroon and the world.</h2>
+            <Kicker dark>{t("home.location.kicker")}</Kicker>
+            <h2 className="mt-4 max-w-xl text-balance text-white">{t("home.location.title")}</h2>
           </Reveal>
           <div className="mt-12 grid gap-4 md:grid-cols-3">
             {[
               {
                 icon: <FaMapLocationDot className="h-5 w-5 text-gold-400" aria-hidden />,
-                title: "Bafoussam Clinic",
+                title: t("home.location.clinic"),
                 lines: ["Immeuble Cathédrale, 3rd Floor", "Apartment E305, Bafoussam"],
               },
               {
                 icon: <FaClock className="h-5 w-5 text-gold-400" aria-hidden />,
-                title: "Opening Hours",
+                title: t("home.location.hours"),
                 lines: ["Monday – Saturday: 8:00 AM – 6:00 PM", "Tele-Health follow-ups: scheduled"],
               },
               {
                 icon: <FaGlobe className="h-5 w-5 text-gold-400" aria-hidden />,
-                title: "Delivery Coverage",
+                title: t("home.location.coverage"),
                 lines: ["Cameroon: Douala, Yaoundé, Bamenda, Buea", "International: worldwide express"],
               },
             ].map((c, i) => (
@@ -465,7 +455,7 @@ export default async function HomePage() {
           </div>
           <Reveal delay={0.15}>
             <Link href="/location" className={buttonLinkClasses("secondary", "lg", "mt-10")}>
-              Visit our location page
+              {t("common.visitLocationPage")}
               <FaArrowRight className="h-3.5 w-3.5" aria-hidden />
             </Link>
           </Reveal>
@@ -476,10 +466,10 @@ export default async function HomePage() {
       <Section>
         <div className="grid gap-10 lg:grid-cols-[1fr_1.6fr]">
           <Reveal>
-            <Kicker>Common questions</Kicker>
-            <h2 className="mt-4">Frequently asked questions.</h2>
+            <Kicker>{t("home.faq.kicker")}</Kicker>
+            <h2 className="mt-4">{t("home.faq.title")}</h2>
             <p className="mt-4 text-[15px] leading-relaxed text-muted">
-              Straight answers about consultations, delivery, payments, and how S19 remedies work.
+              {t("home.faq.lead")}
             </p>
           </Reveal>
           <div className="divide-y divide-line rounded-lg border border-line bg-white shadow-card">

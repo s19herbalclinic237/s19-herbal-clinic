@@ -6,6 +6,7 @@ import { BookingForm } from "@/components/sections/booking-form";
 import { Reveal } from "@/components/ui/motion";
 import { CLINIC, waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
+import { serverT } from "@/lib/i18n-server";
 import {
   FaWhatsapp,
   FaPhone,
@@ -14,64 +15,65 @@ import {
   FaClock,
 } from "react-icons/fa6";
 
-export const metadata: Metadata = {
-  title: "Contact & Book a Consultation",
-  description:
-    "Book a consultation or Tele-health session with S19 Herbal Clinic. Contact us by WhatsApp, phone, or email.",
-};
-
 const HERO_IMG = S19_ASSETS.photos.cupboardProducts;
 
-const rows = [
-  {
-    icon: <FaPhone className="h-4 w-4 text-gold-400" aria-hidden />,
-    label: "Phone & WhatsApp",
-    value: CLINIC.phone,
-    sub: "Tele-Health emergency line 24/7",
-    href: `tel:${CLINIC.phoneHref}`,
-  },
-  {
-    icon: <FaEnvelope className="h-4 w-4 text-gold-400" aria-hidden />,
-    label: "Email",
-    value: CLINIC.email,
-    sub: "We reply within 24 hours",
-    href: `mailto:${CLINIC.email}`,
-  },
-  {
-    icon: <FaMapLocationDot className="h-4 w-4 text-gold-400" aria-hidden />,
-    label: "Clinic Address",
-    value: "Immeuble Cathédrale, 3rd Floor, Apartment E305",
-    sub: "Bafoussam, Cameroon",
-    href: "/location",
-  },
-  {
-    icon: <FaClock className="h-4 w-4 text-gold-400" aria-hidden />,
-    label: "Opening Hours",
-    value: "Monday – Saturday: 8:00 AM – 6:00 PM",
-    sub: "Tele-Health consultations available on request",
-    href: undefined,
-  },
-];
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await serverT();
+  return {
+    title: t("contact.meta.title"),
+    description: t("contact.meta.description"),
+  };
+}
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const t = await serverT();
+  const rows = [
+    {
+      icon: <FaPhone className="h-4 w-4 text-gold-400" aria-hidden />,
+      label: t("contact.phoneLabel"),
+      value: CLINIC.phone,
+      sub: t("contact.phoneSub"),
+      href: `tel:${CLINIC.phoneHref}`,
+    },
+    {
+      icon: <FaEnvelope className="h-4 w-4 text-gold-400" aria-hidden />,
+      label: t("contact.emailLabel"),
+      value: CLINIC.email,
+      sub: t("contact.emailSub"),
+      href: `mailto:${CLINIC.email}`,
+    },
+    {
+      icon: <FaMapLocationDot className="h-4 w-4 text-gold-400" aria-hidden />,
+      label: t("contact.addressLabel"),
+      value: t("contact.addressValue"),
+      sub: t("contact.addressSub"),
+      href: "/location",
+    },
+    {
+      icon: <FaClock className="h-4 w-4 text-gold-400" aria-hidden />,
+      label: t("contact.hoursLabel"),
+      value: t("contact.hoursValue"),
+      sub: t("contact.hoursSub"),
+      href: undefined,
+    },
+  ];
   return (
     <>
       <PageHero
-        eyebrow="Contact & Consultations"
-        title="Book your consultation."
-        lead="Generate a priority in-clinic appointment or a Tele-Health consultation. A member of our clinical team confirms your booking by phone or WhatsApp."
+        eyebrow={t("contact.hero.eyebrow")}
+        title={t("contact.hero.title")}
+        lead={t("contact.hero.lead")}
         image={HERO_IMG}
-        alt="S19 Herbal Clinic remedy shelves and products"
+        alt={t("contact.hero.alt")}
       />
 
       <Section className="bg-white">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           <Reveal>
-            <Kicker>Consultation form</Kicker>
-            <h2 className="mt-4">Tell us about your health.</h2>
+            <Kicker>{t("contact.form.kicker")}</Kicker>
+            <h2 className="mt-4">{t("contact.form.title")}</h2>
             <p className="mt-4 max-w-md text-[15px] leading-relaxed text-muted">
-              Fill in the form to request a priority appointment or Tele-Health consultation. Our
-              clinical team confirms your booking by phone or WhatsApp.
+              {t("contact.form.text")}
             </p>
             <div className="mt-8 flex flex-col gap-3">
               <a
@@ -81,7 +83,7 @@ export default function ContactPage() {
                 className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-forest-800 px-6 text-[15px] font-semibold text-white transition-colors hover:bg-forest-900"
               >
                 <FaWhatsapp className="h-4 w-4 text-gold-400" aria-hidden />
-                Chat directly on WhatsApp
+                {t("contact.chatWhatsApp")}
               </a>
               <a
                 href={`tel:${CLINIC.phoneHref}`}

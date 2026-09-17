@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/heading";
@@ -5,9 +7,11 @@ import { buttonLinkClasses } from "@/components/ui/button";
 import type { SiteProduct } from "@/lib/site";
 import { waLink } from "@/lib/utils";
 import { MultiCurrencyPrice } from "@/components/ui/price";
+import { useLocale } from "@/components/i18n/locale-provider";
 import { FaBagShopping } from "react-icons/fa6";
 
 export function ProductCard({ product }: { product: SiteProduct }) {
+  const { t } = useLocale();
   return (
     <article className="group relative flex flex-col rounded-lg border border-line bg-white transition-colors hover:border-forest-300">
       <Link href={`/shop/${product.slug}`} className="relative block aspect-[4/3] overflow-hidden rounded-t-lg bg-forest-50">
@@ -34,7 +38,7 @@ export function ProductCard({ product }: { product: SiteProduct }) {
           <MultiCurrencyPrice price={product.price} unit={product.unit} size="sm" />
           <Link href={`/shop/${product.slug}`} className={buttonLinkClasses("secondary", "sm")}>
             <FaBagShopping className="h-3 w-3" aria-hidden />
-            View
+            {t("common.view")}
           </Link>
         </div>
       </div>
@@ -44,7 +48,7 @@ export function ProductCard({ product }: { product: SiteProduct }) {
         rel="noopener noreferrer"
         className="rounded-b-lg border-t border-line bg-mist px-4 py-2 text-xs font-semibold text-forest-700 hover:bg-forest-50"
       >
-        Order via WhatsApp
+        {t("common.orderWhatsApp")}
       </Link>
     </article>
   );

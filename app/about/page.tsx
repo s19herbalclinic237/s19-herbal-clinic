@@ -54,6 +54,7 @@ import {
   FaArrowRight,
 } from "react-icons/fa6";
 import Link from "next/link";
+import { serverT } from "@/lib/i18n-server";
 
 const HERO_IMG = S19_ASSETS.photos.labBeakers;
 
@@ -74,41 +75,37 @@ const pillarIcons = [
   <FaGraduationCap key="edu" className="h-5 w-5" aria-hidden />,
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const t = await serverT();
   return (
     <>
       <PageHero
-        eyebrow="Our Approach"
-        title="Science-based herbalism. Root-cause healthcare. Personalization. Monitoring."
-        lead={`${CLINIC.brand} is a Bafoussam-based herbal and integrative wellness clinic. We combine traditional knowledge of medicinal plants with modern laboratory testing, nutrition, lifestyle medicine, health education and evidence-informed natural interventions.`}
+        eyebrow={t("about.hero.eyebrow")}
+        title={t("about.hero.title")}
+        lead={t("about.hero.lead", { brand: CLINIC.brand })}
         image={HERO_IMG}
-        alt="Fresh botanical herbs used at S19 Herbal Clinic"
+        alt={t("about.hero.alt")}
       />
 
       {/* THE S19 PHILOSOPHY */}
       <Section>
         <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
           <RevealLeft>
-            <Kicker>The S19 philosophy</Kicker>
+            <Kicker>{t("about.phil.kicker")}</Kicker>
             <p className="mt-4 font-display text-2xl font-semibold leading-snug text-ink">
               {philosophyQuote}
             </p>
             <p className="mt-5 text-[15px] leading-relaxed text-muted">
-              When someone develops diabetes, hypertension, chronic inflammation, metabolic
-              dysfunction, digestive or hormonal problems, recurrent infections, or another
-              chronic health condition, our first question is not simply: “What can we give this
-              person for the symptoms?”
+              {t("about.phil.p1")}
             </p>
             <p className="mt-3 text-[15px] leading-relaxed text-ink/85">
               {whyQuestion}
             </p>
             <p className="mt-5 text-[15px] leading-relaxed text-muted">
-              Treatment is then designed around the individual rather than around the name of the
-              disease alone. S19 is not simply a place that sells herbal medicines - it is a
-              healthcare system and a philosophy.
+              {t("about.phil.p2")}
             </p>
             <Link href="/programs" className={buttonLinkClasses("primary", "md", "mt-8")}>
-              Explore treatment programs
+              {t("about.phil.explorePrograms")}
               <FaArrowRight className="h-3.5 w-3.5" aria-hidden />
             </Link>
           </RevealLeft>
@@ -119,7 +116,7 @@ export default function AboutPage() {
                 <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-forest-800 text-gold-400">
                   <FaMagnifyingGlass className="h-4 w-4" aria-hidden />
                 </span>
-                Root-cause drivers we investigate
+                {t("about.phil.drivers")}
               </h3>
               <ul className="mt-6 grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
                 {philosophyDrivers.map((d) => (
@@ -139,8 +136,8 @@ export default function AboutPage() {
         <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-7">
             <Reveal>
-              <Kicker>Root-cause healthcare</Kicker>
-              <h2 className="mt-4">Not masking symptoms - treating the root cause.</h2>
+              <Kicker>{t("about.rootcause.kicker")}</Kicker>
+              <h2 className="mt-4">{t("about.rootcause.title")}</h2>
               <div className="mt-6 flex flex-wrap items-center gap-2">
                 {rootCauseSteps.map((s, i) => (
                   <FragmentRow key={s} index={i}>
@@ -151,15 +148,10 @@ export default function AboutPage() {
                 ))}
               </div>
               <p className="mt-6 text-[15px] leading-relaxed text-muted">
-                Symptoms are important, but they may represent only the visible part of a deeper
-                physiological problem. In Type 2 diabetes, reducing blood glucose is important -
-                but we also consider the metabolic processes behind elevated glucose, particularly
-                insulin resistance, excess visceral fat, physical inactivity, nutrition, sleep,
-                stress, inflammation and other relevant risk factors.
+                {t("about.rootcause.p1")}
               </p>
               <p className="mt-3 text-[15px] leading-relaxed text-muted">
-                This applies across chronic and metabolic diseases. Our approach can be
-                summarized as: Investigate, understand, correct, support, monitor and educate.
+                {t("about.rootcause.p2")}
               </p>
             </Reveal>
           </div>
@@ -205,12 +197,9 @@ export default function AboutPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-forest-200 bg-forest-50 text-forest-800">
                 <FaVial className="h-5 w-5" aria-hidden />
               </div>
-              <h2 className="mt-5 text-2xl font-bold text-ink">We do not treat blindly</h2>
+              <h2 className="mt-5 text-2xl font-bold text-ink">{t("about.blind.title")}</h2>
               <p className="mt-3 text-[15px] leading-relaxed text-muted">
-                Whenever appropriate, we encourage objective assessment before designing a health
-                program. Treatment should be guided by information - not guesswork. These findings
-                help us understand what may be happening physiologically and establish measurable
-                baselines.
+                {t("about.blind.text")}
               </p>
               <ul className="mt-6 grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
                 {assessmentAreas.map((a) => (
@@ -228,12 +217,9 @@ export default function AboutPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-forest-200 bg-forest-50 text-forest-800">
                 <FaFlask className="h-5 w-5" aria-hidden />
               </div>
-              <h2 className="mt-5 text-2xl font-bold text-ink">Science-based herbalism</h2>
+              <h2 className="mt-5 text-2xl font-bold text-ink">{t("about.science.title")}</h2>
               <p className="mt-3 text-[15px] leading-relaxed text-muted">
-                We respect the long history of medicinal plants, but we do not believe that
-                “natural” automatically means effective or safe. Herbs contain biologically active
-                compounds, so we evaluate pharmacology, dosing, interactions, contraindications
-                and the available scientific evidence before anything is prescribed.
+                {t("about.science.text")}
               </p>
               <ul className="mt-6 grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
                 {herbalismConsiderations.map((c) => (
@@ -255,11 +241,10 @@ export default function AboutPage() {
       <Section className="bg-white">
         <Reveal>
           <div className="mx-auto max-w-2xl text-center">
-            <Kicker center>How we work</Kicker>
-            <h2 className="mt-4">Herbs are only one part of S19.</h2>
+            <Kicker center>{t("about.pillars.kicker")}</Kicker>
+            <h2 className="mt-4">{t("about.pillars.title")}</h2>
             <p className="mt-4 text-[15px] leading-relaxed text-muted">
-              A major mistake would be to present S19 as a place that simply gives patients herbal
-              mixtures. Our philosophy is much broader.
+              {t("about.pillars.text")}
             </p>
           </div>
         </Reveal>
@@ -286,17 +271,13 @@ export default function AboutPage() {
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
             <div>
               <Reveal>
-                <Kicker dark>Education before medication</Kicker>
+                <Kicker dark>{t("about.education.kicker")}</Kicker>
                 <p className="mt-4 flex items-start gap-3 font-display text-2xl font-semibold leading-snug text-white">
                   <FaQuoteLeft className="mt-1 h-6 w-6 shrink-0 text-gold-400" aria-hidden />
                   “{educationQuote}”
                 </p>
                 <p className="mt-5 text-[15px] leading-relaxed text-forest-200">
-                  This does not mean S19 is against pharmaceutical medicine - medicines can be
-                  essential and lifesaving. But healthcare becomes incomplete when long-term
-                  treatment focuses only on medication while modifiable contributors such as
-                  nutrition, obesity, insulin resistance, inactivity, smoking, alcohol, stress and
-                  poor sleep are ignored.
+                  {t("about.education.text")}
                 </p>
                 <ul className="mt-8 grid gap-x-8 gap-y-3 sm:grid-cols-2">
                   {educationQuestions.map((q) => (
@@ -313,12 +294,9 @@ export default function AboutPage() {
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gold-400 text-forest-950">
                   <FaScaleBalanced className="h-5 w-5" aria-hidden />
                 </div>
-                <h2 className="mt-5 text-2xl font-bold text-white">S19 is not anti-medicine</h2>
+                <h2 className="mt-5 text-2xl font-bold text-white">{t("about.notAnti.title")}</h2>
                 <p className="mt-3 text-[15px] leading-relaxed text-forest-100/90">
-                  Different medical tools have different roles. There are circumstances where
-                  pharmaceuticals, surgery, emergency medicine, hospitalization or specialist
-                  intervention are indispensable, and natural medicine should never delay necessary
-                  emergency or specialist care.
+                  {t("about.notAnti.text")}
                 </p>
                 <p className="mt-4 rounded-md border border-gold-400/40 bg-gold-400/10 px-4 py-3 font-display text-lg font-semibold text-gold-400">
                   {rightIntervention}
@@ -333,18 +311,17 @@ export default function AboutPage() {
       <Section>
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           <Reveal>
-            <Kicker>Chronic &amp; metabolic health</Kicker>
-            <h2 className="mt-4">More than symptom control.</h2>
+            <Kicker>{t("about.metabolic.kicker")}</Kicker>
+            <h2 className="mt-4">{t("about.metabolic.title")}</h2>
             <p className="mt-5 text-[15px] leading-relaxed text-muted">
-              Chronic and metabolic diseases develop over years and involve multiple interacting
-              factors. {diabetesIntro}
+              {t("about.metabolic.p1", { diabetesIntro })}
             </p>
             <div className="mt-8 rounded-lg border border-line bg-white p-7 shadow-card">
               <h3 className="flex items-center gap-2.5 text-lg font-bold text-ink">
                 <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-forest-800 text-gold-400">
                   <FaHeartPulse className="h-4 w-4" aria-hidden />
                 </span>
-                Our approach to Type 2 diabetes
+                {t("about.metabolic.diabetesTitle")}
               </h3>
               <ol className="mt-5 space-y-4">
                 {diabetesGoals.map((g, i) => (
@@ -373,11 +350,9 @@ export default function AboutPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-forest-200 bg-forest-50 text-forest-800">
                 <FaChartLine className="h-5 w-5" aria-hidden />
               </div>
-              <h2 className="mt-5 text-2xl font-bold text-ink">Measurement matters</h2>
+              <h2 className="mt-5 text-2xl font-bold text-ink">{t("about.measure.title")}</h2>
               <p className="mt-3 text-[15px] leading-relaxed text-muted">
-                A patient saying “I feel better” is valuable, but where appropriate we also want
-                measurable evidence of progress. This is one of the central differences between S19
-                and purely traditional herbal practice.
+                {t("about.measure.text")}
               </p>
               <ul className="mt-6 grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
                 {measurableOutcomes.map((o) => (
@@ -400,12 +375,9 @@ export default function AboutPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-forest-200 bg-forest-50 text-forest-800">
                 <FaUserGear className="h-5 w-5" aria-hidden />
               </div>
-              <h3 className="mt-5 text-xl font-bold text-ink">Personalized care</h3>
+              <h3 className="mt-5 text-xl font-bold text-ink">{t("about.personalized.title")}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted">
-                Two people can have the same diagnosis while having very different underlying
-                problems. Age, medical history, medications, laboratory findings, nutrition,
-                lifestyle, disease severity and other conditions all shape an S19 program. Same
-                disease does not automatically mean the same treatment.
+                {t("about.personalized.text")}
               </p>
             </div>
           </Reveal>
@@ -414,10 +386,9 @@ export default function AboutPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-forest-200 bg-forest-50 text-forest-800">
                 <FaUsers className="h-5 w-5" aria-hidden />
               </div>
-              <h3 className="mt-5 text-xl font-bold text-ink">Patient participation</h3>
+              <h3 className="mt-5 text-xl font-bold text-ink">{t("about.participation.title")}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted">
-                The patient is not a passive recipient of medicine; the patient becomes part of the
-                treatment process.
+                {t("about.participation.text")}
               </p>
               <ul className="mt-4 space-y-2">
                 {participation.map((p) => (
@@ -434,12 +405,9 @@ export default function AboutPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-forest-200 bg-forest-50 text-forest-800">
                 <FaArrowsRotate className="h-5 w-5" aria-hidden />
               </div>
-              <h3 className="mt-5 text-xl font-bold text-ink">Continuous monitoring</h3>
+              <h3 className="mt-5 text-xl font-bold text-ink">{t("about.monitoring.title")}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted">
-                Chronic-disease management is never Consultation → Medication → Go home. We
-                emphasize follow-up: patients may be asked to monitor glucose, blood pressure,
-                symptoms, nutrition and treatment response, and investigations may be repeated when
-                appropriate - so programs evolve according to real-world response.
+                {t("about.monitoring.text")}
               </p>
             </div>
           </Reveal>
@@ -450,8 +418,8 @@ export default function AboutPage() {
       <Section>
         <Reveal>
           <div className="mx-auto max-w-2xl text-center">
-            <Kicker center>What makes S19 different</Kicker>
-            <h2 className="mt-4">A modern African integrative health clinic.</h2>
+            <Kicker center>{t("about.different.kicker")}</Kicker>
+            <h2 className="mt-4">{t("about.different.title")}</h2>
           </div>
         </Reveal>
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -473,10 +441,10 @@ export default function AboutPage() {
       <Section className="bg-white">
         <Reveal>
           <div className="mx-auto max-w-2xl text-center">
-            <Kicker center>Getting care</Kicker>
-            <h2 className="mt-4">The S19 patient journey.</h2>
+            <Kicker center>{t("about.journey.kicker")}</Kicker>
+            <h2 className="mt-4">{t("about.journey.title")}</h2>
             <p className="mt-4 text-[15px] leading-relaxed text-muted">
-              Eight stages, from first contact to long-term maintenance of better health.
+              {t("about.journey.text")}
             </p>
           </div>
         </Reveal>
@@ -501,14 +469,12 @@ export default function AboutPage() {
         <Container className="relative z-10">
           <Reveal>
             <div className="mx-auto max-w-3xl text-center">
-              <Kicker dark>S19 in 30 seconds</Kicker>
+              <Kicker dark>{t("about.central.kicker")}</Kicker>
               <p className="mt-5 text-lg font-medium leading-relaxed text-white md:text-xl">
                 {centralMessage}
               </p>
               <p className="mt-6 text-[15px] font-bold text-forest-200">
-                We do not simply ask: “What medicine treats this disease?” We ask: “What is
-                happening inside this person, what factors are contributing to it, what can be
-                changed, and how can we measure whether those changes are working?”
+                {t("about.central.text")}
               </p>
               <p className="mt-8 text-sm font-semibold uppercase tracking-widest text-gold-400">
                 {philosophyTagline}
@@ -521,10 +487,7 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      <CTABand
-        title="Ready for a root-cause approach to your health?"
-        text="Book an in-clinic consultation at our Bafoussam headquarters, or a remote Tele-health session. Investigate, understand, then treat - never blindly."
-      />
+      <CTABand title={t("about.cta.title")} text={t("about.cta.text")} />
     </>
   );
 }

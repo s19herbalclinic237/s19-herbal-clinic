@@ -5,20 +5,23 @@ import toast from "react-hot-toast";
 import { Field, Input, Select, Textarea } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { waLink } from "@/lib/site";
+import { useLocale } from "@/components/i18n/locale-provider";
+import { type TranslationKey } from "@/lib/i18n";
 import { FaWhatsapp, FaCheck, FaLock } from "react-icons/fa6";
 
-const concerns = [
-  "Diabetes / Blood Sugar",
-  "Hypertension / Cardiovascular",
-  "Prostate / Men's Health",
-  "Women's Health / Hormones",
-  "Gastritis / Digestion / Hemorrhoids",
-  "Liver / Kidney Detox",
-  "Integrative Cancer Care",
-  "General Health Consultation",
+const concerns: TranslationKey[] = [
+  "concern.diabetes",
+  "concern.hypertension",
+  "concern.prostate",
+  "concern.women",
+  "concern.gastritis",
+  "concern.liver",
+  "concern.cancer",
+  "concern.general",
 ];
 
 export function BookingForm() {
+  const { t } = useLocale();
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [form, setForm] = useState({
@@ -46,7 +49,7 @@ export function BookingForm() {
       if (!res.ok) throw new Error("Request failed");
       setDone(true);
     } catch {
-      toast.error("Something went wrong. Please try again or use WhatsApp.");
+      toast.error(t("booking.error"));
     } finally {
       setSubmitting(false);
     }
@@ -57,12 +60,10 @@ export function BookingForm() {
       <div className="rounded-lg border border-forest-200 bg-forest-50 p-6 md:p-8">
         <div className="flex items-center gap-2 text-forest-800">
           <FaCheck className="h-5 w-5" aria-hidden />
-          <h3 className="text-lg font-semibold">Request received</h3>
+          <h3 className="text-lg font-semibold">{t("booking.title")}</h3>
         </div>
         <p className="mt-3 text-sm text-ink">
-          Thank you, {form.fullName.split(" ")[0] || "friend"}. Our team will contact you shortly
-          at <strong>{form.phone}</strong>. For an immediate response, connect with the clinic
-          directly on WhatsApp.
+          {t("booking.thanks", { name: form.fullName.split(" ")[0] || "S19", phone: form.phone })}
         </p>
         <a
           href={waLink(
@@ -75,7 +76,7 @@ export function BookingForm() {
           className="mt-5 inline-flex h-11 items-center gap-2 rounded-md bg-forest-700 px-5 text-sm font-semibold text-white hover:bg-forest-800"
         >
           <FaWhatsapp className="h-4 w-4" aria-hidden />
-          Connect with Dr on WhatsApp
+          {t("booking.connectDr")}
         </a>
       </div>
     );
@@ -84,46 +85,46 @@ export function BookingForm() {
   return (
     <form onSubmit={submit} className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Full Name" required>
-          <Input required value={form.fullName} onChange={set("fullName")} placeholder="Your name" autoComplete="name" />
+        <Field label={t("booking.fullName")} required>
+          <Input required value={form.fullName} onChange={set("fullName")} placeholder={t("booking.namePlaceholder")} autoComplete="name" />
         </Field>
-        <Field label="Phone / WhatsApp Number" required>
+        <Field label={t("booking.phone")} required>
           <Input required type="tel" value={form.phone} onChange={set("phone")} placeholder="+237 ..." autoComplete="tel" />
         </Field>
       </div>
-      <Field label="Email (optional)">
+      <Field label={t("booking.email")}>
         <Input type="email" value={form.email} onChange={set("email")} placeholder="you@example.com" autoComplete="email" />
       </Field>
-      <Field label="Consultation Mode" required>
+      <Field label={t("booking.mode")} required>
         <Select required value={form.mode} onChange={set("mode")}>
-          <option>Telehealth (Online / WhatsApp / Call)</option>
-          <option>In-Clinic Visit (Bafoussam Clinic)</option>
+          <option>{t("booking.modeTele")}</option>
+          <option>{t("booking.modeClinic")}</option>
         </Select>
       </Field>
-      <Field label="Primary Health Concern" hint="Select the area closest to your situation.">
+      <Field label={t("booking.concern")} hint={t("booking.concernHint")}>
         <Select value={form.concern} onChange={set("concern")}>
-          <option value="">Select a concern...</option>
+          <option value="">{t("booking.concernPlaceholder")}</option>
           {concerns.map((c) => (
             <option key={c} value={c}>
-              {c}
+              {t(c)}
             </option>
           ))}
         </Select>
       </Field>
-      <Field label="Brief Summary of Symptoms / Previous Treatments">
+      <Field label={t("booking.summary")}>
         <Textarea
           rows={4}
           value={form.message}
           onChange={set("message")}
-          placeholder="A short summary helps us prepare for your consultation."
+          placeholder={t("booking.summaryPlaceholder")}
         />
       </Field>
       <Button type="submit" size="lg" className="w-full" disabled={submitting}>
-        {submitting ? "Sending..." : "Submit & Connect to Dr on WhatsApp"}
+        {submitting ? t("booking.sending") : t("booking.submit")}
       </Button>
       <p className="flex items-center justify-center gap-1.5 text-xs text-muted">
         <FaLock className="h-3 w-3" aria-hidden />
-        Your health details are kept strictly private and confidential.
+        {t("booking.private")}
       </p>
     </form>
   );

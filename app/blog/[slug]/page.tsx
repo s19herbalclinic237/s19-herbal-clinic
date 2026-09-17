@@ -5,6 +5,7 @@ import { Container, Section } from "@/components/ui/container";
 import { formatDate } from "@/lib/format-date";
 import { ArticleBody, readingTime } from "@/components/blog/article-body";
 import { NewsletterForm } from "@/components/blog/newsletter-form";
+import { serverT } from "@/lib/i18n-server";
 import { FaArrowLeft, FaClock, FaRegNewspaper, FaUserPen } from "react-icons/fa6";
 
 export const revalidate = 60;
@@ -54,16 +55,18 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
+  const t = await serverT();
   const post = await fetchPost(slug);
-  if (!post) return { title: "Article not found | S19 Health Blog" };
+  if (!post) return { title: t("blogPost.notFound") };
   return {
-    title: `${post.title} | S19 Health Blog`,
+    title: `${post.title} | ${t("blogPost.metaBlog")}`,
     description: post.excerpt,
   };
 }
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  const t = await serverT();
   const post = await fetchPost(slug);
 
   if (!post) notFound();
@@ -74,23 +77,23 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         <Container className="max-w-3xl">
           <Link href="/blog" className="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-forest-700 hover:text-forest-900">
             <FaArrowLeft className="h-3.5 w-3.5" aria-hidden />
-            Back to the blog
+            {t("blogPost.back")}
           </Link>
 
           <article>
             <p className="text-xs font-semibold uppercase tracking-widest text-gold-600">
-              {post.publishedAt ? formatDate(post.publishedAt) : ""} · S19 Health Blog
+              {post.publishedAt ? formatDate(post.publishedAt) : ""} · {t("blogPost.metaBlog")}
             </p>
             <h1 className="mt-3 font-display text-3xl font-bold leading-tight text-ink sm:text-4xl">{post.title}</h1>
             <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted">
               <p className="flex items-center gap-2">
                 <FaUserPen className="h-4 w-4 text-forest-400" aria-hidden />
-                By {post.author}
+                {t("blogPost.by", { author: post.author })}
               </p>
               <span className="hidden h-4 w-px bg-line-strong sm:block" aria-hidden />
               <p className="flex items-center gap-2">
                 <FaClock className="h-3.5 w-3.5 text-forest-400" aria-hidden />
-                {readingTime(post.body)} min read
+                {t("blogPost.minRead", { minutes: readingTime(post.body) })}
               </p>
             </div>
 
@@ -111,9 +114,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 <FaRegNewspaper className="h-4 w-4" aria-hidden />
               </span>
               <div className="flex-1">
-                <h2 className="font-display text-lg font-semibold text-ink">Enjoyed this article?</h2>
+                <h2 className="font-display text-lg font-semibold text-ink">{t("blogPost.enjoyed")}</h2>
                 <p className="mt-1 text-sm text-muted">
-                  Subscribe for the next health update - tips, new articles and clinic news, straight to your inbox.
+                  {t("blogPost.newsletter.text")}
                 </p>
                 <div className="mt-4">
                   <NewsletterForm />

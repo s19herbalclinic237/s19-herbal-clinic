@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import { ComingSoon } from "@/components/auth/coming-soon";
 import { CTABand } from "@/components/sections/cta-band";
+import { serverT } from "@/lib/i18n-server";
 
-export const metadata: Metadata = {
-  title: "Your account",
-  description:
-    "The S19 Herbal Clinic patient portal is coming soon. Track orders, manage testimonials, and receive clinic messages in one place.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await serverT();
+  return {
+    title: t("account.metaTitle"),
+    description: t("account.metaDescription"),
+  };
+}
 
 export default function AccountPage() {
   return (

@@ -1,4 +1,7 @@
+"use client";
+
 import { cn, formatEur, formatFcfa, formatUsd } from "@/lib/utils";
+import { useLocale } from "@/components/i18n/locale-provider";
 
 export function MultiCurrencyPrice({
   price,
@@ -11,10 +14,11 @@ export function MultiCurrencyPrice({
   size?: "sm" | "md" | "lg";
   className?: string;
 }) {
+  const { t } = useLocale();
   if (price <= 0) {
     return (
       <span className={cn("font-semibold text-forest-800", size === "lg" ? "text-lg" : "text-sm", className)}>
-        Contact S19 for pricing
+        {t("common.contactPricing")}
       </span>
     );
   }

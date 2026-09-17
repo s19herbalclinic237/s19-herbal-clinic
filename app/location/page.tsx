@@ -16,49 +16,52 @@ import {
   FaArrowRight,
 } from "react-icons/fa6";
 import Link from "next/link";
-
-export const metadata: Metadata = {
-  title: "Bafoussam Clinic & Delivery",
-  description:
-    `Visit the S19 Herbal Clinic at ${CLINIC.address}. Nationwide and worldwide delivery available.`,
-};
+import { serverT } from "@/lib/i18n-server";
 
 const HERO_IMG = S19_ASSETS.photos.bloodPressure;
 
-const info = [
-  {
-    icon: <FaMapLocationDot className="h-5 w-5 text-white" aria-hidden />,
-    tile: "from-forest-600 to-forest-900",
-    title: "Exact Physical Address",
-    lines: CLINIC.address.split(", "),
-  },
-  {
-    icon: <FaClock className="h-5 w-5 text-white" aria-hidden />,
-    tile: "from-gold-500 to-gold-600",
-    title: "Opening Hours",
-    lines: [CLINIC.hours, "In-house consultation & pharmacy pickup", "Tele-Health emergency line 24/7 via WhatsApp"],
-  },
-  {
-    icon: <FaGlobe className="h-5 w-5 text-white" aria-hidden />,
-    tile: "from-forest-500 to-forest-800",
-    title: "Dispatch / Logistics",
-    lines: [
-      "Fast dispatch of prescribed herbal packs anywhere in Cameroon",
-      "Worldwide delivery via express courier - fees based on destination",
-      "Local clinic pickup available",
-    ],
-  },
-];
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await serverT();
+  return {
+    title: t("location.meta.title"),
+    description: t("location.meta.description", { address: CLINIC.address }),
+  };
+}
 
-export default function LocationPage() {
+export default async function LocationPage() {
+  const t = await serverT();
+  const info = [
+    {
+      icon: <FaMapLocationDot className="h-5 w-5 text-white" aria-hidden />,
+      tile: "from-forest-600 to-forest-900",
+      title: t("location.info.address"),
+      lines: CLINIC.address.split(", "),
+    },
+    {
+      icon: <FaClock className="h-5 w-5 text-white" aria-hidden />,
+      tile: "from-gold-500 to-gold-600",
+      title: t("location.info.hours"),
+      lines: [CLINIC.hours, t("location.info.hoursLine2"), t("location.info.hoursLine3")],
+    },
+    {
+      icon: <FaGlobe className="h-5 w-5 text-white" aria-hidden />,
+      tile: "from-forest-500 to-forest-800",
+      title: t("location.info.logistics"),
+      lines: [
+        t("location.info.logisticsLine1"),
+        t("location.info.logisticsLine2"),
+        t("location.info.logisticsLine3"),
+      ],
+    },
+  ];
   return (
     <>
       <PageHero
-        eyebrow="Visit Our Physical Facility"
-        title="S19 Herbal Clinic, Bafoussam."
-        lead="In-house consultation, pharmacy pickup, and dispatch logistics - at the heart of Bafoussam, Cameroon."
+        eyebrow={t("location.hero.eyebrow")}
+        title={t("location.hero.title")}
+        lead={t("location.hero.lead")}
         image={HERO_IMG}
-        alt="S19 Herbal Clinic location in Bafoussam, Cameroon"
+        alt={t("location.hero.alt")}
       />
 
       <Section>
@@ -86,7 +89,7 @@ export default function LocationPage() {
           <div className="mt-12 grid gap-8 lg:grid-cols-5">
             <div className="overflow-hidden rounded-lg border border-line shadow-card lg:col-span-3">
               <iframe
-                title="S19 Herbal Clinic on Google Maps"
+                title={t("location.mapTitle")}
                 src="https://www.google.com/maps?q=Immeuble+Cath%C3%A9drale,+Bafoussam,+Cameroon&output=embed"
                 className="h-[360px] w-full border-0"
                 loading="lazy"
@@ -96,8 +99,8 @@ export default function LocationPage() {
             <div className="relative overflow-hidden rounded-lg bg-forest-950 p-8 lg:col-span-2 md:p-9">
               <div className="pointer-events-none absolute -top-16 right-0 h-56 w-56 rounded-full bg-gold-400/10 blur-3xl" />
               <div className="relative">
-                <Kicker dark>We deliver to</Kicker>
-                <h2 className="mt-3 text-2xl font-bold text-white">Shipping coverage</h2>
+                <Kicker dark>{t("location.deliver.kicker")}</Kicker>
+                <h2 className="mt-3 text-2xl font-bold text-white">{t("location.deliver.title")}</h2>
                 <ul className="mt-5 flex flex-wrap gap-2">
                   {deliveryZones.map((z) => (
                     <li
@@ -111,12 +114,10 @@ export default function LocationPage() {
                 </ul>
                 <div className="mt-6 rounded-lg border border-white/15 bg-white/10 p-4 backdrop-blur-sm">
                   <p className="text-xs font-bold uppercase tracking-[0.16em] text-gold-400">
-                    Delivery information
+                    {t("location.deliver.infoTitle")}
                   </p>
                   <p className="mt-2 text-sm leading-relaxed text-forest-100">
-                    S19 can arrange delivery of herbal products within Cameroon and worldwide.
-                    Delivery fees are based on destination and transport/courier charges. Pickup can
-                    also be arranged where applicable.
+                    {t("location.deliver.infoText")}
                   </p>
                 </div>
                 <div className="mt-7 flex flex-col gap-3 sm:flex-row">
@@ -127,13 +128,13 @@ export default function LocationPage() {
                     className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-gold-500 px-5 text-sm font-bold text-forest-950 transition-colors hover:bg-gold-400"
                   >
                     <FaWhatsapp className="h-4 w-4" aria-hidden />
-                    Directions via WhatsApp
+                    {t("location.directions")}
                   </a>
                   <Link
                     href="/contact"
                     className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-white/25 bg-white/10 px-5 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/15"
                   >
-                    Book a visit
+                    {t("location.bookVisit")}
                     <FaArrowRight className="h-3.5 w-3.5" aria-hidden />
                   </Link>
                 </div>
@@ -143,7 +144,7 @@ export default function LocationPage() {
         </Reveal>
       </Section>
 
-      <CTABand title="Visit us in Bafoussam or consult remotely" text="In-clinic consultations, Tele-health, and worldwide herbal dispatch - however far you are." />
+      <CTABand title={t("location.cta.title")} text={t("location.cta.text")} />
     </>
   );
 }
