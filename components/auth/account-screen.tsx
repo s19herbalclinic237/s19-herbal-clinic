@@ -18,6 +18,7 @@ export function AccountScreen() {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   if (loading) {
@@ -42,6 +43,15 @@ export function AccountScreen() {
         : await register(name, email, password);
     setSubmitting(false);
     if (err) setError(err);
+    else if (mode === "register") {
+      setMode("login");
+      setName("");
+      setPassword("");
+      setConfirm("");
+      setNotice(
+        `Your account was created. We sent a verification link to ${email} - please check your inbox, verify your email, then sign in.`
+      );
+    }
   }
 
   if (user) {

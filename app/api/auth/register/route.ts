@@ -8,7 +8,7 @@ import {
   isEmailValid,
   passwordPolicyErrors,
 } from "@/lib/auth";
-import { sendVerificationEmail, siteOrigin } from "@/lib/email";
+import { sendNewAccountNotification, sendVerificationEmail, siteOrigin } from "@/lib/email";
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -65,6 +65,9 @@ export async function POST(request: Request) {
   const verifyLink = `${siteOrigin()}/account/verify?token=${verifyToken}`;
   sendVerificationEmail(email, name, verifyLink).catch((err) =>
     console.error("[auth] verification email failed:", err)
+  );
+  sendNewAccountNotification(name, email).catch((err) =>
+    console.error("[auth] new-account notification failed:", err)
   );
 
   return NextResponse.json(

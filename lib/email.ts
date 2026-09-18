@@ -104,6 +104,14 @@ export async function sendVerificationEmail(to: string, name: string, link: stri
   await sendMail(to, "Verify your S19 account email", wrap(body));
 }
 
+export async function sendNewAccountNotification(name: string, email: string) {
+  if (!ADMIN_EMAIL) return;
+  const body = `<h2 style="margin:0;color:#124034">New account created</h2>
+    <p style="margin:12px 0"><strong>Name:</strong> ${name}<br/><strong>Email:</strong> ${email}</p>
+    <p style="margin:12px 0;font-size:14px;color:#6b7a74">A new patient account was just created on the website. They still need to verify their email before their first sign-in.</p>`;
+  await sendMail(ADMIN_EMAIL, `New account: ${email}`, wrap(body));
+}
+
 export async function sendPasswordResetEmail(to: string, name: string, link: string) {
   const firstName = name.trim().split(/\s+/)[0] || "friend";
   const body = `<h2 style="margin:0 0 6px;color:#124034">Reset your password, ${firstName}</h2>
