@@ -301,7 +301,10 @@ function PostForm({
   const [draft, setDraft] = useState<PostDraft>(initial);
   const [formError, setFormError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [inlineUploading, setInlineUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const inlineFileRef = useRef<HTMLInputElement>(null);
+  const bodyRef = useRef<HTMLTextAreaElement>(null);
 
   const set = (key: keyof PostDraft, value: string | boolean) => setDraft((prev) => ({ ...prev, [key]: value }));
 
@@ -320,6 +323,43 @@ function PostForm({
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = "";
+    }
+  };
+
+  const insertImageIntoBody = (url: string) => {
+    const ta = bodyRef.current;
+    const start = ta?.selectionStart ?? draft.body.length;
+    const end = ta?.selectionEnd ?? draft.body.length;
+    const block = `![Photo](${url})`;
+    const before = draft.body.slice(0, start).trimEnd();
+    const after = draft.body.slice(end).trimStart();
+    const nextBody = [before, block, after].filter((s) => s.length > 0).join("\n\n");
+    set("body", nextBody);
+    requestAnimationFrame(() => {
+      const nextTa = bodyRef.current;
+      if (nextTa) {
+        nextTa.focus();
+        const pos = nextBody.indexOf(block) + block.length;
+        nextTa.setSelectionRange(pos, pos);
+      }
+    });
+  };
+
+  const handleInlineUpload = async (file: File) => {
+    setInlineUploading(true);
+    setFormError(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/upload", { method: "POST", credentials: "include", body: formData });
+      const data = (await res.json().catch(() => ({}))) as { secure_url?: string; error?: string };
+      if (!res.ok || !data.secure_url) throw new Error(data.error || "Upload failed.");
+      insertImageIntoBody(data.secure_url);
+    } catch (e) {
+      setFormError((e as Error).message || "Upload failed. Paste the image URL instead.");
+    } finally {
+      setInlineUploading(false);
+      if (inlineFileRef.current) inlineFileRef.current.value = "";
     }
   };
 
@@ -393,6 +433,7 @@ function PostForm({
         </Field>
         <Field label="Article text" required className="sm:col-span-2">
           <Textarea
+            ref={bodyRef}
             value={draft.body}
             onChange={(e) => set("body", e.target.value)}
             required
@@ -402,6 +443,36 @@ function PostForm({
             placeholder="Write the article here. Blank lines between paragraphs are kept when the article is displayed."
           />
         </Field>
+        <div className="flex flex-wrap items-center gap-3 sm:col-span-2">
+          <Button
+            variant="outline"
+            size="sm"
+            type="button"
+            disabled={inlineUploading}
+            onClick={() => inlineFileRef.current?.click()}
+          >
+            {inlineUploading ? (
+              <FaCloudArrowUp className="h-4 w-4 animate-bounce" aria-hidden />
+            ) : (
+              <FaImage className="h-4 w-4" aria-hidden />
+            )}
+            {inlineUploading ? "Uploading…" : "Insert image into text"}
+          </Button>
+          <p className="text-xs text-muted">
+            Place your cursor where the photo should go, then click the button. Repeat to add more. You can also paste
+            any image URL on its own line, e.g. <code className="rounded bg-cream px-1 py-0.5">![Caption](https://…)</code>
+          </p>
+          <input
+            ref={inlineFileRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) void handleInlineUpload(file);
+            }}
+          />
+        </div>
       </div>
 
       {existingId ? null : (

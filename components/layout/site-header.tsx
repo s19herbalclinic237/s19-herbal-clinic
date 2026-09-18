@@ -77,6 +77,7 @@ export function AnnouncementBar() {
             <FaPhone className="h-3 w-3 shrink-0 text-gold-400" aria-hidden />
             {CLINIC.phone}
           </a>
+          <LanguageSwitcher className="hidden sm:inline-flex" />
         </div>
       </Container>
     </div>
@@ -116,7 +117,7 @@ export function SiteHeader() {
               key={item.href}
               href={item.href}
               className={cn(
-                "rounded-lg px-3 py-2 text-sm font-semibold transition-colors",
+                "rounded-md px-2.5 py-1.5 text-[13px] font-semibold transition-colors",
                 isActive(item.href)
                   ? "bg-forest-100 text-forest-900"
                   : "text-ink/80 hover:bg-forest-50 hover:text-forest-800"
@@ -128,7 +129,6 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <LanguageSwitcher className="hidden md:inline-flex" />
           <Link
             href="/cart"
             aria-label={t("nav.cart")}
