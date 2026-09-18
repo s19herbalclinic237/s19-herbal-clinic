@@ -10,11 +10,10 @@ export interface LocaleEntry {
 const dict = {
   "nav.home": { en: "Home", fr: "Accueil" },
   "nav.programs": { en: "Programs", fr: "Programmes" },
-  "nav.telehealth": { en: "Tele-Health", fr: "Télé-consultation" },
+  "nav.telehealth": { en: "Tele-Health", fr: "Télé-santé" },
   "nav.shop": { en: "Shop", fr: "Boutique" },
   "nav.blog": { en: "Blog", fr: "Blog" },
   "nav.about": { en: "About", fr: "À propos" },
-  "nav.contact": { en: "Contact", fr: "Contact" },
   "nav.account": { en: "My Account", fr: "Mon compte" },
   "nav.cart": { en: "Shopping cart", fr: "Panier" },
   "nav.language": { en: "Language", fr: "Langue" },
@@ -53,7 +52,7 @@ const dict = {
   "home.hero.titleA": { en: "Natural healing,", fr: "Guérison naturelle," },
   "home.hero.titleB": { en: "lasting wellness.", fr: "bien-être durable." },
   "home.hero.lead": {
-    en: "Welcome to {brand} in Bafoussam. Our mission is to provide safe, natural and effective herbal solutions that support long-term health and wellbeing - science-based consultations, individualized formulations, and Tele-Health, one clinic with a worldwide reach.",
+    en: "Welcome to {brand} in Bafoussam. We help you with safe, natural herbal care for long-term health — clinic visits, consultations by phone or WhatsApp, and herbal products delivered anywhere.",
     fr: "Bienvenue à la {brand} de Bafoussam. Notre mission est de fournir des solutions à base de plantes sûres, naturelles et efficaces qui soutiennent la santé et le bien-être à long terme - des consultations fondées sur la science, des formulations individualisées et la Télé-consultation, une clinique avec une portée mondiale.",
   },
   "home.hero.whatsapp": { en: "WhatsApp the Clinic", fr: "Écrire à la clinique sur WhatsApp" },
@@ -61,24 +60,24 @@ const dict = {
   "home.focus.kicker": { en: "What we offer", fr: "Ce que nous proposons" },
   "home.focus.title": { en: "Three ways to care.", fr: "Trois façons de prendre soin de vous." },
   "home.focus.lead": {
-    en: "One clinic, a worldwide reach - in-clinic care, remote Tele-Health, and a standardized herbal catalog delivered to your door.",
+    en: "One clinic, a worldwide reach — come and see us, talk to us from home, or order from our catalog.",
     fr: "Une clinique, une portée mondiale - soins en clinique, Télé-consultation à distance et un catalogue de plantes médicinales standardisées livré à votre porte.",
   },
-  "home.focus.clinical.title": { en: "Clinical Care", fr: "Soins cliniques" },
+  "home.focus.clinical.title": { en: "In-Clinic Care", fr: "Soins en clinique" },
   "home.focus.clinical.desc": {
-    en: "In-clinic consultations and individualized herbal treatment plans reviewed around your medical history and lab results.",
+    en: "Come and see us in Bafoussam. We review your health history and lab results before any remedy.",
     fr: "Consultations en clinique et plans de traitement à base de plantes individualisés, examinés en fonction de vos antécédents médicaux et de vos résultats de laboratoire.",
   },
   "home.focus.clinical.label": { en: "Clinical Programs", fr: "Programmes cliniques" },
-  "home.focus.tele.title": { en: "Tele-Health", fr: "Télé-consultation" },
+  "home.focus.tele.title": { en: "Talk to Us From Home", fr: "Parlez-nous depuis chez vous" },
   "home.focus.tele.desc": {
-    en: "Structured remote consultations, lab result review, and scheduled follow-ups - anywhere in the world via phone and WhatsApp.",
+    en: "Phone or WhatsApp consultation from anywhere in the world. Send us your lab results for review.",
     fr: "Consultations à distance structurées, examen des résultats de laboratoire et suivis programmés - partout dans le monde par téléphone et WhatsApp.",
   },
   "home.focus.tele.label": { en: "Book Virtual Visit", fr: "Réserver une visite virtuelle" },
   "home.focus.catalog.title": { en: "Herbal Catalog", fr: "Catalogue de plantes médicinales" },
   "home.focus.catalog.desc": {
-    en: "Standardized herbal teas, extracts, and detox packs. Available for pickup in Bafoussam and worldwide delivery.",
+    en: "Herbal teas, extracts, and detox packs. Pick up in Bafoussam or get worldwide delivery.",
     fr: "Tisanes, extraits et packs de détox à base de plantes standardisés. Disponibles au retrait à Bafoussam et en livraison mondiale.",
   },
   "home.focus.catalog.label": { en: "Browse Catalog", fr: "Parcourir le catalogue" },
@@ -86,49 +85,49 @@ const dict = {
   "home.programs.kicker": { en: "Clinical care focus", fr: "Focus soins cliniques" },
   "home.programs.title": { en: "Integrative Treatment Programs.", fr: "Programmes de traitement intégratifs." },
   "home.programs.lead": {
-    en: "Every plan is customized after your initial consultation. Pricing is confirmed per patient after your evaluation.",
+    en: "Every plan is built for you after your first consultation. We confirm the price per patient after your evaluation.",
     fr: "Chaque plan est personnalisé après votre consultation initiale. Le prix est confirmé par patient après votre évaluation.",
   },
 
   "home.why.kicker": { en: "Why S19", fr: "Pourquoi S19" },
   "home.why.title": { en: "Built on review, reason, and follow-through.", fr: "Bâti sur l'examen, la raison et le suivi." },
   "home.why.lead": {
-    en: "{brand} is a Bafoussam-based herbal and integrative wellness clinic. Our clinical philosophy starts with the individual - their history, their labs, their daily reality - before any remedy is prescribed.",
+    en: "{brand} is a herbal clinic in Bafoussam. We start with you — your health history, your lab tests, and your daily life — before we give any remedy.",
     fr: "La {brand} est une clinique de bien-être à base de plantes et de médecine intégrative située à Bafoussam. Notre philosophie clinique commence par l'individu - ses antécédents, ses analyses, sa réalité quotidienne - avant toute prescription.",
   },
 
   "home.catalog.kicker": { en: "Standardized formulas", fr: "Formules standardisées" },
   "home.catalog.title": { en: "S19 Herbal Catalog", fr: "Catalogue de plantes S19" },
   "home.catalog.lead": {
-    en: "Carefully formulated botanical solutions, available for pickup in Bafoussam and worldwide delivery.",
+    en: "Carefully made herbal products. Pick up your order in Bafoussam or get it delivered anywhere in the world.",
     fr: "Des solutions botaniques soigneusement formulées, disponibles au retrait à Bafoussam et en livraison mondiale.",
   },
   "home.catalog.note": {
-    en: "Also available in clinic: Malaria & Typhoid Tea, Activated Charcoal, Oral Powder, Castor Oil, and Weight-loss Tea.",
+    en: "Also in the clinic: Malaria & Typhoid Tea, Activated Charcoal, Oral Powder, Castor Oil, and Weight-loss Tea.",
     fr: "Également disponibles en clinique : Tisane Malaria & Typhoïde, Charbon actif, Poudre buccale, Huile de ricin et Tisane minceur.",
   },
 
-  "home.tele.kicker": { en: "Virtual care", fr: "Soins virtuels" },
+  "home.tele.kicker": { en: "Talk to us from home", fr: "Parlez-nous depuis chez vous" },
   "home.tele.title": {
-    en: "Remote consultations & follow-ups, anywhere.",
+    en: "Care from home, anywhere in the world.",
     fr: "Consultations et suivis à distance, partout.",
   },
   "home.tele.lead": {
-    en: "Cannot make it to Bafoussam? We run structured online consultations - symptoms, medical history, and lab reports - then dispatch your protocol and stay with you through scheduled follow-ups.",
+    en: "Cannot make it to Bafoussam? Talk to us about your health from anywhere in the world via phone or WhatsApp. Send us your lab test results for review, discuss your health concerns with us, and receive regular follow-up.",
     fr: "Impossible de venir à Bafoussam ? Nous organisons des consultations en ligne structurées - symptômes, antécédents médicaux et rapports de laboratoire - puis nous envoyons votre protocole et restons à vos côtés grâce à des suivis programmés.",
   },
-  "home.tele.cta": { en: "Book Virtual Consult", fr: "Réserver une consultation virtuelle" },
+  "home.tele.cta": { en: "Book a Phone/WhatsApp Consultation", fr: "Réserver une consultation par téléphone/WhatsApp" },
 
   "home.steps.kicker": { en: "Getting care", fr: "Accéder aux soins" },
   "home.steps.title": { en: "Four steps, start to follow-up.", fr: "Quatre étapes, du début au suivi." },
   "home.steps.1.title": { en: "Book", fr: "Réserver" },
-  "home.steps.1.text": { en: "Book a consultation - in clinic or remotely.", fr: "Réservez une consultation - en clinique ou à distance." },
+  "home.steps.1.text": { en: "Book a consultation — in clinic or from home.", fr: "Réservez une consultation - en clinique ou à distance." },
   "home.steps.2.title": { en: "Protocol", fr: "Protocole" },
-  "home.steps.2.text": { en: "We tailor a root-cause herbal protocol.", fr: "Nous adaptons un protocole à base de plantes axé sur la cause racine." },
+  "home.steps.2.text": { en: "We build a personal herbal plan for you.", fr: "Nous adaptons un protocole à base de plantes axé sur la cause racine." },
   "home.steps.3.title": { en: "Dispatch", fr: "Expédition" },
-  "home.steps.3.text": { en: "Your pack is shipped to your door.", fr: "Votre pack est livré à votre porte." },
+  "home.steps.3.text": { en: "Your pack is sent to your door.", fr: "Votre pack est livré à votre porte." },
   "home.steps.4.title": { en: "Follow-up", fr: "Suivi" },
-  "home.steps.4.text": { en: "Scheduled check-ins on your progress.", fr: "Des points de contrôle programmés sur vos progrès." },
+  "home.steps.4.text": { en: "We check on your progress and adjust.", fr: "Des points de contrôle programmés sur vos progrès." },
 
   "home.testimonials.kicker": { en: "Patient stories", fr: "Témoignages de patients" },
   "home.testimonials.title": { en: "Care that people talk about.", fr: "Des soins dont les gens parlent." },
@@ -136,7 +135,7 @@ const dict = {
   "home.booking.kicker": { en: "Direct consultation", fr: "Consultation directe" },
   "home.booking.title": { en: "Book your consultation.", fr: "Réservez votre consultation." },
   "home.booking.lead": {
-    en: "Fill the form to request a priority in-clinic appointment or a Tele-Health consultation. Our clinical team confirms your booking by phone or WhatsApp.",
+    en: "Fill in the form to ask for a clinic appointment or a consultation by phone or WhatsApp. Our team confirms your booking.",
     fr: "Remplissez le formulaire pour demander un rendez-vous prioritaire en clinique ou une consultation de Télé-consultation. Notre équipe clinique confirme votre réservation par téléphone ou WhatsApp.",
   },
   "home.booking.whatsapp": {
@@ -163,7 +162,7 @@ const dict = {
 
   "cta.title": { en: "Start your consultation", fr: "Commencez votre consultation" },
   "cta.text": {
-    en: "Book a priority in-clinic appointment or a Tele-health consultation with the S19 clinic today.",
+    en: "Book a clinic appointment or a phone/WhatsApp consultation with the S19 clinic today.",
     fr: "Réservez dès aujourd'hui un rendez-vous prioritaire en clinique ou une télé-consultation avec la clinique S19.",
   },
   "cta.primary": { en: "Book a Consultation", fr: "Réserver une consultation" },
@@ -580,22 +579,31 @@ const dict = {
   },
   "blog.featured": { en: "Featured", fr: "À la une" },
   "blog.read": { en: "Read article", fr: "Lire l'article" },
+  "blog.search.placeholder": { en: "Search articles...", fr: "Rechercher des articles..." },
+  "blog.filter.all": { en: "All", fr: "Tous" },
+  "blog.filter.featured": { en: "Featured", fr: "À la une" },
+  "blog.search.empty": { en: "No articles match your search.", fr: "Aucun article ne correspond à votre recherche." },
   "blog.newsletter.title": { en: "Get new articles by email", fr: "Recevez les nouveaux articles par e-mail" },
   "blog.newsletter.text": {
     en: "Health tips, clinic updates and new articles - no spam, unsubscribe anytime.",
     fr: "Conseils santé, actualités de la clinique et nouveaux articles - pas de spam, désinscription à tout moment.",
   },
 
-  "tele.hero.eyebrow": { en: "Virtual Medical Care Available", fr: "Soins médicaux virtuels disponibles" },
+  "tele.hero.eyebrow": { en: "Care From Home", fr: "Soins médicaux virtuels disponibles" },
   "tele.hero.title": {
-    en: "S19 Tele-Health: remote consultations & follow-ups anywhere.",
+    en: "Talk to S19 from home, anywhere in the world.",
     fr: "Télé-santé S19 : consultations à distance et suivis où que vous soyez.",
   },
   "tele.hero.lead": {
-    en: "Cannot make it to our physical clinic in Bafoussam? We provide structured online consultations, evaluation of your laboratory results, and scheduled treatment follow-ups via phone and secure messaging.",
+    en: "Cannot make it to our clinic in Bafoussam? You can send us your lab results, discuss your health concerns by phone or WhatsApp, and get regular follow-up — wherever you are.",
     fr: "Impossible de venir à notre clinique physique de Bafoussam ? Nous proposons des consultations en ligne structurées, l'évaluation de vos résultats de laboratoire, et des suivis de traitement planifiés par téléphone et messagerie sécurisée.",
   },
   "tele.hero.alt": { en: "Doctor preparing for a remote Tele-Health consultation", fr: "Médecin se préparant pour une consultation de Télé-santé à distance" },
+  "tele.price.title": { en: "Online consultation", fr: "Consultation en ligne" },
+  "tele.price.text": {
+    en: "One phone or WhatsApp consultation. Your lab results are reviewed and you get a personal herbal plan.",
+    fr: "Une consultation par téléphone ou WhatsApp. Vos résultats de laboratoire sont examinés et vous recevez un plan personnel à base de plantes.",
+  },
   "tele.steps.kicker": { en: "How remote care works", fr: "Comment fonctionnent les soins à distance" },
   "tele.steps.title": { en: "From consultation to follow-up, wherever you are.", fr: "De la consultation au suivi, où que vous soyez." },
   "tele.step4.title": { en: "Anywhere, Anytime", fr: "Partout, à tout moment" },
@@ -859,8 +867,8 @@ const dict = {
 
   "account.metaTitle": { en: "Your account", fr: "Votre compte" },
   "account.metaDescription": {
-    en: "The S19 Herbal Clinic patient portal is coming soon. Track orders, manage testimonials, and receive clinic messages in one place.",
-    fr: "Le portail patient de la clinique S19 arrive bientôt. Suivez vos commandes, gérez vos témoignages et recevez les messages de la clinique en un seul endroit.",
+    en: "Sign in to your S19 Herbal Clinic account to track orders, manage testimonials, read messages, and receive updates.",
+    fr: "Connectez-vous à votre compte de la clinique S19 pour suivre vos commandes, gérer vos témoignages, lire vos messages et recevoir des mises à jour.",
   },
   "account.kicker": { en: "User Portal", fr: "Portail utilisateur" },
   "account.title": { en: "Coming Soon.", fr: "Bientôt disponible." },

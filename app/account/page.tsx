@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { ComingSoon } from "@/components/auth/coming-soon";
-import { CTABand } from "@/components/sections/cta-band";
+import { AccountScreen } from "@/components/auth/account-screen";
 import { serverT } from "@/lib/i18n-server";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -12,12 +11,5 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function AccountPage() {
-  return (
-    <>
-      <ComingSoon />
-      <div className="border-t border-line bg-white">
-        <CTABand />
-      </div>
-    </>
-  );
+  return <AccountScreen />;
 }

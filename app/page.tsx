@@ -5,7 +5,7 @@ import { buttonLinkClasses } from "@/components/ui/button";
 import { ProductCard } from "@/components/ui/product-card";
 import { BookingForm } from "@/components/sections/booking-form";
 import { CTABand } from "@/components/sections/cta-band";
-import { BlurIn, Reveal, RevealLeft, RevealRight, ScaleIn, StaggerGroup, StaggerItem } from "@/components/ui/motion";
+import { BlurIn, Reveal, ScaleIn, StaggerGroup, StaggerItem } from "@/components/ui/motion";
 import { getProducts } from "@/lib/catalog";
 import { getApprovedTestimonials } from "@/lib/testimonials";
 import {
@@ -30,8 +30,6 @@ import {
   FaRegCircleCheck,
 } from "react-icons/fa6";
 
-const STORY_IMG = S19_ASSETS.photos.nutritionBasket;
-
 const FEATURED_SLUGS = ["s19-herbal-wine-reserve", "s19-shea-butter", "s19-malaria-typhoid-combo"];
 
 export default async function HomePage() {
@@ -42,25 +40,22 @@ export default async function HomePage() {
     .filter((p): p is NonNullable<typeof p> => typeof p !== "undefined");
   const testimonials = await getApprovedTestimonials(12);
 
-  const focus = [
+  const careLinks = [
     {
       icon: S19_ASSETS.icons.herbalMedicine,
       title: t("home.focus.clinical.title"),
-      desc: t("home.focus.clinical.desc"),
       href: "/programs",
       label: t("home.focus.clinical.label"),
     },
     {
       icon: S19_ASSETS.icons.trustedCare,
       title: t("home.focus.tele.title"),
-      desc: t("home.focus.tele.desc"),
       href: "/telehealth",
       label: t("home.focus.tele.label"),
     },
     {
       icon: S19_ASSETS.icons.naturalIngredients,
       title: t("home.focus.catalog.title"),
-      desc: t("home.focus.catalog.desc"),
       href: "/shop",
       label: t("home.focus.catalog.label"),
     },
@@ -85,7 +80,7 @@ export default async function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-r from-forest-950/95 via-forest-950/75 to-forest-950/30" />
         <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-forest-950/90 via-transparent to-transparent" />
 
-<Container className="relative z-10 w-full py-24 md:py-32">
+        <Container className="relative z-10 w-full py-24 md:py-32">
           <BlurIn>
             <h1 className="mt-6 max-w-3xl text-balance text-white drop-shadow-sm">
               {t("home.hero.titleA")}
@@ -113,57 +108,34 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      {/* CORE FOCUS */}
-      <Section className="bg-white">
-        <ScaleIn>
-          <div className="mx-auto max-w-2xl text-center">
-            <Kicker center>{t("home.focus.kicker")}</Kicker>
-            <h2 className="mt-4">{t("home.focus.title")}</h2>
-            <p className="mt-4 text-[15px] text-muted">
-              {t("home.focus.lead")}
-            </p>
-          </div>
-        </ScaleIn>
-        <StaggerGroup className="mt-12 grid gap-5 md:grid-cols-3">
-          {focus.map((f) => (
-            <StaggerItem key={f.title}>
-              <Link
-                href={f.href}
-                className="group relative block h-full overflow-hidden rounded-lg border border-line bg-cream p-8 transition-all hover:border-forest-300 hover:shadow-lift"
-              >
-                <div className="absolute -bottom-10 -right-10 h-40 w-40 rounded-full bg-forest-100/70 blur-2xl transition-transform duration-700 group-hover:scale-125" />
-                <div className="relative">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-lg border border-forest-200 bg-forest-50 shadow-lift transition-transform group-hover:scale-110">
-                    <img src={f.icon} alt="" className="h-7 w-7" aria-hidden />
-                  </div>
-                  <h3 className="mt-6 text-xl font-bold text-ink">{f.title}</h3>
-                  <p className="mt-2.5 text-sm leading-relaxed text-muted">{f.desc}</p>
-                  <span className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-forest-800 transition-all group-hover:gap-3">
-                    {f.label}
-                    <FaArrowRight className="h-3 w-3" aria-hidden />
-                  </span>
-                </div>
-              </Link>
-            </StaggerItem>
-          ))}
-        </StaggerGroup>
-      </Section>
-
-      {/* TREATMENT PROGRAMS */}
+      {/* TREATMENT PROGRAMS (merged with Why S19 principles) */}
       <Section>
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="lg:sticky lg:top-28 lg:col-span-5 lg:self-start">
-            <RevealLeft>
+            <Reveal>
               <Kicker>{t("home.programs.kicker")}</Kicker>
               <h2 className="mt-4">{t("home.programs.title")}</h2>
               <p className="mt-5 text-[15px] leading-relaxed text-muted">
                 {t("home.programs.lead")}
               </p>
+              <div className="mt-7 space-y-4 border-t border-line pt-7">
+                {clinicalPrinciples.map((p) => (
+                  <div key={p.title} className="flex items-start gap-3">
+                    <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-forest-100 text-forest-800">
+                      <FaRegCircleCheck className="h-3.5 w-3.5" aria-hidden />
+                    </span>
+                    <div>
+                      <h3 className="text-sm font-bold text-ink">{p.title}</h3>
+                      <p className="mt-0.5 text-sm leading-relaxed text-muted">{p.text}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
               <Link href="/programs" className={buttonLinkClasses("primary", "lg", "mt-8")}>
                 {t("common.viewAllPrograms")}
                 <FaArrowRight className="h-3.5 w-3.5" aria-hidden />
               </Link>
-            </RevealLeft>
+            </Reveal>
           </div>
           <div className="lg:col-span-7">
             {treatmentPrograms.slice(0, 3).map((p, i) => (
@@ -188,42 +160,8 @@ export default async function HomePage() {
         </div>
       </Section>
 
-      {/* PRINCIPLES - editorial split */}
-      <Section className="bg-white">
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          <RevealLeft className="order-2 lg:order-1">
-            <div className="relative overflow-hidden rounded-lg shadow-lift">
-              <img src={STORY_IMG} alt="The S19 Herbal Clinic care environment" className="h-[420px] w-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-forest-950/40 to-transparent" />
-            </div>
-          </RevealLeft>
-          <div className="order-1 lg:order-2">
-            <RevealRight>
-              <Kicker>{t("home.why.kicker")}</Kicker>
-              <h2 className="mt-4">{t("home.why.title")}</h2>
-              <p className="mt-5 text-[15px] leading-relaxed text-muted">
-                {t("home.why.lead", { brand: CLINIC.brand })}
-              </p>
-              <div className="mt-8 space-y-5">
-                {clinicalPrinciples.map((p) => (
-                  <div key={p.title} className="flex items-start gap-4">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-forest-100 text-forest-800">
-                      <FaRegCircleCheck className="h-4 w-4" aria-hidden />
-                    </span>
-                    <div>
-                      <h3 className="text-base font-bold text-ink">{p.title}</h3>
-                      <p className="mt-1 text-sm leading-relaxed text-muted">{p.text}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </RevealRight>
-          </div>
-        </div>
-      </Section>
-
       {/* FEATURED REMEDIES */}
-      <Section>
+      <Section className="bg-white">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <Reveal>
             <Kicker>{t("home.catalog.kicker")}</Kicker>
@@ -248,7 +186,7 @@ export default async function HomePage() {
         </p>
       </Section>
 
-      {/* TELEHEALTH - full-bleed image band */}
+      {/* TELEHEALTH (merged with the 3 care links) - full-bleed image band */}
       <section className="relative overflow-hidden py-24 md:py-32">
         <img
           src={S19_ASSETS.photos.patientRecords}
@@ -257,9 +195,31 @@ export default async function HomePage() {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-forest-950/95 via-forest-950/80 to-forest-950/40" />
         <Container className="relative z-10">
-          <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
+          <StaggerGroup className="grid gap-4 sm:grid-cols-3">
+            {careLinks.map((c) => (
+              <StaggerItem key={c.href}>
+                <Link
+                  href={c.href}
+                  className="flex h-full items-center gap-4 rounded-lg border border-white/20 bg-white/10 p-5 backdrop-blur-sm transition-all hover:border-gold-400/60 hover:bg-white/15"
+                >
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-white/25 bg-white/10">
+                    <img src={c.icon} alt="" className="h-5 w-5" aria-hidden />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="truncate text-sm font-bold text-white">{c.title}</h3>
+                    <span className="mt-0.5 inline-flex items-center gap-1 text-xs font-semibold text-gold-400">
+                      {c.label}
+                      <FaArrowRight className="h-2.5 w-2.5" aria-hidden />
+                    </span>
+                  </div>
+                </Link>
+              </StaggerItem>
+            ))}
+          </StaggerGroup>
+
+          <div className="mt-14 grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-6">
-              <Reveal>
+              <Reveal delay={0.05}>
                 <Kicker dark>{t("home.tele.kicker")}</Kicker>
                 <h2 className="mt-5 text-balance text-white">
                   {t("home.tele.title")}
@@ -279,13 +239,13 @@ export default async function HomePage() {
               </Reveal>
             </div>
             <StaggerGroup className="space-y-0 lg:col-span-6">
-              {telehealthSteps.map((t) => (
-                <StaggerItem key={t.step}>
+              {telehealthSteps.map((ts) => (
+                <StaggerItem key={ts.step}>
                   <div className="flex items-start gap-5 border-b border-white/15 py-6 first:pt-0 last:border-0">
-                    <span className="font-display text-4xl font-semibold text-gold-400">{t.step}</span>
+                    <span className="font-display text-4xl font-semibold text-gold-400">{ts.step}</span>
                     <div>
-                      <h3 className="text-lg font-bold text-white">{t.title}</h3>
-                      <p className="mt-1 text-sm leading-relaxed text-forest-100/85">{t.text}</p>
+                      <h3 className="text-lg font-bold text-white">{ts.title}</h3>
+                      <p className="mt-1 text-sm leading-relaxed text-forest-100/85">{ts.text}</p>
                     </div>
                   </div>
                 </StaggerItem>
@@ -295,85 +255,21 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      {/* HOW BOOKING WORKS */}
-      <Section className="bg-white">
-        <Reveal>
-          <div className="mx-auto max-w-2xl text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg border border-forest-200 bg-forest-50 shadow-sm">
-              <img src={S19_ASSETS.icons.wellnessAndCare} alt="" className="h-6 w-6" aria-hidden />
-            </div>
-            <Kicker center>{t("home.steps.kicker")}</Kicker>
-            <h2 className="mt-4">{t("home.steps.title")}</h2>
-          </div>
-        </Reveal>
-        <StaggerGroup className="mt-12 grid gap-px overflow-hidden rounded-lg border border-line bg-cream sm:grid-cols-2 lg:grid-cols-4">
-          {bookingSteps.map((s) => (
-            <StaggerItem key={s.n} className="relative bg-white p-7">
-              <span className="font-display text-4xl font-semibold text-forest-200">{s.n}</span>
-              <h3 className="mt-3 text-lg font-bold text-ink">{s.title}</h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-muted">{s.text}</p>
-            </StaggerItem>
-          ))}
-        </StaggerGroup>
-      </Section>
-
-      {/* TESTIMONIALS - marquee */}
-      <Section>
-        <Reveal>
-          <div className="mx-auto max-w-2xl text-center">
-            <Kicker center>{t("home.testimonials.kicker")}</Kicker>
-            <h2 className="mt-4">{t("home.testimonials.title")}</h2>
-          </div>
-        </Reveal>
-        <Reveal className="mt-12">
-          <div className="relative overflow-hidden">
-            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-cream to-transparent sm:w-24" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-cream to-transparent sm:w-24" />
-            <div
-              className="marquee-track flex w-max animate-marquee hover:[animation-play-state:paused]"
-              style={{ animationDuration: "60s" }}
-            >
-              {[0, 1].map((copy) => (
-                <div key={copy} className="flex shrink-0" aria-hidden={copy === 1}>
-                  {testimonials.map((t) => (
-                    <figure
-                      key={`${copy}-${t.name}`}
-                      className="mx-2.5 flex h-full w-[300px] flex-col rounded-lg border border-line bg-white p-7 shadow-card transition-shadow hover:shadow-lift sm:w-[340px]"
-                    >
-                      <div className="flex items-center gap-1 text-gold-500">
-                        {Array.from({ length: 5 }).map((_, j) => (
-                          <FaStar key={j} className="h-3.5 w-3.5" aria-hidden />
-                        ))}
-                      </div>
-                      <blockquote className="mt-4 flex-1 text-[15px] leading-relaxed text-ink/80">
-                        &ldquo;{t.text}&rdquo;
-                      </blockquote>
-                      <figcaption className="mt-6 border-t border-line pt-4 text-sm">
-                        <span className="font-bold text-ink">{t.name}</span>
-                        <span className="mx-1.5 text-muted">·</span>
-                        <span className="text-muted">{t.city}</span>
-                        {t.country ? (
-                          <>
-                            <span className="mx-1.5 text-muted">·</span>
-                            <span className="text-forest-600">{t.country}</span>
-                          </>
-                        ) : null}
-                        <span className="mt-1 block text-xs font-medium italic text-muted">{t.program}</span>
-                      </figcaption>
-                    </figure>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
-        </Reveal>
-      </Section>
-
-      {/* BOOKING */}
+      {/* BOOKING (merged with the 4 steps) */}
       <section className="relative overflow-hidden border-y border-forest-900 bg-forest-950 py-16 md:py-24">
         <div className="pointer-events-none absolute -top-20 right-0 h-72 w-72 rounded-full bg-gold-400/10 blur-3xl" />
         <div className="pointer-events-none absolute bottom-0 left-1/4 h-64 w-64 rounded-full bg-emerald-400/10 blur-3xl" />
         <Container className="relative z-10">
+          <StaggerGroup className="mb-14 grid gap-px overflow-hidden rounded-lg border border-forest-800 bg-forest-800 sm:grid-cols-2 lg:grid-cols-4">
+            {bookingSteps.map((s) => (
+              <StaggerItem key={s.n} className="bg-forest-950 p-6">
+                <span className="font-display text-3xl font-semibold text-gold-400">{s.n}</span>
+                <h3 className="mt-2 text-base font-bold text-white">{s.title}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-forest-200/80">{s.text}</p>
+              </StaggerItem>
+            ))}
+          </StaggerGroup>
+
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
             <div>
               <Reveal>
@@ -406,6 +302,58 @@ export default async function HomePage() {
           </div>
         </Container>
       </section>
+
+      {/* TESTIMONIALS - marquee */}
+      <Section>
+        <Reveal>
+          <div className="mx-auto max-w-2xl text-center">
+            <Kicker center>{t("home.testimonials.kicker")}</Kicker>
+            <h2 className="mt-4">{t("home.testimonials.title")}</h2>
+          </div>
+        </Reveal>
+        <Reveal className="mt-12">
+          <div className="relative overflow-hidden">
+            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-cream to-transparent sm:w-24" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-cream to-transparent sm:w-24" />
+            <div
+              className="marquee-track flex w-max animate-marquee hover:[animation-play-state:paused]"
+              style={{ animationDuration: "60s" }}
+            >
+              {[0, 1].map((copy) => (
+                <div key={copy} className="flex shrink-0" aria-hidden={copy === 1}>
+                  {testimonials.map((test) => (
+                    <figure
+                      key={`${copy}-${test.name}`}
+                      className="mx-2.5 flex h-full w-[300px] flex-col rounded-lg border border-line bg-white p-7 shadow-card transition-shadow hover:shadow-lift sm:w-[340px]"
+                    >
+                      <div className="flex items-center gap-1 text-gold-500">
+                        {Array.from({ length: 5 }).map((_, j) => (
+                          <FaStar key={j} className="h-3.5 w-3.5" aria-hidden />
+                        ))}
+                      </div>
+                      <blockquote className="mt-4 flex-1 text-[15px] leading-relaxed text-ink/80">
+                        &ldquo;{test.text}&rdquo;
+                      </blockquote>
+                      <figcaption className="mt-6 border-t border-line pt-4 text-sm">
+                        <span className="font-bold text-ink">{test.name}</span>
+                        <span className="mx-1.5 text-muted">·</span>
+                        <span className="text-muted">{test.city}</span>
+                        {test.country ? (
+                          <>
+                            <span className="mx-1.5 text-muted">·</span>
+                            <span className="text-forest-600">{test.country}</span>
+                          </>
+                        ) : null}
+                        <span className="mt-1 block text-xs font-medium italic text-muted">{test.program}</span>
+                      </figcaption>
+                    </figure>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+      </Section>
 
       {/* LOCATION - full-bleed image band */}
       <section className="relative overflow-hidden py-24 md:py-28">

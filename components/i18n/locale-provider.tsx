@@ -8,7 +8,6 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { useRouter } from "next/navigation";
 import {
   COOKIE_NAME,
   translate,
@@ -35,7 +34,6 @@ export function LocaleProvider({
   children: ReactNode;
 }) {
   const [locale, setLocaleState] = useState<Locale>(initialLocale);
-  const router = useRouter();
 
   const t = useCallback<TFunc>(
     (key, params) => translate(locale, key, params),
@@ -46,9 +44,9 @@ export function LocaleProvider({
     (l: Locale) => {
       setLocaleState(l);
       document.cookie = `${COOKIE_NAME}=${l}; path=/; max-age=31536000; samesite=lax`;
-      router.refresh();
+      window.location.reload();
     },
-    [router]
+    []
   );
 
   const value = useMemo(

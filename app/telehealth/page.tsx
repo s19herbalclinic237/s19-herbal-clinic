@@ -8,6 +8,7 @@ import { CLINIC, waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { FaWhatsapp, FaShieldHalved, FaFlask, FaClock, FaPaperPlane } from "react-icons/fa6";
 import { serverT } from "@/lib/i18n-server";
+import { formatEur, formatFcfa, formatUsd } from "@/lib/utils";
 
 const HERO_IMG = S19_ASSETS.photos.patientRecords;
 
@@ -48,6 +49,26 @@ export default async function TelehealthPage() {
         image={HERO_IMG}
         alt={t("tele.hero.alt")}
       />
+
+      {/* Price */}
+      <Section>
+        <Reveal>
+          <div className="mx-auto flex max-w-3xl flex-col items-center justify-between gap-4 rounded-lg border border-forest-200 bg-forest-50/70 p-6 text-center sm:flex-row sm:text-left md:p-8">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-forest-600">{t("tele.price.title")}</p>
+              <p className="mt-2 text-[15px] leading-relaxed text-ink/80">{t("tele.price.text")}</p>
+            </div>
+            <div className="shrink-0 text-center sm:text-right">
+              <p className="font-display text-2xl font-bold text-forest-900">
+                {formatFcfa(10000)}
+              </p>
+              <p className="text-sm text-muted">
+                ≈ {formatUsd(10000)} · {formatEur(10000)}
+              </p>
+            </div>
+          </div>
+        </Reveal>
+      </Section>
 
       {/* Steps */}
       <Section>

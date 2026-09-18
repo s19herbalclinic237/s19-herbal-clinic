@@ -51,14 +51,22 @@ Our Diabetes and Metabolic Health program starts with an individual assessment o
 SOURCES
 WHO Diabetes fact sheet (2024); IDF Diabetes Atlas, 11th edition; NCD Risk Factor Collaboration, The Lancet (2024); Global Burden of Disease Study 2021.
 
-This article is educational and is not a substitute for a medical consultation. Always discuss changes to your treatment plan with a qualified health professional.`,
+This article is educational and is not a substitute for a medical consultation. Always discuss changes to your treatment plan with a qualified health professional.
+
+## Contact Us
+
+- WhatsApp: [Click here](https://wa.me/237672595989)
+- Email: Sweet19hoe@gmail.com
+- Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
+
+Online consultation is free. We can answer your questions and ship our products to any country with a DHL service.`,
   },
   {
     title: "The Silent Killer You Can Measure: High Blood Pressure Facts Every Adult Should Know",
     slug: "high-blood-pressure-silent-killer",
     excerpt:
       "1.4 billion adults have high blood pressure, and roughly 44% do not know it. It is silent, measurable and - for many people - reversible. Here is what the science really says.",
-    cover: "/s19-assets/s19%20staff%20taking%20blood%20pressure%20level%20of%20persong%20with%20machine%20and%20two%20older%20people%20are%20watching%20all%20in%20the%20s19%20headqueater%20office.jpg",
+    cover: "/s19-blog/silent-killer.png",
     author: "S19 Wellness Team",
     status: "published",
     featured: false,
@@ -96,7 +104,15 @@ Our Hypertension and Cardiovascular Wellness program pairs careful blood-pressur
 SOURCES
 WHO Global Report on Hypertension (2025); WHO fact sheet on hypertension (2025); WHO SHAKE package for salt reduction; NCD Risk Factor Collaboration, The Lancet (2021).
 
-This article is educational and not a substitute for a medical consultation, especially for anyone already diagnosed with hypertension.`,
+This article is educational and not a substitute for a medical consultation, especially for anyone already diagnosed with hypertension.
+
+## Contact Us
+
+- WhatsApp: [Click here](https://wa.me/237672595989)
+- Email: Sweet19hoe@gmail.com
+- Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
+
+Online consultation is free. We can answer your questions and ship our products to any country with a DHL service.`,
   },
   {
     title: "Natural Does Not Mean Safe: The Science Behind Responsible Herbal Medicine",
@@ -138,7 +154,15 @@ We do not treat blindly. Every S19 program starts with a review of your medical 
 SOURCES
 NCCIH (Herb-Drug Interactions and "Natural Doesn't Necessarily Mean Safer"); American Academy of Family Physicians (2017 review); StatPearls, NCBI (2024); DILIN registry data.
 
-This article is educational and not a substitute for a consultation. If you take any medication, discuss herbal products with your doctor or pharmacist first.`,
+This article is educational and not a substitute for a consultation. If you take any medication, discuss herbal products with your doctor or pharmacist first.
+
+## Contact Us
+
+- WhatsApp: [Click here](https://wa.me/237672595989)
+- Email: Sweet19hoe@gmail.com
+- Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
+
+Online consultation is free. We can answer your questions and ship our products to any country with a DHL service.`,
   },
   {
     title: "Food as Medicine: Applying the WHO's Dietary Targets to Everyday Meals",
@@ -176,7 +200,15 @@ Nutrition is not a one-size-fits-all handout at S19. Our Nutrition and Lifestyle
 SOURCES
 WHO fact sheet on healthy diet (Fact sheet 394); WHO guidelines on sodium, free sugars, and saturated and trans fatty acids; WHO REPLACE package on eliminating industrially produced trans fats.
 
-This article is educational and not a substitute for personalised dietary advice, especially in chronic disease.`,
+This article is educational and not a substitute for personalised dietary advice, especially in chronic disease.
+
+## Contact Us
+
+- WhatsApp: [Click here](https://wa.me/237672595989)
+- Email: Sweet19hoe@gmail.com
+- Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
+
+Online consultation is free. We can answer your questions and ship our products to any country with a DHL service.`,
   },
   {
     title: "The Enlarged Prostate Problem Every Man Over 50 Should Understand",
@@ -215,14 +247,22 @@ Our Prostate and Men's Health program begins with a proper assessment: your urin
 SOURCES
 NIDDK, Prostate Enlargement (Benign Prostatic Hyperplasia); Urologic Diseases in America Annual Data Report 2024 (NIDDK); StatPearls, NCBI (2024); NIH informedhealth.org (2022).
 
-This article is educational and not a substitute for a medical evaluation. Any new or worsening urinary symptoms deserve a doctor's assessment.`,
+This article is educational and not a substitute for a medical evaluation. Any new or worsening urinary symptoms deserve a doctor's assessment.
+
+## Contact Us
+
+- WhatsApp: [Click here](https://wa.me/237672595989)
+- Email: Sweet19hoe@gmail.com
+- Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
+
+Online consultation is free. We can answer your questions and ship our products to any country with a DHL service.`,
   },
   {
     title: "Is Hepatitis B Curable?",
     slug: "is-hepatitis-b-curable",
     excerpt:
       "Hepatitis B attacks the liver and currently has no definitive pharmaceutical cure. A comprehensive 45 to 60-day herbal regimen offers a different path to complete reversal.",
-    cover: "/s19-assets/s19%20staff%20taking%20blood%20pressure%20level%20of%20persong%20with%20machine%20and%20two%20older%20people%20are%20watching%20all%20in%20the%20s19%20headqueater%20office.jpg",
+    cover: "/s19-blog/hepatitis-b.png",
     author: "S19 Herbal Clinic",
     status: "published",
     featured: false,
@@ -251,7 +291,7 @@ Our alternative treatment for HBV is a comprehensive **45 to 60-day regimen** in
 
 For free consultation or purchase:
 
-- WhatsApp: [Click here](https://wa.me/message/ZIJA77DWNKH6D1)
+- WhatsApp: [Click here](https://wa.me/237672595989)
 - Email: Sweet19hoe@gmail.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
@@ -329,7 +369,7 @@ While most herbs support the body harmoniously together, some herbs can interact
 
 ## Contact Us
 
-- WhatsApp: [Click here](https://wa.me/message/ZIJA77DWNKH6D1)
+- WhatsApp: [Click here](https://wa.me/237672595989)
 - Email: Sweet19hoe@gmail.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
@@ -384,7 +424,7 @@ The impact of exercise and food reduction on obesity reversal alone is minimal. 
 
 ## Contact Us
 
-- WhatsApp: [Click here](https://wa.me/message/ZIJA77DWNKH6D1)
+- WhatsApp: [Click here](https://wa.me/237672595989)
 - Email: Sweet19hoe@gmail.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
@@ -457,7 +497,7 @@ It is crucial to remember that **early-stage cancer can often be reversed**, mak
 
 Contact us:
 
-- WhatsApp: [Click here](https://wa.me/message/ZIJA77DWNKH6D1)
+- WhatsApp: [Click here](https://wa.me/237672595989)
 - Email: Sweet19hoe@gmail.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
@@ -511,7 +551,7 @@ Our products can be shipped to any country that has a DHL shipping service avail
 
 ## For More Info
 
-- WhatsApp: [Click here](https://wa.me/message/ZIJA77DWNKH6D1)
+- WhatsApp: [Click here](https://wa.me/237672595989)
 - Email: Sweet19hoe@gmail.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
@@ -572,7 +612,7 @@ We ship our products to any country with the presence of a DHL shipping service.
 
 ## For More Info
 
-- WhatsApp: [Click here](https://wa.me/message/ZIJA77DWNKH6D1)
+- WhatsApp: [Click here](https://wa.me/237672595989)
 - Email: Sweet19hoe@gmail.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
@@ -628,8 +668,8 @@ Our products can be shipped to any country that has a DHL shipping service avail
 
 ## Contact Us
 
-- WhatsApp: [Click here](https://wa.me/message/ZIJA77DWNKH6D1)
-- Email: S19herbs@gmail.com
+- WhatsApp: [Click here](https://wa.me/237672595989)
+- Email: Sweet19hoe@gmail.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
 Online consultation is free. Our services extend to treating and curing infections and diseases that are not mentioned on our blog, like syphilis, chlamydia, gonorrhea, staphylococcus, bacteria vaginosis, mycoplasma genitalium, pelvic inflammatory disease and fibroids.

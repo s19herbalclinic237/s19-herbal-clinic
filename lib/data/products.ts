@@ -285,6 +285,24 @@ export const seedProducts: SiteProduct[] = [
     stock: 150,
   },
   {
+    id: "p-natural-bathing-soap",
+    name: "S19 Natural Bathing Soap",
+    slug: "s19-natural-bathing-soap",
+    category: "Wellness Essentials",
+    categorySlug: "wellness-essentials",
+    price: 2500,
+    badge: "Natural",
+    shortDescription:
+      "For smoother, brighter-looking skin. Also treats facial & skin acne, rashes, and fungal infections.",
+    description:
+      "A natural bathing soap for smoother, brighter-looking skin. Gently cleanses while helping to treat facial and body acne, rashes, and fungal infections.",
+    usage: "Use daily when bathing. Lather over the skin and rinse well.",
+    ingredients: "Natural plant-based soap blend.",
+    image: productImage("S19 Natural Bathing Soap.jpg"),
+    featured: false,
+    stock: 100,
+  },
+  {
     id: "p-herbal-wine",
     name: "S19 Herbal Wine Reserve",
     slug: "s19-herbal-wine-reserve",

@@ -38,7 +38,6 @@ const nav = [
   { key: "nav.shop", href: "/shop" },
   { key: "nav.blog", href: "/blog" },
   { key: "nav.about", href: "/about" },
-  { key: "nav.contact", href: "/contact" },
 ] as const;
 
 export function AnnouncementBar() {
