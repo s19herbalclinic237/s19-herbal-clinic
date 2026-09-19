@@ -10,6 +10,7 @@ export interface SiteTestimonial {
   country?: string;
   program: string;
   text: string;
+  rating?: number;
 }
 
 let dbUnavailable = false;
@@ -21,6 +22,7 @@ function toSiteTestimonial(t: ITestimonial): SiteTestimonial {
     country: t.country,
     program: t.program,
     text: t.text,
+    rating: t.rating,
   };
 }
 

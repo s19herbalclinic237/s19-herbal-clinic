@@ -11,6 +11,7 @@ import {
   FaCommentMedical,
   FaPencil,
   FaPlus,
+  FaStar,
   FaTrashCan,
 } from "react-icons/fa6";
 
@@ -22,6 +23,8 @@ interface AdminTestimonial {
   country?: string;
   program: string;
   text: string;
+  rating?: number;
+  email?: string;
   status: "pending" | "approved" | "rejected";
   createdAt: string;
 }
@@ -188,11 +191,17 @@ export function AdminTestimonialsTab() {
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="font-semibold text-ink">{t.name}</p>
+                      <span className="flex items-center gap-0.5 text-gold-500">
+                        {Array.from({ length: t.rating ?? 5 }).map((_, j) => (
+                          <FaStar key={j} className="h-3 w-3" aria-hidden />
+                        ))}
+                      </span>
                       <TestimonialStatusBadge status={t.status} />
                     </div>
                     <p className="mt-0.5 text-xs text-muted">
                       {t.city}
                       {t.country ? `, ${t.country}` : ""} · {t.program} · {formatDate(t.createdAt)}
+                      {t.email ? ` · ${t.email}` : ""}
                       {t.user?.name ? ` · submitted by ${t.user.name} (${t.user.email})` : " · added by clinic"}
                     </p>
                   </div>
@@ -251,6 +260,8 @@ function AddTestimonialForm({ onDone }: { onDone: (message: string) => void }) {
   const [country, setCountry] = useState("");
   const [program, setProgram] = useState("");
   const [text, setText] = useState("");
+  const [rating, setRating] = useState<number>(5);
+  const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"pending" | "approved">("pending");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -265,7 +276,7 @@ function AddTestimonialForm({ onDone }: { onDone: (message: string) => void }) {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, city, country, program, text, status }),
+        body: JSON.stringify({ name, city, country, program, text, rating, email, status }),
       });
       const data = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok) throw new Error(data.error || "Could not save.");
@@ -297,6 +308,22 @@ function AddTestimonialForm({ onDone }: { onDone: (message: string) => void }) {
         </div>
         <Field label="Program / concern" required className="sm:col-span-2">
           <Input value={program} onChange={(e) => setProgram(e.target.value)} required minLength={2} />
+        </Field>
+        <Field label="Rating" hint="1 - 5 stars">
+          <select
+            value={rating}
+            onChange={(e) => setRating(Number(e.target.value))}
+            className="rounded-md border border-line-strong bg-white px-3 py-2 text-sm text-ink focus:border-forest-500 focus:outline-none"
+          >
+            {[5, 4, 3, 2, 1].map((r) => (
+              <option key={r} value={r}>
+                {r} star{r > 1 ? "s" : ""}
+              </option>
+            ))}
+          </select>
+        </Field>
+        <Field label="Email">
+          <Input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="client@example.com" />
         </Field>
         <Field label="Testimonial text" required className="sm:col-span-2">
           <Textarea value={text} onChange={(e) => setText(e.target.value)} required minLength={20} maxLength={1200} />

@@ -4,6 +4,7 @@ export interface Testimonial {
   country?: string;
   program: string;
   text: string;
+  rating?: number;
 }
 
 export const testimonials: Testimonial[] = [
@@ -13,6 +14,7 @@ export const testimonials: Testimonial[] = [
     country: "Cameroun",
     program: "Hypertension & Cardiovascular Wellness",
     text: "Doc, I don't even know how to say thank you enough. Before I came to S19, my blood pressure was always high and the conventional medicine was just managing me, not healing me. They looked at my whole life - my food, my stress, my sleep - and built something just for me. Today my readings are normal and I feel like myself again. Healing is truly ours.",
+    rating: 5,
   },
   {
     name: "Jean-Baptiste Nkeng",
@@ -20,6 +22,7 @@ export const testimonials: Testimonial[] = [
     country: "Cameroun",
     program: "Diabetes & Metabolic Health Support",
     text: "I started taking the treatment and within a few weeks I just started feeling the difference - even my urine changed. My sugar levels are coming down and the doctor at the hospital confirmed things are improving. What I appreciate most is that they didn't just give me something and send me home. They explained what was happening in my body and why. That is what makes S19 different.",
+    rating: 5,
   },
   {
     name: "Brigitte Fomekong",
@@ -27,6 +30,7 @@ export const testimonials: Testimonial[] = [
     country: "Cameroun",
     program: "Women's Health - Uterine & Hormonal Support",
     text: "I had fibroids that were making my life unbearable - painful periods every month, heavy bleeding, I could not function. I came to S19 and they assessed me properly before giving me anything. Three months into the program, the pain reduced significantly and my last scan showed improvement. I am so grateful. You are truly God-sent to my life.",
+    rating: 5,
   },
   {
     name: "Patrice Awono Mballa",
@@ -34,6 +38,7 @@ export const testimonials: Testimonial[] = [
     country: "Cameroun",
     program: "Digestive & Gut Health",
     text: "Gastritis was something I had been suffering with for years. Doctors kept giving me antacids but nothing was resolving the root problem. S19 reviewed my history, asked about my nutrition and lifestyle, and built a program that actually targeted what was causing it. After two months I can eat properly again without pain. This is what real treatment looks like.",
+    rating: 5,
   },
   {
     name: "Rosalie Nguefack",
@@ -41,6 +46,7 @@ export const testimonials: Testimonial[] = [
     country: "Cameroun",
     program: "Liver & Metabolic Support",
     text: "I am just from the hospital now and the doctor said everything is fine. Everything is gone. My liver enzymes are back to normal after the program they designed for me at S19. They combined herbal formulations with nutrition guidance and it made all the difference. I can never truly thank them enough for everything including the teachings. Thank you so very much.",
+    rating: 5,
   },
   {
     name: "Hervé Djomgoue",
@@ -48,6 +54,7 @@ export const testimonials: Testimonial[] = [
     country: "Cameroun",
     program: "Prostate & Men's Health",
     text: "At my age, the prostate problems were beginning to affect everything - sleep, daily life, my confidence. S19 did a proper assessment, looked at my test results and previous treatments, and explained clearly what was contributing to the problem. The herbal program they gave me alongside lifestyle changes has made a real difference. I feel like a younger man again.",
+    rating: 5,
   },
   {
     name: "Clarissa Fontem",
@@ -55,6 +62,7 @@ export const testimonials: Testimonial[] = [
     country: "USA",
     program: "Viral Wellness Program - International",
     text: "I did my test today and it came back negative. I can never truly thank you enough for everything including your teachings. I have been following the full 60-day protocol and the difference has been beyond what I imagined. My friend will send the receipts as a small token of my gratitude. What S19 does is not just selling products - they walk with you through the whole process. Thanks boo.",
+    rating: 5,
   },
   {
     name: "Darnell Kamga-Williams",
@@ -62,20 +70,23 @@ export const testimonials: Testimonial[] = [
     country: "USA",
     program: "Viral Wellness Program - International Delivery",
     text: "I'm a living testimony for this and I thank God every day for finding S19 on social media. My wife was returning from deployment and needed the treatment urgently - they shipped it to us in the USA within 5 days and she started her program right away. We are both on the other side now. You gave us hope again. Healing is ours.",
+    rating: 5,
   },
   {
-    name: "Chidinma Okafor",
-    city: "Lagos",
-    country: "Nigeria",
+    name: "Mme Tracey Ngwa",
+    city: "Buea",
+    country: "Cameroun",
     program: "Digestive & Gut Health - Chronic Wellness Program",
     text: "Boo I won't lie, I was skeptical at first because I had tried so many things. But S19 is different - they actually assessed me before giving me anything. They looked at my lab results, my history, everything. The program they designed was specific to me, not some generic thing. After two months my digestion issues that I had been carrying for years are gone. I am so grateful I found them.",
+    rating: 5,
   },
   {
-    name: "Emeka Chukwuemeka",
-    city: "Abuja",
-    country: "Nigeria",
+    name: "Papa Tanko",
+    city: "Bamenda",
+    country: "Cameroun",
     program: "Diabetes & Metabolic Health Support",
     text: "Those who took or are currently taking the weight loss and metabolic programs at S19 - I am a living testimony for you. My blood sugar was out of control and conventional medicine was just managing the numbers without addressing why. S19 investigated my insulin resistance, my nutrition, my lifestyle. Six months later my HbA1c has improved significantly and I feel energetic again. This is science-based care that actually works.",
+    rating: 5,
   },
   {
     name: "Alice Fotso",
@@ -83,6 +94,7 @@ export const testimonials: Testimonial[] = [
     country: "Cameroun",
     program: "S19 Oral Miracle - Natural Oral Care",
     text: "I really testify ooo! Since I bought that natural toothpaste from your clinic, my teeth are getting brighter. I used to always find blood in my mouth when brushing, but since I started using the natural toothpaste I haven't noticed it again.",
+    rating: 5,
   },
   {
     name: "Steve Mbarga",
@@ -90,13 +102,15 @@ export const testimonials: Testimonial[] = [
     country: "Cameroun",
     program: "Oral Health & Toothache Relief",
     text: "Good evening Doc. Thanks so much for reaching out! I'm fine now, strong, no toothache again! I've been brushing twice daily after meals and before bed just as you instructed.",
+    rating: 4,
   },
   {
-    name: "Tunde Adewale",
-    city: "Lagos",
-    country: "Nigeria",
+    name: "Mama Rachel",
+    city: "Kumba",
+    country: "Cameroun",
     program: "Urinary Health & Pain Relief",
     text: "Doctor, I want to thank you again for this testimony. Remember I told you I had been suffering with a burning sensation when I pee for almost 6 years? For one month now I can assure you I don't feel it anymore since taking your medication. The worst part was always when I got dehydrated - the burning got worse. But today, even if I don't drink enough water during the day, I don't feel it again. Doctor, thank you for helping me heal. I am an ambassador of S19 forever!",
+    rating: 5,
   },
   {
     name: "Nadine Kenfack",
@@ -104,27 +118,31 @@ export const testimonials: Testimonial[] = [
     country: "Cameroun",
     program: "Women's Health - Uterine & Reproductive Care",
     text: "Now that you are sharing testimonies, let me share my own small one. Remember those cancer tea I bought from you years back on Snapchat? I was diagnosed with precancerous cervical cells and my doctor advised an operation to remove the bad cells, but I refused and tried your Cancer tea instead. I drank all the package you sent for some months... a few months later I stopped feeling the pain. I didn't go back immediately - I waited about a year, then went for a check-up and there was no sign of any problem with my uterus. The doctor asked me to redo it after 6 months and it still shows that it is cleared. So this is my official thank you - you may never truly know the full impact your teachings have had on my life. I still give you flowers!",
+    rating: 5,
   },
   {
-    name: "Mamadou Diallo",
-    city: "Conakry",
-    country: "Guinea",
+    name: "Njuh Fuh",
+    city: "Limbe",
+    country: "Cameroun",
     program: "Integrative Treatment & Pain Relief",
     text: "Good evening Doc. I just want to say thank you! You know your thing - the medication is working for me. Gladness is also doing well, her pains are gone. Your medications work magically.",
+    rating: 5,
   },
   {
-    name: "Kelly Donovan",
-    city: "Houston, Texas",
+    name: "Kelly",
+    city: "Maryland",
     country: "USA",
     program: "S19 Liver & Metabolic Cleansing - Detox",
     text: "That Detox is honestly the best thing I've given myself in 2026, hands down! I've been doing the detox routine and I can see the results directly. It really is the secret not just to healing, but to prevention.",
+    rating: 5,
   },
   {
-    name: "Sarah Mitchell",
-    city: "Atlanta, Georgia",
+    name: "Sherill",
+    city: "Minnesota",
     country: "USA",
     program: "Wellness Essentials & Long-Term Relief",
     text: "And her eyes are getting better - something that has been bothering her for years! Healing is truly possible.",
+    rating: 4,
   },
   {
     name: "Marthe Djoumo",
@@ -132,13 +150,15 @@ export const testimonials: Testimonial[] = [
     country: "Cameroun",
     program: "S19 Oral Miracle - Dental Wellness",
     text: "My mom really likes the toothpaste, and she gave positive feedback after I spoke with her today. Her tooth pain has drastically decreased and there is no more gum bleeding!",
+    rating: 5,
   },
   {
-    name: "Chioma Nwosu",
-    city: "Abuja",
-    country: "Nigeria",
+    name: "Enow Magnificat",
+    city: "Yaoundé",
+    country: "Cameroun",
     program: "Oral Health & Gum Care",
     text: "Since I started taking the S19 oral care, I haven't suffered from inflammation of my gums since the beginning of this year. I should have shared this miracle with you earlier. Please add another pack for me!",
+    rating: 5,
   },
   {
     name: "Joseph Kamdem",
@@ -146,13 +166,15 @@ export const testimonials: Testimonial[] = [
     country: "Cameroun",
     program: "Liver & Metabolic Cleansing - Detox",
     text: "Thank you for the detox Doc! Just before I detoxed, I was having difficulties sleeping which resulted in stress during the day. But last night I slept like a baby, and I feel my strength renewed!",
+    rating: 5,
   },
   {
-    name: "Fatoumata Sylla",
-    city: "Conakry",
-    country: "Guinea",
+    name: "Ebong Sone",
+    city: "Bamenda",
+    country: "Cameroun",
     program: "Clinical Detoxification & Metabolic Health",
     text: "Good morning Dr. I'm done with the detox program and those stones are coming out. I can really feel the results and the improvement in my body system.",
+    rating: 5,
   },
   {
     name: "Marcus Johnson",
@@ -160,5 +182,6 @@ export const testimonials: Testimonial[] = [
     country: "USA",
     program: "Holistic Care & Lifestyle Coaching",
     text: "Thanks - I have never seen a doctor like you! You take the time to analyze everything and explain how even mild problems can be corrected with natural herbs and the right food.",
+    rating: 5,
   },
 ];

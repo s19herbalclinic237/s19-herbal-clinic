@@ -85,7 +85,7 @@ export const healthPillars = [
 ];
 
 export const educationQuote =
-  "Society needs more health education and less unnecessary medication.";
+  "Society needs more health education and less dependence on medication.";
 
 export const educationQuestions = [
   "What is happening?",
@@ -214,7 +214,7 @@ export const patientJourney = [
 ];
 
 export const centralMessage =
-  "S19 Herbal Clinic combines science-based herbal medicine, laboratory investigation, nutrition, lifestyle medicine, patient education and continuous monitoring to provide personalized, root-cause-oriented healthcare.";
+  "S19 Herbal Clinic combines non-conventional therapies, science-based herbal medicine, laboratory investigation, nutrition, lifestyle medicine, patient education and continuous monitoring to provide personalized, root-cause-oriented healthcare.";
 
 export const philosophyTagline =
   "Science-Based Herbalism. Root-Cause Healthcare. Education. Investigation. Personalization. Monitoring.";

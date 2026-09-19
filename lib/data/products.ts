@@ -376,7 +376,7 @@ export const seedProducts: SiteProduct[] = [
     slug: "s19-experience-hoodie-men",
     category: "Merch & Branded",
     categorySlug: "merchandise",
-    price: 10000,
+    price: 25000,
     badge: "Merch",
     shortDescription:
       "Official Experience S19 hoodie for men. Available in Black, White, Red, Sky Blue, Purple and Pink. Wear the S19 brand wherever you go.",
@@ -394,7 +394,7 @@ export const seedProducts: SiteProduct[] = [
     slug: "s19-experience-hoodie-women",
     category: "Merch & Branded",
     categorySlug: "merchandise",
-    price: 10000,
+    price: 25000,
     badge: "Merch",
     shortDescription:
       "Official Experience S19 hoodie for women. Available in Black, White, Red, Sky Blue, Purple and Pink. Wear the S19 brand wherever you go.",

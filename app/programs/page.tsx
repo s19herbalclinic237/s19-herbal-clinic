@@ -4,17 +4,19 @@ import { PageHero } from "@/components/ui/page-hero";
 import { CTABand } from "@/components/sections/cta-band";
 import { Reveal, RevealLeft, StaggerGroup, StaggerItem } from "@/components/ui/motion";
 import { buttonLinkClasses } from "@/components/ui/button";
-import { treatmentPrograms } from "@/lib/data/programs";
+import { localizedPrograms } from "@/lib/data/programs";
 import { CLINIC, waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { FaWhatsapp, FaRegCircleCheck, FaArrowRight } from "react-icons/fa6";
 import Link from "next/link";
-import { serverT } from "@/lib/i18n-server";
+import { getServerLocale, serverT } from "@/lib/i18n-server";
 
 const HERO_IMG = S19_ASSETS.photos.consultationAdvice;
 
 export default async function ProgramsPage() {
   const t = await serverT();
+  const locale = await getServerLocale();
+  const treatmentPrograms = localizedPrograms(locale);
   return (
     <>
       <PageHero

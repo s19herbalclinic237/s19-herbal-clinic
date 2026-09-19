@@ -64,6 +64,20 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     patch.text = value;
   }
 
+  if (body.email !== undefined) {
+    const value = String(body.email).trim();
+    if (value && (value.length > 120 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))) {
+      return NextResponse.json({ error: "Please provide a valid email address, or leave it empty." }, { status: 400 });
+    }
+    patch.email = value || undefined;
+  }
+
+  if (body.rating !== undefined) {
+    const parsedRating = Number(body.rating);
+    patch.rating =
+      Number.isInteger(parsedRating) && parsedRating >= 1 && parsedRating <= 5 ? parsedRating : 5;
+  }
+
   try {
     const testimonial = await Testimonial.findByIdAndUpdate(id, { $set: patch }, { new: true })
       .populate("user", "name email")

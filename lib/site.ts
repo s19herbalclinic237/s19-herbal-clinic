@@ -29,6 +29,10 @@ export interface TreatmentProgram {
   short: string;
   detail: string;
   conditions: string[];
+  titleFr?: string;
+  shortFr?: string;
+  detailFr?: string;
+  conditionsFr?: string[];
 }
 
 export const CLINIC = {

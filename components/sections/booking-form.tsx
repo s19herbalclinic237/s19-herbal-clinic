@@ -18,6 +18,7 @@ const concerns: TranslationKey[] = [
   "concern.liver",
   "concern.cancer",
   "concern.general",
+  "concern.other",
 ];
 
 export function BookingForm() {
@@ -30,12 +31,17 @@ export function BookingForm() {
     email: "",
     mode: "Telehealth (Online / WhatsApp / Call)",
     concern: "",
+    concernOther: "",
     message: "",
   });
 
   const set = (key: keyof typeof form) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
       setForm((f) => ({ ...f, [key]: e.target.value }));
+
+  const isOther = form.concern === "concern.other";
+  const resolvedConcern =
+    isOther && form.concernOther.trim() ? form.concernOther.trim() : form.concern;
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -44,7 +50,7 @@ export function BookingForm() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, type: "Booking" }),
+        body: JSON.stringify({ ...form, concern: resolvedConcern, type: "Booking" }),
       });
       if (!res.ok) throw new Error("Request failed");
       setDone(true);
@@ -68,7 +74,7 @@ export function BookingForm() {
         <a
           href={waLink(
             `Hello S19 Herbal Clinic, I just submitted a consultation request${
-              form.concern ? ` regarding ${form.concern}` : ""
+              resolvedConcern ? ` regarding ${resolvedConcern}` : ""
             }. Name: ${form.fullName}.`
           )}
           target="_blank"
@@ -111,6 +117,16 @@ export function BookingForm() {
           ))}
         </Select>
       </Field>
+      {isOther ? (
+        <Field label={t("concern.other")} required>
+          <Input
+            required
+            value={form.concernOther}
+            onChange={set("concernOther")}
+            placeholder={t("booking.concernOtherPlaceholder")}
+          />
+        </Field>
+      ) : null}
       <Field label={t("booking.summary")}>
         <Textarea
           rows={4}

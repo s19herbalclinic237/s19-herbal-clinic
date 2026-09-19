@@ -5,7 +5,7 @@ import { PageHero } from "@/components/ui/page-hero";
 import { Reveal, RevealLeft, RevealRight, ScaleIn } from "@/components/ui/motion";
 import { buttonLinkClasses } from "@/components/ui/button";
 import OrbitImages from "@/components/ui/orbit-images";
-import { coreStrengths } from "@/lib/data/programs";
+import { localizedCoreStrengths } from "@/lib/data/programs";
 import {
   philosophyQuote,
   whyQuestion,
@@ -54,7 +54,7 @@ import {
   FaArrowRight,
 } from "react-icons/fa6";
 import Link from "next/link";
-import { serverT } from "@/lib/i18n-server";
+import { getServerLocale, serverT } from "@/lib/i18n-server";
 
 const HERO_IMG = S19_ASSETS.photos.labBeakers;
 
@@ -77,6 +77,8 @@ const pillarIcons = [
 
 export default async function AboutPage() {
   const t = await serverT();
+  const locale = await getServerLocale();
+  const coreStrengths = localizedCoreStrengths(locale);
   return (
     <>
       <PageHero

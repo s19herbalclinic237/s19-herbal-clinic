@@ -3,17 +3,19 @@ import { Kicker } from "@/components/ui/heading";
 import { PageHero } from "@/components/ui/page-hero";
 import { CTABand } from "@/components/sections/cta-band";
 import { Reveal } from "@/components/ui/motion";
-import { telehealthSteps } from "@/lib/data/programs";
+import { localizedTelehealthSteps } from "@/lib/data/programs";
 import { CLINIC, waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { FaWhatsapp, FaShieldHalved, FaFlask, FaClock, FaPaperPlane } from "react-icons/fa6";
-import { serverT } from "@/lib/i18n-server";
+import { getServerLocale, serverT } from "@/lib/i18n-server";
 import { formatEur, formatFcfa, formatUsd } from "@/lib/utils";
 
 const HERO_IMG = S19_ASSETS.photos.patientRecords;
 
 export default async function TelehealthPage() {
   const t = await serverT();
+  const locale = await getServerLocale();
+  const telehealthSteps = localizedTelehealthSteps(locale);
   const modalities = [
     {
       title: t("tele.modality1.title"),

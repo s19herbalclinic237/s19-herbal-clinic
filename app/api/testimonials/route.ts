@@ -27,11 +27,6 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const user = await getSessionUser();
-  if (!user) {
-    return NextResponse.json({ error: "Sign in to drop a testimony." }, { status: 401 });
-  }
-
   let body: unknown;
   try {
     body = await request.json();
@@ -39,12 +34,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { name, city, country, program, text } = (body ?? {}) as {
+  const { name, city, country, program, text, rating, email } = (body ?? {}) as {
     name?: string;
     city?: string;
     country?: string;
     program?: string;
     text?: string;
+    rating?: number | string;
+    email?: string;
   };
 
   const cleanName = (name || "").trim();
@@ -52,6 +49,7 @@ export async function POST(request: Request) {
   const cleanProgram = (program || "").trim();
   const cleanText = (text || "").trim();
   const cleanCountry = (country || "").trim();
+  const cleanEmail = (email || "").trim();
 
   if (cleanName.length < 2 || cleanName.length > 80) {
     return NextResponse.json({ error: "Please provide your name." }, { status: 400 });
@@ -68,24 +66,35 @@ export async function POST(request: Request) {
       { status: 400 }
     );
   }
+  if (cleanEmail && (cleanEmail.length > 120 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail))) {
+    return NextResponse.json({ error: "Please provide a valid email address, or leave it empty." }, { status: 400 });
+  }
+
+  const parsedRating = Number(rating);
+  const cleanRating =
+    Number.isInteger(parsedRating) && parsedRating >= 1 && parsedRating <= 5 ? parsedRating : 5;
 
   const conn = await connectDb();
   if (!conn) {
     return NextResponse.json({ error: "Testimonials are temporarily unavailable." }, { status: 503 });
   }
 
+  const user = await getSessionUser();
+
   try {
     const testimonial = await Testimonial.create({
-      user: user.id,
+      user: user?.id,
       name: cleanName,
       city: cleanCity,
       country: cleanCountry || undefined,
       program: cleanProgram,
       text: cleanText,
+      rating: cleanRating,
+      email: cleanEmail || undefined,
       status: "pending",
     });
     return NextResponse.json(
-      { success: true, testimonial, message: "Thank you! Your testimony is pending review and will appear on the site once approved." },
+      { success: true, testimonial, message: "Thank you! Your story is pending review and will appear on the site once approved." },
       { status: 201 }
     );
   } catch (error) {

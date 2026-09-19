@@ -22,6 +22,15 @@ async function main() {
     console.log(`Removed ${removed.deletedCount} leftover test testimonial(s).`);
   }
 
+  const staticNames = staticTestimonials.map((t) => t.name);
+  const purged = await Testimonial.deleteMany({
+    status: "approved",
+    $nor: [{ name: { $in: staticNames } }],
+  });
+  if (purged.deletedCount) {
+    console.log(`Removed ${purged.deletedCount} stale approved testimonial(s) no longer in the static list.`);
+  }
+
   const base = Date.now();
   let seeded = 0;
   for (let i = 0; i < staticTestimonials.length; i++) {
@@ -36,6 +45,7 @@ async function main() {
           country: t.country,
           program: t.program,
           text: t.text,
+          rating: t.rating,
           status: "approved",
         },
         $setOnInsert: { createdAt },

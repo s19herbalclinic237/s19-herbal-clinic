@@ -11,6 +11,8 @@ export interface ITestimonial {
   country?: string;
   program: string;
   text: string;
+  rating?: number;
+  email?: string;
   status: TestimonialStatus;
   createdAt: Date;
 }
@@ -23,6 +25,8 @@ const TestimonialSchema = new Schema<ITestimonial>(
     country: { type: String, trim: true },
     program: { type: String, required: true, trim: true },
     text: { type: String, required: true, trim: true },
+    rating: { type: Number, min: 1, max: 5 },
+    email: { type: String, trim: true },
     status: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" },
   },
   { timestamps: true }

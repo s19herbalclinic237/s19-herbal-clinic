@@ -9,14 +9,14 @@ import { BlurIn, Reveal, ScaleIn, StaggerGroup, StaggerItem } from "@/components
 import { getProducts } from "@/lib/catalog";
 import { getApprovedTestimonials } from "@/lib/testimonials";
 import {
-  treatmentPrograms,
-  clinicalPrinciples,
-  telehealthSteps,
-  faqs,
+  localizedClinicalPrinciples,
+  localizedFaqs,
+  localizedPrograms,
+  localizedTelehealthSteps,
 } from "@/lib/data/programs";
 import { CLINIC, waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
-import { serverT } from "@/lib/i18n-server";
+import { getServerLocale, serverT } from "@/lib/i18n-server";
 
 export const revalidate = 60;
 import {
@@ -34,6 +34,11 @@ const FEATURED_SLUGS = ["s19-herbal-wine-reserve", "s19-shea-butter", "s19-malar
 
 export default async function HomePage() {
   const t = await serverT();
+  const locale = await getServerLocale();
+  const treatmentPrograms = localizedPrograms(locale);
+  const clinicalPrinciples = localizedClinicalPrinciples(locale);
+  const telehealthSteps = localizedTelehealthSteps(locale);
+  const faqs = localizedFaqs(locale);
   const products = await getProducts();
   const featured = FEATURED_SLUGS
     .map((slug) => products.find((p) => p.slug === slug))
@@ -327,8 +332,11 @@ export default async function HomePage() {
                       className="mx-2.5 flex h-full w-[300px] flex-col rounded-lg border border-line bg-white p-7 shadow-card transition-shadow hover:shadow-lift sm:w-[340px]"
                     >
                       <div className="flex items-center gap-1 text-gold-500">
-                        {Array.from({ length: 5 }).map((_, j) => (
+                        {Array.from({ length: test.rating ?? 5 }).map((_, j) => (
                           <FaStar key={j} className="h-3.5 w-3.5" aria-hidden />
+                        ))}
+                        {Array.from({ length: 5 - (test.rating ?? 5) }).map((_, j) => (
+                          <FaStar key={`o-${j}`} className="h-3.5 w-3.5 text-forest-200" aria-hidden />
                         ))}
                       </div>
                       <blockquote className="mt-4 flex-1 text-[15px] leading-relaxed text-ink/80">
@@ -351,6 +359,14 @@ export default async function HomePage() {
                 </div>
               ))}
             </div>
+          </div>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <div className="mt-10 text-center">
+            <Link href="/patient-stories" className={buttonLinkClasses("primary", "lg")}>
+              {t("home.testimonials.cta")}
+              <FaArrowRight className="h-3.5 w-3.5" aria-hidden />
+            </Link>
           </div>
         </Reveal>
       </Section>
