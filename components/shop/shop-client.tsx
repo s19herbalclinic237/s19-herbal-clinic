@@ -102,7 +102,10 @@ export function ShopClient({
             {t("shop.empty")}
           </div>
         ) : (
-          <StaggerGroup className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <StaggerGroup
+            key={`${category}-${query}-${sort}`}
+            className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4"
+          >
             {filtered.map((p) => (
               <StaggerItem key={p.id}>
                 <ProductCard product={p} />
