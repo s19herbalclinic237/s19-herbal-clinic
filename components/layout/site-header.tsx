@@ -112,13 +112,13 @@ export function SiteHeader() {
       <Container className="flex h-16 items-center justify-between gap-4 md:h-[68px]">
         <Logo />
 
-        <nav className="hidden items-center gap-1 xl:flex">
+        <nav className="hidden items-center gap-0.5 xl:flex">
           {nav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                "rounded-md px-2.5 py-1.5 text-[13px] font-semibold transition-colors",
+                "whitespace-nowrap rounded-md px-2 py-1 text-[12px] font-semibold transition-colors",
                 isActive(item.href)
                   ? "bg-forest-100 text-forest-900"
                   : "text-ink/80 hover:bg-forest-50 hover:text-forest-800"
@@ -129,7 +129,7 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <Link
             href="/cart"
             aria-label={t("nav.cart")}
@@ -149,7 +149,7 @@ export function SiteHeader() {
           >
             <FaRegUser className="h-4 w-4" aria-hidden />
           </Link>
-          <Link href="/contact" className={cn(buttonLinkClasses("primary", "sm"), "hidden sm:inline-flex")}>
+          <Link href="/contact" className={cn(buttonLinkClasses("primary", "sm"), "hidden whitespace-nowrap sm:inline-flex")}>
             {t("common.bookConsultation")}
           </Link>
           <button

@@ -75,7 +75,7 @@ const dict = {
     en: "Phone or WhatsApp consultation from anywhere in the world. Send us your lab results for review.",
     fr: "Consultations à distance structurées, examen des résultats de laboratoire et suivis programmés - partout dans le monde par téléphone et WhatsApp.",
   },
-  "home.focus.tele.label": { en: "Book Virtual Visit", fr: "Réserver une visite virtuelle" },
+  "home.focus.tele.label": { en: "Book online consultation", fr: "Réserver une consultation en ligne" },
   "home.focus.catalog.title": { en: "Herbal Catalog", fr: "Catalogue de plantes médicinales" },
   "home.focus.catalog.desc": {
     en: "Herbal teas, extracts, and detox packs. Pick up in Bafoussam or get worldwide delivery.",
