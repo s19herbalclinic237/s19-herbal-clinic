@@ -41,6 +41,14 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     patch.name = name;
   }
 
+  if (body.nameFr !== undefined) {
+    const nameFr = String(body.nameFr).trim();
+    if (nameFr.length < 2 || nameFr.length > 120) {
+      return NextResponse.json({ error: "Please provide the French product name." }, { status: 400 });
+    }
+    patch.nameFr = nameFr;
+  }
+
   if (body.slug !== undefined) {
     const slug = slugify(String(body.slug).trim() || String(existing.name));
     if (slug !== existing.slug) {
@@ -58,6 +66,14 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       return NextResponse.json({ error: "Please provide the category." }, { status: 400 });
     }
     patch.category = category;
+  }
+
+  if (body.categoryFr !== undefined) {
+    const categoryFr = String(body.categoryFr).trim();
+    if (categoryFr.length < 2) {
+      return NextResponse.json({ error: "Please provide the French category." }, { status: 400 });
+    }
+    patch.categoryFr = categoryFr;
   }
 
   if (body.categorySlug !== undefined) {
@@ -82,7 +98,24 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     }
   }
 
+  for (const key of ["shortDescriptionFr", "descriptionFr"] as const) {
+    if (body[key] !== undefined) {
+      const value = String(body[key]).trim();
+      if (value.length < 10) {
+        return NextResponse.json({ error: "Please provide the complete French description." }, { status: 400 });
+      }
+      patch[key] = value;
+    }
+  }
+
   for (const key of ["unit", "usage", "ingredients", "badge", "image"] as const) {
+    if (body[key] !== undefined) {
+      const value = String(body[key]).trim();
+      patch[key] = value || undefined;
+    }
+  }
+
+  for (const key of ["unitFr", "usageFr", "ingredientsFr", "badgeFr"] as const) {
     if (body[key] !== undefined) {
       const value = String(body[key]).trim();
       patch[key] = value || undefined;

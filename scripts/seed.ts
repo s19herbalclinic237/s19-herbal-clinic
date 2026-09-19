@@ -20,7 +20,7 @@ async function main() {
 
   await Category.deleteMany({});
   await Category.insertMany(
-    productCategories.map((c) => ({ name: c.name, slug: c.slug, blurb: c.blurb }))
+    productCategories.map((c) => ({ name: c.name, slug: c.slug, blurb: c.blurb, nameFr: c.nameFr }))
   );
   console.log(`Seeded ${productCategories.length} categories.`);
 
@@ -42,6 +42,14 @@ async function main() {
       featured: p.featured,
       stock: p.stock,
       active: true,
+      nameFr: p.nameFr,
+      categoryFr: p.categoryFr,
+      unitFr: p.unitFr,
+      shortDescriptionFr: p.shortDescriptionFr,
+      descriptionFr: p.descriptionFr,
+      usageFr: p.usageFr,
+      ingredientsFr: p.ingredientsFr,
+      badgeFr: p.badgeFr,
     }))
   );
   console.log(`Seeded ${seedProducts.length} products.`);

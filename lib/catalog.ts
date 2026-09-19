@@ -30,6 +30,14 @@ function toSiteProduct(p: IProduct): SiteProduct {
     image: p.image,
     featured: p.featured,
     stock: p.stock,
+    nameFr: p.nameFr,
+    categoryFr: p.categoryFr,
+    unitFr: p.unitFr,
+    shortDescriptionFr: p.shortDescriptionFr,
+    descriptionFr: p.descriptionFr,
+    usageFr: p.usageFr,
+    ingredientsFr: p.ingredientsFr,
+    badgeFr: p.badgeFr,
   };
 }
 
@@ -39,6 +47,7 @@ function toSiteCategory(c: ICategory): SiteCategory {
     name: c.name,
     slug: c.slug,
     blurb: c.blurb,
+    nameFr: c.nameFr,
   };
 }
 

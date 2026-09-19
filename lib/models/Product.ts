@@ -17,6 +17,14 @@ export interface IProduct {
   featured: boolean;
   stock: number;
   active: boolean;
+  nameFr?: string;
+  categoryFr?: string;
+  unitFr?: string;
+  shortDescriptionFr?: string;
+  descriptionFr?: string;
+  usageFr?: string;
+  ingredientsFr?: string;
+  badgeFr?: string;
 }
 
 const ProductSchema = new Schema<IProduct>(
@@ -36,6 +44,14 @@ const ProductSchema = new Schema<IProduct>(
     featured: { type: Boolean, default: false },
     stock: { type: Number, default: 0 },
     active: { type: Boolean, default: true },
+    nameFr: { type: String, trim: true },
+    categoryFr: { type: String, trim: true },
+    unitFr: { type: String, trim: true },
+    shortDescriptionFr: { type: String },
+    descriptionFr: { type: String },
+    usageFr: { type: String },
+    ingredientsFr: { type: String },
+    badgeFr: { type: String },
   },
   { timestamps: true }
 );

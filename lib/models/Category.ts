@@ -5,6 +5,7 @@ export interface ICategory {
   name: string;
   slug: string;
   blurb?: string;
+  nameFr?: string;
 }
 
 const CategorySchema = new Schema<ICategory>(
@@ -12,6 +13,7 @@ const CategorySchema = new Schema<ICategory>(
     name: { type: String, required: true, trim: true },
     slug: { type: String, required: true, unique: true, lowercase: true, trim: true },
     blurb: { type: String },
+    nameFr: { type: String, trim: true },
   },
   { timestamps: true }
 );

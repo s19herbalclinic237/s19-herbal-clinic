@@ -6,13 +6,15 @@ import { waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { serverT } from "@/lib/i18n-server";
 
-export const metadata: Metadata = {
-  title: "Herbal Catalog",
-  description:
-    "Browse the S19 Herbal Clinic standardized product catalog - treatment packs, herbal teas, extracts and oils, and wellness essentials. Pickup in Bafoussam and worldwide delivery.",
-};
-
 export const revalidate = 60;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await serverT();
+  return {
+    title: t("shop.meta.title"),
+    description: t("shop.meta.description"),
+  };
+}
 
 export default async function ShopPage() {
   const t = await serverT();

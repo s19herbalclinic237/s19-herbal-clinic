@@ -1,3 +1,5 @@
+import type { Locale } from "@/lib/i18n";
+
 export interface SiteProduct {
   id: string;
   name: string;
@@ -14,6 +16,15 @@ export interface SiteProduct {
   image: string;
   featured: boolean;
   stock: number;
+  /** French versions. Fall back to the English fields when absent. */
+  nameFr?: string;
+  categoryFr?: string;
+  unitFr?: string;
+  shortDescriptionFr?: string;
+  descriptionFr?: string;
+  usageFr?: string;
+  ingredientsFr?: string;
+  badgeFr?: string;
 }
 
 export interface SiteCategory {
@@ -21,6 +32,7 @@ export interface SiteCategory {
   name: string;
   slug: string;
   blurb?: string;
+  nameFr?: string;
 }
 
 export interface TreatmentProgram {
@@ -60,3 +72,34 @@ export const orderWhatsAppMessage = (reference: string, total: string) =>
   waLink(
     `Hello S19 Herbal Clinic, I just placed order ${reference} (${total}). I would like to confirm payment and delivery.`
   );
+
+export type LocalizedProduct = Pick<
+  SiteProduct,
+  | "name"
+  | "category"
+  | "unit"
+  | "shortDescription"
+  | "description"
+  | "usage"
+  | "ingredients"
+  | "badge"
+>;
+
+/**
+ * Returns a product whose display fields are resolved for the given locale.
+ * Fields without a French version fall back to their English value.
+ */
+export function localizedProduct(p: SiteProduct, locale: Locale): SiteProduct {
+  if (locale !== "fr") return p;
+  return {
+    ...p,
+    name: p.nameFr || p.name,
+    category: p.categoryFr || p.category,
+    unit: p.unitFr || p.unit,
+    shortDescription: p.shortDescriptionFr || p.shortDescription,
+    description: p.descriptionFr || p.description,
+    usage: p.usageFr || p.usage,
+    ingredients: p.ingredientsFr || p.ingredients,
+    badge: p.badgeFr || p.badge,
+  };
+}

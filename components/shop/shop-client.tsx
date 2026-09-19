@@ -5,6 +5,7 @@ import { ProductCard } from "@/components/ui/product-card";
 import { Input } from "@/components/ui/form";
 import { StaggerGroup, StaggerItem } from "@/components/ui/motion";
 import type { SiteProduct, SiteCategory } from "@/lib/site";
+import { localizedProduct } from "@/lib/site";
 import { useLocale } from "@/components/i18n/locale-provider";
 import { FaMagnifyingGlass, FaFilter } from "react-icons/fa6";
 
@@ -17,26 +18,32 @@ export function ShopClient({
   products: SiteProduct[];
   categories: SiteCategory[];
 }) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("all");
   const [sort, setSort] = useState<SortKey>("featured");
 
+  const localized = useMemo(
+    () => products.map((p) => localizedProduct(p, locale)),
+    [products, locale]
+  );
+
   const filtered = useMemo(() => {
-    let list = products.filter(
+    const q = query.trim().toLowerCase();
+    let list = localized.filter(
       (p) =>
         (category === "all" || p.categorySlug === category) &&
-        (query.trim() === "" ||
-          p.name.toLowerCase().includes(query.toLowerCase()) ||
-          p.shortDescription.toLowerCase().includes(query.toLowerCase()) ||
-          p.category.toLowerCase().includes(query.toLowerCase()))
+        (q === "" ||
+          p.name.toLowerCase().includes(q) ||
+          p.shortDescription.toLowerCase().includes(q) ||
+          p.category.toLowerCase().includes(q))
     );
     if (sort === "price-asc") list = [...list].sort((a, b) => a.price - b.price);
     else if (sort === "price-desc") list = [...list].sort((a, b) => b.price - a.price);
     else if (sort === "name") list = [...list].sort((a, b) => a.name.localeCompare(b.name));
     else list = [...list].sort((a, b) => Number(b.featured) - Number(a.featured));
     return list;
-  }, [products, query, category, sort]);
+  }, [localized, query, category, sort]);
 
   return (
     <div className="border-t border-line bg-mist">
@@ -76,10 +83,10 @@ export function ShopClient({
                 : "h-8 rounded-sm border border-line-strong bg-white px-3 text-xs font-semibold text-ink hover:border-forest-400"
             }
           >
-            {t("shop.filter.all", { count: products.length })}
+            {t("shop.filter.all", { count: localized.length })}
           </button>
           {categories.map((c) => {
-            const count = products.filter((p) => p.categorySlug === c.slug).length;
+            const count = localized.filter((p) => p.categorySlug === c.slug).length;
             return (
               <button
                 key={c.slug}
@@ -91,7 +98,7 @@ export function ShopClient({
                     : "h-8 rounded-sm border border-line-strong bg-white px-3 text-xs font-semibold text-ink hover:border-forest-400"
                 }
               >
-                {c.name} ({count})
+                {locale === "fr" ? c.nameFr || c.name : c.name} ({count})
               </button>
             );
           })}

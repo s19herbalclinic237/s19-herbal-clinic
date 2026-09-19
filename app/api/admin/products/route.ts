@@ -39,18 +39,28 @@ export async function POST(request: Request) {
   const p = (body ?? {}) as Record<string, unknown>;
 
   const name = String(p.name || "").trim();
+  const nameFr = String(p.nameFr || "").trim();
   const category = String(p.category || "").trim();
+  const categoryFr = String(p.categoryFr || "").trim();
   const categorySlug = String(p.categorySlug || slugify(category)).trim();
   const price = Number(p.price);
   const shortDescription = String(p.shortDescription || "").trim();
+  const shortDescriptionFr = String(p.shortDescriptionFr || "").trim();
   const description = String(p.description || "").trim();
+  const descriptionFr = String(p.descriptionFr || "").trim();
   const image = String(p.image || "").trim();
 
   if (name.length < 2 || name.length > 120) {
     return NextResponse.json({ error: "Please provide the product name." }, { status: 400 });
   }
+  if (nameFr.length < 2 || nameFr.length > 120) {
+    return NextResponse.json({ error: "Please provide the French product name." }, { status: 400 });
+  }
   if (category.length < 2) {
     return NextResponse.json({ error: "Please provide the category." }, { status: 400 });
+  }
+  if (categoryFr.length < 2) {
+    return NextResponse.json({ error: "Please provide the French category." }, { status: 400 });
   }
   if (!Number.isFinite(price) || price < 0) {
     return NextResponse.json({ error: "Please provide a valid price (0 for contact-for-pricing)." }, { status: 400 });
@@ -58,8 +68,14 @@ export async function POST(request: Request) {
   if (shortDescription.length < 10) {
     return NextResponse.json({ error: "Please provide a short description." }, { status: 400 });
   }
+  if (shortDescriptionFr.length < 10) {
+    return NextResponse.json({ error: "Please provide the French short description." }, { status: 400 });
+  }
   if (description.length < 10) {
     return NextResponse.json({ error: "Please provide a description." }, { status: 400 });
+  }
+  if (descriptionFr.length < 10) {
+    return NextResponse.json({ error: "Please provide the French description." }, { status: 400 });
   }
   if (!image) {
     return NextResponse.json({ error: "Please provide an image (URL or upload)." }, { status: 400 });
@@ -92,6 +108,14 @@ export async function POST(request: Request) {
       featured: Boolean(p.featured),
       stock: Number.isFinite(Number(p.stock)) ? Math.max(0, Math.floor(Number(p.stock))) : 0,
       active: p.active === undefined ? true : Boolean(p.active),
+      nameFr,
+      categoryFr,
+      unitFr: typeof p.unitFr === "string" ? p.unitFr.trim() || undefined : undefined,
+      shortDescriptionFr,
+      descriptionFr,
+      usageFr: typeof p.usageFr === "string" ? p.usageFr.trim() || undefined : undefined,
+      ingredientsFr: typeof p.ingredientsFr === "string" ? p.ingredientsFr.trim() || undefined : undefined,
+      badgeFr: typeof p.badgeFr === "string" ? p.badgeFr.trim() || undefined : undefined,
     });
     return NextResponse.json({ success: true, product }, { status: 201 });
   } catch (error) {

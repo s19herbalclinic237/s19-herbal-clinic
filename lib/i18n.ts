@@ -328,6 +328,11 @@ const dict = {
 
   "shop.hero.eyebrow": { en: "Standardized Formulas", fr: "Formules standardisées" },
   "shop.hero.title": { en: "S19 Herbal Product Catalog", fr: "Catalogue de produits S19" },
+  "shop.meta.title": { en: "Herbal Product Catalog | S19 Herbal Clinic", fr: "Catalogue de produits | Clinique S19" },
+  "shop.meta.description": {
+    en: "Browse the S19 Herbal Clinic standardized product catalog - treatment packs, herbal teas, extracts and oils, and wellness essentials. Pickup in Bafoussam and worldwide delivery.",
+    fr: "Parcourez le catalogue de produits standardisés de la clinique S19 - packs de traitement, tisanes, extraits et huiles, et essentiels de bien-être. Retrait à Bafoussam et livraison mondiale.",
+  },
   "shop.hero.lead": {
     en: "Carefully formulated botanical solutions. Available for pickup in Bafoussam and worldwide delivery.",
     fr: "Des solutions botaniques soigneusement formulées. Disponibles au retrait à Bafoussam et en livraison mondiale.",

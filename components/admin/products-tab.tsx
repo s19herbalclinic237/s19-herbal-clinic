@@ -31,6 +31,14 @@ interface AdminProduct {
   featured: boolean;
   stock: number;
   active: boolean;
+  nameFr?: string;
+  categoryFr?: string;
+  unitFr?: string;
+  shortDescriptionFr?: string;
+  descriptionFr?: string;
+  usageFr?: string;
+  ingredientsFr?: string;
+  badgeFr?: string;
 }
 
 type ProductDraft = Omit<AdminProduct, "_id">;
@@ -51,6 +59,14 @@ const emptyDraft: ProductDraft = {
   featured: false,
   stock: 0,
   active: true,
+  nameFr: "",
+  categoryFr: "",
+  unitFr: "",
+  shortDescriptionFr: "",
+  descriptionFr: "",
+  usageFr: "",
+  ingredientsFr: "",
+  badgeFr: "",
 };
 
 function toSlug(value: string): string {
@@ -145,7 +161,13 @@ export function ProductsTab() {
   const filtered = products?.filter((p) => {
     const q = query.trim().toLowerCase();
     if (!q) return true;
-    return p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q) || p.slug.includes(q);
+    return (
+      p.name.toLowerCase().includes(q) ||
+      (p.nameFr || "").toLowerCase().includes(q) ||
+      p.category.toLowerCase().includes(q) ||
+      (p.categoryFr || "").toLowerCase().includes(q) ||
+      p.slug.includes(q)
+    );
   });
 
   return (
@@ -236,6 +258,9 @@ export function ProductsTab() {
                   {p.name}
                   {!p.active ? <span className="ml-2 text-xs font-medium text-muted">(hidden)</span> : null}
                 </p>
+                {p.nameFr ? (
+                  <p className="truncate text-xs font-normal text-muted">{p.nameFr}</p>
+                ) : null}
                 <p className="truncate text-xs text-muted">
                   {p.category} · {p.price === 0 ? "Contact for pricing" : formatFcfa(p.price)}
                   {p.stock !== undefined && p.price !== 0 ? ` · stock ${p.stock}` : ""}
@@ -383,86 +408,17 @@ function ProductForm({
       ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Name" required className="sm:col-span-2">
-          <Input
-            value={draft.name}
-            onChange={(e) => {
-              set("name", e.target.value);
-              if (!existingId) set("slug", toSlug(e.target.value));
-            }}
-            required
-            maxLength={120}
-          />
-        </Field>
-        <Field label="Slug" required hint="Auto-generated from the name.">
+        <Field label="Slug" required hint="Auto-generated from the English name." className="sm:col-span-2">
           <Input value={draft.slug} onChange={(e) => set("slug", e.target.value)} required maxLength={80} />
         </Field>
-        <div className="grid grid-cols-2 gap-4">
-          <Field label="Price (FCFA)" hint="0 = contact for pricing.">
-            <Input
-              type="number"
-              min={0}
-              step="1"
-              value={draft.price}
-              onChange={(e) => set("price", Number(e.target.value))}
-            />
-          </Field>
-          <Field label="Unit">
-            <Input value={draft.unit || ""} onChange={(e) => set("unit", e.target.value)} placeholder="200 g" />
-          </Field>
-        </div>
-        <Field label="Category" required className="sm:col-span-2">
+        <Field label="Price (FCFA)" hint="0 = contact for pricing.">
           <Input
-            value={draft.category}
-            onChange={(e) => {
-              set("category", e.target.value);
-              if (!existingId) set("categorySlug", toSlug(e.target.value));
-            }}
-            required
-            list="s19-categories"
+            type="number"
+            min={0}
+            step="1"
+            value={draft.price}
+            onChange={(e) => set("price", Number(e.target.value))}
           />
-        </Field>
-      </div>
-      <datalist id="s19-categories">
-        <option value="Men's Health" />
-        <option value="General Wellness" />
-        <option value="Digestive Health" />
-        <option value="Cold & Flu" />
-        <option value="Detox & Cleansing" />
-        <option value="Kidney & Urinary" />
-        <option value="Herbal Tea Blends" />
-        <option value="Extracts & Oils" />
-      </datalist>
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Short description" required className="sm:col-span-2">
-          <Textarea
-            value={draft.shortDescription}
-            onChange={(e) => set("shortDescription", e.target.value)}
-            required
-            maxLength={300}
-          />
-        </Field>
-        <Field label="Description" required className="sm:col-span-2">
-          <Textarea
-            value={draft.description}
-            onChange={(e) => set("description", e.target.value)}
-            required
-            maxLength={6000}
-          />
-        </Field>
-        <Field label="Usage">
-          <Textarea value={draft.usage || ""} onChange={(e) => set("usage", e.target.value)} maxLength={1000} />
-        </Field>
-        <Field label="Ingredients">
-          <Textarea
-            value={draft.ingredients || ""}
-            onChange={(e) => set("ingredients", e.target.value)}
-            maxLength={1000}
-          />
-        </Field>
-        <Field label="Badge">
-          <Input value={draft.badge || ""} onChange={(e) => set("badge", e.target.value)} placeholder="Bestseller" />
         </Field>
         <Field label="Stock">
           <Input
@@ -474,6 +430,147 @@ function ProductForm({
           />
         </Field>
       </div>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <div className="space-y-4 rounded-md border border-line bg-white p-4">
+          <p className="text-xs font-bold uppercase tracking-wide text-forest-800">English</p>
+          <Field label="Name" required>
+            <Input
+              value={draft.name}
+              onChange={(e) => {
+                set("name", e.target.value);
+                if (!existingId) set("slug", toSlug(e.target.value));
+              }}
+              required
+              maxLength={120}
+            />
+          </Field>
+          <Field label="Category" required>
+            <Input
+              value={draft.category}
+              onChange={(e) => {
+                set("category", e.target.value);
+                if (!existingId) set("categorySlug", toSlug(e.target.value));
+              }}
+              required
+              list="s19-categories"
+            />
+          </Field>
+          <Field label="Short description" required>
+            <Textarea
+              value={draft.shortDescription}
+              onChange={(e) => set("shortDescription", e.target.value)}
+              required
+              maxLength={300}
+            />
+          </Field>
+          <Field label="Description" required>
+            <Textarea
+              value={draft.description}
+              onChange={(e) => set("description", e.target.value)}
+              required
+              maxLength={6000}
+            />
+          </Field>
+          <Field label="Usage">
+            <Textarea value={draft.usage || ""} onChange={(e) => set("usage", e.target.value)} maxLength={1000} />
+          </Field>
+          <Field label="Ingredients">
+            <Textarea
+              value={draft.ingredients || ""}
+              onChange={(e) => set("ingredients", e.target.value)}
+              maxLength={1000}
+            />
+          </Field>
+          <Field label="Badge">
+            <Input value={draft.badge || ""} onChange={(e) => set("badge", e.target.value)} placeholder="Bestseller" />
+          </Field>
+          <Field label="Unit">
+            <Input value={draft.unit || ""} onChange={(e) => set("unit", e.target.value)} placeholder="200 g" />
+          </Field>
+        </div>
+
+        <div className="space-y-4 rounded-md border border-line bg-white p-4">
+          <p className="text-xs font-bold uppercase tracking-wide text-forest-800">Français</p>
+          <Field label="Nom" required>
+            <Input
+              value={draft.nameFr || ""}
+              onChange={(e) => set("nameFr", e.target.value)}
+              required
+              maxLength={120}
+              placeholder="Nom du produit en français"
+            />
+          </Field>
+          <Field label="Catégorie" required>
+            <Input
+              value={draft.categoryFr || ""}
+              onChange={(e) => set("categoryFr", e.target.value)}
+              required
+              list="s19-categories-fr"
+            />
+          </Field>
+          <Field label="Description courte" required>
+            <Textarea
+              value={draft.shortDescriptionFr || ""}
+              onChange={(e) => set("shortDescriptionFr", e.target.value)}
+              required
+              maxLength={300}
+            />
+          </Field>
+          <Field label="Description" required>
+            <Textarea
+              value={draft.descriptionFr || ""}
+              onChange={(e) => set("descriptionFr", e.target.value)}
+              required
+              maxLength={6000}
+            />
+          </Field>
+          <Field label="Mode d'emploi">
+            <Textarea
+              value={draft.usageFr || ""}
+              onChange={(e) => set("usageFr", e.target.value)}
+              maxLength={1000}
+            />
+          </Field>
+          <Field label="Ingrédients">
+            <Textarea
+              value={draft.ingredientsFr || ""}
+              onChange={(e) => set("ingredientsFr", e.target.value)}
+              maxLength={1000}
+            />
+          </Field>
+          <Field label="Badge">
+            <Input
+              value={draft.badgeFr || ""}
+              onChange={(e) => set("badgeFr", e.target.value)}
+              placeholder="Ex. Meilleure vente"
+            />
+          </Field>
+          <Field label="Unité">
+            <Input value={draft.unitFr || ""} onChange={(e) => set("unitFr", e.target.value)} placeholder="200 g" />
+          </Field>
+        </div>
+      </div>
+      <datalist id="s19-categories">
+        <option value="Men's Health" />
+        <option value="General Wellness" />
+        <option value="Digestive Health" />
+        <option value="Cold & Flu" />
+        <option value="Detox & Cleansing" />
+        <option value="Kidney & Urinary" />
+        <option value="Herbal Tea Blends" />
+        <option value="Extracts & Oils" />
+      </datalist>
+      <datalist id="s19-categories-fr">
+        <option value="Santé masculine" />
+        <option value="Bien-être général" />
+        <option value="Santé digestive" />
+        <option value="Rhume & grippe" />
+        <option value="Détox & nettoyage" />
+        <option value="Reins & voies urinaires" />
+        <option value="Mélanges de tisanes" />
+        <option value="Extraits & huiles" />
+      </datalist>
 
       <Field label="Image URL" hint="Or upload a photo below.">
         <div className="flex gap-2">
