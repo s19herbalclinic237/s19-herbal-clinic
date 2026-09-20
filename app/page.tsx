@@ -276,12 +276,12 @@ export default async function HomePage() {
             ))}
           </StaggerGroup>
 
-          <div className="mb-14 flex flex-wrap items-center justify-between gap-4 rounded-lg border border-gold-400/40 bg-gold-400/10 px-6 py-5">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-gold-400">{t("home.consultFee.title")}</p>
-              <p className="mt-1 text-sm text-forest-100/90">{t("home.consultFee.note")}</p>
+          <div className="mb-14 rounded-lg border border-gold-400/40 bg-gold-400/10 px-6 py-5">
+            <div className="flex flex-wrap items-baseline justify-center gap-x-3 gap-y-1 sm:justify-start">
+              <p className="font-display text-lg font-bold text-white sm:text-xl">{t("home.consultFee.title")}</p>
+              <p className="font-display text-lg font-bold text-gold-400 sm:text-xl">{formatFcfa(10000)}</p>
             </div>
-            <p className="font-display text-2xl font-bold text-gold-400">{formatFcfa(10000)}</p>
+            <p className="mt-1 text-center text-sm text-forest-100/90 sm:text-left">{t("home.consultFee.note")}</p>
           </div>
 
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">

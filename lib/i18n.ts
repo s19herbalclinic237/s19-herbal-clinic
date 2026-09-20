@@ -207,8 +207,8 @@ const dict = {
   },
   "home.consultFee.title": { en: "Standard Consultation", fr: "Consultation standard" },
   "home.consultFee.note": {
-    en: "Available in person or online at the same consultation fee.",
-    fr: "Disponible en personne ou en ligne au même tarif.",
+    en: "The same standard consultation fee applies for both online and in-person consultations.",
+    fr: "Les mêmes frais de consultation standard s'appliquent aux consultations en ligne et en personne.",
   },
 
   "home.location.kicker": { en: "Find the clinic", fr: "Trouver la clinique" },
