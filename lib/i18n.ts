@@ -538,8 +538,8 @@ const dict = {
   "programs.hero.eyebrow": { en: "Clinical Care Focus", fr: "Focus des soins cliniques" },
   "programs.hero.title": { en: "Integrative Treatment Programs", fr: "Programmes de traitement intégratifs" },
   "programs.hero.lead": {
-    en: "Each treatment plan is customized according to individual patient evaluation. Pricing is confirmed after your consultation and personalized treatment plan cost.",
-    fr: "Chaque plan de traitement est personnalisé en fonction de l'évaluation individuelle du patient. Le prix est confirmé après votre consultation et le coût de votre plan de traitement personnalisé.",
+    en: "Every S19 treatment plan is personalized based on your health history, test results, symptoms, medications, and individual needs. Treatment duration and cost are confirmed after consultation and evaluation.",
+    fr: "Chaque plan de traitement S19 est personnalisé en fonction de vos antécédents de santé, de vos résultats de laboratoire, de vos symptômes, de vos médicaments et de vos besoins individuels. La durée du traitement et son coût sont confirmés après la consultation et l'évaluation.",
   },
   "programs.hero.alt": {
     en: "Healthy green leaves representing herbal treatment programs",
