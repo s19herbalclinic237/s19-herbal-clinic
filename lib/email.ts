@@ -58,6 +58,11 @@ const C = {
 
 const WHATSAPP_CLINIC = `https://wa.me/${CLINIC.whatsappNumber}`;
 
+/** Absolute logo URL (email clients cannot resolve relative asset paths). */
+function brandLogo(): string {
+  return `${siteOrigin()}/s19-full-logo-for-dark-mode.png`;
+}
+
 function esc(value: unknown): string {
   return String(value ?? "")
     .replace(/&/g, "&amp;")
@@ -110,9 +115,14 @@ function wrap(c: EmailContent): string {
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:${C.white};border:1px solid ${C.line};border-radius:14px;overflow:hidden">
           <tr><td style="height:4px;background:${C.gold};font-size:0;line-height:0">&nbsp;</td></tr>
           <tr>
-            <td style="background:${C.brand};padding:26px 32px">
-              <div style="color:${C.gold};font-weight:bold;font-size:16px;letter-spacing:1px">S19 HERBAL CLINIC</div>
-              <div style="color:${C.white};font-size:12px;margin-top:3px;opacity:0.85">S19 King of Cure · Bafoussam &amp; Worldwide Tele-Health</div>
+            <td style="background:${C.brand};padding:28px 32px;text-align:center">
+              <img
+                src="${brandLogo()}"
+                alt="S19 Herbal Clinic"
+                width="220"
+                style="display:block;margin:0 auto;width:220px;max-width:100%;height:auto;border:0;outline:none;text-decoration:none"
+              />
+              <div style="color:rgba(255,255,255,0.75);font-size:12px;margin-top:10px;letter-spacing:0.2px">S19 King of Cure · Bafoussam &amp; Worldwide Tele-Health</div>
             </td>
           </tr>
           <tr>
