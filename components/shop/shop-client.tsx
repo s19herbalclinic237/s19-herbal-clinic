@@ -7,7 +7,7 @@ import { StaggerGroup, StaggerItem } from "@/components/ui/motion";
 import type { SiteProduct, SiteCategory } from "@/lib/site";
 import { localizedProduct } from "@/lib/site";
 import { useLocale } from "@/components/i18n/locale-provider";
-import { FaMagnifyingGlass, FaFilter } from "react-icons/fa6";
+import { FaMagnifyingGlass, FaFilter, FaArrowDown } from "react-icons/fa6";
 
 type SortKey = "featured" | "price-asc" | "price-desc" | "name";
 
@@ -58,7 +58,7 @@ export function ShopClient({
               className="pl-9"
             />
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <FaFilter className="h-3.5 w-3.5 text-muted" aria-hidden />
             <select
               value={sort}
@@ -70,6 +70,19 @@ export function ShopClient({
               <option value="price-desc">{t("shop.sort.priceDesc")}</option>
               <option value="name">{t("shop.sort.name")}</option>
             </select>
+            <a
+              href="#alternative-order"
+              onClick={(e) => {
+                e.preventDefault();
+                document
+                  .getElementById("alternative-order")
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+              className="inline-flex h-9 items-center gap-2 rounded-md border border-gold-500/60 bg-gold-400/20 px-3 text-xs font-bold text-forest-900 transition-colors hover:bg-gold-400/35"
+            >
+              {t("shop.alternativeOrder.title")}
+              <FaArrowDown className="h-3 w-3" aria-hidden />
+            </a>
           </div>
         </div>
 

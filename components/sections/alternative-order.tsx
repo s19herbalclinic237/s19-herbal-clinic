@@ -11,7 +11,7 @@ export async function AlternativeOrderSection() {
   const t = await serverT();
   return (
     <Section className="bg-mist">
-      <Container className="max-w-5xl">
+      <Container id="alternative-order" className="max-w-5xl scroll-mt-28">
         <Reveal>
           <div className="mx-auto max-w-3xl text-center">
             <Kicker center>{t("shop.alternativeOrder.kicker")}</Kicker>

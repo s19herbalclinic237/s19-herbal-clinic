@@ -29,6 +29,7 @@ import {
   FaChevronDown,
   FaStar,
   FaRegCircleCheck,
+  FaStarOfLife,
 } from "react-icons/fa6";
 
 const FEATURED_SLUGS = ["s19-herbal-wine-reserve", "s19-sozo", "s19-malaria-typhoid-combo"];
@@ -88,10 +89,7 @@ export default async function HomePage() {
 
         <Container className="relative z-10 w-full py-24 md:py-32">
           <BlurIn>
-            <p className="max-w-3xl text-lg font-extrabold uppercase tracking-wide text-gold-400 drop-shadow-sm md:text-xl">
-              {t("home.hero.claim")}
-            </p>
-            <h1 className="mt-3 max-w-3xl text-balance text-white drop-shadow-sm">
+            <h1 className="mt-6 max-w-3xl text-balance text-white drop-shadow-sm">
               {t("home.hero.titleA")}
               <span className="block text-gold-400">{t("home.hero.titleB")}</span>
             </h1>
@@ -116,6 +114,16 @@ export default async function HomePage() {
           </BlurIn>
         </Container>
       </section>
+
+      {/* CLAIM BANNER */}
+      <div className="bg-gold-400">
+        <Container className="flex items-center justify-center gap-3 py-3.5 md:py-4">
+          <FaStarOfLife className="h-4 w-4 shrink-0 text-forest-950" aria-hidden />
+          <p className="text-center text-sm font-extrabold uppercase tracking-wide text-forest-950 md:text-[15px]">
+            {t("home.hero.claim")}
+          </p>
+        </Container>
+      </div>
 
       {/* TREATMENT PROGRAMS (merged with Why S19 principles) */}
       <Section>
