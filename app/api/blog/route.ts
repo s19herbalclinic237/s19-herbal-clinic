@@ -10,7 +10,7 @@ export async function GET() {
 
   try {
     const posts = await BlogPost.find({ status: "published" })
-      .select("-body")
+      .select("-body -bodyFr")
       .sort({ publishedAt: -1, createdAt: -1 })
       .limit(100)
       .lean();

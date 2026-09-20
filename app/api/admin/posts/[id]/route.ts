@@ -41,6 +41,14 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     patch.title = title;
   }
 
+  if (body.titleFr !== undefined) {
+    const titleFr = String(body.titleFr).trim();
+    if (titleFr.length < 3 || titleFr.length > 160) {
+      return NextResponse.json({ error: "Please provide a French title." }, { status: 400 });
+    }
+    patch.titleFr = titleFr;
+  }
+
   if (body.slug !== undefined) {
     const slug = slugify(String(body.slug).trim() || String(existing.title));
     if (slug && slug !== existing.slug) {
@@ -60,6 +68,21 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       }
       patch[key] = value;
     }
+  }
+
+  for (const key of ["excerptFr", "bodyFr"] as const) {
+    if (body[key] !== undefined) {
+      const value = String(body[key]).trim();
+      if ((key === "excerptFr" && (value.length < 10 || value.length > 400)) || value.length < 20) {
+        return NextResponse.json({ error: "Please complete the French excerpt and article text." }, { status: 400 });
+      }
+      patch[key] = value;
+    }
+  }
+
+  if (body.authorFr !== undefined) {
+    const authorFr = String(body.authorFr).trim();
+    patch.authorFr = authorFr || undefined;
   }
 
   if (body.cover !== undefined) {

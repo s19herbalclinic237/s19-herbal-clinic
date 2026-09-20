@@ -103,3 +103,40 @@ export function localizedProduct(p: SiteProduct, locale: Locale): SiteProduct {
     badge: p.badgeFr || p.badge,
   };
 }
+
+export interface SiteBlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  body: string;
+  cover?: string;
+  author: string;
+  featured: boolean;
+  publishedAt?: string;
+  /** French versions. Fall back to the English fields when absent. */
+  titleFr?: string;
+  excerptFr?: string;
+  bodyFr?: string;
+  authorFr?: string;
+}
+
+export type LocalizedBlogPost = Pick<
+  SiteBlogPost,
+  "title" | "excerpt" | "body" | "author"
+>;
+
+/**
+ * Returns a blog post whose display fields are resolved for the given locale.
+ * Fields without a French version fall back to their English value.
+ */
+export function localizedBlogPost(p: SiteBlogPost, locale: Locale): SiteBlogPost {
+  if (locale !== "fr") return p;
+  return {
+    ...p,
+    title: p.titleFr || p.title,
+    excerpt: p.excerptFr || p.excerpt,
+    body: p.bodyFr || p.body,
+    author: p.authorFr || p.author,
+  };
+}

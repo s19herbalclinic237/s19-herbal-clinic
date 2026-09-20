@@ -17,6 +17,7 @@ import {
 import { CLINIC, waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { getServerLocale, serverT } from "@/lib/i18n-server";
+import { formatFcfa } from "@/lib/utils";
 
 export const revalidate = 60;
 import {
@@ -274,6 +275,14 @@ export default async function HomePage() {
               </StaggerItem>
             ))}
           </StaggerGroup>
+
+          <div className="mb-14 flex flex-wrap items-center justify-between gap-4 rounded-lg border border-gold-400/40 bg-gold-400/10 px-6 py-5">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-gold-400">{t("home.consultFee.title")}</p>
+              <p className="mt-1 text-sm text-forest-100/90">{t("home.consultFee.note")}</p>
+            </div>
+            <p className="font-display text-2xl font-bold text-gold-400">{formatFcfa(10000)}</p>
+          </div>
 
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
             <div>

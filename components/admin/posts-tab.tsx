@@ -27,6 +27,10 @@ interface BlogPost {
   publishedAt?: string;
   createdAt: string;
   updatedAt?: string;
+  titleFr?: string;
+  excerptFr?: string;
+  bodyFr?: string;
+  authorFr?: string;
 }
 
 type PostDraft = Omit<BlogPost, "_id" | "publishedAt" | "createdAt" | "updatedAt">;
@@ -40,6 +44,10 @@ const emptyDraft: PostDraft = {
   author: "S19 Herbal Clinic",
   status: "draft",
   featured: false,
+  titleFr: "",
+  excerptFr: "",
+  bodyFr: "",
+  authorFr: "",
 };
 
 function toSlug(value: string): string {
@@ -422,57 +430,104 @@ function PostForm({
             maxLength={160}
           />
         </Field>
-        <Field label="Slug" required hint="Auto-generated from the title.">
+        <Field label="Slug" required hint="Auto-generated from the English title.">
           <Input value={draft.slug} onChange={(e) => set("slug", e.target.value)} required maxLength={120} />
         </Field>
         <Field label="Author">
           <Input value={draft.author} onChange={(e) => set("author", e.target.value)} maxLength={80} />
         </Field>
-        <Field label="Short excerpt" required hint="Shown on the blog list (10-400 characters)." className="sm:col-span-2">
-          <Textarea value={draft.excerpt} onChange={(e) => set("excerpt", e.target.value)} required maxLength={400} />
-        </Field>
-        <Field label="Article text" required className="sm:col-span-2">
-          <Textarea
-            ref={bodyRef}
-            value={draft.body}
-            onChange={(e) => set("body", e.target.value)}
-            required
-            minLength={20}
-            maxLength={60000}
-            className="min-h-48"
-            placeholder="Write the article here. Blank lines between paragraphs are kept when the article is displayed."
-          />
-        </Field>
-        <div className="flex flex-wrap items-center gap-3 sm:col-span-2">
-          <Button
-            variant="outline"
-            size="sm"
-            type="button"
-            disabled={inlineUploading}
-            onClick={() => inlineFileRef.current?.click()}
-          >
-            {inlineUploading ? (
-              <FaCloudArrowUp className="h-4 w-4 animate-bounce" aria-hidden />
-            ) : (
-              <FaImage className="h-4 w-4" aria-hidden />
-            )}
-            {inlineUploading ? "Uploading…" : "Insert image into text"}
-          </Button>
-          <p className="text-xs text-muted">
-            Place your cursor where the photo should go, then click the button. Repeat to add more. You can also paste
-            any image URL on its own line, e.g. <code className="rounded bg-cream px-1 py-0.5">![Caption](https://…)</code>
-          </p>
-          <input
-            ref={inlineFileRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) void handleInlineUpload(file);
-            }}
-          />
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <div className="space-y-4 rounded-md border border-line bg-white p-4">
+          <p className="text-xs font-bold uppercase tracking-wide text-forest-800">English</p>
+          <Field label="Short excerpt" required hint="Shown on the blog list (10-400 characters)." className="sm:col-span-2">
+            <Textarea value={draft.excerpt} onChange={(e) => set("excerpt", e.target.value)} required maxLength={400} />
+          </Field>
+          <Field label="Article text" required className="sm:col-span-2">
+            <Textarea
+              ref={bodyRef}
+              value={draft.body}
+              onChange={(e) => set("body", e.target.value)}
+              required
+              minLength={20}
+              maxLength={60000}
+              className="min-h-48"
+              placeholder="Write the article here. Blank lines between paragraphs are kept when the article is displayed."
+            />
+          </Field>
         </div>
+
+        <div className="space-y-4 rounded-md border border-line bg-white p-4">
+          <p className="text-xs font-bold uppercase tracking-wide text-forest-800">Français</p>
+          <Field label="Titre" required>
+            <Input
+              value={draft.titleFr || ""}
+              onChange={(e) => set("titleFr", e.target.value)}
+              required
+              maxLength={160}
+              placeholder="Titre de l'article en français"
+            />
+          </Field>
+          <Field label="Extrait court" required hint="Affiché dans la liste du blog (10-400 caractères).">
+            <Textarea
+              value={draft.excerptFr || ""}
+              onChange={(e) => set("excerptFr", e.target.value)}
+              required
+              maxLength={400}
+            />
+          </Field>
+          <Field label="Texte de l'article" required className="sm:col-span-2">
+            <Textarea
+              value={draft.bodyFr || ""}
+              onChange={(e) => set("bodyFr", e.target.value)}
+              required
+              minLength={20}
+              maxLength={60000}
+              className="min-h-48"
+              placeholder="Écrivez l'article ici. Les lignes vides entre les paragraphes sont conservées à l'affichage."
+            />
+          </Field>
+          <Field label="Auteur">
+            <Input
+              value={draft.authorFr || ""}
+              onChange={(e) => set("authorFr", e.target.value)}
+              maxLength={80}
+              placeholder="Auteur en français"
+            />
+          </Field>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3">
+        <Button
+          variant="outline"
+          size="sm"
+          type="button"
+          disabled={inlineUploading}
+          onClick={() => inlineFileRef.current?.click()}
+        >
+          {inlineUploading ? (
+            <FaCloudArrowUp className="h-4 w-4 animate-bounce" aria-hidden />
+          ) : (
+            <FaImage className="h-4 w-4" aria-hidden />
+          )}
+          {inlineUploading ? "Uploading…" : "Insert image into text"}
+        </Button>
+        <p className="text-xs text-muted">
+          Place your cursor where the photo should go, then click the button. Repeat to add more. You can also paste
+          any image URL on its own line, e.g. <code className="rounded bg-cream px-1 py-0.5">![Caption](https://…)</code>
+        </p>
+        <input
+          ref={inlineFileRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) void handleInlineUpload(file);
+          }}
+        />
       </div>
 
       {existingId ? null : (

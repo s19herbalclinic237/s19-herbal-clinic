@@ -15,6 +15,10 @@ export interface IBlogPost {
   publishedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
+  titleFr?: string;
+  excerptFr?: string;
+  bodyFr?: string;
+  authorFr?: string;
 }
 
 const BlogPostSchema = new Schema<IBlogPost>(
@@ -28,6 +32,10 @@ const BlogPostSchema = new Schema<IBlogPost>(
     status: { type: String, enum: ["draft", "published"], default: "draft" },
     featured: { type: Boolean, default: false },
     publishedAt: { type: Date },
+    titleFr: { type: String, trim: true },
+    excerptFr: { type: String, trim: true },
+    bodyFr: { type: String, trim: true },
+    authorFr: { type: String, trim: true },
   },
   { timestamps: true }
 );

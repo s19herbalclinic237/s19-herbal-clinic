@@ -34,17 +34,29 @@ export async function POST(request: Request) {
   }
 
   const title = String(body.title || "").trim();
+  const titleFr = String(body.titleFr || "").trim();
   const excerpt = String(body.excerpt || "").trim();
+  const excerptFr = String(body.excerptFr || "").trim();
   const text = String(body.body || "").trim();
+  const bodyFr = String(body.bodyFr || "").trim();
 
   if (title.length < 3 || title.length > 160) {
     return NextResponse.json({ error: "Please provide a title." }, { status: 400 });
   }
+  if (titleFr.length < 3 || titleFr.length > 160) {
+    return NextResponse.json({ error: "Please provide a French title." }, { status: 400 });
+  }
   if (excerpt.length < 10 || excerpt.length > 400) {
     return NextResponse.json({ error: "Please provide a short excerpt (10-400 characters)." }, { status: 400 });
   }
+  if (excerptFr.length < 10 || excerptFr.length > 400) {
+    return NextResponse.json({ error: "Please provide a French excerpt (10-400 characters)." }, { status: 400 });
+  }
   if (text.length < 20) {
     return NextResponse.json({ error: "Please provide the article text." }, { status: 400 });
+  }
+  if (bodyFr.length < 20) {
+    return NextResponse.json({ error: "Please provide the French article text." }, { status: 400 });
   }
 
   const conn = await connectDb();
@@ -75,6 +87,10 @@ export async function POST(request: Request) {
             ? new Date(String(body.publishedAt))
             : new Date()
           : undefined,
+      titleFr,
+      excerptFr,
+      bodyFr,
+      authorFr: typeof body.authorFr === "string" && body.authorFr.trim() ? body.authorFr.trim() : undefined,
     });
     return NextResponse.json({ success: true, post }, { status: 201 });
   } catch (error) {

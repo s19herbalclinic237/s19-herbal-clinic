@@ -32,6 +32,10 @@ async function main() {
           status: post.status,
           featured: post.featured,
           publishedAt: new Date(post.publishedAt),
+          titleFr: post.titleFr,
+          excerptFr: post.excerptFr,
+          bodyFr: post.bodyFr,
+          authorFr: post.authorFr,
         },
       },
       { upsert: true }

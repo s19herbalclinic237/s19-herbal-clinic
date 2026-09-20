@@ -205,6 +205,11 @@ const dict = {
     en: "{hours} · In-clinic, or book a remote Tele-Health visit.",
     fr: "{hours} · En clinique, ou réservez une Télé-consultation à distance.",
   },
+  "home.consultFee.title": { en: "Standard Consultation", fr: "Consultation standard" },
+  "home.consultFee.note": {
+    en: "Available in person or online at the same consultation fee.",
+    fr: "Disponible en personne ou en ligne au même tarif.",
+  },
 
   "home.location.kicker": { en: "Find the clinic", fr: "Trouver la clinique" },
   "home.location.title": { en: "Care across Cameroon and the world.", fr: "Des soins partout au Cameroun et dans le monde." },
@@ -669,10 +674,91 @@ const dict = {
     fr: "Impossible de venir à notre clinique physique de Bafoussam ? Nous proposons des consultations en ligne structurées, l'évaluation de vos résultats de laboratoire, et des suivis de traitement planifiés par téléphone et messagerie sécurisée.",
   },
   "tele.hero.alt": { en: "Doctor preparing for a remote Tele-Health consultation", fr: "Médecin se préparant pour une consultation de Télé-santé à distance" },
-  "tele.price.title": { en: "Online consultation", fr: "Consultation en ligne" },
+  "tele.price.title": { en: "Standard Consultation", fr: "Consultation standard" },
   "tele.price.text": {
     en: "One phone or WhatsApp consultation. Your lab results are reviewed and you get a personal herbal plan.",
     fr: "Une consultation par téléphone ou WhatsApp. Vos résultats de laboratoire sont examinés et vous recevez un plan personnel à base de plantes.",
+  },
+  "tele.price.note": {
+    en: "The same standard consultation fee applies for both online and in-person consultations.",
+    fr: "Les mêmes frais de consultation standard s'appliquent aux consultations en ligne et en personne.",
+  },
+  "tele.advantages.kicker": { en: "Why go virtual", fr: "Pourquoi consulter en ligne" },
+  "tele.advantages.title": {
+    en: "Advantages of an Online Consultation",
+    fr: "Avantages d'une consultation en ligne",
+  },
+  "tele.advantages.lead": {
+    en: "An online consultation allows you to speak with the S19 team from wherever you are, without needing to travel to the clinic.",
+    fr: "Une consultation en ligne vous permet de parler avec l'équipe S19 où que vous soyez, sans avoir à vous déplacer à la clinique.",
+  },
+  "tele.adv1": {
+    en: "Convenient access from home or from another city or country",
+    fr: "Un accès pratique depuis chez vous, d'une autre ville ou d'un autre pays",
+  },
+  "tele.adv2": {
+    en: "One-on-one consultation with the S19 Head Herbalist",
+    fr: "Consultation individuelle avec le chef herboriste de S19",
+  },
+  "tele.adv3": {
+    en: "Opportunity to discuss your symptoms, medical history, medications and health concerns",
+    fr: "Possibilité de discuter de vos symptômes, antécédents médicaux, médicaments et préoccupations de santé",
+  },
+  "tele.adv4": {
+    en: "Ability to send laboratory results, scans, prescriptions and previous medical records for review",
+    fr: "Possibilité d'envoyer vos résultats de laboratoire, scanners, ordonnances et antécédents médicaux pour examen",
+  },
+  "tele.adv5": {
+    en: "Guidance on herbal treatment, nutrition, lifestyle and daily health habits",
+    fr: "Conseils sur le traitement à base de plantes, la nutrition, le mode de vie et les habitudes de santé quotidiennes",
+  },
+  "tele.adv6": {
+    en: "Clear explanation of your recommended treatment plan and product instructions",
+    fr: "Explication claire de votre plan de traitement recommandé et des instructions produit",
+  },
+  "tele.adv7": {
+    en: "Opportunity to ask questions and receive direct clarification",
+    fr: "Possibilité de poser des questions et d'obtenir des éclaircissements directs",
+  },
+  "tele.adv8": {
+    en: "Useful for follow-up consultations and treatment progress reviews",
+    fr: "Utile pour les consultations de suivi et l'examen des progrès du traitement",
+  },
+  "tele.adv9": {
+    en: "Easier access for patients who are elderly, busy, traveling or unable to visit Bafoussam",
+    fr: "Accès plus facile pour les patients âgés, occupés, en voyage ou dans l'incapacité de se rendre à Bafoussam",
+  },
+  "tele.adv10": {
+    en: "Continued communication and support even when you live outside Cameroon",
+    fr: "Communication et soutien continus même lorsque vous vivez hors du Cameroun",
+  },
+  "tele.adv11": {
+    en: "Ability to discuss whether additional laboratory tests, scans or medical evaluation may be necessary before starting or adjusting a program",
+    fr: "Possibilité de discuter de la nécessité de tests de laboratoire, scanners ou évaluations médicales supplémentaires avant de commencer ou d'ajuster un programme",
+  },
+  "tele.adv12": {
+    en: "Products can be shipped to countries where DHL delivery service is available",
+    fr: "Expédition des produits vers les pays où le service de livraison DHL est disponible",
+  },
+  "tele.fee.title": { en: "Standard Consultation Fee", fr: "Frais de consultation standard" },
+  "tele.options.kicker": { en: "Pick the right fit", fr: "Choisissez la bonne formule" },
+  "tele.options.title": {
+    en: "Which Option Should You Choose?",
+    fr: "Quelle option devriez-vous choisir ?",
+  },
+  "tele.options.inPerson.title": { en: "In-person consultation", fr: "Consultation en personne" },
+  "tele.options.inPerson.text": {
+    en: "Choose an in-person consultation if you want direct physical assessment, blood-pressure and blood-sugar checks, and face-to-face interaction with the S19 team.",
+    fr: "Choisissez une consultation en personne si vous souhaitez une évaluation physique directe, des contrôles de tension artérielle et de glycémie, et une interaction en face à face avec l'équipe S19.",
+  },
+  "tele.options.online.title": { en: "Online consultation", fr: "Consultation en ligne" },
+  "tele.options.online.text": {
+    en: "Choose an online consultation if traveling is difficult or you live outside Bafoussam or Cameroon and want to discuss your case remotely.",
+    fr: "Choisissez une consultation en ligne si les déplacements sont difficiles ou si vous vivez hors de Bafoussam ou du Cameroun et souhaitez discuter de votre cas à distance.",
+  },
+  "tele.options.note": {
+    en: "For some health conditions, the S19 team may recommend that you obtain certain laboratory tests, scans or an in-person medical evaluation before a complete treatment plan is developed.",
+    fr: "Pour certaines conditions de santé, l'équipe S19 peut recommander d'effectuer certains tests de laboratoire, des scanners ou une évaluation médicale en personne avant qu'un plan de traitement complet ne soit élaboré.",
   },
   "tele.steps.kicker": { en: "How remote care works", fr: "Comment fonctionnent les soins à distance" },
   "tele.steps.title": { en: "From consultation to follow-up, wherever you are.", fr: "De la consultation au suivi, où que vous soyez." },

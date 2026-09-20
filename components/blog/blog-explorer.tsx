@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { formatDate } from "@/lib/format-date";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/components/i18n/locale-provider";
+import { localizedBlogPost } from "@/lib/site";
 import { FaArrowRight, FaMagnifyingGlass, FaRegNewspaper } from "react-icons/fa6";
 
 interface BlogPost {
@@ -16,22 +17,43 @@ interface BlogPost {
   author: string;
   featured?: boolean;
   publishedAt?: string;
+  titleFr?: string;
+  excerptFr?: string;
+  authorFr?: string;
 }
 
 type Filter = "all" | "featured";
 
 export function BlogExplorer({ posts }: { posts: BlogPost[] }) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
 
+  const localizedPosts = useMemo(
+    () => posts.map((p) => localizedBlogPost({
+      id: p._id,
+      title: p.title,
+      slug: p.slug,
+      excerpt: p.excerpt,
+      body: "",
+      cover: p.cover,
+      author: p.author,
+      featured: p.featured ?? false,
+      publishedAt: p.publishedAt,
+      titleFr: p.titleFr,
+      excerptFr: p.excerptFr,
+      authorFr: p.authorFr,
+    }, locale)),
+    [posts, locale]
+  );
+
   const sorted = useMemo(
     () =>
-      [...posts].sort((a, b) => {
+      [...localizedPosts].sort((a, b) => {
         if (Boolean(a.featured) !== Boolean(b.featured)) return a.featured ? -1 : 1;
         return (b.publishedAt ?? "").localeCompare(a.publishedAt ?? "");
       }),
-    [posts]
+    [localizedPosts]
   );
 
   const filtered = useMemo(() => {
@@ -141,7 +163,7 @@ export function BlogExplorer({ posts }: { posts: BlogPost[] }) {
             <div className="grid gap-6 sm:grid-cols-2">
               {rest.map((p) => (
                 <Link
-                  key={p._id}
+                  key={p.id}
                   href={`/blog/${p.slug}`}
                   className="group overflow-hidden rounded-xl border border-line bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-forest-300 hover:shadow-lift"
                 >

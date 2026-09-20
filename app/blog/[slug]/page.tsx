@@ -5,7 +5,8 @@ import { Container, Section } from "@/components/ui/container";
 import { formatDate } from "@/lib/format-date";
 import { ArticleBody, readingTime } from "@/components/blog/article-body";
 import { NewsletterForm } from "@/components/blog/newsletter-form";
-import { serverT } from "@/lib/i18n-server";
+import { getServerLocale, serverT } from "@/lib/i18n-server";
+import { localizedBlogPost } from "@/lib/site";
 import { FaArrowLeft, FaClock, FaRegNewspaper, FaUserPen } from "react-icons/fa6";
 
 export const revalidate = 60;
@@ -22,6 +23,10 @@ interface BlogPost {
   author: string;
   featured: boolean;
   publishedAt?: string;
+  titleFr?: string;
+  excerptFr?: string;
+  bodyFr?: string;
+  authorFr?: string;
 }
 
 const API_BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -56,20 +61,53 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const t = await serverT();
+  const locale = await getServerLocale();
   const post = await fetchPost(slug);
   if (!post) return { title: t("blogPost.notFound") };
+  const localized = localizedBlogPost({
+    id: post._id,
+    title: post.title,
+    slug: post.slug,
+    excerpt: post.excerpt,
+    body: post.body,
+    cover: post.cover,
+    author: post.author,
+    featured: post.featured,
+    publishedAt: post.publishedAt,
+    titleFr: post.titleFr,
+    excerptFr: post.excerptFr,
+    bodyFr: post.bodyFr,
+    authorFr: post.authorFr,
+  }, locale);
   return {
-    title: `${post.title} | ${t("blogPost.metaBlog")}`,
-    description: post.excerpt,
+    title: `${localized.title} | ${t("blogPost.metaBlog")}`,
+    description: localized.excerpt,
   };
 }
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const t = await serverT();
+  const locale = await getServerLocale();
   const post = await fetchPost(slug);
 
   if (!post) notFound();
+
+  const p = localizedBlogPost({
+    id: post._id,
+    title: post.title,
+    slug: post.slug,
+    excerpt: post.excerpt,
+    body: post.body,
+    cover: post.cover,
+    author: post.author,
+    featured: post.featured,
+    publishedAt: post.publishedAt,
+    titleFr: post.titleFr,
+    excerptFr: post.excerptFr,
+    bodyFr: post.bodyFr,
+    authorFr: post.authorFr,
+  }, locale);
 
   return (
     <>
@@ -84,27 +122,27 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <p className="text-xs font-semibold uppercase tracking-widest text-gold-600">
               {post.publishedAt ? formatDate(post.publishedAt) : ""} · {t("blogPost.metaBlog")}
             </p>
-            <h1 className="mt-3 font-display text-3xl font-bold leading-tight text-ink sm:text-4xl">{post.title}</h1>
+            <h1 className="mt-3 font-display text-3xl font-bold leading-tight text-ink sm:text-4xl">{p.title}</h1>
             <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted">
               <p className="flex items-center gap-2">
                 <FaUserPen className="h-4 w-4 text-forest-400" aria-hidden />
-                {t("blogPost.by", { author: post.author })}
+                {t("blogPost.by", { author: p.author })}
               </p>
               <span className="hidden h-4 w-px bg-line-strong sm:block" aria-hidden />
               <p className="flex items-center gap-2">
                 <FaClock className="h-3.5 w-3.5 text-forest-400" aria-hidden />
-                {t("blogPost.minRead", { minutes: readingTime(post.body) })}
+                {t("blogPost.minRead", { minutes: readingTime(p.body) })}
               </p>
             </div>
 
             {post.cover ? (
               <div className="mt-8 overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
-                <img src={post.cover} alt={post.title} className="w-full object-cover" />
+                <img src={post.cover} alt={p.title} className="w-full object-cover" />
               </div>
             ) : null}
 
             <div className="mt-8">
-              <ArticleBody body={post.body} cover={post.cover} />
+              <ArticleBody body={p.body} cover={post.cover} />
             </div>
           </article>
 

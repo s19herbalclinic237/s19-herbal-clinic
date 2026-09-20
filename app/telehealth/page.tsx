@@ -6,7 +6,7 @@ import { Reveal } from "@/components/ui/motion";
 import { localizedTelehealthSteps } from "@/lib/data/programs";
 import { CLINIC, waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
-import { FaWhatsapp, FaShieldHalved, FaFlask, FaClock, FaPaperPlane } from "react-icons/fa6";
+import { FaWhatsapp, FaShieldHalved, FaFlask, FaClock, FaPaperPlane, FaRegCircleCheck, FaUserDoctor, FaVideo } from "react-icons/fa6";
 import { getServerLocale, serverT } from "@/lib/i18n-server";
 import { formatEur, formatFcfa, formatUsd } from "@/lib/utils";
 
@@ -69,7 +69,42 @@ export default async function TelehealthPage() {
               </p>
             </div>
           </div>
+          <p className="mx-auto mt-3 max-w-3xl text-center text-sm text-muted">
+            {t("tele.price.note")}
+          </p>
         </Reveal>
+      </Section>
+
+      {/* Advantages */}
+      <Section className="bg-white">
+        <Reveal>
+          <div className="mx-auto max-w-2xl text-center">
+            <Kicker center>{t("tele.advantages.kicker")}</Kicker>
+            <h2 className="mt-4">{t("tele.advantages.title")}</h2>
+            <p className="mt-4 text-[15px] leading-relaxed text-muted">{t("tele.advantages.lead")}</p>
+          </div>
+        </Reveal>
+        <div className="mx-auto mt-10 grid max-w-4xl gap-3 sm:grid-cols-2">
+          {[
+            t("tele.adv1"),
+            t("tele.adv2"),
+            t("tele.adv3"),
+            t("tele.adv4"),
+            t("tele.adv5"),
+            t("tele.adv6"),
+            t("tele.adv7"),
+            t("tele.adv8"),
+            t("tele.adv9"),
+            t("tele.adv10"),
+            t("tele.adv11"),
+            t("tele.adv12"),
+          ].map((item) => (
+            <div key={item} className="flex items-start gap-3 rounded-lg border border-line bg-cream p-4">
+              <FaRegCircleCheck className="mt-0.5 h-4 w-4 shrink-0 text-forest-700" aria-hidden />
+              <p className="text-sm leading-relaxed text-ink/85">{item}</p>
+            </div>
+          ))}
+        </div>
       </Section>
 
       {/* Steps */}
@@ -145,6 +180,45 @@ export default async function TelehealthPage() {
             {CLINIC.phone}
           </a>
         </Container>
+      </Section>
+
+      {/* Which option */}
+      <Section>
+        <Reveal>
+          <div className="mx-auto max-w-2xl text-center">
+            <Kicker center>{t("tele.options.kicker")}</Kicker>
+            <h2 className="mt-4">{t("tele.options.title")}</h2>
+          </div>
+        </Reveal>
+        <div className="mx-auto mt-10 grid max-w-4xl gap-5 md:grid-cols-2">
+          <Reveal>
+            <div className="flex h-full items-start gap-4 rounded-lg border border-line bg-white p-7 shadow-card">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-forest-800 text-white">
+                <FaUserDoctor className="h-5 w-5" aria-hidden />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-forest-900">{t("tele.options.inPerson.title")}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{t("tele.options.inPerson.text")}</p>
+              </div>
+            </div>
+          </Reveal>
+          <Reveal>
+            <div className="flex h-full items-start gap-4 rounded-lg border border-line bg-white p-7 shadow-card">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-gold-500 text-forest-950">
+                <FaVideo className="h-5 w-5" aria-hidden />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-forest-900">{t("tele.options.online.title")}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{t("tele.options.online.text")}</p>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+        <Reveal>
+          <p className="mx-auto mt-6 max-w-3xl rounded-lg border border-gold-200 bg-gold-50/60 px-5 py-4 text-center text-sm leading-relaxed text-ink/80">
+            {t("tele.options.note")}
+          </p>
+        </Reveal>
       </Section>
 
       <CTABand title={t("tele.cta.title")} text={t("tele.cta.text")} />
