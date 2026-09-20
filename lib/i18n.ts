@@ -676,10 +676,6 @@ const dict = {
   "tele.hero.alt": { en: "Doctor preparing for a remote Tele-Health consultation", fr: "Médecin se préparant pour une consultation de Télé-santé à distance" },
   "tele.price.title": { en: "Standard Consultation", fr: "Consultation standard" },
   "tele.price.text": {
-    en: "One phone or WhatsApp consultation. Your lab results are reviewed and you get a personal herbal plan.",
-    fr: "Une consultation par téléphone ou WhatsApp. Vos résultats de laboratoire sont examinés et vous recevez un plan personnel à base de plantes.",
-  },
-  "tele.price.note": {
     en: "The same standard consultation fee applies for both online and in-person consultations.",
     fr: "Les mêmes frais de consultation standard s'appliquent aux consultations en ligne et en personne.",
   },

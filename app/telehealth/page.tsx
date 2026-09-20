@@ -69,9 +69,6 @@ export default async function TelehealthPage() {
               </p>
             </div>
           </div>
-          <p className="mx-auto mt-3 max-w-3xl text-center text-sm text-muted">
-            {t("tele.price.note")}
-          </p>
         </Reveal>
       </Section>
 
