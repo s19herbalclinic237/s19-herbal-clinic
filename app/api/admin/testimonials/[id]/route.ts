@@ -72,6 +72,17 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     patch.email = value || undefined;
   }
 
+  if (body.videoUrl !== undefined) {
+    const value = String(body.videoUrl).trim();
+    if (value && (value.length > 500 || !/^https?:\/\//i.test(value))) {
+      return NextResponse.json(
+        { error: "Please provide a valid video link (YouTube, Google Drive or Vimeo), or leave it empty." },
+        { status: 400 }
+      );
+    }
+    patch.videoUrl = value || undefined;
+  }
+
   if (body.rating !== undefined) {
     const parsedRating = Number(body.rating);
     patch.rating =

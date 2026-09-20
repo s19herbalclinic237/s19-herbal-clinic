@@ -88,7 +88,10 @@ export default async function HomePage() {
 
         <Container className="relative z-10 w-full py-24 md:py-32">
           <BlurIn>
-            <h1 className="mt-6 max-w-3xl text-balance text-white drop-shadow-sm">
+            <p className="max-w-3xl text-lg font-extrabold uppercase tracking-wide text-gold-400 drop-shadow-sm md:text-xl">
+              {t("home.hero.claim")}
+            </p>
+            <h1 className="mt-3 max-w-3xl text-balance text-white drop-shadow-sm">
               {t("home.hero.titleA")}
               <span className="block text-gold-400">{t("home.hero.titleB")}</span>
             </h1>

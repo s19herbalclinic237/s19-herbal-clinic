@@ -25,6 +25,7 @@ interface AdminTestimonial {
   text: string;
   rating?: number;
   email?: string;
+  videoUrl?: string;
   status: "pending" | "approved" | "rejected";
   createdAt: string;
 }
@@ -46,6 +47,7 @@ export function AdminTestimonialsTab() {
   const [busyId, setBusyId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState("");
+  const [editVideo, setEditVideo] = useState("");
   const [showAdd, setShowAdd] = useState(false);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -118,7 +120,7 @@ export function AdminTestimonialsTab() {
   };
 
   const saveEdit = (t: AdminTestimonial) => {
-    void patch(t._id, { text: editText }, "Testimonial updated.");
+    void patch(t._id, { text: editText, videoUrl: editVideo }, "Testimonial updated.");
     setEditingId(null);
   };
 
@@ -202,6 +204,7 @@ export function AdminTestimonialsTab() {
                       {t.city}
                       {t.country ? `, ${t.country}` : ""} · {t.program} · {formatDate(t.createdAt)}
                       {t.email ? ` · ${t.email}` : ""}
+                      {t.videoUrl ? " · video review linked" : ""}
                       {t.user?.name ? ` · submitted by ${t.user.name} (${t.user.email})` : " · added by clinic"}
                     </p>
                   </div>
@@ -210,12 +213,17 @@ export function AdminTestimonialsTab() {
                 {editing ? (
                   <div className="mt-3 space-y-2">
                     <Textarea value={editText} onChange={(e) => setEditText(e.target.value)} maxLength={1200} />
+                    <Input
+                      value={editVideo}
+                      onChange={(e) => setEditVideo(e.target.value)}
+                      placeholder="Video review link (YouTube / Google Drive / Vimeo) - leave empty for none"
+                    />
                     <div className="flex justify-end gap-2">
                       <Button variant="outline" size="sm" onClick={() => setEditingId(null)}>
                         Cancel
                       </Button>
                       <Button size="sm" onClick={() => saveEdit(t)}>
-                        Save text
+                        Save changes
                       </Button>
                     </div>
                   </div>
@@ -236,7 +244,7 @@ export function AdminTestimonialsTab() {
                       Reject
                     </Button>
                   ) : null}
-                  <Button variant="ghost" size="sm" disabled={busyId === t._id} onClick={() => { setEditingId(editing ? null : t._id); setEditText(t.text); }}>
+                  <Button variant="ghost" size="sm" disabled={busyId === t._id} onClick={() => { setEditingId(editing ? null : t._id); setEditText(t.text); setEditVideo(t.videoUrl || ""); }}>
                     <FaPencil className="h-3.5 w-3.5" aria-hidden />
                     Edit
                   </Button>
@@ -262,6 +270,7 @@ function AddTestimonialForm({ onDone }: { onDone: (message: string) => void }) {
   const [text, setText] = useState("");
   const [rating, setRating] = useState<number>(5);
   const [email, setEmail] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
   const [status, setStatus] = useState<"pending" | "approved">("pending");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -276,7 +285,7 @@ function AddTestimonialForm({ onDone }: { onDone: (message: string) => void }) {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, city, country, program, text, rating, email, status }),
+        body: JSON.stringify({ name, city, country, program, text, rating, email, videoUrl, status }),
       });
       const data = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok) throw new Error(data.error || "Could not save.");
@@ -327,6 +336,17 @@ function AddTestimonialForm({ onDone }: { onDone: (message: string) => void }) {
         </Field>
         <Field label="Testimonial text" required className="sm:col-span-2">
           <Textarea value={text} onChange={(e) => setText(e.target.value)} required minLength={20} maxLength={1200} />
+        </Field>
+        <Field
+          label="Video review link"
+          hint="Paste a YouTube, Google Drive or Vimeo link (optional)"
+          className="sm:col-span-2"
+        >
+          <Input
+            value={videoUrl}
+            onChange={(e) => setVideoUrl(e.target.value)}
+            placeholder="https://drive.google.com/file/d/... or https://youtube.com/watch?v=..."
+          />
         </Field>
       </div>
       <div className="mt-3 flex flex-wrap items-center justify-between gap-3">

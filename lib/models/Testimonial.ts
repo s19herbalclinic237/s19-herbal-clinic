@@ -13,6 +13,7 @@ export interface ITestimonial {
   text: string;
   rating?: number;
   email?: string;
+  videoUrl?: string;
   status: TestimonialStatus;
   createdAt: Date;
 }
@@ -27,6 +28,7 @@ const TestimonialSchema = new Schema<ITestimonial>(
     text: { type: String, required: true, trim: true },
     rating: { type: Number, min: 1, max: 5 },
     email: { type: String, trim: true },
+    videoUrl: { type: String, trim: true, maxlength: 500 },
     status: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" },
   },
   { timestamps: true }

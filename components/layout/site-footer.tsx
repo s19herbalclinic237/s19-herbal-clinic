@@ -20,6 +20,7 @@ const treatmentLinks: { key: TranslationKey; href: string }[] = [
   { key: "footer.prostate", href: "/programs#prostate-mens-health" },
   { key: "footer.womens", href: "/programs#womens-health-hormones" },
   { key: "footer.gastritis", href: "/programs#digestive-gut-health" },
+  { key: "footer.cancer", href: "/programs#integrative-cancer-care" },
 ];
 
 const companyLinks: { key: TranslationKey; href: string }[] = [

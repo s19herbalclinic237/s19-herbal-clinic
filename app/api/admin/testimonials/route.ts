@@ -51,6 +51,7 @@ export async function POST(request: Request) {
   const program = String(body.program || "").trim();
   const text = String(body.text || "").trim();
   const email = String(body.email || "").trim();
+  const videoUrl = String(body.videoUrl || "").trim();
 
   if (name.length < 2) {
     return NextResponse.json({ error: "Please provide the customer name." }, { status: 400 });
@@ -63,6 +64,15 @@ export async function POST(request: Request) {
   }
   if (text.length < 20) {
     return NextResponse.json({ error: "Please provide the full testimonial text." }, { status: 400 });
+  }
+  if (
+    videoUrl &&
+    (videoUrl.length > 500 || !/^https?:\/\//i.test(videoUrl))
+  ) {
+    return NextResponse.json(
+      { error: "Please provide a valid video link (YouTube, Google Drive or Vimeo), or leave it empty." },
+      { status: 400 }
+    );
   }
   if (email && (email.length > 120 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) {
     return NextResponse.json({ error: "Please provide a valid email address, or leave it empty." }, { status: 400 });
@@ -89,6 +99,7 @@ export async function POST(request: Request) {
       text,
       rating,
       email: email || undefined,
+      videoUrl: videoUrl || undefined,
       status,
     });
     return NextResponse.json({ success: true, testimonial }, { status: 201 });

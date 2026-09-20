@@ -3,6 +3,7 @@ import { Container, Section } from "@/components/ui/container";
 import { Kicker } from "@/components/ui/heading";
 import { Reveal } from "@/components/ui/motion";
 import { StoriesForm } from "@/components/testimonials/stories-form";
+import { StoryVideo } from "@/components/testimonials/story-video";
 import { getApprovedTestimonials } from "@/lib/testimonials";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { serverT } from "@/lib/i18n-server";
@@ -55,9 +56,9 @@ export default async function PatientStoriesPage() {
       {/* GRID */}
       <Section>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {stories.map((test) => (
+          {stories.map((test, i) => (
             <figure
-              key={test.name}
+              key={`${test.name}-${i}`}
               className="flex h-full flex-col rounded-lg border border-line bg-white p-7 shadow-card transition-shadow hover:shadow-lift"
             >
               <FaQuoteLeft className="h-5 w-5 text-forest-300" aria-hidden />
@@ -72,6 +73,7 @@ export default async function PatientStoriesPage() {
               <blockquote className="mt-4 flex-1 text-[15px] leading-relaxed text-ink/80">
                 &ldquo;{test.text}&rdquo;
               </blockquote>
+              {test.videoUrl ? <StoryVideo url={test.videoUrl} /> : null}
               <figcaption className="mt-6 border-t border-line pt-4 text-sm">
                 <span className="font-bold text-ink">{test.name}</span>
                 <span className="mx-1.5 text-muted">·</span>

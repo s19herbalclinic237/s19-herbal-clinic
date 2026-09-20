@@ -11,6 +11,7 @@ export interface SiteTestimonial {
   program: string;
   text: string;
   rating?: number;
+  videoUrl?: string;
 }
 
 let dbUnavailable = false;
@@ -23,6 +24,7 @@ function toSiteTestimonial(t: ITestimonial): SiteTestimonial {
     program: t.program,
     text: t.text,
     rating: t.rating,
+    videoUrl: t.videoUrl,
   };
 }
 

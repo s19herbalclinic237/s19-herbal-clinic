@@ -57,6 +57,10 @@ const dict = {
     fr: "Bienvenue à la {brand} de Bafoussam. Notre mission est de fournir des solutions à base de plantes sûres, naturelles et efficaces qui soutiennent la santé et le bien-être à long terme - des consultations fondées sur la science, des formulations individualisées et la Télé-consultation, une clinique avec une portée mondiale.",
   },
   "home.hero.whatsapp": { en: "WhatsApp the Clinic", fr: "Écrire à la clinique sur WhatsApp" },
+  "home.hero.claim": {
+    en: "Specialized Support for Diabetes and Cancer Care.",
+    fr: "Soutien spécialisé pour le diabète et les soins du cancer.",
+  },
 
   "home.focus.kicker": { en: "What we offer", fr: "Ce que nous proposons" },
   "home.focus.title": { en: "Three ways to care.", fr: "Trois façons de prendre soin de vous." },
@@ -258,6 +262,28 @@ const dict = {
   "footer.prostate": { en: "Prostate & Men's Health", fr: "Prostate et santé masculine" },
   "footer.womens": { en: "Women's Reproductive Wellness", fr: "Bien-être reproductif féminin" },
   "footer.gastritis": { en: "Gastritis & Digestive Disorders", fr: "Gastrite et troubles digestifs" },
+  "footer.cancer": { en: "Integrative Cancer Care", fr: "Soins intégratifs du cancer" },
+
+  "refer.kicker": { en: "Kindness that heals", fr: "Une bonté qui guérit" },
+  "refer.title": { en: "Refer a Loved One to S19", fr: "Parrainez un proche vers S19" },
+  "refer.lead1": {
+    en: "Do you know someone living with diabetes, high blood pressure, prostate or heart complications, cancer, or another long-term health condition?",
+    fr: "Connaissez-vous quelqu'un qui vit avec le diabète, l'hypertension artérielle, des complications de la prostate ou du cœur, le cancer ou une autre maladie de longue durée ?",
+  },
+  "refer.lead2": {
+    en: "Please refer them to S19 Herbal Clinic. Many people need more than temporary symptom control — they need proper evaluation, health education, lifestyle guidance, and supportive care that addresses the wider factors affecting their health to improve their quality of life.",
+    fr: "Veuillez les orienter vers la Clinique de phytothérapie S19. Beaucoup de personnes ont besoin de plus qu'un simple contrôle temporaire des symptômes — elles ont besoin d'une évaluation appropriée, d'une éducation à la santé, de conseils de mode de vie et de soins de soutien qui abordent les facteurs plus larges affectant leur santé afin d'améliorer leur qualité de vie.",
+  },
+  "refer.lead3": {
+    en: "By referring a loved one, you are not only supporting S19; you may be helping someone access care, hope, and a healthier path forward. You are also contributing to a healthier community and doing a meaningful act of kindness before God.",
+    fr: "En parrainant un proche, vous ne soutenez pas seulement S19 : vous pouvez aider quelqu'un à accéder à des soins, à l'espoir et à une voie plus saine. Vous contribuez également à une communauté plus saine et vous accomplissez un acte de bonté significatif devant Dieu.",
+  },
+  "refer.lead4": {
+    en: "A simple referral could make a real difference in someone's life.",
+    fr: "Une simple recommandation peut faire une réelle différence dans la vie de quelqu'un.",
+  },
+  "refer.whatsapp": { en: "Refer via WhatsApp", fr: "Parrainer via WhatsApp" },
+  "refer.book": { en: "Book a Consultation", fr: "Réserver une consultation" },
 
   "booking.title": { en: "Request received", fr: "Demande reçue" },
   "booking.thanks": {
@@ -358,6 +384,18 @@ const dict = {
     en: ". Personalized treatment packs and programs are priced after your consultation.",
     fr: ". Les packs et programmes de traitement personnalisés sont tarifés après votre consultation.",
   },
+  "shop.alternativeOrder.kicker": { en: "No account? No problem.", fr: "Pas de compte ? Pas de problème." },
+  "shop.alternativeOrder.title": { en: "Alternative Way to Order", fr: "Autre façon de commander" },
+  "shop.alternativeOrder.text": {
+    en: "If you prefer, you can screenshot the product(s) you want and send the images to us on WhatsApp or by email at s19herbs@gmail.com.",
+    fr: "Si vous préférez, vous pouvez faire une capture d'écran du ou des produits souhaités et nous envoyer les images sur WhatsApp ou par e-mail à s19herbs@gmail.com.",
+  },
+  "shop.alternativeOrder.details": {
+    en: "Please include your full name, phone number, delivery location, and the quantity you need. Our team will reply to confirm availability, price, payment, and delivery.",
+    fr: "Veuillez indiquer votre nom complet, votre numéro de téléphone, votre lieu de livraison et la quantité souhaitée. Notre équipe répondra pour confirmer la disponibilité, le prix, le paiement et la livraison.",
+  },
+  "shop.alternativeOrder.whatsapp": { en: "Send a screenshot on WhatsApp", fr: "Envoyer une capture d'écran sur WhatsApp" },
+  "shop.alternativeOrder.email": { en: "Email: s19herbs@gmail.com", fr: "Email : s19herbs@gmail.com" },
   "shop.contactPricing": { en: "Contact S19 for pricing", fr: "Contactez S19 pour le prix" },
 
   "addToCart.quantity": { en: "Quantity", fr: "Quantité" },

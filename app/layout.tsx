@@ -4,6 +4,7 @@ import { Providers } from "@/components/providers";
 import { AnnouncementBar, SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { WhatsAppFloat } from "@/components/sections/cta-band";
+import { LanguageFab } from "@/components/i18n/language-fab";
 import { CLINIC } from "@/lib/site";
 import { getServerLocale } from "@/lib/i18n-server";
 import "./globals.css";
@@ -94,6 +95,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <main>{children}</main>
           <SiteFooter />
           <WhatsAppFloat />
+          <LanguageFab />
         </Providers>
       </body>
     </html>

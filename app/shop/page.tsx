@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/ui/page-hero";
 import { ShopClient } from "@/components/shop/shop-client";
+import { AlternativeOrderSection } from "@/components/sections/alternative-order";
+import { ReferSection } from "@/components/sections/refer-section";
 import { getCategories, getProducts } from "@/lib/catalog";
 import { waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
@@ -30,6 +32,8 @@ export default async function ShopPage() {
         alt="S19 staff explaining natural nutrition with a basket of fresh vegetables and fruits"
       />
       <ShopClient products={products} categories={categories} />
+      <AlternativeOrderSection />
+      <ReferSection />
       <div className="border-t border-line bg-mist">
         <div className="mx-auto w-full max-w-6xl px-4 py-6 text-sm text-muted sm:px-6 lg:px-8">
           {t("shop.orderByChatA")}{" "}
