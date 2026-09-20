@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
-import { CLINIC, waLink } from "@/lib/site";
+import { localizedClinic, waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
-import { serverT } from "@/lib/i18n-server";
+import { getServerLocale, serverT } from "@/lib/i18n-server";
 import type { TranslationKey } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 import {
@@ -37,6 +37,7 @@ const companyLinks: { key: TranslationKey; href: string }[] = [
 
 export async function SiteFooter() {
   const t = await serverT();
+  const clinic = localizedClinic(await getServerLocale());
   return (
     <footer className="relative border-t border-forest-900 bg-forest-950 text-forest-200">
       <div
@@ -52,16 +53,16 @@ export async function SiteFooter() {
         <div>
           <img
             src={S19_ASSETS.logos.fullDark}
-            alt={`${CLINIC.brand} logo`}
+            alt={`${clinic.brand} logo`}
             className="h-11 w-auto"
           />
-          <p className="mt-3 max-w-xs text-lg font-bold text-white">{CLINIC.slogan}</p>
+          <p className="mt-3 max-w-xs text-lg font-bold text-white">{clinic.slogan}</p>
           <p className="mt-3 max-w-xs text-sm leading-relaxed text-forest-300">
-            {CLINIC.mission}
+            {clinic.mission}
           </p>
           <div className="mt-5 flex items-center gap-3">
             <a
-              href={CLINIC.instagram}
+              href={clinic.instagram}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={t("aria.instagram")}
@@ -70,7 +71,7 @@ export async function SiteFooter() {
               <FaInstagram className="h-3.5 w-3.5" aria-hidden />
             </a>
             <a
-              href={CLINIC.facebook}
+              href={clinic.facebook}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={t("aria.facebook")}
@@ -79,8 +80,8 @@ export async function SiteFooter() {
               <FaFacebookF className="h-3.5 w-3.5" aria-hidden />
             </a>
             <a
-              href={`tel:${CLINIC.phoneHref}`}
-              aria-label={CLINIC.phone}
+              href={`tel:${clinic.phoneHref}`}
+              aria-label={clinic.phone}
               className="flex h-9 w-9 items-center justify-center rounded-full border border-forest-700 text-forest-300 transition-colors hover:border-gold-400 hover:text-gold-400"
             >
               <FaPhone className="h-3.5 w-3.5" aria-hidden />
@@ -106,18 +107,18 @@ export async function SiteFooter() {
           <ul className="mt-4 space-y-2.5 text-sm text-forest-300">
             <li className="flex gap-2">
               <FaMapLocationDot className="mt-1 h-3.5 w-3.5 shrink-0 text-gold-400" aria-hidden />
-              <span>{CLINIC.address}</span>
+              <span>{clinic.address}</span>
             </li>
             <li>
-              <a href={`tel:${CLINIC.phoneHref}`} className="flex items-center gap-2 hover:text-gold-400">
+              <a href={`tel:${clinic.phoneHref}`} className="flex items-center gap-2 hover:text-gold-400">
                 <FaPhone className="h-3.5 w-3.5 text-gold-400" aria-hidden />
-                {CLINIC.phone}
+                {clinic.phone}
               </a>
             </li>
             <li>
-              <a href={`mailto:${CLINIC.email}`} className="flex items-center gap-2 hover:text-gold-400">
+              <a href={`mailto:${clinic.email}`} className="flex items-center gap-2 hover:text-gold-400">
                 <FaEnvelope className="h-3.5 w-3.5 text-gold-400" aria-hidden />
-                {CLINIC.email}
+                {clinic.email}
               </a>
             </li>
             <li>
@@ -150,7 +151,7 @@ export async function SiteFooter() {
 
       <div className="relative z-10 border-t border-forest-900/80">
         <Container className="flex flex-col gap-3 py-5 text-xs text-forest-400 sm:flex-row sm:items-center sm:justify-between">
-          <p>{t("footer.rights", { year: new Date().getFullYear(), brand: CLINIC.brand, slogan: CLINIC.slogan })}</p>
+          <p>{t("footer.rights", { year: new Date().getFullYear(), brand: clinic.brand, slogan: clinic.slogan })}</p>
           <p className="flex items-center gap-3">
             <span>{t("footer.bottom")}</span>
             <LanguageSwitcher />

@@ -14,7 +14,7 @@ import {
   localizedPrograms,
   localizedTelehealthSteps,
 } from "@/lib/data/programs";
-import { CLINIC, waLink } from "@/lib/site";
+import { CLINIC, localizedClinic, waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { getServerLocale, serverT } from "@/lib/i18n-server";
 import { formatFcfa } from "@/lib/utils";
@@ -295,15 +295,15 @@ export default async function HomePage() {
                 <ul className="mt-8 space-y-4 text-sm text-forest-200">
                   <li className="flex items-start gap-3">
                     <FaWhatsapp className="mt-1 h-4 w-4 shrink-0 text-gold-400" aria-hidden />
-                    <span>{t("home.booking.whatsapp", { phone: CLINIC.phone })}</span>
+                    <span>{t("home.booking.whatsapp", { phone: localizedClinic(locale).phone })}</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <FaClock className="mt-1 h-4 w-4 shrink-0 text-gold-400" aria-hidden />
-                    <span>{t("home.booking.hours", { hours: CLINIC.hours })}</span>
+                    <span>{t("home.booking.hours", { hours: localizedClinic(locale).hours })}</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <FaMapLocationDot className="mt-1 h-4 w-4 shrink-0 text-gold-400" aria-hidden />
-                    <span>{CLINIC.address}.</span>
+                    <span>{localizedClinic(locale).address}.</span>
                   </li>
                 </ul>
               </Reveal>

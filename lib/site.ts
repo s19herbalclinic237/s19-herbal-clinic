@@ -50,19 +50,39 @@ export interface TreatmentProgram {
 export const CLINIC = {
   brand: "S19 Herbal Clinic",
   slogan: "Natural Healing, Lasting Wellness",
+  sloganFr: "Guérison naturelle, Bien-être durable",
   tagline: "Science-Based Herbalism & Root-Cause Healthcare",
   mission:
     "To provide safe, natural and effective herbal solutions that support long-term health and wellbeing through science-based herbalism, individualized assessment, nutrition, lifestyle medicine, and continuous monitoring.",
+  missionFr:
+    "Fournir des solutions à base de plantes sûres, naturelles et efficaces qui soutiennent la santé et le bien-être à long terme grâce à une phytothérapie fondée sur la science, une évaluation individualisée, la nutrition, la médecine du mode de vie et un suivi continu.",
   phone: "+237 672 595 989",
   phoneHref: "+237672595989",
   whatsappNumber: "237672595989",
   email: "s19herbs@gmail.com",
   address: "Immeuble Cathédrale, 3rd Floor, Apartment E305, Bafoussam, Cameroon",
+  addressFr: "Immeuble Cathédrale, 3ᵉ étage, Appartement E305, Bafoussam, Cameroun",
   hours: "Monday - Saturday: 8:00 AM - 6:00 PM",
+  hoursFr: "Lundi – samedi : 8h00 – 18h00",
   currency: "FCFA",
   instagram: "https://www.instagram.com/s19_kingofcure",
   facebook: "https://www.facebook.com/share/p/1LhrR7ogQE/",
 };
+
+/**
+ * Returns the clinic contact details resolved for the given locale.
+ * French variants (slogan, mission, address, hours) fall back to English when absent.
+ */
+export function localizedClinic(locale: Locale) {
+  if (locale !== "fr") return CLINIC;
+  return {
+    ...CLINIC,
+    slogan: CLINIC.sloganFr,
+    mission: CLINIC.missionFr,
+    address: CLINIC.addressFr,
+    hours: CLINIC.hoursFr,
+  };
+}
 
 export function waLink(message: string): string {
   return `https://wa.me/${CLINIC.whatsappNumber}?text=${encodeURIComponent(message)}`;

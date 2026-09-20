@@ -4,7 +4,7 @@ import { Kicker } from "@/components/ui/heading";
 import { PageHero } from "@/components/ui/page-hero";
 import { CTABand } from "@/components/sections/cta-band";
 import { Reveal } from "@/components/ui/motion";
-import { CLINIC, waLink } from "@/lib/site";
+import { localizedClinic, waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { deliveryZones } from "@/lib/data/programs";
 import {
@@ -16,32 +16,34 @@ import {
   FaArrowRight,
 } from "react-icons/fa6";
 import Link from "next/link";
-import { serverT } from "@/lib/i18n-server";
+import { getServerLocale, serverT } from "@/lib/i18n-server";
 
 const HERO_IMG = S19_ASSETS.photos.bloodPressure;
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await serverT();
+  const clinic = localizedClinic(await getServerLocale());
   return {
     title: t("location.meta.title"),
-    description: t("location.meta.description", { address: CLINIC.address }),
+    description: t("location.meta.description", { address: clinic.address }),
   };
 }
 
 export default async function LocationPage() {
   const t = await serverT();
+  const clinic = localizedClinic(await getServerLocale());
   const info = [
     {
       icon: <FaMapLocationDot className="h-5 w-5 text-white" aria-hidden />,
       tile: "from-forest-600 to-forest-900",
       title: t("location.info.address"),
-      lines: CLINIC.address.split(", "),
+      lines: clinic.address.split(", "),
     },
     {
       icon: <FaClock className="h-5 w-5 text-white" aria-hidden />,
       tile: "from-gold-500 to-gold-600",
       title: t("location.info.hours"),
-      lines: [CLINIC.hours, t("location.info.hoursLine2"), t("location.info.hoursLine3")],
+      lines: [clinic.hours, t("location.info.hoursLine2"), t("location.info.hoursLine3")],
     },
     {
       icon: <FaGlobe className="h-5 w-5 text-white" aria-hidden />,
