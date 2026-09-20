@@ -31,7 +31,7 @@ import {
   FaRegCircleCheck,
 } from "react-icons/fa6";
 
-const FEATURED_SLUGS = ["s19-herbal-wine-reserve", "s19-shea-butter", "s19-malaria-typhoid-combo"];
+const FEATURED_SLUGS = ["s19-herbal-wine-reserve", "s19-sozo", "s19-malaria-typhoid-combo"];
 
 export default async function HomePage() {
   const t = await serverT();
