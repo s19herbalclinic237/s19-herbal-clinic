@@ -29,6 +29,7 @@ const companyLinks: { key: TranslationKey; href: string }[] = [
   { key: "footer.catalog", href: "/shop" },
   { key: "footer.blog", href: "/blog" },
   { key: "footer.stories", href: "/patient-stories" },
+  { key: "footer.liveReviews", href: "/live-reviews" },
   { key: "footer.contactUs", href: "/contact" },
   { key: "footer.trackOrder", href: "/track" },
   { key: "footer.refundReturns", href: "/refund-and-returns" },

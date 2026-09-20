@@ -263,6 +263,7 @@ const dict = {
   "footer.womens": { en: "Women's Reproductive Wellness", fr: "Bien-être reproductif féminin" },
   "footer.gastritis": { en: "Gastritis & Digestive Disorders", fr: "Gastrite et troubles digestifs" },
   "footer.cancer": { en: "Integrative Cancer Care", fr: "Soins intégratifs du cancer" },
+  "footer.liveReviews": { en: "Live Reviews", fr: "Avis vidéo" },
 
   "refer.kicker": { en: "Kindness that heals", fr: "Une bonté qui guérit" },
   "refer.title": { en: "Refer a Loved One to S19", fr: "Parrainez un proche vers S19" },
@@ -284,6 +285,22 @@ const dict = {
   },
   "refer.whatsapp": { en: "Refer via WhatsApp", fr: "Parrainer via WhatsApp" },
   "refer.book": { en: "Book a Consultation", fr: "Réserver une consultation" },
+
+  "liveReviews.meta.title": { en: "Live Reviews | S19 Herbal Clinic", fr: "Avis vidéo | Clinique S19" },
+  "liveReviews.meta.description": {
+    en: "Watch real patients share their healing journeys at S19 Herbal Clinic through live video reviews.",
+    fr: "Regardez de vrais patients partager leur parcours de guérison à la Clinique de phytothérapie S19 à travers des avis vidéo.",
+  },
+  "liveReviews.hero.eyebrow": { en: "Patient Stories on Video", fr: "Témoignages de patients en vidéo" },
+  "liveReviews.hero.title": { en: "Live Reviews", fr: "Avis vidéo" },
+  "liveReviews.hero.lead": {
+    en: "Real patients, real results. Watch our community share their health journeys in their own words.",
+    fr: "De vrais patients, de vrais résultats. Regardez notre communauté partager son parcours de santé avec ses propres mots.",
+  },
+  "liveReviews.empty": {
+    en: "New video reviews will appear here as they are added.",
+    fr: "De nouveaux avis vidéo apparaîtront ici au fur et à mesure qu'ils seront ajoutés.",
+  },
 
   "booking.title": { en: "Request received", fr: "Demande reçue" },
   "booking.thanks": {

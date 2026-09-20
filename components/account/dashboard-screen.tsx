@@ -12,6 +12,7 @@ import { AdminTestimonialsTab } from "@/components/admin/testimonials-tab";
 import { MessagingTab } from "@/components/admin/messaging-tab";
 import { PostsTab } from "@/components/admin/posts-tab";
 import { SubscribersTab } from "@/components/admin/subscribers-tab";
+import { AdminVideosTab } from "@/components/admin/video-reviews-tab";
 import {
   FaBoxOpen,
   FaCheck,
@@ -26,6 +27,7 @@ import {
   FaTruckFast,
   FaUserGear,
   FaUsers,
+  FaVideo,
 } from "react-icons/fa6";
 
 type TabId =
@@ -39,7 +41,8 @@ type TabId =
   | "admin-testimonials"
   | "admin-messaging"
   | "admin-posts"
-  | "admin-subscribers";
+  | "admin-subscribers"
+  | "admin-videos";
 
 const tabList: { id: TabId; label: string; icon: ReactNode }[] = [
   { id: "overview", label: "Overview", icon: <FaCircleUser className="h-4 w-4" aria-hidden /> },
@@ -56,6 +59,7 @@ const adminTabList: { id: TabId; label: string; icon: ReactNode }[] = [
   { id: "admin-messaging", label: "Users & Messages", icon: <FaUserGear className="h-4 w-4" aria-hidden /> },
   { id: "admin-posts", label: "Blog", icon: <FaNewspaper className="h-4 w-4" aria-hidden /> },
   { id: "admin-subscribers", label: "Subscribers", icon: <FaUsers className="h-4 w-4" aria-hidden /> },
+  { id: "admin-videos", label: "Live Reviews", icon: <FaVideo className="h-4 w-4" aria-hidden /> },
 ];
 
 function OverviewTab({ onNavigate }: { onNavigate: (tab: TabId) => void }) {
@@ -234,6 +238,7 @@ export function DashboardScreen() {
             {isAdmin && tab === "admin-messaging" ? <MessagingTab /> : null}
             {isAdmin && tab === "admin-posts" ? <PostsTab /> : null}
             {isAdmin && tab === "admin-subscribers" ? <SubscribersTab /> : null}
+            {isAdmin && tab === "admin-videos" ? <AdminVideosTab /> : null}
           </div>
         </div>
       </div>
