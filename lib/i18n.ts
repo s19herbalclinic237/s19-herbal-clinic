@@ -545,8 +545,8 @@ const dict = {
   "contact.hero.eyebrow": { en: "Contact & Consultations", fr: "Contact & Consultations" },
   "contact.hero.title": { en: "Book your consultation.", fr: "Réservez votre consultation." },
   "contact.hero.lead": {
-    en: "Generate a priority in-clinic appointment or a Tele-Health consultation. A member of our clinical team confirms your booking by phone or WhatsApp.",
-    fr: "Générez un rendez-vous prioritaire en clinique ou une consultation de Télé-santé. Un membre de notre équipe clinique confirme votre réservation par téléphone ou WhatsApp.",
+    en: "Book an appointment at our clinic or online. Our team will call or WhatsApp you to confirm.",
+    fr: "Prenez rendez-vous dans notre clinique ou en ligne. Notre équipe vous appellera ou vous contactera par WhatsApp pour confirmer.",
   },
   "contact.hero.alt": {
     en: "S19 Herbal Clinic remedy shelves and products",
