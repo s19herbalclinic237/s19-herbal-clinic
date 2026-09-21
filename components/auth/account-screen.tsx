@@ -63,17 +63,9 @@ export function AccountScreen() {
       <div className="mx-auto w-full max-w-md px-4">
         <div className="overflow-hidden rounded-xl border border-line bg-white shadow-lift">
           <div className="bg-forest-950 px-6 py-6 text-center">
-            <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-gold-400">
-              S19 Herbal Clinic
-            </p>
-            <h1 className="mt-2 text-2xl text-white">
+            <h1 className="text-2xl text-white">
               {mode === "login" ? "Welcome back" : "Create your account"}
             </h1>
-            <p className="mt-2 text-sm text-forest-200">
-              {mode === "login"
-                ? "Sign in to manage your orders, testimonials, and messages."
-                : "Join to track orders, receive updates, and more."}
-            </p>
           </div>
           <div className="p-6 md:p-8">
             <div className="mb-5 grid grid-cols-2 gap-1 rounded-lg border border-line-strong bg-cream p-1">
