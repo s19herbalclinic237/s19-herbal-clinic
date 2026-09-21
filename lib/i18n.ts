@@ -50,11 +50,18 @@ const dict = {
   "common.optional": { en: "optional", fr: "facultatif" },
 
   "home.hero.kicker": { en: "S19 Herbal Clinic", fr: "Clinique de phytothérapie S19" },
-  "home.hero.titleA": { en: "Natural healing,", fr: "Guérison naturelle," },
-  "home.hero.titleB": { en: "lasting wellness.", fr: "bien-être durable." },
+  "home.hero.titleA": { en: "Welcome to S19 Herbal Clinic", fr: "Bienvenue à la Clinique de phytothérapie S19" },
+  "home.hero.titleB": {
+    en: "Where Natural Wellness Meets Personalized Care",
+    fr: "Là où le bien-être naturel rencontre des soins personnalisés",
+  },
   "home.hero.lead": {
-    en: "Welcome to {brand} in Bafoussam. We help you with safe, natural herbal care for long-term health — clinic visits, consultations by phone or WhatsApp, and herbal products delivered anywhere.",
-    fr: "Bienvenue à la {brand} de Bafoussam. Notre mission est de fournir des solutions à base de plantes sûres, naturelles et efficaces qui soutiennent la santé et le bien-être à long terme - des consultations fondées sur la science, des formulations individualisées et la Télé-consultation, une clinique avec une portée mondiale.",
+    en: "We combine herbal medicine, nutrition, lifestyle support, modern therapies, and health education to go beyond simply managing symptoms—supporting your body's natural healing processes and helping you work toward better health, recovery, and lasting wellness.",
+    fr: "Nous combinons la phytothérapie, la nutrition, le soutien au mode de vie, les thérapies modernes et l'éducation à la santé pour aller au-delà de la simple gestion des symptômes — en soutenant les processus naturels de guérison de votre corps et en vous aidant à tendre vers une meilleure santé, la récupération et un bien-être durable.",
+  },
+  "home.hero.closing": {
+    en: "Healing is possible and sustainable health is worth working toward.",
+    fr: "La guérison est possible et une santé durable vaut la peine qu'on s'y engage.",
   },
   "home.hero.whatsapp": { en: "WhatsApp the Clinic", fr: "Écrire à la clinique sur WhatsApp" },
   "home.hero.claim": {

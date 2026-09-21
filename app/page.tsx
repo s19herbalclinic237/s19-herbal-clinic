@@ -14,7 +14,7 @@ import {
   localizedPrograms,
   localizedTelehealthSteps,
 } from "@/lib/data/programs";
-import { CLINIC, localizedClinic, waLink } from "@/lib/site";
+import { localizedClinic, waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { getServerLocale, serverT } from "@/lib/i18n-server";
 import { formatFcfa } from "@/lib/utils";
@@ -93,8 +93,11 @@ export default async function HomePage() {
               {t("home.hero.titleA")}
               <span className="block text-gold-400">{t("home.hero.titleB")}</span>
             </h1>
-            <p className="mt-7 max-w-xl text-base leading-relaxed text-forest-100/90 md:text-lg">
-              {t("home.hero.lead", { brand: CLINIC.brand })}
+            <p className="mt-7 max-w-2xl text-base leading-relaxed text-forest-100/90 md:text-lg">
+              {t("home.hero.lead")}
+            </p>
+            <p className="mt-6 max-w-2xl font-display text-lg font-bold text-gold-300 drop-shadow-sm md:text-xl">
+              {t("home.hero.closing")}
             </p>
             <div className="mt-10 flex flex-wrap items-center gap-3">
               <Link href="/contact" className={buttonLinkClasses("gold", "xl")}>
