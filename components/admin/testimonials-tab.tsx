@@ -9,6 +9,7 @@ import {
   FaBan,
   FaCheck,
   FaCommentMedical,
+  FaLanguage,
   FaPencil,
   FaPlus,
   FaStar,
@@ -40,6 +41,64 @@ const FILTERS: { id: StatusFilter; label: string }[] = [
   { id: "rejected", label: "Rejected" },
   { id: "all", label: "All" },
 ];
+
+/** Free auto-translate (EN -> FR) via /api/translate. Returns null on failure. */
+async function postTranslate(source: string): Promise<string | null> {
+  const text = source.trim();
+  if (!text) return null;
+  try {
+    const res = await fetch("/api/translate", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text, target: "fr" }),
+    });
+    const data = (await res.json().catch(() => ({}))) as { translated?: string; error?: string };
+    if (!res.ok || typeof data.translated !== "string") return null;
+    return data.translated;
+  } catch {
+    return null;
+  }
+}
+
+/** Translates program + text (EN -> FR). Each result is null when that call failed. */
+async function translatePairToFr(program: string, text: string) {
+  const [programTxt, textTxt] = await Promise.all([postTranslate(program), postTranslate(text)]);
+  return { program: programTxt, text: textTxt };
+}
+
+/** One-click "fill the French fields for me" button (uses the free translation API). */
+function AutoTranslateButton({
+  onTranslate,
+  disabled,
+}: {
+  onTranslate: () => Promise<boolean>;
+  disabled?: boolean;
+}) {
+  const [busy, setBusy] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const click = async () => {
+    if (busy) return;
+    setBusy(true);
+    setFailed(false);
+    let ok = false;
+    try {
+      ok = await onTranslate();
+    } finally {
+      setBusy(false);
+    }
+    if (!ok) setFailed(true);
+  };
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      <Button type="button" variant="outline" size="sm" onClick={click} disabled={busy || disabled}>
+        <FaLanguage className="h-3.5 w-3.5" aria-hidden />
+        {busy ? "Translating…" : "Auto-translate to French"}
+      </Button>
+      {failed ? <span className="text-xs text-red-600">Unavailable - type it manually</span> : null}
+    </span>
+  );
+}
 
 export function AdminTestimonialsTab() {
   const [items, setItems] = useState<AdminTestimonial[] | null>(null);
@@ -239,6 +298,17 @@ export function AdminTestimonialsTab() {
 
                 {editing ? (
                   <div className="mt-3 space-y-2">
+                    <div className="flex justify-end">
+                      <AutoTranslateButton
+                        disabled={busyId === t._id}
+                        onTranslate={async () => {
+                          const r = await translatePairToFr(t.program, t.text);
+                          if (r.program !== null) setEditFrProgram(r.program);
+                          if (r.text !== null) setEditFrText(r.text);
+                          return r.program !== null || r.text !== null;
+                        }}
+                      />
+                    </div>
                     <Input
                       value={editFrProgram}
                       onChange={(e) => setEditFrProgram(e.target.value)}
@@ -295,9 +365,20 @@ export function AdminTestimonialsTab() {
 
                 {translateId === t._id ? (
                   <div className="mt-3 rounded-md border border-gold-200 bg-gold-50/60 p-3">
-                    <p className="text-xs font-semibold text-forest-800">
-                      Optional French version - shown to French-speaking visitors. Leave empty to keep the English text.
-                    </p>
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <p className="text-xs font-semibold text-forest-800">
+                        Optional French version - shown to French-speaking visitors. Leave empty to keep the English text.
+                      </p>
+                      <AutoTranslateButton
+                        disabled={busyId === t._id}
+                        onTranslate={async () => {
+                          const r = await translatePairToFr(t.program, t.text);
+                          if (r.program !== null) setFrProgram(r.program);
+                          if (r.text !== null) setFrText(r.text);
+                          return r.program !== null || r.text !== null;
+                        }}
+                      />
+                    </div>
                     <div className="mt-2 grid gap-2">
                       <Input
                         value={frProgram}
@@ -410,6 +491,17 @@ function AddTestimonialForm({ onDone }: { onDone: (message: string) => void }) {
         <Field label="Testimonial text" required className="sm:col-span-2">
           <Textarea value={text} onChange={(e) => setText(e.target.value)} required minLength={20} maxLength={1200} />
         </Field>
+        <div className="flex justify-end sm:col-span-2">
+          <AutoTranslateButton
+            disabled={busy}
+            onTranslate={async () => {
+              const r = await translatePairToFr(program, text);
+              if (r.program !== null) setProgramFr(r.program);
+              if (r.text !== null) setTextFr(r.text);
+              return r.program !== null || r.text !== null;
+            }}
+          />
+        </div>
         <Field
           label="Program (French)"
           hint="Optional - shown to French-speaking visitors"
