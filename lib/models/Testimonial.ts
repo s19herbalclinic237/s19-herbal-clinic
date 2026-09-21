@@ -11,6 +11,10 @@ export interface ITestimonial {
   country?: string;
   program: string;
   text: string;
+  /** French translation of program (shown on the French site when present). */
+  programFr?: string;
+  /** French translation of text (shown on the French site when present). */
+  textFr?: string;
   rating?: number;
   email?: string;
   videoUrl?: string;
@@ -26,6 +30,8 @@ const TestimonialSchema = new Schema<ITestimonial>(
     country: { type: String, trim: true },
     program: { type: String, required: true, trim: true },
     text: { type: String, required: true, trim: true },
+    programFr: { type: String, trim: true },
+    textFr: { type: String, trim: true },
     rating: { type: Number, min: 1, max: 5 },
     email: { type: String, trim: true },
     videoUrl: { type: String, trim: true, maxlength: 500 },

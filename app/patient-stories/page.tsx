@@ -6,7 +6,7 @@ import { StoriesForm } from "@/components/testimonials/stories-form";
 import { StoryVideo } from "@/components/testimonials/story-video";
 import { getApprovedTestimonials } from "@/lib/testimonials";
 import { S19_ASSETS } from "@/lib/site-assets";
-import { serverT } from "@/lib/i18n-server";
+import { serverT, getServerLocale } from "@/lib/i18n-server";
 import { FaQuoteLeft, FaStar } from "react-icons/fa6";
 
 export const revalidate = 60;
@@ -23,7 +23,8 @@ const HERO_IMG = S19_ASSETS.photos.consultationAdvice;
 
 export default async function PatientStoriesPage() {
   const t = await serverT();
-  const stories = await getApprovedTestimonials(60);
+  const locale = await getServerLocale();
+  const stories = await getApprovedTestimonials(60, locale);
 
   return (
     <>

@@ -64,6 +64,30 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     patch.text = value;
   }
 
+  if (body.textFr !== undefined) {
+    const value = String(body.textFr).trim();
+    if (value && value.length < 10) {
+      return NextResponse.json(
+        { error: "The French translation should be at least 10 characters, or leave it empty." },
+        { status: 400 }
+      );
+    }
+    // Store empty string so clearing an existing translation works ($set omits undefined).
+    patch.textFr = value;
+  }
+
+  if (body.programFr !== undefined) {
+    const value = String(body.programFr).trim();
+    if (value && value.length < 2) {
+      return NextResponse.json(
+        { error: "The French program name should be at least 2 characters, or leave it empty." },
+        { status: 400 }
+      );
+    }
+    // Store empty string so clearing an existing translation works ($set omits undefined).
+    patch.programFr = value;
+  }
+
   if (body.email !== undefined) {
     const value = String(body.email).trim();
     if (value && (value.length > 120 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))) {

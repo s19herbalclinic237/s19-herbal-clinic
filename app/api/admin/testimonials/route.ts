@@ -50,6 +50,8 @@ export async function POST(request: Request) {
   const country = String(body.country || "").trim();
   const program = String(body.program || "").trim();
   const text = String(body.text || "").trim();
+  const textFr = String(body.textFr || "").trim();
+  const programFr = String(body.programFr || "").trim();
   const email = String(body.email || "").trim();
   const videoUrl = String(body.videoUrl || "").trim();
 
@@ -64,6 +66,12 @@ export async function POST(request: Request) {
   }
   if (text.length < 20) {
     return NextResponse.json({ error: "Please provide the full testimonial text." }, { status: 400 });
+  }
+  if (textFr && textFr.length < 10) {
+    return NextResponse.json({ error: "The French translation should be at least 10 characters, or leave it empty." }, { status: 400 });
+  }
+  if (programFr && programFr.length < 2) {
+    return NextResponse.json({ error: "The French program name should be at least 2 characters, or leave it empty." }, { status: 400 });
   }
   if (
     videoUrl &&
@@ -97,6 +105,8 @@ export async function POST(request: Request) {
       country: country || undefined,
       program,
       text,
+      programFr: programFr || undefined,
+      textFr: textFr || undefined,
       rating,
       email: email || undefined,
       videoUrl: videoUrl || undefined,

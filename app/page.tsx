@@ -45,7 +45,7 @@ export default async function HomePage() {
   const featured = FEATURED_SLUGS
     .map((slug) => products.find((p) => p.slug === slug))
     .filter((p): p is NonNullable<typeof p> => typeof p !== "undefined");
-  const testimonials = await getApprovedTestimonials(12);
+  const testimonials = await getApprovedTestimonials(12, locale);
 
   const careLinks = [
     {

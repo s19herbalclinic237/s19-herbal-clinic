@@ -22,7 +22,9 @@ interface AdminTestimonial {
   city: string;
   country?: string;
   program: string;
+  programFr?: string;
   text: string;
+  textFr?: string;
   rating?: number;
   email?: string;
   videoUrl?: string;
@@ -47,8 +49,13 @@ export function AdminTestimonialsTab() {
   const [busyId, setBusyId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState("");
+  const [editFrProgram, setEditFrProgram] = useState("");
+  const [editFrText, setEditFrText] = useState("");
   const [editVideo, setEditVideo] = useState("");
   const [showAdd, setShowAdd] = useState(false);
+  const [translateId, setTranslateId] = useState<string | null>(null);
+  const [frProgram, setFrProgram] = useState("");
+  const [frText, setFrText] = useState("");
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const load = (status: StatusFilter = filter) => {
@@ -120,8 +127,27 @@ export function AdminTestimonialsTab() {
   };
 
   const saveEdit = (t: AdminTestimonial) => {
-    void patch(t._id, { text: editText, videoUrl: editVideo }, "Testimonial updated.");
+    void patch(
+      t._id,
+      { text: editText, videoUrl: editVideo, programFr: editFrProgram.trim(), textFr: editFrText.trim() },
+      "Testimonial updated."
+    );
     setEditingId(null);
+  };
+
+  const openTranslate = (t: AdminTestimonial) => {
+    setTranslateId((cur) => (cur === t._id ? null : t._id));
+    setFrProgram(t.programFr || "");
+    setFrText(t.textFr || "");
+  };
+
+  const approveWithTranslation = (t: AdminTestimonial) => {
+    void patch(
+      t._id,
+      { status: "approved", programFr: frProgram.trim(), textFr: frText.trim() },
+      "Approved - now live on the site."
+    );
+    setTranslateId(null);
   };
 
   return (
@@ -205,6 +231,7 @@ export function AdminTestimonialsTab() {
                       {t.country ? `, ${t.country}` : ""} · {t.program} · {formatDate(t.createdAt)}
                       {t.email ? ` · ${t.email}` : ""}
                       {t.videoUrl ? " · video review linked" : ""}
+                      {t.textFr ? " · French translation added" : ""}
                       {t.user?.name ? ` · submitted by ${t.user.name} (${t.user.email})` : " · added by clinic"}
                     </p>
                   </div>
@@ -212,7 +239,19 @@ export function AdminTestimonialsTab() {
 
                 {editing ? (
                   <div className="mt-3 space-y-2">
+                    <Input
+                      value={editFrProgram}
+                      onChange={(e) => setEditFrProgram(e.target.value)}
+                      placeholder="Program in French (optional)"
+                      maxLength={100}
+                    />
                     <Textarea value={editText} onChange={(e) => setEditText(e.target.value)} maxLength={1200} />
+                    <Textarea
+                      value={editFrText}
+                      onChange={(e) => setEditFrText(e.target.value)}
+                      placeholder="Testimonial text in French (optional)"
+                      maxLength={2000}
+                    />
                     <Input
                       value={editVideo}
                       onChange={(e) => setEditVideo(e.target.value)}
@@ -233,7 +272,7 @@ export function AdminTestimonialsTab() {
 
                 <div className="mt-3 flex flex-wrap gap-2 border-t border-line pt-3">
                   {t.status !== "approved" ? (
-                    <Button size="sm" disabled={busyId === t._id} onClick={() => void patch(t._id, { status: "approved" }, "Approved - now live on the site.")}>
+                    <Button size="sm" disabled={busyId === t._id} onClick={() => openTranslate(t)}>
                       <FaCheck className="h-3.5 w-3.5" aria-hidden />
                       Approve
                     </Button>
@@ -244,7 +283,7 @@ export function AdminTestimonialsTab() {
                       Reject
                     </Button>
                   ) : null}
-                  <Button variant="ghost" size="sm" disabled={busyId === t._id} onClick={() => { setEditingId(editing ? null : t._id); setEditText(t.text); setEditVideo(t.videoUrl || ""); }}>
+                  <Button variant="ghost" size="sm" disabled={busyId === t._id} onClick={() => { setEditingId(editing ? null : t._id); setEditText(t.text); setEditFrProgram(t.programFr || ""); setEditFrText(t.textFr || ""); setEditVideo(t.videoUrl || ""); }}>
                     <FaPencil className="h-3.5 w-3.5" aria-hidden />
                     Edit
                   </Button>
@@ -253,6 +292,38 @@ export function AdminTestimonialsTab() {
                     Delete
                   </Button>
                 </div>
+
+                {translateId === t._id ? (
+                  <div className="mt-3 rounded-md border border-gold-200 bg-gold-50/60 p-3">
+                    <p className="text-xs font-semibold text-forest-800">
+                      Optional French version - shown to French-speaking visitors. Leave empty to keep the English text.
+                    </p>
+                    <div className="mt-2 grid gap-2">
+                      <Input
+                        value={frProgram}
+                        onChange={(e) => setFrProgram(e.target.value)}
+                        placeholder="Program in French (optional)"
+                        maxLength={100}
+                      />
+                      <Textarea
+                        value={frText}
+                        onChange={(e) => setFrText(e.target.value)}
+                        placeholder="Testimonial text in French (optional)"
+                        rows={3}
+                        maxLength={2000}
+                      />
+                    </div>
+                    <div className="mt-2 flex justify-end gap-2">
+                      <Button variant="outline" size="sm" onClick={() => setTranslateId(null)}>
+                        Cancel
+                      </Button>
+                      <Button size="sm" disabled={busyId === t._id} onClick={() => approveWithTranslation(t)}>
+                        <FaCheck className="h-3.5 w-3.5" aria-hidden />
+                        Approve
+                      </Button>
+                    </div>
+                  </div>
+                ) : null}
               </li>
             );
           })}
@@ -267,7 +338,9 @@ function AddTestimonialForm({ onDone }: { onDone: (message: string) => void }) {
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
   const [program, setProgram] = useState("");
+  const [programFr, setProgramFr] = useState("");
   const [text, setText] = useState("");
+  const [textFr, setTextFr] = useState("");
   const [rating, setRating] = useState<number>(5);
   const [email, setEmail] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
@@ -285,7 +358,7 @@ function AddTestimonialForm({ onDone }: { onDone: (message: string) => void }) {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, city, country, program, text, rating, email, videoUrl, status }),
+        body: JSON.stringify({ name, city, country, program, text, programFr, textFr, rating, email, videoUrl, status }),
       });
       const data = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok) throw new Error(data.error || "Could not save.");
@@ -336,6 +409,20 @@ function AddTestimonialForm({ onDone }: { onDone: (message: string) => void }) {
         </Field>
         <Field label="Testimonial text" required className="sm:col-span-2">
           <Textarea value={text} onChange={(e) => setText(e.target.value)} required minLength={20} maxLength={1200} />
+        </Field>
+        <Field
+          label="Program (French)"
+          hint="Optional - shown to French-speaking visitors"
+          className="sm:col-span-2"
+        >
+          <Input value={programFr} onChange={(e) => setProgramFr(e.target.value)} maxLength={100} placeholder="e.g. Soutien au diabète et à la santé métabolique" />
+        </Field>
+        <Field
+          label="Testimonial text (French)"
+          hint="Optional - if left empty, French visitors see the English text"
+          className="sm:col-span-2"
+        >
+          <Textarea value={textFr} onChange={(e) => setTextFr(e.target.value)} maxLength={2000} placeholder="French translation of the testimonial" />
         </Field>
         <Field
           label="Video review link"
