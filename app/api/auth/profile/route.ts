@@ -16,15 +16,25 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const payload = (body ?? {}) as { name?: string; phone?: string };
+  const payload = (body ?? {}) as { name?: string; phone?: string; avatar?: string };
   const name = payload.name?.trim();
   const phone = payload.phone?.trim() || undefined;
+  const avatarRaw = payload.avatar;
+  const avatarProvided = avatarRaw !== undefined;
+  const avatar = avatarProvided ? avatarRaw.trim() : undefined;
 
   if (name !== undefined && (name.length < 2 || name.length > 100)) {
     return NextResponse.json({ error: "Please provide a valid name." }, { status: 400 });
   }
   if (phone !== undefined && phone.length > 30) {
     return NextResponse.json({ error: "Please provide a valid phone number." }, { status: 400 });
+  }
+  if (
+    avatar !== undefined &&
+    avatar !== "" &&
+    (avatar.length < 8 || avatar.length > 500 || !/^https?:\/\//.test(avatar))
+  ) {
+    return NextResponse.json({ error: "Please provide a valid avatar URL." }, { status: 400 });
   }
 
   const conn = await connectDb();
@@ -39,7 +49,9 @@ export async function PATCH(request: Request) {
         $set: {
           ...(name !== undefined ? { name } : {}),
           ...(phone !== undefined ? { phone } : {}),
+          ...(avatarProvided && avatar !== "" ? { avatar } : {}),
         },
+        ...(avatarProvided && avatar === "" ? { $unset: { avatar: 1 } } : {}),
       },
       { new: true }
     ).lean();

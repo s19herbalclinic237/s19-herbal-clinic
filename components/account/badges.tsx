@@ -18,7 +18,7 @@ const orderStatusClasses: Record<string, string> = {
 export function OrderStatusBadge({ status }: { status: string }) {
   return (
     <span
-      className={`inline-flex items-center rounded-sm border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
+      className={`inline-flex items-center rounded-full border px-2.5 py-[3px] text-[10px] font-semibold uppercase tracking-wide ${
         orderStatusClasses[status] || "border-line-strong bg-cream text-muted"
       }`}
     >
@@ -42,7 +42,7 @@ const testimonialStatusLabels: Record<string, string> = {
 export function TestimonialStatusBadge({ status }: { status: string }) {
   return (
     <span
-      className={`inline-flex items-center rounded-sm border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
+      className={`inline-flex items-center rounded-full border px-2.5 py-[3px] text-[10px] font-semibold uppercase tracking-wide ${
         testimonialStatusClasses[status] || "border-line-strong bg-cream text-muted"
       }`}
     >

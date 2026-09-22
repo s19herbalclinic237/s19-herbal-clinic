@@ -3,6 +3,7 @@ import { Montserrat, Libre_Baskerville } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { AnnouncementBar, SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { SiteChromeGate } from "@/components/layout/site-chrome-gate";
 import { WhatsAppFloat } from "@/components/sections/cta-band";
 import { LanguageFab } from "@/components/i18n/language-fab";
 import { CLINIC } from "@/lib/site";
@@ -95,12 +96,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           }}
         />
         <Providers initialLocale={locale}>
-          <AnnouncementBar />
-          <SiteHeader />
+          <SiteChromeGate>
+            <AnnouncementBar />
+            <SiteHeader />
+          </SiteChromeGate>
           <main>{children}</main>
-          <SiteFooter />
-          <WhatsAppFloat />
-          <LanguageFab />
+          <SiteChromeGate>
+            <SiteFooter />
+            <WhatsAppFloat />
+            <LanguageFab />
+          </SiteChromeGate>
         </Providers>
       </body>
     </html>

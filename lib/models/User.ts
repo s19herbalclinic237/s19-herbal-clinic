@@ -10,6 +10,7 @@ export interface IUser {
   role: UserRole;
   emailVerified: boolean;
   phone?: string;
+  avatar?: string;
   isActive: boolean;
   lastLoginAt?: Date;
   verifyTokenHash?: string;
@@ -26,6 +27,7 @@ const UserSchema = new Schema<IUser>(
     role: { type: String, enum: ["admin", "user"], default: "user" },
     emailVerified: { type: Boolean, default: false },
     phone: { type: String, trim: true },
+    avatar: { type: String, trim: true },
     isActive: { type: Boolean, default: true },
     lastLoginAt: { type: Date },
     verifyTokenHash: { type: String },

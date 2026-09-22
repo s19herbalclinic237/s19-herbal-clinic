@@ -1,0 +1,1236 @@
+<!DOCTYPE html><html lang="en"><head><base href="https://forge.moonchild.ai/site/3fc73183c8269039d201d2b69ff0879bb9c286177dee01a27d35688d44ed700e/">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>S19 Herbal Clinic – Patient Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&amp;family=Montserrat:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --forest-dark: #07331a;
+      --forest-mid: #0c2314;
+      --forest-hover: #0e3d20;
+      --gold: #d4b447;
+      --gold-light: #e8ca6a;
+      --cream: #f4f8ec;
+      --sage: #e3edda;
+      --sage-mid: #c8ddb8;
+      --white: #ffffff;
+      --text-dark: #1a2e1f;
+      --text-mid: #3d5a44;
+      --text-muted: #7a9a82;
+      --shadow-soft: 0 2px 12px rgba(7,51,26,0.08);
+      --shadow-card: 0 4px 20px rgba(7,51,26,0.10);
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--cream);
+      color: var(--text-dark);
+      width: 1728px;
+      min-height: 1117px;
+      display: flex;
+      overflow-x: hidden;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 220px;
+      min-width: 220px;
+      background: var(--forest-dark);
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      position: relative;
+      z-index: 10;
+    }
+
+    .sidebar-logo {
+      padding: 28px 24px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .logo-mark {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--gold);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .logo-icon i {
+      color: var(--forest-dark);
+      font-size: 18px;
+    }
+
+    .logo-text {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.1;
+    }
+
+    .logo-sub {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 9px;
+      font-weight: 500;
+      color: var(--gold);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .sidebar-profile {
+      padding: 24px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .profile-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 3px solid var(--gold);
+      overflow: hidden;
+      margin-bottom: 12px;
+      flex-shrink: 0;
+    }
+
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-name {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+
+    .profile-tagline {
+      font-size: 11px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.4;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 16px 0;
+      overflow-y: auto;
+    }
+
+    .nav-section-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      padding: 12px 20px 6px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 20px;
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .nav-item:hover {
+      background: rgba(255,255,255,0.07);
+      border-left-color: rgba(212,180,71,0.5);
+    }
+
+    .nav-item.active {
+      background: rgba(212,180,71,0.12);
+      border-left-color: var(--gold);
+    }
+
+    .nav-item i {
+      width: 18px;
+      text-align: center;
+      font-size: 14px;
+      color: rgba(255,255,255,0.45);
+      flex-shrink: 0;
+    }
+
+    .nav-item.active i {
+      color: var(--gold);
+    }
+
+    .nav-item:hover i {
+      color: rgba(255,255,255,0.75);
+    }
+
+    .nav-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.55);
+      white-space: nowrap;
+    }
+
+    .nav-item.active .nav-label {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .nav-item:hover .nav-label {
+      color: rgba(255,255,255,0.9);
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      background: var(--gold);
+      color: var(--forest-dark);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 20px;
+    }
+
+    .sidebar-footer {
+      padding: 16px 0 24px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--cream);
+      overflow-y: auto;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 40px 0;
+    }
+
+    .topbar-greeting h1 {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-dark);
+      line-height: 1.2;
+    }
+
+    .topbar-greeting p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 400;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .topbar-search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--white);
+      border: 1px solid var(--sage-mid);
+      border-radius: 10px;
+      padding: 9px 16px;
+      cursor: text;
+      transition: all 0.2s ease;
+    }
+
+    .topbar-search:hover {
+      border-color: var(--forest-dark);
+      box-shadow: 0 2px 8px rgba(7,51,26,0.08);
+    }
+
+    .topbar-search i {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .topbar-search span {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      background: var(--white);
+      border: 1px solid var(--sage-mid);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .icon-btn:hover {
+      background: var(--sage);
+      border-color: var(--forest-dark);
+      transform: translateY(-1px);
+    }
+
+    .icon-btn i {
+      font-size: 15px;
+      color: var(--text-mid);
+    }
+
+    .notif-dot {
+      position: absolute;
+      top: 7px;
+      right: 8px;
+      width: 7px;
+      height: 7px;
+      background: var(--gold);
+      border-radius: 50%;
+      border: 1.5px solid var(--white);
+    }
+
+    .topbar-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid var(--gold);
+      cursor: pointer;
+    }
+
+    .topbar-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ── STATS ROW ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      padding: 24px 40px 0;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-card);
+      border-color: var(--sage-mid);
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .stat-icon i {
+      font-size: 20px;
+    }
+
+    .stat-icon.green { background: rgba(7,51,26,0.1); }
+    .stat-icon.green i { color: var(--forest-dark); }
+    .stat-icon.gold { background: rgba(212,180,71,0.15); }
+    .stat-icon.gold i { color: #b8952a; }
+    .stat-icon.sage { background: var(--sage); }
+    .stat-icon.sage i { color: var(--text-mid); }
+    .stat-icon.warm { background: #fef9ec; }
+    .stat-icon.warm i { color: #c9831a; }
+
+    .stat-body {}
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-dark);
+      line-height: 1.2;
+    }
+
+    .stat-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .stat-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 20px;
+      margin-top: 4px;
+      display: inline-block;
+    }
+
+    .stat-badge.active { background: rgba(7,51,26,0.1); color: var(--forest-dark); }
+    .stat-badge.gold-badge { background: rgba(212,180,71,0.2); color: #8a6e1a; }
+
+    /* ── CONTENT COLUMNS ── */
+    .content-cols {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 20px;
+      padding: 20px 40px 32px;
+    }
+
+    .left-col {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .right-col {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(227,237,218,0.8);
+      overflow: hidden;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px 14px;
+      border-bottom: 1px solid var(--sage);
+    }
+
+    .card-title {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .card-action {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--forest-dark);
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .card-action:hover { color: var(--gold); }
+
+    /* ── APPOINTMENTS CARD ── */
+    .appt-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--sage);
+      transition: background 0.2s ease;
+    }
+
+    .appt-row:last-child { border-bottom: none; }
+    .appt-row:hover { background: rgba(244,248,236,0.6); }
+
+    .appt-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid var(--sage-mid);
+      flex-shrink: 0;
+    }
+
+    .appt-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .appt-info {
+      flex: 1;
+    }
+
+    .appt-doctor {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .appt-specialty {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .appt-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--sage);
+      color: var(--forest-dark);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .chip i { font-size: 10px; }
+
+    .appt-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-end;
+    }
+
+    .btn-primary {
+      background: var(--forest-dark);
+      color: var(--white);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 9px 16px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover {
+      background: var(--forest-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(7,51,26,0.25);
+    }
+
+    .btn-primary.gold-btn {
+      background: var(--gold);
+      color: var(--forest-dark);
+    }
+
+    .btn-primary.gold-btn:hover {
+      background: var(--gold-light);
+      box-shadow: 0 4px 12px rgba(212,180,71,0.4);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-mid);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1.5px solid var(--sage-mid);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--forest-dark);
+      color: var(--forest-dark);
+      background: var(--sage);
+    }
+
+    /* ── PRESCRIPTIONS CARD ── */
+    .rx-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--sage);
+      transition: background 0.2s ease;
+    }
+
+    .rx-row:last-child { border-bottom: none; }
+    .rx-row:hover { background: rgba(244,248,236,0.6); }
+
+    .rx-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--sage);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .rx-icon i {
+      font-size: 18px;
+      color: var(--forest-dark);
+    }
+
+    .rx-info { flex: 1; }
+
+    .rx-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .rx-dose {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .rx-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .status-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    .status-active {
+      background: rgba(7,51,26,0.1);
+      color: var(--forest-dark);
+    }
+
+    .status-pending {
+      background: rgba(212,180,71,0.2);
+      color: #8a6e1a;
+    }
+
+    /* ── WELLNESS CARD (Right col) ── */
+    .wellness-card .card-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .donut-wrap {
+      position: relative;
+      width: 160px;
+      height: 160px;
+      margin: 8px auto 16px;
+    }
+
+    .donut-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .donut-pct {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-dark);
+      line-height: 1;
+    }
+
+    .donut-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .wellness-legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 4px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    /* ── CONDITIONS CARD ── */
+    .conditions-body {
+      padding: 16px 24px;
+    }
+
+    .condition-row {
+      margin-bottom: 16px;
+    }
+
+    .condition-row:last-child { margin-bottom: 0; }
+
+    .cond-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 7px;
+    }
+
+    .cond-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .cond-pct {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--forest-dark);
+    }
+
+    .progress-track {
+      height: 8px;
+      background: var(--sage);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 20px;
+      transition: width 0.6s ease;
+    }
+
+    .progress-fill.green { background: var(--forest-dark); }
+    .progress-fill.gold { background: var(--gold); }
+    .progress-fill.teal { background: #2a7d5c; }
+
+    .cond-sub {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ── QUICK ACTIONS ── */
+    .quick-actions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 16px 24px 20px;
+    }
+
+    .qa-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px 12px;
+      background: var(--cream);
+      border: 1.5px solid var(--sage-mid);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .qa-btn:hover {
+      background: var(--sage);
+      border-color: var(--forest-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(7,51,26,0.12);
+    }
+
+    .qa-btn i {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .qa-btn:nth-child(1) i { background: rgba(7,51,26,0.1); color: var(--forest-dark); }
+    .qa-btn:nth-child(2) i { background: rgba(212,180,71,0.15); color: #8a6e1a; }
+    .qa-btn:nth-child(3) i { background: rgba(42,125,92,0.12); color: #2a7d5c; }
+    .qa-btn:nth-child(4) i { background: rgba(200,221,184,0.5); color: var(--text-mid); }
+
+    .qa-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-mid);
+      line-height: 1.3;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--sage-mid); border-radius: 10px; }
+
+    /* Date tag on appointment */
+    .appt-meta {
+      display: flex;
+      gap: 8px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <div class="logo-icon"><i class="fas fa-leaf"></i></div>
+        <div>
+          <div class="logo-text">S19 Herbal</div>
+          <div class="logo-sub">Clinic</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-profile">
+      <div class="profile-avatar">
+        <img src="https://storage.googleapis.com/forge-sites/7ee6dac059af4628dc4f8c7e4f5838771cdbd6505ca921d2294a45daa29a420b.png?X-Goog-Algorithm=GOOG4-RSA-SHA256&amp;X-Goog-Credential=164061697651-compute%40developer.gserviceaccount.com%2F20260922%2Fauto%2Fstorage%2Fgoog4_request&amp;X-Goog-Date=20260922T205820Z&amp;X-Goog-Expires=86400&amp;X-Goog-SignedHeaders=host&amp;response-access-control-allow-origin=https%3A%2F%2Fforge.moonchild.ai&amp;X-Goog-Signature=67182c253cb2ae7eb4b582a7cff505c78de8a1ce24babf39c64b5fee5c383327ea07c9fdfa43defb314aab0c2003ba1649b210bc9a62da58d3dc378adc98babafbc997c68f5b5be577c75fa3e0d24df4bcde18b65e275925deba5821879059d7538640180fc3319cfd4bb2e817d97f4a040c63533c47a76be9bec6fe2038253d2c5d0c9e5e06737798da21d0b831921d44672f8fc44be7999b51f9c4127ce0b030eb3c44257b76dcbad2d328c53143c10705f94ab38f5b8ad1f6745213ce243a72120f063f83148c57bf7352e1b57c4d851bd002048ab1c9eddbae9ef4fda9ec997d54448c66c39545abb5bdd6a1f2989c49d9c885ba40adcd34920f0714ec81" alt="Patient Amara K., a young woman with a warm smile, natural wellness aesthetic" width="72" height="72">
+      </div>
+      <div class="profile-name">Amara K.</div>
+      <div class="profile-tagline">Natural Healing Journey</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main Menu</div>
+
+      <a class="nav-item active" href="#">
+        <i class="fas fa-th-large"></i>
+        <span class="nav-label">Dashboard</span>
+      </a>
+      <a class="nav-item" href="#">
+        <i class="far fa-calendar-check"></i>
+        <span class="nav-label">My Appointments</span>
+        <span class="nav-badge">2</span>
+      </a>
+      <a class="nav-item" href="#">
+        <i class="fas fa-prescription-bottle-alt"></i>
+        <span class="nav-label">My Prescriptions</span>
+      </a>
+      <a class="nav-item" href="#">
+        <i class="fas fa-chart-line"></i>
+        <span class="nav-label">Health Progress</span>
+      </a>
+      <a class="nav-item" href="#">
+        <i class="fas fa-seedling"></i>
+        <span class="nav-label">Herbal Catalog</span>
+      </a>
+
+      <div class="nav-section-label">Services</div>
+
+      <a class="nav-item" href="#">
+        <i class="fas fa-video"></i>
+        <span class="nav-label">Tele-Health</span>
+      </a>
+      <a class="nav-item" href="#">
+        <i class="far fa-comment-dots"></i>
+        <span class="nav-label">Messages</span>
+        <span class="nav-badge">3</span>
+      </a>
+      <a class="nav-item" href="#">
+        <i class="fas fa-cog"></i>
+        <span class="nav-label">Settings</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a class="nav-item" href="#">
+        <i class="fas fa-sign-out-alt"></i>
+        <span class="nav-label">Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- ── MAIN CONTENT ── -->
+  <main class="main">
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+      <div class="topbar-greeting">
+        <h1>Good morning, Amara ☀️</h1>
+        <p>Let's check on your wellness journey today — Tuesday, 22 September 2026</p>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-search">
+          <i class="fas fa-search"></i>
+          <span>Search records, prescriptions…</span>
+        </div>
+        <div class="icon-btn">
+          <i class="far fa-bell"></i>
+          <span class="notif-dot"></span>
+        </div>
+        <div class="icon-btn">
+          <i class="far fa-envelope"></i>
+        </div>
+        <div class="topbar-avatar">
+          <img src="https://storage.googleapis.com/forge-sites/7ee6dac059af4628dc4f8c7e4f5838771cdbd6505ca921d2294a45daa29a420b.png?X-Goog-Algorithm=GOOG4-RSA-SHA256&amp;X-Goog-Credential=164061697651-compute%40developer.gserviceaccount.com%2F20260922%2Fauto%2Fstorage%2Fgoog4_request&amp;X-Goog-Date=20260922T205820Z&amp;X-Goog-Expires=86400&amp;X-Goog-SignedHeaders=host&amp;response-access-control-allow-origin=https%3A%2F%2Fforge.moonchild.ai&amp;X-Goog-Signature=67182c253cb2ae7eb4b582a7cff505c78de8a1ce24babf39c64b5fee5c383327ea07c9fdfa43defb314aab0c2003ba1649b210bc9a62da58d3dc378adc98babafbc997c68f5b5be577c75fa3e0d24df4bcde18b65e275925deba5821879059d7538640180fc3319cfd4bb2e817d97f4a040c63533c47a76be9bec6fe2038253d2c5d0c9e5e06737798da21d0b831921d44672f8fc44be7999b51f9c4127ce0b030eb3c44257b76dcbad2d328c53143c10705f94ab38f5b8ad1f6745213ce243a72120f063f83148c57bf7352e1b57c4d851bd002048ab1c9eddbae9ef4fda9ec997d54448c66c39545abb5bdd6a1f2989c49d9c885ba40adcd34920f0714ec81" alt="Amara K. profile avatar" width="40" height="40">
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS ROW -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="far fa-calendar-check"></i></div>
+        <div class="stat-body">
+          <div class="stat-label">Today's Appointment</div>
+          <div class="stat-value">10:00 AM</div>
+          <div class="stat-sub">Dr. Osei — Tele-Health</div>
+          <span class="stat-badge active">Confirmed</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon gold"><i class="fas fa-prescription-bottle-alt"></i></div>
+        <div class="stat-body">
+          <div class="stat-label">Active Prescriptions</div>
+          <div class="stat-value">4 Active</div>
+          <div class="stat-sub">2 due for refill soon</div>
+          <span class="stat-badge gold-badge">Review</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon sage"><i class="fas fa-clock"></i></div>
+        <div class="stat-body">
+          <div class="stat-label">Next Follow-up</div>
+          <div class="stat-value">Oct 5, 2026</div>
+          <div class="stat-sub">Dr. Mensah — In-Clinic</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon warm"><i class="fas fa-heart-pulse"></i></div>
+        <div class="stat-body">
+          <div class="stat-label">Wellness Score</div>
+          <div class="stat-value">74 / 100</div>
+          <div class="stat-sub">↑ +6 pts from last week</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT COLUMNS -->
+    <div class="content-cols">
+
+      <!-- LEFT COLUMN -->
+      <div class="left-col">
+
+        <!-- Upcoming Appointments -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Upcoming Appointments</div>
+            <a class="card-action" href="#">See all <i class="fas fa-arrow-right" style="font-size:10px;"></i></a>
+          </div>
+
+          <div class="appt-row">
+            <div class="appt-avatar">
+              <img src="https://storage.googleapis.com/forge-sites/0f40375184d90b8fbf4f2e835fe3cfa7362c7fc84d8b1ab3074a6a473e144bcf.png?X-Goog-Algorithm=GOOG4-RSA-SHA256&amp;X-Goog-Credential=164061697651-compute%40developer.gserviceaccount.com%2F20260922%2Fauto%2Fstorage%2Fgoog4_request&amp;X-Goog-Date=20260922T205820Z&amp;X-Goog-Expires=86400&amp;X-Goog-SignedHeaders=host&amp;response-access-control-allow-origin=https%3A%2F%2Fforge.moonchild.ai&amp;X-Goog-Signature=c1279a4750a33e6d9b825681e07db5d749e8ba62ca4fdca9007b5716696128ce1a0afdb4a628a49b46096ebdc3dea16e6a81713fdc5e6d5f27e0c4eba804c9ac0b58e706b45b6ae33d362be8a4a4de4f633c8053b7e9134582ca8f5116210b61f3e2a923b65dc7c9102fd32c43460cd824a9d80d07f691e1e2e63dcc570788f864ac1198aef0553554c7ec693119fa7c17dcdfdc9d2bf97a94be5f12ad3ffbfc5323fb5e562be94ec69f9e1433259d53ff3f8fff1f804fe526b8b285f0a0e30f202966ce3d315b5b01f7cfcf4e5ce6294ec3816dcb28b82b9306d25f89af7d41061f965d506166b381e60aa207e6a4a03bd9141bd050b48adb408210b8a61fc8" alt="Dr. Kwame Osei, male herbal medicine practitioner with professional attire" width="46" height="46">
+            </div>
+            <div class="appt-info">
+              <div class="appt-doctor">Dr. Kwame Osei</div>
+              <div class="appt-specialty">Herbal Medicine &amp; Metabolic Health</div>
+              <div class="appt-meta">
+                <span class="chip"><i class="far fa-calendar"></i> 22 Sep 2026</span>
+                <span class="chip"><i class="far fa-clock"></i> 10:00 AM</span>
+                <span class="chip"><i class="fas fa-video"></i> Tele-Health</span>
+              </div>
+            </div>
+            <div class="appt-actions">
+              <button class="btn-primary"><i class="fas fa-video"></i> Join Tele-Health</button>
+              <button class="btn-ghost">Reschedule</button>
+            </div>
+          </div>
+
+          <div class="appt-row">
+            <div class="appt-avatar">
+              <img src="https://storage.googleapis.com/forge-sites/76af29e776c64d214a9fd8c809e91414ec4ebe732024ff6535098acc0ef3b234.png?X-Goog-Algorithm=GOOG4-RSA-SHA256&amp;X-Goog-Credential=164061697651-compute%40developer.gserviceaccount.com%2F20260922%2Fauto%2Fstorage%2Fgoog4_request&amp;X-Goog-Date=20260922T205820Z&amp;X-Goog-Expires=86400&amp;X-Goog-SignedHeaders=host&amp;response-access-control-allow-origin=https%3A%2F%2Fforge.moonchild.ai&amp;X-Goog-Signature=815ac5f7fe607051c42e77cea1c7c68a43b489081f1cd737dcce40f66fe85cb6eed98eead0e65340f35b5ab516cc748e0daf926fa3345676907c355cfd8c977f48eb4434b5700921af389e6599fe1082cfc87e359e1863d6c632062d4563f5cdfa00ff34e2a4216234ef0e7372079944ba3345047151a54f2a3d836c7ac9541dbb98e806cb75d7b31623f8d5a4e2653ca4598c5e8405d380a9af7dc66eeb4aef5c67b6d39d02e302d0bf27e3dcb13a1cbed30c5fe6248d76911c51da885f541ccd5392f83a8c3e0574a5b40f72566abc87795c450612003c092ada7c61114b04a53c5f068af4e37db0b45146d40f12d3c8670b751ffd3eae83a940073a8ed924" alt="Dr. Abena Mensah, female naturopath doctor with warm professional smile" width="46" height="46">
+            </div>
+            <div class="appt-info">
+              <div class="appt-doctor">Dr. Abena Mensah</div>
+              <div class="appt-specialty">Naturopathy &amp; Hypertension Care</div>
+              <div class="appt-meta">
+                <span class="chip"><i class="far fa-calendar"></i> 5 Oct 2026</span>
+                <span class="chip"><i class="far fa-clock"></i> 09:00 AM</span>
+                <span class="chip"><i class="fas fa-hospital"></i> In-Clinic</span>
+              </div>
+            </div>
+            <div class="appt-actions">
+              <button class="btn-primary gold-btn"><i class="fas fa-map-marker-alt"></i> Get Directions</button>
+              <button class="btn-ghost">Reschedule</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Herbal Prescriptions -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">My Active Herbal Prescriptions</div>
+            <a class="card-action" href="#">View all <i class="fas fa-arrow-right" style="font-size:10px;"></i></a>
+          </div>
+
+          <div class="rx-row">
+            <div class="rx-icon"><i class="fas fa-leaf"></i></div>
+            <div class="rx-info">
+              <div class="rx-name">S19 SOZO Herbal Blend</div>
+              <div class="rx-dose">2 capsules · Twice daily · After meals</div>
+              <div class="rx-dose" style="margin-top:3px; color: var(--text-muted); font-size:11px;">Prescribed by Dr. Osei · 30-day supply</div>
+            </div>
+            <div class="rx-right">
+              <span class="status-badge status-active">Active</span>
+              <button class="btn-ghost" style="font-size:11px; padding:6px 12px;">Request Refill</button>
+            </div>
+          </div>
+
+          <div class="rx-row">
+            <div class="rx-icon" style="background: rgba(212,180,71,0.12);"><i class="fas fa-wine-bottle" style="color: #8a6e1a;"></i></div>
+            <div class="rx-info">
+              <div class="rx-name">S19 Herbal Wine Reserve</div>
+              <div class="rx-dose">30ml · Once daily · Before dinner</div>
+              <div class="rx-dose" style="margin-top:3px; color: var(--text-muted); font-size:11px;">Prescribed by Dr. Mensah · 60-day supply</div>
+            </div>
+            <div class="rx-right">
+              <span class="status-badge status-active">Active</span>
+              <button class="btn-ghost" style="font-size:11px; padding:6px 12px;">Request Refill</button>
+            </div>
+          </div>
+
+          <div class="rx-row">
+            <div class="rx-icon" style="background: rgba(42,125,92,0.1);"><i class="fas fa-mortar-pestle" style="color: #2a7d5c;"></i></div>
+            <div class="rx-info">
+              <div class="rx-name">S19 Cardio Herbal Tonic</div>
+              <div class="rx-dose">5ml in warm water · Morning only</div>
+              <div class="rx-dose" style="margin-top:3px; color: var(--text-muted); font-size:11px;">Prescribed by Dr. Mensah · Awaiting approval</div>
+            </div>
+            <div class="rx-right">
+              <span class="status-badge status-pending">Pending</span>
+              <button class="btn-ghost" style="font-size:11px; padding:6px 12px; opacity:0.5; cursor:not-allowed;">Awaiting</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="right-col">
+
+        <!-- Wellness Progress -->
+        <div class="card wellness-card">
+          <div class="card-header">
+            <div class="card-title">Wellness Progress</div>
+            <a class="card-action" href="#">Details <i class="fas fa-arrow-right" style="font-size:10px;"></i></a>
+          </div>
+          <div class="card-body" style="padding: 20px 24px 16px; display:flex; flex-direction:column; align-items:center;">
+            <div class="donut-wrap">
+              <svg id="donutChart" width="160" height="160"></svg>
+              <div class="donut-center">
+                <div class="donut-pct">74%</div>
+                <div class="donut-label">Overall</div>
+              </div>
+            </div>
+            <div class="wellness-legend">
+              <div class="legend-item">
+                <div class="legend-dot" style="background: var(--forest-dark);"></div>
+                <span>Wellness Score</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background: var(--gold);"></div>
+                <span>Remaining</span>
+              </div>
+            </div>
+            <div style="width:100%; margin-top:14px; background: var(--cream); border-radius:8px; padding:10px 14px;">
+              <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted);">
+                <span>Last month: <strong style="color:var(--text-dark);">68%</strong></span>
+                <span style="color: var(--forest-dark); font-weight:600;">↑ +6 pts improved</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Health Conditions -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Health Conditions</div>
+          </div>
+          <div class="conditions-body">
+            <div class="condition-row">
+              <div class="cond-header">
+                <span class="cond-name">Diabetes &amp; Metabolic Health</span>
+                <span class="cond-pct">68%</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill green" style="width: 68%;"></div>
+              </div>
+              <div class="cond-sub">Improving — Blood sugar trending down</div>
+            </div>
+            <div class="condition-row">
+              <div class="cond-header">
+                <span class="cond-name">Hypertension Management</span>
+                <span class="cond-pct">74%</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill teal" style="width: 74%;"></div>
+              </div>
+              <div class="cond-sub">Stable — Bp 128/82 · Last reading Sep 20</div>
+            </div>
+            <div class="condition-row">
+              <div class="cond-header">
+                <span class="cond-name">Stress &amp; Sleep Quality</span>
+                <span class="cond-pct">81%</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill gold" style="width: 81%;"></div>
+              </div>
+              <div class="cond-sub">Good — 7.2 hrs avg sleep this week</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Quick Actions</div>
+          </div>
+          <div class="quick-actions-grid">
+            <button class="qa-btn">
+              <i class="far fa-calendar-plus"></i>
+              <span class="qa-label">Book Appointment</span>
+            </button>
+            <button class="qa-btn">
+              <i class="fas fa-file-prescription"></i>
+              <span class="qa-label">Request Prescription</span>
+            </button>
+            <button class="qa-btn">
+              <i class="far fa-comment-medical"></i>
+              <span class="qa-label">Message Doctor</span>
+            </button>
+            <button class="qa-btn">
+              <i class="far fa-file-alt"></i>
+              <span class="qa-label">View Reports</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // ── Donut Chart (D3) ──
+    const width = 160, height = 160, radius = 70;
+    const pct = 0.74;
+
+    const svg = d3.select("#donutChart")
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", `translate(${width/2},${height/2})`);
+
+    const arc = d3.arc()
+      .innerRadius(52)
+      .outerRadius(radius)
+      .cornerRadius(6);
+
+    const pie = d3.pie().sort(null).padAngle(0.04);
+
+    const data = [pct, 1 - pct];
+    const colors = ["#07331a", "#e3edda"];
+
+    const arcs = svg.selectAll("path")
+      .data(pie(data))
+      .enter()
+      .append("path")
+      .attr("fill", (d, i) => colors[i])
+      .attr("d", arc)
+      .style("transition", "opacity 0.2s ease");
+
+    // Animate in
+    arcs.each(function(d) {
+      const i = d3.interpolate({startAngle: 0, endAngle: 0}, d);
+      d3.select(this)
+        .transition()
+        .duration(900)
+        .ease(d3.easeCubicOut)
+        .attrTween("d", () => t => arc(i(t)));
+    });
+  </script>
+
+
+</body></html>

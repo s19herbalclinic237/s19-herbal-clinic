@@ -154,10 +154,10 @@ export async function SiteFooter() {
       <div className="relative z-10 border-t border-forest-900/80">
         <Container className="flex flex-col gap-3 py-5 text-xs text-forest-400 sm:flex-row sm:items-center sm:justify-between">
           <p>{t("footer.rights", { year: new Date().getFullYear(), brand: clinic.brand, slogan: clinic.slogan })}</p>
-          <p className="flex items-center gap-3">
+          <div className="flex items-center gap-3">
             <span>{t("footer.bottom")}</span>
             <LanguageSwitcher />
-          </p>
+          </div>
         </Container>
       </div>
     </footer>

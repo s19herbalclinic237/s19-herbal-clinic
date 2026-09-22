@@ -1,7 +1,15 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import Link from "next/link";
+import { useRef, useState, type ReactNode } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
+import {
+  useDashboardData,
+  type PatientTabId,
+} from "@/components/account/dashboard-data";
+import { DashboardOverview, getGreeting } from "@/components/account/overview-tab";
+import { UserAvatar } from "@/components/account/user-avatar";
 import { OrdersTab } from "@/components/account/orders-tab";
 import { MessagesTab } from "@/components/account/messages-tab";
 import { TestimonialsTab } from "@/components/account/testimonials-tab";
@@ -13,29 +21,30 @@ import { MessagingTab } from "@/components/admin/messaging-tab";
 import { PostsTab } from "@/components/admin/posts-tab";
 import { SubscribersTab } from "@/components/admin/subscribers-tab";
 import { AdminVideosTab } from "@/components/admin/video-reviews-tab";
+import { buttonLinkClasses } from "@/components/ui/button";
+import { S19_ASSETS } from "@/lib/site-assets";
 import {
+  FaArrowRightFromBracket,
+  FaBars,
   FaBoxOpen,
   FaCheck,
-  FaCircleUser,
   FaCommentDots,
   FaEnvelope,
   FaGear,
+  FaHouse,
   FaNewspaper,
-  FaRegCircleXmark,
   FaShieldHalved,
+  FaTableCellsLarge,
   FaTags,
   FaTruckFast,
   FaUserGear,
   FaUsers,
   FaVideo,
+  FaXmark,
 } from "react-icons/fa6";
 
 type TabId =
-  | "overview"
-  | "orders"
-  | "messages"
-  | "testimonials"
-  | "settings"
+  | PatientTabId
   | "admin-products"
   | "admin-orders"
   | "admin-testimonials"
@@ -44,204 +53,567 @@ type TabId =
   | "admin-subscribers"
   | "admin-videos";
 
-const tabList: { id: TabId; label: string; icon: ReactNode }[] = [
-  { id: "overview", label: "Overview", icon: <FaCircleUser className="h-4 w-4" aria-hidden /> },
-  { id: "orders", label: "Orders", icon: <FaBoxOpen className="h-4 w-4" aria-hidden /> },
-  { id: "messages", label: "Messages", icon: <FaEnvelope className="h-4 w-4" aria-hidden /> },
-  { id: "testimonials", label: "My Testimonials", icon: <FaCommentDots className="h-4 w-4" aria-hidden /> },
-  { id: "settings", label: "Settings", icon: <FaGear className="h-4 w-4" aria-hidden /> },
+interface NavItem {
+  id: TabId;
+  label: string;
+  icon: ReactNode;
+}
+
+const patientTabs: NavItem[] = [
+  {
+    id: "overview",
+    label: "Dashboard",
+    icon: <FaTableCellsLarge className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "orders",
+    label: "Orders",
+    icon: <FaBoxOpen className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "messages",
+    label: "Messages",
+    icon: <FaEnvelope className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "testimonials",
+    label: "Your Stories",
+    icon: <FaCommentDots className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "settings",
+    label: "Settings",
+    icon: <FaGear className="h-4 w-4" aria-hidden />,
+  },
 ];
 
-const adminTabList: { id: TabId; label: string; icon: ReactNode }[] = [
-  { id: "admin-products", label: "Products", icon: <FaTags className="h-4 w-4" aria-hidden /> },
-  { id: "admin-orders", label: "Orders", icon: <FaTruckFast className="h-4 w-4" aria-hidden /> },
-  { id: "admin-testimonials", label: "Testimonials", icon: <FaCommentDots className="h-4 w-4" aria-hidden /> },
-  { id: "admin-messaging", label: "Users & Messages", icon: <FaUserGear className="h-4 w-4" aria-hidden /> },
-  { id: "admin-posts", label: "Blog", icon: <FaNewspaper className="h-4 w-4" aria-hidden /> },
-  { id: "admin-subscribers", label: "Subscribers", icon: <FaUsers className="h-4 w-4" aria-hidden /> },
-  { id: "admin-videos", label: "Live Reviews", icon: <FaVideo className="h-4 w-4" aria-hidden /> },
+const adminTabs: NavItem[] = [
+  {
+    id: "admin-products",
+    label: "Products",
+    icon: <FaTags className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "admin-orders",
+    label: "Orders",
+    icon: <FaTruckFast className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "admin-testimonials",
+    label: "Testimonials",
+    icon: <FaCommentDots className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "admin-messaging",
+    label: "Users & Messages",
+    icon: <FaUserGear className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "admin-posts",
+    label: "Blog",
+    icon: <FaNewspaper className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "admin-subscribers",
+    label: "Subscribers",
+    icon: <FaUsers className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "admin-videos",
+    label: "Live Reviews",
+    icon: <FaVideo className="h-4 w-4" aria-hidden />,
+  },
 ];
 
-function OverviewTab({ onNavigate }: { onNavigate: (tab: TabId) => void }) {
-  const { user, resendVerification } = useAuth();
-  const [resent, setResent] = useState(false);
-
+function NavButton({
+  item,
+  active,
+  badge,
+  onClick,
+}: {
+  item: NavItem;
+  active: boolean;
+  badge?: number;
+  onClick: () => void;
+}) {
   return (
-    <div className="space-y-5">
-      {user && !user.emailVerified ? (
-        <div className="flex items-start gap-2 rounded-lg border border-gold-300 bg-gold-50 px-4 py-3 text-sm text-ink">
-          <FaRegCircleXmark className="mt-0.5 h-4 w-4 shrink-0 text-gold-600" aria-hidden />
-          <span>
-            Your email is not verified yet. Check your inbox for the verification link, or{" "}
-            <button
-              type="button"
-              onClick={async () => {
-                await resendVerification(user.email);
-                setResent(true);
-              }}
-              className="font-semibold text-forest-800 underline underline-offset-2"
-            >
-              resend it
-            </button>
-            {resent ? " (sent - check your inbox)" : ""}
-          </span>
-        </div>
+    <button
+      type="button"
+      onClick={onClick}
+      className={
+        active
+          ? "flex w-full cursor-pointer items-center gap-3 rounded-md bg-gold-400/15 px-3 py-2.5 text-left text-sm font-semibold text-gold-300"
+          : "flex w-full cursor-pointer items-center gap-3 rounded-md px-3 py-2.5 text-left text-sm font-medium text-white/55 transition-colors hover:bg-white/5 hover:text-white"
+      }
+    >
+      <span className="w-4 shrink-0">{item.icon}</span>
+      <span className="min-w-0 flex-1 truncate">{item.label}</span>
+      {badge ? (
+        <span className="shrink-0 rounded-full bg-gold-400 px-2 py-0.5 text-[10px] font-bold text-forest-950">
+          {badge > 9 ? "9+" : badge}
+        </span>
       ) : null}
+    </button>
+  );
+}
 
-      <div className="rounded-lg border border-line bg-white p-5">
-        <p className="text-sm leading-relaxed text-muted">
-          Welcome to your S19 Herbal Clinic dashboard. Here you can review your orders, receive
-          messages from the clinic, share your story, and manage your profile.
-        </p>
+function PageHeader({
+  title,
+  subtitle,
+  children,
+}: {
+  title: string;
+  subtitle: string;
+  children?: ReactNode;
+}) {
+  return (
+    <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+      <div className="min-w-0">
+        <h1 className="font-display text-xl font-bold text-ink sm:text-2xl">{title}</h1>
+        <p className="mt-1 text-xs text-muted sm:text-[13px]">{subtitle}</p>
       </div>
-
-      <div className="grid gap-3 sm:grid-cols-2">
-        <button
-          type="button"
-          onClick={() => onNavigate("orders")}
-          className="flex items-center gap-3 rounded-lg border border-line bg-white p-4 text-left transition-colors hover:border-forest-300"
-        >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-forest-50 text-forest-700">
-            <FaBoxOpen className="h-4 w-4" aria-hidden />
-          </span>
-          <span>
-            <span className="block text-sm font-bold text-ink">Your Orders</span>
-            <span className="block text-xs text-muted">History, totals &amp; tracking links</span>
-          </span>
-        </button>
-        <button
-          type="button"
-          onClick={() => onNavigate("messages")}
-          className="flex items-center gap-3 rounded-lg border border-line bg-white p-4 text-left transition-colors hover:border-forest-300"
-        >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-forest-50 text-forest-700">
-            <FaEnvelope className="h-4 w-4" aria-hidden />
-          </span>
-          <span>
-            <span className="block text-sm font-bold text-ink">Messages from the Clinic</span>
-            <span className="block text-xs text-muted">Order updates, reports &amp; news</span>
-          </span>
-        </button>
-        <button
-          type="button"
-          onClick={() => onNavigate("testimonials")}
-          className="flex items-center gap-3 rounded-lg border border-line bg-white p-4 text-left transition-colors hover:border-forest-300"
-        >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-forest-50 text-forest-700">
-            <FaCommentDots className="h-4 w-4" aria-hidden />
-          </span>
-          <span>
-            <span className="block text-sm font-bold text-ink">Your Stories</span>
-            <span className="block text-xs text-muted">Testimonials you have shared</span>
-          </span>
-        </button>
-        <button
-          type="button"
-          onClick={() => onNavigate("settings")}
-          className="flex items-center gap-3 rounded-lg border border-line bg-white p-4 text-left transition-colors hover:border-forest-300"
-        >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-forest-50 text-forest-700">
-            <FaGear className="h-4 w-4" aria-hidden />
-          </span>
-          <span>
-            <span className="block text-sm font-bold text-ink">Settings</span>
-            <span className="block text-xs text-muted">Profile details &amp; password</span>
-          </span>
-        </button>
-      </div>
+      {children ? <div className="flex shrink-0 items-center gap-2">{children}</div> : null}
     </div>
   );
 }
 
+/** Small link used in the sidebar/drawer footers to return to the public site. */
+function BackToSiteLink({ compact = false }: { compact?: boolean }) {
+  return (
+    <Link
+      href="/"
+      className={
+        compact
+          ? "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-white/55 transition-colors hover:bg-white/5 hover:text-white"
+          : "flex items-center justify-center gap-2 rounded-lg bg-white/5 px-3 py-2.5 text-sm font-semibold text-gold-300 ring-1 ring-gold-500/40 transition-colors hover:bg-white/10"
+      }
+    >
+      <FaHouse className="h-4 w-4 shrink-0" aria-hidden />
+      Back to main site
+    </Link>
+  );
+}
+
+function BrandLogo({ dark = true }: { dark?: boolean }) {
+  return (
+    <img
+      src={S19_ASSETS.logos[dark ? "fullDark" : "fullLight"]}
+      alt="S19 Herbal Clinic"
+      className="h-9 w-auto"
+    />
+  );
+}
+
 export function DashboardScreen() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const data = useDashboardData();
   const [tab, setTab] = useState<TabId>("overview");
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const scrollRef = useRef<HTMLElement | null>(null);
   const isAdmin = user?.role === "admin";
 
+  const firstName = user?.name?.trim().split(/\s+/)[0] || "there";
+  const greeting = getGreeting();
+  const dateLabel = new Date().toLocaleDateString("en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
+  const openTab = (id: TabId) => {
+    setTab(id);
+    setDrawerOpen(false);
+    scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  function renderTab() {
+    switch (tab) {
+      case "overview":
+        return <DashboardOverview data={data} onNavigate={openTab} />;
+      case "orders":
+        return (
+          <>
+            <PageHeader title="My Orders" subtitle="Order history, totals and tracking links">
+              <Link href="/shop" className={buttonLinkClasses("gold", "md")}>
+                Browse catalog
+              </Link>
+            </PageHeader>
+            <OrdersTab />
+          </>
+        );
+      case "messages":
+        return (
+          <>
+            <PageHeader title="Messages" subtitle="Updates and notes from the clinic" />
+            <MessagesTab />
+          </>
+        );
+      case "testimonials":
+        return (
+          <>
+            <PageHeader
+              title="Your Stories"
+              subtitle="Testimonies you have shared with the S19 community"
+            />
+            <TestimonialsTab />
+          </>
+        );
+      case "settings":
+        return (
+          <>
+            <PageHeader title="Account Settings" subtitle="Profile details, photo, password and sign-out" />
+            <SettingsTab />
+          </>
+        );
+      case "admin-products":
+        return isAdmin ? (
+          <>
+            <PageHeader title="Products" subtitle="Manage the online catalog" />
+            <ProductsTab />
+          </>
+        ) : null;
+      case "admin-orders":
+        return isAdmin ? (
+          <>
+            <PageHeader title="Orders" subtitle="Review and update customer orders" />
+            <AdminOrdersTab />
+          </>
+        ) : null;
+      case "admin-testimonials":
+        return isAdmin ? (
+          <>
+            <PageHeader title="Testimonials" subtitle="Review stories submitted by patients" />
+            <AdminTestimonialsTab />
+          </>
+        ) : null;
+      case "admin-messaging":
+        return isAdmin ? (
+          <>
+            <PageHeader title="Users & Messages" subtitle="Manage accounts and send updates" />
+            <MessagingTab />
+          </>
+        ) : null;
+      case "admin-posts":
+        return isAdmin ? (
+          <>
+            <PageHeader title="Blog" subtitle="Write and manage articles" />
+            <PostsTab />
+          </>
+        ) : null;
+      case "admin-subscribers":
+        return isAdmin ? (
+          <>
+            <PageHeader title="Subscribers" subtitle="Email newsletter subscribers" />
+            <SubscribersTab />
+          </>
+        ) : null;
+      case "admin-videos":
+        return isAdmin ? (
+          <>
+            <PageHeader title="Live Reviews" subtitle="Manage video testimonials" />
+            <AdminVideosTab />
+          </>
+        ) : null;
+      default:
+        return null;
+    }
+  }
+
   return (
-    <div className="mx-auto w-full max-w-4xl px-4 py-8 md:py-12">
-      <div className="overflow-hidden rounded-xl border border-line bg-white shadow-lift">
-        <div className="bg-forest-950 px-6 py-6">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-gold-400">Your account</p>
-              <h1 className="mt-1 text-2xl text-white">{user?.name || "Welcome"}</h1>
-              <p className="mt-0.5 break-all text-sm text-forest-200">{user?.email}</p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {isAdmin ? (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-gold-500/60 bg-gold-500/10 px-3 py-1 text-xs font-semibold text-gold-300">
-                  <FaShieldHalved className="h-3 w-3" aria-hidden />
-                  Clinic admin
-                </span>
-              ) : null}
-              {user?.emailVerified ? (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-forest-600 bg-forest-900 px-3 py-1 text-xs font-semibold text-forest-100">
-                  <FaCheck className="h-3 w-3 text-gold-400" aria-hidden />
-                  Email verified
-                </span>
-              ) : null}
-            </div>
-          </div>
+    <div className="flex h-dvh w-full flex-col overflow-hidden bg-forest-50/60 lg:flex-row">
+      {/* Desktop sidebar */}
+      <aside className="hidden w-72 shrink-0 flex-col bg-forest-950 lg:flex">
+        <div className="px-6 pb-4 pt-7">
+          <Link href="/" aria-label="S19 Herbal Clinic home">
+            <BrandLogo dark />
+          </Link>
         </div>
 
-        <div className="flex flex-col gap-0 md:flex-row">
-          <nav className="flex w-full shrink-0 gap-1 overflow-x-auto border-b border-line bg-cream p-2 md:w-56 md:flex-col md:gap-1 md:border-b-0 md:border-r">
-            {tabList.map((t) => (
-              <button
-                key={t.id}
-                type="button"
-                onClick={() => setTab(t.id)}
-                className={
-                  tab === t.id
-                    ? "flex shrink-0 items-center gap-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-forest-800 shadow-sm"
-                    : "flex shrink-0 items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-muted hover:text-ink"
-                }
-              >
-                {t.icon}
-                {t.label}
-              </button>
-            ))}
+        <div className="flex flex-col items-center border-y border-white/10 px-5 py-6 text-center">
+          <UserAvatar
+            user={user}
+            className="h-16 w-16 border-2 border-gold-400"
+            textClassName="font-display text-lg font-bold text-gold-300"
+          />
+          <p className="mt-3 max-w-full truncate font-display text-[15px] font-bold text-white">
+            {user?.name || "Welcome"}
+          </p>
+          <p className="mt-0.5 w-full break-all text-[11px] text-white/50">{user?.email}</p>
+          <div className="mt-2.5 flex flex-wrap justify-center gap-1.5">
             {isAdmin ? (
-              <>
-                <p className="mt-2 hidden px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-muted md:block md:border-t md:border-line md:pt-3">
-                  Clinic admin
-                </p>
-                {adminTabList.map((t) => (
-                  <button
-                    key={t.id}
-                    type="button"
-                    onClick={() => setTab(t.id)}
-                    className={
-                      tab === t.id
-                        ? "flex shrink-0 items-center gap-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-forest-800 shadow-sm"
-                        : "flex shrink-0 items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-muted hover:text-ink"
-                    }
-                  >
-                    {t.icon}
-                    {t.label}
-                  </button>
-                ))}
-              </>
+              <span className="inline-flex items-center gap-1 rounded-full border border-gold-500/50 bg-gold-400/10 px-2 py-0.5 text-[10px] font-bold text-gold-300">
+                <FaShieldHalved className="h-2.5 w-2.5" aria-hidden />
+                Clinic admin
+              </span>
             ) : null}
-          </nav>
-
-          <div className="min-w-0 flex-1 p-5 md:p-6">
-            {tab === "overview" ? <OverviewTab onNavigate={setTab} /> : null}
-            {tab === "orders" ? <OrdersTab /> : null}
-            {tab === "messages" ? <MessagesTab /> : null}
-            {tab === "testimonials" ? <TestimonialsTab /> : null}
-            {tab === "settings" ? <SettingsTab /> : null}
-            {isAdmin && tab === "admin-products" ? <ProductsTab /> : null}
-            {isAdmin && tab === "admin-orders" ? <AdminOrdersTab /> : null}
-            {isAdmin && tab === "admin-testimonials" ? <AdminTestimonialsTab /> : null}
-            {isAdmin && tab === "admin-messaging" ? <MessagingTab /> : null}
-            {isAdmin && tab === "admin-posts" ? <PostsTab /> : null}
-            {isAdmin && tab === "admin-subscribers" ? <SubscribersTab /> : null}
-            {isAdmin && tab === "admin-videos" ? <AdminVideosTab /> : null}
+            {user?.emailVerified ? (
+              <span className="inline-flex items-center gap-1 rounded-full border border-forest-600 bg-forest-800/80 px-2 py-0.5 text-[10px] font-bold text-forest-100">
+                <FaCheck className="h-2.5 w-2.5 text-gold-400" aria-hidden />
+                Verified
+              </span>
+            ) : null}
           </div>
         </div>
+
+        <nav className="min-h-0 flex-1 space-y-1 overflow-y-auto px-3 py-4">
+          <p className="px-2 pb-1.5 pt-2 text-[9px] font-bold uppercase tracking-[0.2em] text-white/30">
+            My account
+          </p>
+          {patientTabs.map((item) => (
+            <NavButton
+              key={item.id}
+              item={item}
+              active={tab === item.id}
+              badge={
+                item.id === "messages" && data.unreadCount > 0 ? data.unreadCount : undefined
+              }
+              onClick={() => openTab(item.id)}
+            />
+          ))}
+          {isAdmin ? (
+            <>
+              <p className="px-2 pb-1.5 pt-5 text-[9px] font-bold uppercase tracking-[0.2em] text-white/30">
+                Clinic admin
+              </p>
+              {adminTabs.map((item) => (
+                <NavButton
+                  key={item.id}
+                  item={item}
+                  active={tab === item.id}
+                  onClick={() => openTab(item.id)}
+                />
+              ))}
+            </>
+          ) : null}
+        </nav>
+
+        <div className="space-y-1 border-t border-white/10 p-3">
+          <BackToSiteLink compact />
+          <button
+            type="button"
+            onClick={() => logout()}
+            className="flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-white/55 transition-colors hover:bg-white/5 hover:text-white"
+          >
+            <FaArrowRightFromBracket className="h-4 w-4" aria-hidden />
+            Sign out
+          </button>
+        </div>
+      </aside>
+
+      {/* Main column */}
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+        {/* Mobile top bar */}
+        <header className="flex items-center justify-between gap-3 bg-white/80 px-3 py-3 backdrop-blur sm:px-5 lg:hidden">
+          <button
+            type="button"
+            onClick={() => setDrawerOpen(true)}
+            aria-label="Open menu"
+            className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-xl border border-line-strong bg-white text-ink shadow-card"
+          >
+            <FaBars className="h-4 w-4" aria-hidden />
+          </button>
+          <Link href="/" className="flex items-center" aria-label="S19 Herbal Clinic home">
+            <BrandLogo dark={false} />
+          </Link>
+          <button
+            type="button"
+            onClick={() => openTab("messages")}
+            aria-label="Messages"
+            className="relative flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-xl border border-line-strong bg-white text-ink shadow-card"
+          >
+            <FaEnvelope className="h-4 w-4" aria-hidden />
+            {data.unreadCount > 0 ? (
+              <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold-400 px-1 text-[9px] font-bold text-forest-950">
+                {data.unreadCount > 9 ? "9+" : data.unreadCount}
+              </span>
+            ) : null}
+          </button>
+        </header>
+
+        {/* Desktop top bar */}
+        <header className="hidden items-center justify-between gap-4 px-8 pb-6 pt-8 lg:flex">
+          <div>
+            <p className="font-display text-[22px] font-bold leading-tight text-ink">
+              {greeting}, {firstName}
+            </p>
+            <p className="mt-1 text-xs text-muted">{dateLabel}</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => openTab("messages")}
+              aria-label="Messages"
+              className="relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border border-line-strong bg-white text-ink shadow-card transition-colors hover:bg-forest-50"
+            >
+              <FaEnvelope className="h-4 w-4" aria-hidden />
+              {data.unreadCount > 0 ? (
+                <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-gold-400 px-1.5 text-[10px] font-bold text-forest-950">
+                  {data.unreadCount > 9 ? "9+" : data.unreadCount}
+                </span>
+              ) : null}
+            </button>
+            <button
+              type="button"
+              onClick={() => openTab("settings")}
+              aria-label="Account settings"
+              className="cursor-pointer rounded-xl transition-transform hover:scale-105"
+            >
+              <UserAvatar
+                user={user}
+                className="h-11 w-11 border-2 border-gold-400"
+                textClassName="font-display text-sm font-bold text-gold-300"
+              />
+            </button>
+          </div>
+        </header>
+
+        {/* Scrollable content */}
+        <main
+          ref={scrollRef}
+          className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-24 pt-2 sm:px-5 lg:px-8 lg:pb-10 lg:pt-0"
+        >
+          {renderTab()}
+        </main>
       </div>
+
+      {/* Mobile bottom nav */}
+      <nav
+        aria-label="Account menu"
+        className="fixed inset-x-0 bottom-0 z-50 border-t border-forest-100 bg-white/95 pb-[max(0.4rem,env(safe-area-inset-bottom))] pt-1.5 backdrop-blur lg:hidden"
+      >
+        <div className="mx-auto flex max-w-md items-stretch justify-between gap-1 px-2">
+          {patientTabs.map((item) => {
+            const active = tab === item.id;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => openTab(item.id)}
+                className={`relative flex min-w-0 flex-1 cursor-pointer flex-col items-center gap-1 rounded-lg px-1 py-1.5 ${
+                  active ? "bg-forest-50" : ""
+                }`}
+              >
+                <span className={`relative ${active ? "text-forest-950" : "text-muted"}`}>
+                  {item.id === "messages" && data.unreadCount > 0 ? (
+                    <span
+                      className="absolute -right-1.5 -top-1 h-1.5 w-1.5 rounded-full bg-gold-500"
+                      aria-hidden
+                    />
+                  ) : null}
+                  {item.icon}
+                </span>
+                <span
+                  className={`truncate text-[9px] font-bold ${
+                    active ? "text-forest-950" : "text-muted"
+                  }`}
+                >
+                  {item.id === "testimonials" ? "Stories" : item.label}
+                </span>
+                <span
+                  className={`h-1 w-1 rounded-full ${active ? "bg-gold-500" : "bg-transparent"}`}
+                  aria-hidden
+                />
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+
+      {/* Mobile drawer */}
+      <AnimatePresence>
+        {drawerOpen ? (
+          <div className="fixed inset-0 z-[70] lg:hidden" role="dialog" aria-modal="true">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="absolute inset-0 bg-forest-950/60 backdrop-blur-sm"
+              onClick={() => setDrawerOpen(false)}
+            />
+            <motion.div
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "tween", duration: 0.25, ease: "easeOut" }}
+              className="absolute inset-y-0 left-0 flex w-[300px] max-w-[85vw] flex-col overflow-y-auto bg-forest-950 shadow-lift"
+            >
+              <div className="flex items-center justify-between px-5 pt-6">
+                <Link href="/" aria-label="S19 Herbal Clinic home">
+                  <BrandLogo dark />
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setDrawerOpen(false)}
+                  aria-label="Close menu"
+                  className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-white/15 text-white/70 transition-colors hover:bg-white/10"
+                >
+                  <FaXmark className="h-4 w-4" aria-hidden />
+                </button>
+              </div>
+
+              <div className="flex items-center gap-3 border-y border-white/10 px-5 py-4">
+                <UserAvatar
+                  user={user}
+                  className="h-12 w-12 shrink-0 border-2 border-gold-400"
+                  textClassName="font-display text-sm font-bold text-gold-300"
+                />
+                <div className="min-w-0">
+                  <p className="truncate font-display text-sm font-bold text-white">
+                    {user?.name || "Welcome"}
+                  </p>
+                  <p className="truncate text-[11px] text-white/50">{user?.email}</p>
+                </div>
+              </div>
+
+              <nav className="flex-1 space-y-1 px-3 py-4">
+                <p className="px-2 pb-1.5 pt-2 text-[9px] font-bold uppercase tracking-[0.2em] text-white/30">
+                  My account
+                </p>
+                {patientTabs.map((item) => (
+                  <NavButton
+                    key={item.id}
+                    item={item}
+                    active={tab === item.id}
+                    badge={
+                      item.id === "messages" && data.unreadCount > 0 ? data.unreadCount : undefined
+                    }
+                    onClick={() => openTab(item.id)}
+                  />
+                ))}
+                {isAdmin ? (
+                  <>
+                    <p className="px-2 pb-1.5 pt-5 text-[9px] font-bold uppercase tracking-[0.2em] text-white/30">
+                      Clinic admin
+                    </p>
+                    {adminTabs.map((item) => (
+                      <NavButton
+                        key={item.id}
+                        item={item}
+                        active={tab === item.id}
+                        onClick={() => openTab(item.id)}
+                      />
+                    ))}
+                  </>
+                ) : null}
+              </nav>
+
+              <div className="space-y-1 border-t border-white/10 p-3">
+                <BackToSiteLink compact />
+                <button
+                  type="button"
+                  onClick={() => logout()}
+                  className="flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-white/55 transition-colors hover:bg-white/5 hover:text-white"
+                >
+                  <FaArrowRightFromBracket className="h-4 w-4" aria-hidden />
+                  Sign out
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        ) : null}
+      </AnimatePresence>
     </div>
   );
 }

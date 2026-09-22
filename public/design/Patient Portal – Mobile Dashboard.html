@@ -1,0 +1,1565 @@
+<!DOCTYPE html><html lang="en"><head><base href="https://forge.moonchild.ai/site/748e5443c6794de4d717cca5e8f259ffcdfa912015001161c2b473c1cb3c7ab6/">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>S19 Herbal Clinic – Mobile Patient Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&amp;family=Montserrat:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --forest-dark: #07331a;
+      --forest-mid: #0c2314;
+      --forest-hover: #0e3d20;
+      --forest-light: #1a5c32;
+      --gold: #d4b447;
+      --gold-light: #e8ca6a;
+      --cream: #f4f8ec;
+      --sage: #e3edda;
+      --sage-mid: #c8ddb8;
+      --white: #ffffff;
+      --text-dark: #1a2e1f;
+      --text-mid: #3d5a44;
+      --text-muted: #7a9a82;
+      --shadow-soft: 0 2px 12px rgba(7,51,26,0.08);
+      --shadow-card: 0 4px 20px rgba(7,51,26,0.12);
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--cream);
+      color: var(--text-dark);
+      width: 430px;
+      min-height: 932px;
+      margin: 0 auto;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 52px 20px 12px;
+      background: var(--cream);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-menu {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--white);
+      border: 1px solid var(--sage-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+      transition: all 0.2s ease;
+    }
+
+    .topbar-menu:hover {
+      background: var(--sage);
+      border-color: var(--forest-dark);
+    }
+
+    .topbar-menu i {
+      font-size: 16px;
+      color: var(--text-mid);
+    }
+
+    .topbar-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-icon-sm {
+      width: 30px;
+      height: 30px;
+      background: var(--gold);
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-icon-sm i {
+      color: var(--forest-dark);
+      font-size: 14px;
+    }
+
+    .logo-text-sm {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .logo-sub-sm {
+      font-size: 8px;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .topbar-right {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .topbar-bell {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--white);
+      border: 1px solid var(--sage-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      box-shadow: var(--shadow-soft);
+      transition: all 0.2s ease;
+    }
+
+    .topbar-bell:hover {
+      background: var(--sage);
+      border-color: var(--forest-dark);
+    }
+
+    .topbar-bell i {
+      font-size: 15px;
+      color: var(--text-mid);
+    }
+
+    .notif-dot {
+      position: absolute;
+      top: 8px;
+      right: 9px;
+      width: 7px;
+      height: 7px;
+      background: var(--gold);
+      border-radius: 50%;
+      border: 1.5px solid var(--white);
+    }
+
+    /* ── SCROLL CONTENT ── */
+    .scroll-content {
+      padding: 0 0 100px;
+      overflow-y: auto;
+    }
+
+    /* ── HERO GREETING CARD ── */
+    .hero-card {
+      background: var(--forest-dark);
+      border-radius: 24px;
+      margin: 8px 20px 0;
+      padding: 24px 24px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -30px;
+      width: 180px;
+      height: 180px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 50%;
+    }
+
+    .hero-card::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      right: 40px;
+      width: 100px;
+      height: 100px;
+      background: rgba(212,180,71,0.08);
+      border-radius: 50%;
+    }
+
+    .hero-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .hero-text {
+      flex: 1;
+    }
+
+    .hero-greeting {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    .hero-sub {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      font-weight: 400;
+      line-height: 1.4;
+    }
+
+    .hero-wellness {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      margin-left: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .wellness-ring {
+      position: relative;
+      width: 72px;
+      height: 72px;
+    }
+
+    .wellness-ring-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .wellness-pct {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1;
+    }
+
+    .wellness-ring-label {
+      font-size: 9px;
+      color: rgba(255,255,255,0.6);
+      font-weight: 500;
+    }
+
+    /* ── STAT CHIPS SCROLL ── */
+    .stat-chips-section {
+      padding: 16px 20px 0;
+    }
+
+    .stat-chips-scroll {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .stat-chips-scroll::-webkit-scrollbar { display: none; }
+
+    .stat-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--white);
+      border: 1px solid rgba(200,221,184,0.7);
+      border-radius: 14px;
+      padding: 12px 16px;
+      flex-shrink: 0;
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+      transition: all 0.2s ease;
+      min-width: 150px;
+    }
+
+    .stat-chip:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-card);
+      border-color: var(--forest-dark);
+    }
+
+    .chip-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .chip-icon.green { background: rgba(7,51,26,0.1); }
+    .chip-icon.green i { color: var(--forest-dark); font-size: 15px; }
+    .chip-icon.gold { background: rgba(212,180,71,0.15); }
+    .chip-icon.gold i { color: #b8952a; font-size: 15px; }
+    .chip-icon.teal { background: rgba(42,125,92,0.12); }
+    .chip-icon.teal i { color: #2a7d5c; font-size: 15px; }
+
+    .chip-body {}
+
+    .chip-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .chip-value {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-top: 2px;
+    }
+
+    .chip-sub {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    /* ── SECTION HEADING ── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 20px 12px;
+    }
+
+    .section-title {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .section-link {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--forest-dark);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: color 0.2s ease;
+    }
+
+    .section-link:hover { color: var(--gold); }
+
+    /* ── APPOINTMENT CARD ── */
+    .appt-card {
+      background: var(--white);
+      border-radius: 20px;
+      margin: 0 20px;
+      padding: 20px;
+      box-shadow: var(--shadow-card);
+      border: 1px solid rgba(227,237,218,0.8);
+      transition: all 0.2s ease;
+    }
+
+    .appt-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(7,51,26,0.14);
+    }
+
+    .appt-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .appt-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2px solid var(--sage-mid);
+      flex-shrink: 0;
+    }
+
+    .appt-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .appt-info {}
+
+    .appt-doctor {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .appt-specialty {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .appt-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .tag-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--sage);
+      color: var(--forest-dark);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 4px 9px;
+      border-radius: 20px;
+    }
+
+    .tag-chip i { font-size: 9px; }
+
+    .appt-divider {
+      height: 1px;
+      background: var(--sage);
+      margin-bottom: 14px;
+    }
+
+    .appt-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-primary {
+      flex: 1;
+      background: var(--forest-dark);
+      color: var(--white);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 13px 16px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover {
+      background: var(--forest-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(7,51,26,0.3);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-mid);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1.5px solid var(--sage-mid);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--forest-dark);
+      color: var(--forest-dark);
+      background: var(--sage);
+    }
+
+    /* ── PRESCRIPTIONS SCROLL ── */
+    .rx-scroll-wrap {
+      padding: 0 20px;
+      overflow: hidden;
+    }
+
+    .rx-scroll {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      scrollbar-width: none;
+    }
+
+    .rx-scroll::-webkit-scrollbar { display: none; }
+
+    .rx-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 18px 18px 16px;
+      flex-shrink: 0;
+      width: 220px;
+      box-shadow: var(--shadow-card);
+      border: 1px solid rgba(227,237,218,0.8);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .rx-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(7,51,26,0.14);
+    }
+
+    .rx-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .rx-icon-wrap {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      background: var(--sage);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .rx-icon-wrap i {
+      font-size: 17px;
+      color: var(--forest-dark);
+    }
+
+    .rx-icon-wrap.gold-rx {
+      background: rgba(212,180,71,0.15);
+    }
+
+    .rx-icon-wrap.gold-rx i { color: #8a6e1a; }
+
+    .rx-status {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .rx-status.active {
+      background: rgba(7,51,26,0.1);
+      color: var(--forest-dark);
+    }
+
+    .rx-status.pending {
+      background: rgba(212,180,71,0.2);
+      color: #8a6e1a;
+    }
+
+    .rx-name {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-dark);
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+
+    .rx-dose {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .rx-progress-wrap {
+      margin-top: 14px;
+    }
+
+    .rx-progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .rx-progress-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .rx-days-left {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--forest-dark);
+    }
+
+    .rx-progress-track {
+      height: 6px;
+      background: var(--sage);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .rx-progress-fill {
+      height: 100%;
+      border-radius: 20px;
+      transition: width 0.6s ease;
+    }
+
+    .rx-progress-fill.green { background: var(--forest-dark); }
+    .rx-progress-fill.gold { background: var(--gold); }
+
+    /* ── WELLNESS CHART ── */
+    .wellness-chart-card {
+      background: var(--white);
+      border-radius: 20px;
+      margin: 0 20px;
+      padding: 20px;
+      box-shadow: var(--shadow-card);
+      border: 1px solid rgba(227,237,218,0.8);
+    }
+
+    .chart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .chart-title {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .chart-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(7,51,26,0.1);
+      color: var(--forest-dark);
+    }
+
+    .bar-chart-wrap {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 10px;
+      height: 120px;
+      padding-bottom: 24px;
+      position: relative;
+    }
+
+    .bar-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    .bar {
+      width: 100%;
+      border-radius: 6px 6px 2px 2px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .bar:hover {
+      opacity: 0.8;
+      transform: scaleY(1.03);
+      transform-origin: bottom;
+    }
+
+    .bar-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      position: absolute;
+      bottom: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+
+    .bar-value {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-mid);
+      margin-bottom: 4px;
+    }
+
+    .chart-legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    /* ── QUICK ACTIONS ── */
+    .quick-actions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 0 20px;
+    }
+
+    .qa-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 16px;
+      background: var(--white);
+      border: 1.5px solid var(--sage-mid);
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .qa-btn:hover {
+      background: var(--sage);
+      border-color: var(--forest-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(7,51,26,0.12);
+    }
+
+    .qa-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 15px;
+    }
+
+    .qa-icon.green { background: rgba(7,51,26,0.1); color: var(--forest-dark); }
+    .qa-icon.gold { background: rgba(212,180,71,0.15); color: #8a6e1a; }
+    .qa-icon.teal { background: rgba(42,125,92,0.12); color: #2a7d5c; }
+    .qa-icon.sage { background: var(--sage); color: var(--text-mid); }
+
+    .qa-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-mid);
+      line-height: 1.3;
+    }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 430px;
+      background: var(--white);
+      border-top: 1px solid var(--sage);
+      box-shadow: 0 -4px 20px rgba(7,51,26,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 10px 0 24px;
+      z-index: 200;
+    }
+
+    .nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 6px 16px;
+      border-radius: 12px;
+      transition: all 0.2s ease;
+      border: none;
+      background: transparent;
+    }
+
+    .nav-btn:hover {
+      background: var(--sage);
+    }
+
+    .nav-btn i {
+      font-size: 18px;
+      color: var(--text-muted);
+      transition: color 0.2s ease;
+    }
+
+    .nav-btn.active i {
+      color: var(--forest-dark);
+    }
+
+    .nav-btn span {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: color 0.2s ease;
+    }
+
+    .nav-btn.active span {
+      color: var(--forest-dark);
+    }
+
+    .nav-active-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--gold);
+      margin-top: -2px;
+    }
+
+    /* ── SLIDE-IN DRAWER ── */
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(7,51,26,0.5);
+      z-index: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .drawer-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .drawer {
+      position: fixed;
+      top: 0;
+      left: -280px;
+      width: 280px;
+      height: 100%;
+      background: var(--forest-dark);
+      z-index: 600;
+      transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .drawer.open {
+      left: 0;
+    }
+
+    .drawer-logo {
+      padding: 56px 24px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .drawer-logo-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--gold);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .drawer-logo-icon i {
+      color: var(--forest-dark);
+      font-size: 17px;
+    }
+
+    .drawer-logo-text {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .drawer-logo-sub {
+      font-size: 9px;
+      font-weight: 500;
+      color: var(--gold);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .drawer-profile {
+      padding: 24px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .drawer-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 2px solid var(--gold);
+      overflow: hidden;
+    }
+
+    .drawer-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .drawer-name {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .drawer-tagline {
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .drawer-nav {
+      flex: 1;
+      padding: 12px 0;
+    }
+
+    .drawer-nav-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      padding: 10px 20px 6px;
+    }
+
+    .drawer-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .drawer-nav-item:hover {
+      background: rgba(255,255,255,0.07);
+      border-left-color: rgba(212,180,71,0.5);
+    }
+
+    .drawer-nav-item.active {
+      background: rgba(212,180,71,0.12);
+      border-left-color: var(--gold);
+    }
+
+    .drawer-nav-item i {
+      width: 18px;
+      text-align: center;
+      font-size: 14px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .drawer-nav-item.active i { color: var(--gold); }
+    .drawer-nav-item:hover i { color: rgba(255,255,255,0.8); }
+
+    .drawer-nav-text {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.55);
+    }
+
+    .drawer-nav-item.active .drawer-nav-text {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .drawer-nav-item:hover .drawer-nav-text { color: rgba(255,255,255,0.9); }
+
+    .drawer-badge {
+      margin-left: auto;
+      background: var(--gold);
+      color: var(--forest-dark);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 20px;
+    }
+
+    .drawer-footer {
+      padding: 12px 0 40px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 0; }
+
+    /* Vital score mini cards within hero */
+    .hero-vitals {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .vital-mini {
+      flex: 1;
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+
+    .vital-val {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .vital-lbl {
+      font-size: 10px;
+      color: rgba(255,255,255,0.55);
+      margin-top: 2px;
+    }
+
+    .vital-mini.gold-v {
+      background: rgba(212,180,71,0.18);
+    }
+
+    .vital-mini.gold-v .vital-val { color: var(--gold-light); }
+  </style>
+</head>
+<body>
+
+  <!-- ── SLIDE-IN DRAWER ── -->
+  <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+  <div class="drawer" id="sideDrawer">
+    <div class="drawer-logo">
+      <div class="drawer-logo-icon"><i class="fas fa-leaf"></i></div>
+      <div>
+        <div class="drawer-logo-text">S19 Herbal</div>
+        <div class="drawer-logo-sub">Clinic</div>
+      </div>
+    </div>
+    <div class="drawer-profile">
+      <div class="drawer-avatar">
+        <img src="https://storage.googleapis.com/forge-sites/7ee6dac059af4628dc4f8c7e4f5838771cdbd6505ca921d2294a45daa29a420b.png?X-Goog-Algorithm=GOOG4-RSA-SHA256&amp;X-Goog-Credential=164061697651-compute%40developer.gserviceaccount.com%2F20260922%2Fauto%2Fstorage%2Fgoog4_request&amp;X-Goog-Date=20260922T205820Z&amp;X-Goog-Expires=86400&amp;X-Goog-SignedHeaders=host&amp;response-access-control-allow-origin=https%3A%2F%2Fforge.moonchild.ai&amp;X-Goog-Signature=67182c253cb2ae7eb4b582a7cff505c78de8a1ce24babf39c64b5fee5c383327ea07c9fdfa43defb314aab0c2003ba1649b210bc9a62da58d3dc378adc98babafbc997c68f5b5be577c75fa3e0d24df4bcde18b65e275925deba5821879059d7538640180fc3319cfd4bb2e817d97f4a040c63533c47a76be9bec6fe2038253d2c5d0c9e5e06737798da21d0b831921d44672f8fc44be7999b51f9c4127ce0b030eb3c44257b76dcbad2d328c53143c10705f94ab38f5b8ad1f6745213ce243a72120f063f83148c57bf7352e1b57c4d851bd002048ab1c9eddbae9ef4fda9ec997d54448c66c39545abb5bdd6a1f2989c49d9c885ba40adcd34920f0714ec81" alt="Amara K., young woman with warm smile, natural wellness aesthetic" width="52" height="52">
+      </div>
+      <div>
+        <div class="drawer-name">Amara K.</div>
+        <div class="drawer-tagline">Natural Healing Journey</div>
+      </div>
+    </div>
+    <nav class="drawer-nav">
+      <div class="drawer-nav-label">Main Menu</div>
+      <a class="drawer-nav-item active" href="#">
+        <i class="fas fa-th-large"></i>
+        <span class="drawer-nav-text">Dashboard</span>
+      </a>
+      <a class="drawer-nav-item" href="#">
+        <i class="far fa-calendar-check"></i>
+        <span class="drawer-nav-text">My Appointments</span>
+        <span class="drawer-badge">2</span>
+      </a>
+      <a class="drawer-nav-item" href="#">
+        <i class="fas fa-prescription-bottle-alt"></i>
+        <span class="drawer-nav-text">My Prescriptions</span>
+      </a>
+      <a class="drawer-nav-item" href="#">
+        <i class="fas fa-chart-line"></i>
+        <span class="drawer-nav-text">Health Progress</span>
+      </a>
+      <a class="drawer-nav-item" href="#">
+        <i class="fas fa-seedling"></i>
+        <span class="drawer-nav-text">Herbal Catalog</span>
+      </a>
+      <div class="drawer-nav-label">Services</div>
+      <a class="drawer-nav-item" href="#">
+        <i class="fas fa-video"></i>
+        <span class="drawer-nav-text">Tele-Health</span>
+      </a>
+      <a class="drawer-nav-item" href="#">
+        <i class="far fa-comment-dots"></i>
+        <span class="drawer-nav-text">Messages</span>
+        <span class="drawer-badge">3</span>
+      </a>
+      <a class="drawer-nav-item" href="#">
+        <i class="fas fa-cog"></i>
+        <span class="drawer-nav-text">Settings</span>
+      </a>
+    </nav>
+    <div class="drawer-footer">
+      <a class="drawer-nav-item" href="#">
+        <i class="fas fa-sign-out-alt"></i>
+        <span class="drawer-nav-text">Logout</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ── TOP BAR ── -->
+  <div class="topbar">
+    <div class="topbar-menu" onclick="openDrawer()">
+      <i class="fas fa-bars"></i>
+    </div>
+    <div class="topbar-logo">
+      <div class="logo-icon-sm"><i class="fas fa-leaf"></i></div>
+      <div>
+        <div class="logo-text-sm">S19 Herbal</div>
+        <div class="logo-sub-sm">Clinic</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-bell">
+        <i class="far fa-bell"></i>
+        <span class="notif-dot"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCROLL CONTENT ── -->
+  <div class="scroll-content">
+
+    <!-- HERO GREETING CARD -->
+    <div class="hero-card">
+      <div class="hero-top">
+        <div class="hero-text">
+          <div class="hero-greeting">Good morning,<br>Amara ☀️</div>
+          <div class="hero-sub">Tuesday, 22 September 2026<br>Your healing journey continues</div>
+        </div>
+        <div class="hero-wellness">
+          <div class="wellness-ring">
+            <svg id="heroRing" width="72" height="72"></svg>
+            <div class="wellness-ring-center">
+              <div class="wellness-pct">74%</div>
+              <div class="wellness-ring-label">Wellness</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-vitals">
+        <div class="vital-mini">
+          <div class="vital-val">74</div>
+          <div class="vital-lbl">Score</div>
+        </div>
+        <div class="vital-mini gold-v">
+          <div class="vital-val">4</div>
+          <div class="vital-lbl">Active Rx</div>
+        </div>
+        <div class="vital-mini">
+          <div class="vital-val">10AM</div>
+          <div class="vital-lbl">Next Appt</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAT CHIPS -->
+    <div class="stat-chips-section">
+      <div class="stat-chips-scroll">
+        <div class="stat-chip">
+          <div class="chip-icon green"><i class="far fa-calendar-check"></i></div>
+          <div class="chip-body">
+            <div class="chip-label">Next Appointment</div>
+            <div class="chip-value">10:00 AM</div>
+            <div class="chip-sub">Dr. Osei · Today</div>
+          </div>
+        </div>
+        <div class="stat-chip">
+          <div class="chip-icon gold"><i class="fas fa-prescription-bottle-alt"></i></div>
+          <div class="chip-body">
+            <div class="chip-label">Active Rx</div>
+            <div class="chip-value">4 Active</div>
+            <div class="chip-sub">2 due for refill</div>
+          </div>
+        </div>
+        <div class="stat-chip">
+          <div class="chip-icon teal"><i class="far fa-comment-dots"></i></div>
+          <div class="chip-body">
+            <div class="chip-label">Unread Messages</div>
+            <div class="chip-value">3 New</div>
+            <div class="chip-sub">From your doctors</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UPCOMING APPOINTMENT -->
+    <div class="section-header">
+      <div class="section-title">Upcoming Appointment</div>
+      <a class="section-link" href="#">See all <i class="fas fa-arrow-right" style="font-size:10px;"></i></a>
+    </div>
+
+    <div class="appt-card">
+      <div class="appt-header">
+        <div class="appt-avatar">
+          <img src="https://storage.googleapis.com/forge-sites/196d1a0b56976d40b86ba7c44bcba5ec858f8a129c4cf9604fff76a98f860bb0.png?X-Goog-Algorithm=GOOG4-RSA-SHA256&amp;X-Goog-Credential=164061697651-compute%40developer.gserviceaccount.com%2F20260922%2Fauto%2Fstorage%2Fgoog4_request&amp;X-Goog-Date=20260922T210021Z&amp;X-Goog-Expires=86400&amp;X-Goog-SignedHeaders=host&amp;response-access-control-allow-origin=https%3A%2F%2Fforge.moonchild.ai&amp;X-Goog-Signature=c18534fa218f033639b8525ea7351c13e3c4c1e8894c2097161432473f4a67c5e208beda558e8dc8dcb2b58c0bec456e028a57ed4f4ddcb6dad1b881ca3e823b68fd34b7716fd1f67205f4063a913ba36e798d3b86255f19756c64e4bd7ee1ba779459ec3ceb2f04995d3977f79fca046b2278a2ca4a2e46d34fc95d55c05128261b2b4bd5aa69eadbad642cc1c2c1d27e740c06c8539e4270afbd399006c14a41c18ede0c4b3016e6615d6c1d148d75f5ad298a98d71f3b7dfc489f9a2e38b3044fb7ec0d0baced8be431dd9a61c7d372912cc85c07f9eb9d1f3fb1ec4f2a8057f09570c3aff468474745e313f93b0f5b273520c30fff3fe255b1515a4d9238" alt="Dr. Emeka Nwosu, male herbal consultant with professional warm demeanor" width="56" height="56">
+        </div>
+        <div class="appt-info">
+          <div class="appt-doctor">Dr. Emeka Nwosu</div>
+          <div class="appt-specialty">Herbal Consultant &amp; Metabolic Health</div>
+          <div class="appt-chips">
+            <span class="tag-chip"><i class="far fa-calendar"></i> 22 Sep 2026</span>
+            <span class="tag-chip"><i class="far fa-clock"></i> 10:00 AM</span>
+            <span class="tag-chip"><i class="fas fa-video"></i> Tele-Health</span>
+          </div>
+        </div>
+      </div>
+      <div class="appt-divider"></div>
+      <div class="appt-actions">
+        <button class="btn-primary"><i class="fas fa-video"></i> Join Tele-Health</button>
+        <button class="btn-ghost">Reschedule</button>
+      </div>
+    </div>
+
+    <!-- MY PRESCRIPTIONS -->
+    <div class="section-header">
+      <div class="section-title">My Prescriptions</div>
+      <a class="section-link" href="#">View all <i class="fas fa-arrow-right" style="font-size:10px;"></i></a>
+    </div>
+
+    <div class="rx-scroll-wrap">
+      <div class="rx-scroll">
+
+        <div class="rx-card">
+          <div class="rx-card-top">
+            <div class="rx-icon-wrap"><i class="fas fa-leaf"></i></div>
+            <span class="rx-status active">Active</span>
+          </div>
+          <div class="rx-name">S19 SOZO Herbal Blend</div>
+          <div class="rx-dose">2 capsules · Twice daily<br>After meals · 30-day supply</div>
+          <div class="rx-progress-wrap">
+            <div class="rx-progress-header">
+              <span class="rx-progress-label">Days remaining</span>
+              <span class="rx-days-left">18 days</span>
+            </div>
+            <div class="rx-progress-track">
+              <div class="rx-progress-fill green" style="width: 60%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rx-card">
+          <div class="rx-card-top">
+            <div class="rx-icon-wrap gold-rx"><i class="fas fa-wine-bottle"></i></div>
+            <span class="rx-status active">Active</span>
+          </div>
+          <div class="rx-name">S19 Herbal Wine Reserve</div>
+          <div class="rx-dose">30ml · Once daily<br>Before dinner · 60-day supply</div>
+          <div class="rx-progress-wrap">
+            <div class="rx-progress-header">
+              <span class="rx-progress-label">Days remaining</span>
+              <span class="rx-days-left">42 days</span>
+            </div>
+            <div class="rx-progress-track">
+              <div class="rx-progress-fill gold" style="width: 70%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rx-card">
+          <div class="rx-card-top">
+            <div class="rx-icon-wrap" style="background: rgba(42,125,92,0.12);"><i class="fas fa-mortar-pestle" style="color:#2a7d5c;"></i></div>
+            <span class="rx-status pending">Pending</span>
+          </div>
+          <div class="rx-name">S19 Cardio Herbal Tonic</div>
+          <div class="rx-dose">5ml in warm water<br>Morning only · Awaiting approval</div>
+          <div class="rx-progress-wrap">
+            <div class="rx-progress-header">
+              <span class="rx-progress-label">Status</span>
+              <span class="rx-days-left" style="color:#8a6e1a;">Pending</span>
+            </div>
+            <div class="rx-progress-track">
+              <div class="rx-progress-fill" style="width: 0%; background: var(--sage-mid);"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- WELLNESS PROGRESS CHART -->
+    <div class="section-header">
+      <div class="section-title">Wellness Progress</div>
+      <a class="section-link" href="#">Details <i class="fas fa-arrow-right" style="font-size:10px;"></i></a>
+    </div>
+
+    <div class="wellness-chart-card">
+      <div class="chart-header">
+        <div class="chart-title">Last 6 Months</div>
+        <div class="chart-badge">↑ +6 pts this week</div>
+      </div>
+      <div id="barChartWrap" style="position: relative;">
+        <svg id="barChart" width="100%"></svg>
+      </div>
+      <div class="chart-legend">
+        <div class="legend-item">
+          <div class="legend-dot" style="background: var(--forest-dark);"></div>
+          <span>Wellness Score</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background: var(--gold);"></div>
+          <span>Target</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="section-header">
+      <div class="section-title">Quick Actions</div>
+    </div>
+
+    <div class="quick-actions-grid">
+      <button class="qa-btn">
+        <div class="qa-icon green"><i class="far fa-calendar-plus"></i></div>
+        <span class="qa-label">Book Appointment</span>
+      </button>
+      <button class="qa-btn">
+        <div class="qa-icon gold"><i class="fas fa-file-prescription"></i></div>
+        <span class="qa-label">Request Prescription</span>
+      </button>
+      <button class="qa-btn">
+        <div class="qa-icon teal"><i class="far fa-comment-medical"></i></div>
+        <span class="qa-label">Message Doctor</span>
+      </button>
+      <button class="qa-btn">
+        <div class="qa-icon sage"><i class="far fa-file-alt"></i></div>
+        <span class="qa-label">View Reports</span>
+      </button>
+    </div>
+
+  </div><!-- end scroll-content -->
+
+  <!-- ── BOTTOM NAV ── -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" onclick="setActive(this)">
+      <i class="fas fa-th-large"></i>
+      <span>Dashboard</span>
+      <div class="nav-active-dot"></div>
+    </button>
+    <button class="nav-btn" onclick="setActive(this)">
+      <i class="far fa-calendar-check"></i>
+      <span>Appointments</span>
+    </button>
+    <button class="nav-btn" onclick="setActive(this)">
+      <i class="fas fa-prescription-bottle-alt"></i>
+      <span>Prescriptions</span>
+    </button>
+    <button class="nav-btn" onclick="setActive(this)">
+      <i class="fas fa-chart-line"></i>
+      <span>Progress</span>
+    </button>
+    <button class="nav-btn" onclick="setActive(this)">
+      <i class="far fa-user-circle"></i>
+      <span>Profile</span>
+    </button>
+  </nav>
+
+  <script>
+    // ── Hero Ring (D3) ──
+    (function() {
+      const size = 72, radius = 32, pct = 0.74;
+      const svg = d3.select("#heroRing")
+        .attr("viewBox", `0 0 ${size} ${size}`);
+
+      const arc = d3.arc()
+        .innerRadius(25)
+        .outerRadius(radius)
+        .cornerRadius(4);
+
+      const pie = d3.pie().sort(null).padAngle(0.05);
+      const colors = ["#d4b447", "rgba(255,255,255,0.12)"];
+
+      const g = svg.append("g").attr("transform", `translate(${size/2},${size/2})`);
+
+      const arcs = g.selectAll("path")
+        .data(pie([pct, 1 - pct]))
+        .enter()
+        .append("path")
+        .attr("fill", (d, i) => colors[i])
+        .attr("d", arc);
+
+      arcs.each(function(d) {
+        const i = d3.interpolate({startAngle: 0, endAngle: 0}, d);
+        d3.select(this)
+          .transition()
+          .duration(900)
+          .ease(d3.easeCubicOut)
+          .attrTween("d", () => t => arc(i(t)));
+      });
+    })();
+
+    // ── Bar Chart (D3) ──
+    (function() {
+      const data = [
+        { month: "Apr", score: 58 },
+        { month: "May", score: 62 },
+        { month: "Jun", score: 65 },
+        { month: "Jul", score: 68 },
+        { month: "Aug", score: 71 },
+        { month: "Sep", score: 74 }
+      ];
+
+      const container = document.getElementById("barChartWrap");
+      const width = container.clientWidth || 350;
+      const height = 140;
+      const margin = { top: 10, right: 10, bottom: 28, left: 28 };
+      const innerW = width - margin.left - margin.right;
+      const innerH = height - margin.top - margin.bottom;
+
+      const svg = d3.select("#barChart")
+        .attr("width", width)
+        .attr("height", height);
+
+      const g = svg.append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+      const x = d3.scaleBand()
+        .domain(data.map(d => d.month))
+        .range([0, innerW])
+        .padding(0.35);
+
+      const y = d3.scaleLinear()
+        .domain([40, 85])
+        .range([innerH, 0]);
+
+      // Gridlines
+      g.selectAll(".gridline")
+        .data(y.ticks(4))
+        .enter()
+        .append("line")
+        .attr("class", "gridline")
+        .attr("x1", 0)
+        .attr("x2", innerW)
+        .attr("y1", d => y(d))
+        .attr("y2", d => y(d))
+        .attr("stroke", "#e3edda")
+        .attr("stroke-width", 1);
+
+      // Y axis
+      g.append("g")
+        .call(d3.axisLeft(y).ticks(4).tickSize(0))
+        .select(".domain").remove();
+
+      g.selectAll(".tick text")
+        .style("fill", "#7a9a82")
+        .style("font-size", "9px")
+        .style("font-family", "Montserrat, sans-serif");
+
+      // Target line at 80
+      g.append("line")
+        .attr("x1", 0).attr("x2", innerW)
+        .attr("y1", y(80)).attr("y2", y(80))
+        .attr("stroke", "#d4b447")
+        .attr("stroke-width", 1.5)
+        .attr("stroke-dasharray", "4,3");
+
+      // Bars
+      const bars = g.selectAll(".bar")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", d => x(d.month))
+        .attr("y", innerH)
+        .attr("width", x.bandwidth())
+        .attr("height", 0)
+        .attr("rx", 5)
+        .attr("fill", (d, i) => i === data.length - 1 ? "#07331a" : "#2a7d5c")
+        .style("cursor", "pointer");
+
+      bars.transition()
+        .duration(800)
+        .delay((d, i) => i * 80)
+        .ease(d3.easeCubicOut)
+        .attr("y", d => y(d.score))
+        .attr("height", d => innerH - y(d.score));
+
+      // X axis labels
+      g.selectAll(".x-label")
+        .data(data)
+        .enter()
+        .append("text")
+        .attr("class", "x-label")
+        .attr("x", d => x(d.month) + x.bandwidth() / 2)
+        .attr("y", innerH + 16)
+        .attr("text-anchor", "middle")
+        .style("fill", "#7a9a82")
+        .style("font-size", "10px")
+        .style("font-family", "Montserrat, sans-serif")
+        .style("font-weight", "600")
+        .text(d => d.month);
+
+      // Score labels on bars
+      g.selectAll(".bar-val")
+        .data(data)
+        .enter()
+        .append("text")
+        .attr("class", "bar-val")
+        .attr("x", d => x(d.month) + x.bandwidth() / 2)
+        .attr("y", d => y(d.score) - 4)
+        .attr("text-anchor", "middle")
+        .style("fill", (d, i) => i === data.length - 1 ? "#07331a" : "#2a7d5c")
+        .style("font-size", "9px")
+        .style("font-family", "Montserrat, sans-serif")
+        .style("font-weight", "700")
+        .text(d => d.score);
+    })();
+
+    // ── Drawer ──
+    function openDrawer() {
+      document.getElementById("sideDrawer").classList.add("open");
+      document.getElementById("drawerOverlay").classList.add("open");
+    }
+
+    function closeDrawer() {
+      document.getElementById("sideDrawer").classList.remove("open");
+      document.getElementById("drawerOverlay").classList.remove("open");
+    }
+
+    // ── Bottom nav active ──
+    function setActive(btn) {
+      document.querySelectorAll(".nav-btn").forEach(b => {
+        b.classList.remove("active");
+        const dot = b.querySelector(".nav-active-dot");
+        if (dot) dot.remove();
+      });
+      btn.classList.add("active");
+      const dot = document.createElement("div");
+      dot.className = "nav-active-dot";
+      btn.appendChild(dot);
+    }
+  </script>
+
+</body></html>
