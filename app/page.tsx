@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Container, Section } from "@/components/ui/container";
 import { Kicker } from "@/components/ui/heading";
@@ -18,6 +19,7 @@ import { localizedClinic, waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { getServerLocale, serverT } from "@/lib/i18n-server";
 import { formatFcfa } from "@/lib/utils";
+import { canonicalMeta } from "@/lib/seo";
 
 export const revalidate = 60;
 import {
@@ -33,6 +35,25 @@ import {
 } from "react-icons/fa6";
 
 const FEATURED_SLUGS = ["s19-herbal-wine-reserve", "s19-sozo", "s19-malaria-typhoid-combo"];
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Herbal Clinic in Bafoussam, Cameroon – Science-Based Natural Medicine",
+    description:
+      "S19 Herbal Clinic: science-based herbal medicine in Bafoussam, Cameroon. Individualized natural programs for diabetes, hypertension, prostate health, and women's health. Telehealth consultations and worldwide DHL shipping.",
+    alternates: { canonical: canonicalMeta("/").alternates?.canonical },
+    openGraph: {
+      ...canonicalMeta("/").openGraph,
+      title: "S19 Herbal Clinic – Natural Healing, Lasting Wellness",
+      description: "Science-based herbal medicine clinic in Bafoussam, Cameroon. Telehealth + worldwide DHL shipping.",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "S19 Herbal Clinic – Natural Healing, Lasting Wellness",
+      description: "Science-based herbal medicine clinic in Bafoussam, Cameroon. Telehealth + worldwide DHL shipping.",
+    },
+  };
+}
 
 export default async function HomePage() {
   const t = await serverT();

@@ -293,7 +293,7 @@ const dict = {
   "refer.whatsapp": { en: "Refer via WhatsApp", fr: "Parrainer via WhatsApp" },
   "refer.book": { en: "Book a Consultation", fr: "Réserver une consultation" },
 
-  "liveReviews.meta.title": { en: "Live Reviews | S19 Herbal Clinic", fr: "Avis vidéo | Clinique S19" },
+  "liveReviews.meta.title": { en: "Live Reviews", fr: "Avis vidéo" },
   "liveReviews.meta.description": {
     en: "Watch real patients share their healing journeys at S19 Herbal Clinic through live video reviews.",
     fr: "Regardez de vrais patients partager leur parcours de guérison à la Clinique de phytothérapie S19 à travers des avis vidéo.",
@@ -383,7 +383,7 @@ const dict = {
 
   "shop.hero.eyebrow": { en: "Standardized Formulas", fr: "Formules standardisées" },
   "shop.hero.title": { en: "S19 Herbal Product Catalog", fr: "Catalogue de produits S19" },
-  "shop.meta.title": { en: "Herbal Product Catalog | S19 Herbal Clinic", fr: "Catalogue de produits | Clinique S19" },
+  "shop.meta.title": { en: "Herbal Product Catalog", fr: "Catalogue de produits" },
   "shop.meta.description": {
     en: "Browse the S19 Herbal Clinic standardized product catalog - treatment packs, herbal teas, extracts and oils, and wellness essentials. Pickup in Bafoussam and worldwide delivery.",
     fr: "Parcourez le catalogue de produits standardisés de la clinique S19 - packs de traitement, tisanes, extraits et huiles, et essentiels de bien-être. Retrait à Bafoussam et livraison mondiale.",
@@ -431,6 +431,14 @@ const dict = {
   "aria.decreaseQty": { en: "Decrease quantity", fr: "Diminuer la quantité" },
   "aria.increaseQty": { en: "Increase quantity", fr: "Augmenter la quantité" },
 
+  "about.meta.title": {
+    en: "About S19 Herbal Clinic – Root-Cause Herbal Medicine in Bafoussam",
+    fr: "À propos de la Clinique S19 – Médecine par les plantes à Bafoussam",
+  },
+  "about.meta.description": {
+    en: "How S19 Herbal Clinic in Bafoussam, Cameroon combines African medicinal plants with science-based herbalism, lab testing, nutrition and lifestyle medicine.",
+    fr: "Comment la Clinique S19 à Bafoussam, Cameroun, combine les plantes médicinales africaines avec une phytothérapie fondée sur la science, les analyses de laboratoire, la nutrition et la médecine du mode de vie.",
+  },
   "about.hero.eyebrow": { en: "Our Approach", fr: "Notre approche" },
   "about.hero.alt": {
     en: "Fresh botanical herbs used at S19 Herbal Clinic",
@@ -542,6 +550,14 @@ const dict = {
     fr: "Réservez une consultation en clinique à notre siège de Bafoussam, ou une session de Télé-santé à distance. Enquêter, comprendre, puis traiter - jamais à l'aveugle.",
   },
 
+  "programs.meta.title": {
+    en: "Herbal Treatment Programs in Bafoussam",
+    fr: "Programmes de traitement à base de plantes à Bafoussam",
+  },
+  "programs.meta.description": {
+    en: "Individualized herbal treatment programs in Bafoussam, Cameroon: diabetes, hypertension, prostate and men's health, women's health and hormones, malaria and typhoid, and digestive health.",
+    fr: "Programmes de traitement personnalisés à base de plantes à Bafoussam, Cameroun : diabète, hypertension, prostate et santé masculine, santé féminine et hormones, paludisme et typhoïde et santé digestive.",
+  },
   "programs.hero.eyebrow": { en: "Clinical Care Focus", fr: "Focus des soins cliniques" },
   "programs.hero.title": { en: "Integrative Treatment Programs", fr: "Programmes de traitement intégratifs" },
   "programs.hero.lead": {
@@ -726,6 +742,14 @@ const dict = {
     fr: "Conseils santé, actualités de la clinique et nouveaux articles - pas de spam, désinscription à tout moment.",
   },
 
+  "tele.meta.title": {
+    en: "Herbal Telehealth Consultations Worldwide",
+    fr: "Téléconsultations en phytothérapie dans le monde",
+  },
+  "tele.meta.description": {
+    en: "Virtual herbal medicine consultations with S19 Herbal Clinic in Bafoussam, Cameroon. Online assessment, personalized natural protocols and worldwide DHL shipping of your herbal program.",
+    fr: "Consultations virtuelles de médecine naturelle avec la Clinique S19 à Bafoussam, Cameroun. Évaluation en ligne, protocoles naturels personnalisés et expédition DHL de votre programme à base de plantes dans le monde entier.",
+  },
   "tele.hero.eyebrow": { en: "Care From Home", fr: "Soins médicaux virtuels disponibles" },
   "tele.hero.title": {
     en: "Talk to S19 from home, anywhere in the world.",

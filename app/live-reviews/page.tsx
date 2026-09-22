@@ -6,6 +6,7 @@ import { StoryVideo } from "@/components/testimonials/story-video";
 import { getActiveVideoReviews } from "@/lib/video-reviews";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { serverT } from "@/lib/i18n-server";
+import { canonicalMeta } from "@/lib/seo";
 import { FaCirclePlay } from "react-icons/fa6";
 
 export const revalidate = 60;
@@ -15,6 +16,15 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: t("liveReviews.meta.title"),
     description: t("liveReviews.meta.description"),
+    keywords: [
+      "S19 patient video reviews",
+      "herbal clinic video testimonials Cameroon",
+      "live reviews Bafoussam",
+      "natural healing videos S19",
+      "avis vidéo patients S19",
+      "témoignages vidéo phytothérapie Cameroun",
+    ],
+    ...canonicalMeta("/live-reviews"),
   };
 }
 

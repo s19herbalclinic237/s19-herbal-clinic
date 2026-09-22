@@ -1,4 +1,5 @@
-﻿import { Section, Container } from "@/components/ui/container";
+﻿import type { Metadata } from "next";
+import { Section, Container } from "@/components/ui/container";
 import { Kicker } from "@/components/ui/heading";
 import { PageHero } from "@/components/ui/page-hero";
 import { CTABand } from "@/components/sections/cta-band";
@@ -10,8 +11,32 @@ import { S19_ASSETS } from "@/lib/site-assets";
 import { FaWhatsapp, FaRegCircleCheck, FaArrowRight } from "react-icons/fa6";
 import Link from "next/link";
 import { getServerLocale, serverT } from "@/lib/i18n-server";
+import { canonicalMeta } from "@/lib/seo";
 
 const HERO_IMG = S19_ASSETS.photos.consultationAdvice;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await serverT();
+  return {
+    title: t("programs.meta.title"),
+    description: t("programs.meta.description"),
+    keywords: [
+      "herbal treatment programs Cameroon",
+      "herbal medicine programs Bafoussam",
+      "natural treatment for diabetes Bafoussam",
+      "herbal support for high blood pressure",
+      "prostate herbal treatment",
+      "women's health herbal remedies",
+      "herbal treatment malaria typhoid",
+      "digestive health natural remedies",
+      "integrative treatment programs Cameroon",
+      "programme de phytothérapie Cameroun",
+      "traitement naturel du diabète",
+      "remède naturel pour la prostate",
+    ],
+    ...canonicalMeta("/programs"),
+  };
+}
 
 export default async function ProgramsPage() {
   const t = await serverT();

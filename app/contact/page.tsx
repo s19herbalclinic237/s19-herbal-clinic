@@ -7,6 +7,7 @@ import { Reveal } from "@/components/ui/motion";
 import { CLINIC, waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { serverT } from "@/lib/i18n-server";
+import { canonicalMeta } from "@/lib/seo";
 import {
   FaWhatsapp,
   FaPhone,

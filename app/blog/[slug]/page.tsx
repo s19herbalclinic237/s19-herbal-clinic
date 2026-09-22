@@ -7,6 +7,7 @@ import { ArticleBody, readingTime } from "@/components/blog/article-body";
 import { NewsletterForm } from "@/components/blog/newsletter-form";
 import { getServerLocale, serverT } from "@/lib/i18n-server";
 import { localizedBlogPost } from "@/lib/site";
+import { canonicalMeta } from "@/lib/seo";
 import { FaArrowLeft, FaClock, FaRegNewspaper, FaUserPen } from "react-icons/fa6";
 
 export const revalidate = 60;
@@ -82,6 +83,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${localized.title} | ${t("blogPost.metaBlog")}`,
     description: localized.excerpt,
+    keywords: [
+      localized.title,
+      "herbal medicine blog Cameroon",
+      "natural health article",
+      "phytothérapie Cameroun article",
+      "natural remedies education S19",
+    ],
+    ...canonicalMeta(`/blog/${slug}`),
   };
 }
 

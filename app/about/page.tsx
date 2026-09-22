@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Container, Section } from "@/components/ui/container";
 import { Kicker } from "@/components/ui/heading";
 import { CTABand } from "@/components/sections/cta-band";
@@ -55,8 +56,30 @@ import {
 } from "react-icons/fa6";
 import Link from "next/link";
 import { getServerLocale, serverT } from "@/lib/i18n-server";
+import { canonicalMeta } from "@/lib/seo";
 
 const HERO_IMG = S19_ASSETS.photos.labBeakers;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await serverT();
+  return {
+    title: t("about.meta.title"),
+    description: t("about.meta.description"),
+    keywords: [
+      "about S19 Herbal Clinic",
+      "root-cause healthcare Cameroon",
+      "science-based herbalism",
+      "African medicinal plants clinic",
+      "integrative medicine Bafoussam",
+      "traditional medicine clinic Cameroon",
+      "herbal philosophy diabetes hypertension",
+      "médecine traditionnelle Bafoussam",
+      "phytothérapie fondée sur la science",
+      "clinique intégrative Cameroun",
+    ],
+    ...canonicalMeta("/about"),
+  };
+}
 
 const strengthIcons = [
   <FaMicroscope key="ind" className="h-5 w-5" aria-hidden />,

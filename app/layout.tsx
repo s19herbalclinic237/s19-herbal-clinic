@@ -7,6 +7,7 @@ import { WhatsAppFloat } from "@/components/sections/cta-band";
 import { LanguageFab } from "@/components/i18n/language-fab";
 import { CLINIC } from "@/lib/site";
 import { getServerLocale } from "@/lib/i18n-server";
+import { SITE_URL, SEO_KEYWORDS, clinicJsonLd } from "@/lib/seo";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -22,37 +23,27 @@ const libreBaskerville = Libre_Baskerville({
   display: "swap",
 });
 
-function normalizeSiteUrl(raw: string | undefined): URL {
-  const fallback = "https://s19herbalclinic.com";
-  const trimmed = raw?.trim();
-  if (!trimmed) return new URL(fallback);
-  const withScheme = /^[a-z][a-z\d+.-]*:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
-  try {
-    return new URL(withScheme);
-  } catch {
-    return new URL(fallback);
-  }
-}
-
 export const metadata: Metadata = {
-  metadataBase: normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: `${CLINIC.brand} | ${CLINIC.tagline}`,
     template: `%s | ${CLINIC.brand}`,
   },
-  description: CLINIC.tagline + ". " + CLINIC.mission,
-  keywords: [
-    "S19 Herbal Clinic",
-    "herbal medicine Cameroon",
-    "herbalist Bafoussam",
-    "science-based herbalism",
-    "root-cause healthcare",
-    "telehealth",
-    "herbal remedy",
-    "diabetes herbal support",
-    "hypertension herbal support",
-    "natural healing",
-  ],
+  description: `${CLINIC.tagline}. ${CLINIC.mission} Located in Bafoussam, West Region, Cameroon — with telehealth consultations and worldwide DHL shipping.`,
+  keywords: SEO_KEYWORDS,
+  applicationName: CLINIC.brand,
+  authors: [{ name: CLINIC.brand, url: SITE_URL }],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -67,6 +58,8 @@ export const metadata: Metadata = {
     siteName: CLINIC.brand,
     type: "website",
     locale: "en_US",
+    alternateLocale: ["fr_FR"],
+    url: SITE_URL,
     title: `${CLINIC.brand} | ${CLINIC.tagline}`,
     description: CLINIC.mission,
     images: [
@@ -77,6 +70,12 @@ export const metadata: Metadata = {
         alt: CLINIC.brand,
       },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${CLINIC.brand} | ${CLINIC.tagline}`,
+    description: CLINIC.mission,
+    images: ["/open-graph-thumbnail.png"],
   },
 };
 
@@ -89,6 +88,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={locale} className={`${montserrat.variable} ${libreBaskerville.variable}`}>
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(clinicJsonLd()).replace(/</g, "\\u003c"),
+          }}
+        />
         <Providers initialLocale={locale}>
           <AnnouncementBar />
           <SiteHeader />

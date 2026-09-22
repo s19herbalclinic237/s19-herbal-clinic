@@ -32,7 +32,9 @@ export async function POST(request: Request) {
     user.verifyExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
     await user.save();
     const verifyLink = `${siteOrigin()}/account/verify?token=${verifyToken}`;
-    sendVerificationEmail(email, user.name, verifyLink).catch(() => {});
+    sendVerificationEmail(email, user.name, verifyLink).catch((err) =>
+      console.error("[auth] resend-verification email failed:", err)
+    );
   }
 
   return NextResponse.json({

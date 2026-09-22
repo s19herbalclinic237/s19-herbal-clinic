@@ -35,9 +35,12 @@ function getTransporter() {
 
 async function sendMail(to: string, subject: string, html: string) {
   const t = getTransporter();
-  if (!t) return false;
+  if (!t) {
+    throw new Error(
+      "SMTP is not configured: SMTP_HOST, SMTP_USER and SMTP_PASS must be set in the environment."
+    );
+  }
   await t.sendMail({ from: SMTP_FROM, to, subject, html });
-  return true;
 }
 
 /* ------------------------------------------------------------------ */

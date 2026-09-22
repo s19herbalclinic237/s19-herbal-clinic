@@ -30,7 +30,9 @@ export async function POST(request: Request) {
     const token = await createResetToken(String(user._id));
     if (token) {
       const resetLink = `${siteOrigin()}/account/reset-password?token=${token}`;
-      sendPasswordResetEmail(email, user.name, resetLink).catch(() => {});
+      sendPasswordResetEmail(email, user.name, resetLink).catch((err) =>
+        console.error("[auth] forgot-password email failed:", err)
+      );
     }
   }
 

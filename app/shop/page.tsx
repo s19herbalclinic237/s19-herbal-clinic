@@ -7,6 +7,7 @@ import { getCategories, getProducts } from "@/lib/catalog";
 import { waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { serverT } from "@/lib/i18n-server";
+import { canonicalMeta } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -15,6 +16,18 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: t("shop.meta.title"),
     description: t("shop.meta.description"),
+    keywords: [
+      "herbal products Cameroon",
+      "buy herbal medicine Bafoussam",
+      "natural remedies online shop",
+      "herbal tea Bafoussam",
+      "African herbal products worldwide shipping",
+      "produits de phytothérapie Cameroun",
+      "acheter plantes médicinales Cameroun",
+      "tisane médicinale Bafoussam",
+      "herboristerie en ligne",
+    ],
+    ...canonicalMeta("/shop"),
   };
 }
 

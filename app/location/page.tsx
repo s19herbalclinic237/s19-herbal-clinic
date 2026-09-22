@@ -7,6 +7,7 @@ import { Reveal } from "@/components/ui/motion";
 import { localizedClinic, waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { deliveryZones } from "@/lib/data/programs";
+import { canonicalMeta } from "@/lib/seo";
 import {
   FaMapLocationDot,
   FaClock,
@@ -26,6 +27,19 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: t("location.meta.title"),
     description: t("location.meta.description", { address: clinic.address }),
+    keywords: [
+      "herbal clinic Bafoussam",
+      "herbalist Bafoussam",
+      "herbal medicine clinic Bafoussam",
+      "clinique de phytothérapie Bafoussam",
+      "phytothérapeute Bafoussam",
+      "herbal medicine West Region Cameroon",
+      "herbal clinic Cameroon",
+      "herbal medicine Cameroon delivery",
+      "natural medicine clinic Bafoussam",
+      "traditional medicine clinic Cameroon",
+    ],
+    ...canonicalMeta("/location"),
   };
 }
 

@@ -5,6 +5,7 @@ import { NewsletterForm } from "@/components/blog/newsletter-form";
 import { BlogExplorer } from "@/components/blog/blog-explorer";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { serverT } from "@/lib/i18n-server";
+import { canonicalMeta } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -13,6 +14,17 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: t("blog.meta.title"),
     description: t("blog.meta.description"),
+    keywords: [
+      "herbal medicine blog Cameroon",
+      "natural health articles",
+      "herbal remedies education",
+      "health tips Bafoussam",
+      "phytothérapie blog",
+      "conseils santé naturelle Cameroun",
+      "plantes médicinales éducation",
+      "blog santé S19",
+    ],
+    ...canonicalMeta("/blog"),
   };
 }
 

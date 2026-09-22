@@ -7,6 +7,7 @@ import { StoryVideo } from "@/components/testimonials/story-video";
 import { getApprovedTestimonials } from "@/lib/testimonials";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { serverT, getServerLocale } from "@/lib/i18n-server";
+import { canonicalMeta } from "@/lib/seo";
 import { FaQuoteLeft, FaStar } from "react-icons/fa6";
 
 export const revalidate = 60;
@@ -16,6 +17,17 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: t("stories.meta.title"),
     description: t("stories.meta.description"),
+    keywords: [
+      "patient testimonials herbal clinic Cameroon",
+      "S19 healing stories",
+      "patient reviews Bafoussam",
+      "herbal treatment success stories",
+      "natural medicine testimonials",
+      "avis patients clinique S19",
+      "témoignages guérison naturelle Cameroun",
+      "résultats traitement phytothérapie",
+    ],
+    ...canonicalMeta("/patient-stories"),
   };
 }
 

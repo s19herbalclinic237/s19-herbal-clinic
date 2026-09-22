@@ -11,6 +11,7 @@ import { formatEur, formatFcfa, formatUsd, waLink } from "@/lib/utils";
 import { localizedProduct } from "@/lib/site";
 import { MultiCurrencyPrice } from "@/components/ui/price";
 import { getServerLocale, serverT } from "@/lib/i18n-server";
+import { canonicalMeta } from "@/lib/seo";
 import { FaChevronRight, FaLeaf, FaRegCircleCheck, FaWhatsapp } from "react-icons/fa6";
 
 interface Props {
@@ -26,6 +27,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: p.name,
     description: p.shortDescription,
+    keywords: [
+      p.name,
+      "herbal product Cameroon",
+      "buy natural medicine Bafoussam",
+      "African herbal remedy",
+      "produit de phytothérapie Cameroun",
+      "plante médicinale Bafoussam",
+    ],
+    ...canonicalMeta(`/shop/${slug}`),
   };
 }
 

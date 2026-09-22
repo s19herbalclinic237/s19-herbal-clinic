@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Section, Container } from "@/components/ui/container";
 import { Kicker } from "@/components/ui/heading";
 import { PageHero } from "@/components/ui/page-hero";
@@ -9,8 +10,30 @@ import { S19_ASSETS } from "@/lib/site-assets";
 import { FaWhatsapp, FaShieldHalved, FaFlask, FaClock, FaPaperPlane, FaRegCircleCheck, FaUserDoctor, FaVideo } from "react-icons/fa6";
 import { getServerLocale, serverT } from "@/lib/i18n-server";
 import { formatEur, formatFcfa, formatUsd } from "@/lib/utils";
+import { canonicalMeta } from "@/lib/seo";
 
 const HERO_IMG = S19_ASSETS.photos.patientRecords;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await serverT();
+  return {
+    title: t("tele.meta.title"),
+    description: t("tele.meta.description"),
+    keywords: [
+      "herbal telehealth consultation",
+      "online herbal doctor consultation",
+      "virtual naturopathic consultation Cameroon",
+      "herbal medicine worldwide delivery",
+      "DHL herbal medicine shipping",
+      "online consultation Bafoussam",
+      "téléconsultation phytothérapie Cameroun",
+      "consultation en ligne médecin traditionnel",
+      "médecine naturelle à distance",
+      "livraison internationale plantes médicinales",
+    ],
+    ...canonicalMeta("/telehealth"),
+  };
+}
 
 export default async function TelehealthPage() {
   const t = await serverT();
