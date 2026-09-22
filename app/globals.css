@@ -76,6 +76,17 @@ body {
   }
 }
 
+/* Prevent iOS/touch Safari from auto-zooming the page when a form field is
+   focused: any input/select/textarea under 16px triggers a viewport zoom on
+   touchscreens (the "I have to zoom out after tapping a field" bug). */
+@media (hover: none) and (pointer: coarse) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
 @layer base {
   h1,
   h2,

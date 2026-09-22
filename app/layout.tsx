@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Montserrat, Libre_Baskerville } from "next/font/google";
 import { Providers } from "@/components/providers";
+import { RouteProgress } from "@/components/ui/route-progress";
 import { AnnouncementBar, SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteChromeGate } from "@/components/layout/site-chrome-gate";
@@ -89,6 +90,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={locale} className={`${montserrat.variable} ${libreBaskerville.variable}`}>
       <body>
+        <RouteProgress />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

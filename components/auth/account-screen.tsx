@@ -7,6 +7,7 @@ import { DashboardScreen } from "@/components/account/dashboard-screen";
 import { Field, Input } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { PasswordInput } from "@/components/ui/password-input";
+import { SiteLoader } from "@/components/ui/site-loader";
 
 type Mode = "login" | "register";
 
@@ -24,7 +25,7 @@ export function AccountScreen() {
   if (loading) {
     return (
       <div className="flex min-h-[40vh] items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-forest-200 border-t-forest-800" />
+        <SiteLoader label="Checking your session…" />
       </div>
     );
   }

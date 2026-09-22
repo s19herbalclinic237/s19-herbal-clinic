@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/db";
 import { Session } from "@/lib/models/Session";
+import "@/lib/models/User";
 import { SESSION_COOKIE, SESSION_DAYS, hashToken } from "@/lib/auth";
 import type { AuthUser } from "@/lib/auth";
 import type { IUser } from "@/lib/models/User";
