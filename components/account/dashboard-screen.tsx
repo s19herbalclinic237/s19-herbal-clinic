@@ -142,8 +142,8 @@ function NavButton({
       onClick={onClick}
       className={
         active
-          ? "flex w-full cursor-pointer items-center gap-3 rounded-md bg-gold-400/15 px-3 py-2.5 text-left text-sm font-semibold text-gold-300"
-          : "flex w-full cursor-pointer items-center gap-3 rounded-md px-3 py-2.5 text-left text-sm font-medium text-white/55 transition-colors hover:bg-white/5 hover:text-white"
+          ? "flex w-full cursor-pointer items-center gap-3 rounded-md bg-gold-400/15 px-3 py-1.5 text-left text-sm font-semibold text-gold-300"
+          : "flex w-full cursor-pointer items-center gap-3 rounded-md px-3 py-1.5 text-left text-sm font-medium text-white/55 transition-colors hover:bg-white/5 hover:text-white"
       }
     >
       <span className="w-4 shrink-0">{item.icon}</span>
@@ -167,7 +167,7 @@ function PageHeader({
   children?: ReactNode;
 }) {
   return (
-    <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+    <div className="mb-5 flex flex-wrap items-center justify-between gap-3 px-4 sm:px-0">
       <div className="min-w-0">
         <h1 className="font-display text-xl font-bold text-ink sm:text-2xl">{title}</h1>
         <p className="mt-1 text-xs text-muted sm:text-[13px]">{subtitle}</p>
@@ -239,14 +239,18 @@ export function DashboardScreen() {
                 Browse catalog
               </Link>
             </PageHeader>
-            <OrdersTab />
+            <div className="px-4 sm:px-0">
+              <OrdersTab />
+            </div>
           </>
         );
       case "messages":
         return (
           <>
             <PageHeader title="Messages" subtitle="Updates and notes from the clinic" />
-            <MessagesTab />
+            <div className="px-4 sm:px-0">
+              <MessagesTab />
+            </div>
           </>
         );
       case "testimonials":
@@ -256,63 +260,81 @@ export function DashboardScreen() {
               title="Your Stories"
               subtitle="Testimonies you have shared with the S19 community"
             />
-            <TestimonialsTab />
+            <div className="px-4 sm:px-0">
+              <TestimonialsTab />
+            </div>
           </>
         );
       case "settings":
         return (
           <>
             <PageHeader title="Account Settings" subtitle="Profile details, photo, password and sign-out" />
-            <SettingsTab />
+            <div className="px-4 sm:px-0">
+              <SettingsTab />
+            </div>
           </>
         );
       case "admin-products":
         return isAdmin ? (
           <>
             <PageHeader title="Products" subtitle="Manage the online catalog" />
-            <ProductsTab />
+            <div className="px-4 sm:px-0">
+              <ProductsTab />
+            </div>
           </>
         ) : null;
       case "admin-orders":
         return isAdmin ? (
           <>
             <PageHeader title="Orders" subtitle="Review and update customer orders" />
-            <AdminOrdersTab />
+            <div className="px-4 sm:px-0">
+              <AdminOrdersTab />
+            </div>
           </>
         ) : null;
       case "admin-testimonials":
         return isAdmin ? (
           <>
             <PageHeader title="Testimonials" subtitle="Review stories submitted by patients" />
-            <AdminTestimonialsTab />
+            <div className="px-4 sm:px-0">
+              <AdminTestimonialsTab />
+            </div>
           </>
         ) : null;
       case "admin-messaging":
         return isAdmin ? (
           <>
             <PageHeader title="Users & Messages" subtitle="Manage accounts and send updates" />
-            <MessagingTab />
+            <div className="px-4 sm:px-0">
+              <MessagingTab />
+            </div>
           </>
         ) : null;
       case "admin-posts":
         return isAdmin ? (
           <>
             <PageHeader title="Blog" subtitle="Write and manage articles" />
-            <PostsTab />
+            <div className="px-4 sm:px-0">
+              <PostsTab />
+            </div>
           </>
         ) : null;
       case "admin-subscribers":
         return isAdmin ? (
           <>
             <PageHeader title="Subscribers" subtitle="Email newsletter subscribers" />
-            <SubscribersTab />
+            <div className="px-4 sm:px-0">
+              <SubscribersTab />
+            </div>
           </>
         ) : null;
       case "admin-videos":
         return isAdmin ? (
           <>
             <PageHeader title="Live Reviews" subtitle="Manage video testimonials" />
-            <AdminVideosTab />
+            <div className="px-4 sm:px-0">
+              <AdminVideosTab />
+            </div>
           </>
         ) : null;
       default:
@@ -324,40 +346,44 @@ export function DashboardScreen() {
     <div className="flex h-dvh w-full flex-col overflow-hidden bg-forest-50/60 lg:flex-row">
       {/* Desktop sidebar */}
       <aside className="hidden w-72 shrink-0 flex-col bg-forest-950 lg:flex">
-        <div className="px-6 pb-4 pt-7">
+        <div className="px-5 pb-2 pt-4">
           <Link href="/" aria-label="S19 Herbal Clinic home">
             <BrandLogo dark />
           </Link>
         </div>
 
-        <div className="flex flex-col items-center border-y border-white/10 px-5 py-6 text-center">
+        <div className="flex items-center gap-3 border-y border-white/10 px-4 py-2.5">
           <UserAvatar
             user={user}
-            className="h-16 w-16 border-2 border-gold-400"
-            textClassName="font-display text-lg font-bold text-gold-300"
+            className="h-11 w-11 shrink-0 border-2 border-gold-400"
+            textClassName="font-display text-sm font-bold text-gold-300"
           />
-          <p className="mt-3 max-w-full truncate font-display text-[15px] font-bold text-white">
-            {user?.name || "Welcome"}
-          </p>
-          <p className="mt-0.5 w-full break-all text-[11px] text-white/50">{user?.email}</p>
-          <div className="mt-2.5 flex flex-wrap justify-center gap-1.5">
-            {isAdmin ? (
-              <span className="inline-flex items-center gap-1 rounded-full border border-gold-500/50 bg-gold-400/10 px-2 py-0.5 text-[10px] font-bold text-gold-300">
-                <FaShieldHalved className="h-2.5 w-2.5" aria-hidden />
-                Clinic admin
-              </span>
-            ) : null}
-            {user?.emailVerified ? (
-              <span className="inline-flex items-center gap-1 rounded-full border border-forest-600 bg-forest-800/80 px-2 py-0.5 text-[10px] font-bold text-forest-100">
-                <FaCheck className="h-2.5 w-2.5 text-gold-400" aria-hidden />
-                Verified
-              </span>
-            ) : null}
+          <div className="min-w-0">
+            <p className="truncate font-display text-sm font-bold text-white">
+              {user?.name || "Welcome"}
+            </p>
+            <p className="truncate text-[11px] text-white/50" title={user?.email}>
+              {user?.email}
+            </p>
+            <div className="mt-1 flex flex-wrap gap-1.5">
+              {isAdmin ? (
+                <span className="inline-flex items-center gap-1 rounded-full border border-gold-500/50 bg-gold-400/10 px-2 py-0.5 text-[10px] font-bold text-gold-300">
+                  <FaShieldHalved className="h-2.5 w-2.5" aria-hidden />
+                  Clinic admin
+                </span>
+              ) : null}
+              {user?.emailVerified ? (
+                <span className="inline-flex items-center gap-1 rounded-full border border-forest-600 bg-forest-800/80 px-2 py-0.5 text-[10px] font-bold text-forest-100">
+                  <FaCheck className="h-2.5 w-2.5 text-gold-400" aria-hidden />
+                  Verified
+                </span>
+              ) : null}
+            </div>
           </div>
         </div>
 
-        <nav className="min-h-0 flex-1 space-y-1 overflow-y-auto px-3 py-4">
-          <p className="px-2 pb-1.5 pt-2 text-[9px] font-bold uppercase tracking-[0.2em] text-white/30">
+        <nav className="min-h-0 flex-1 space-y-0.5 overflow-y-auto no-scrollbar px-3 py-3">
+          <p className="px-2 pb-1 pt-1.5 text-[9px] font-bold uppercase tracking-[0.2em] text-white/30">
             My account
           </p>
           {patientTabs.map((item) => (
@@ -373,7 +399,7 @@ export function DashboardScreen() {
           ))}
           {isAdmin ? (
             <>
-              <p className="px-2 pb-1.5 pt-5 text-[9px] font-bold uppercase tracking-[0.2em] text-white/30">
+              <p className="px-2 pb-1 pt-3 text-[9px] font-bold uppercase tracking-[0.2em] text-white/30">
                 Clinic admin
               </p>
               {adminTabs.map((item) => (
@@ -388,12 +414,12 @@ export function DashboardScreen() {
           ) : null}
         </nav>
 
-        <div className="space-y-1 border-t border-white/10 p-3">
+        <div className="space-y-1 border-t border-white/10 p-2.5">
           <BackToSiteLink compact />
           <button
             type="button"
             onClick={() => logout()}
-            className="flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-white/55 transition-colors hover:bg-white/5 hover:text-white"
+            className="flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-white/55 transition-colors hover:bg-white/5 hover:text-white"
           >
             <FaArrowRightFromBracket className="h-4 w-4" aria-hidden />
             Sign out
@@ -471,7 +497,7 @@ export function DashboardScreen() {
         {/* Scrollable content */}
         <main
           ref={scrollRef}
-          className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-24 pt-2 sm:px-5 lg:px-8 lg:pb-10 lg:pt-0"
+          className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-0 pb-24 pt-0 sm:px-5 lg:px-8 lg:pb-10 lg:pt-0"
         >
           {renderTab()}
         </main>

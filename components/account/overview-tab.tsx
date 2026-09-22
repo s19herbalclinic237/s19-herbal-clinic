@@ -493,7 +493,7 @@ export function DashboardOverview({ data, onNavigate }: DashboardOverviewProps) 
     <div className="space-y-5 lg:space-y-6">
       {/* Email verification notice */}
       {user && !user.emailVerified ? (
-        <div className="flex items-start gap-2.5 rounded-2xl border border-gold-300/70 bg-gold-400/10 px-4 py-3 text-sm text-ink">
+        <div className="flex items-start gap-2.5 rounded-2xl border border-gold-300/70 bg-gold-400/10 px-4 py-3 text-sm text-ink mx-4 sm:mx-0">
           <FaRegCircleXmark className="mt-0.5 h-4 w-4 shrink-0 text-gold-600" aria-hidden />
           <span>
             Your email is not verified yet. Check your inbox for the verification link, or{" "}
@@ -513,7 +513,7 @@ export function DashboardOverview({ data, onNavigate }: DashboardOverviewProps) 
       ) : null}
 
       {/* Mobile hero */}
-      <div className="relative overflow-hidden rounded-3xl bg-forest-950 px-6 pb-6 pt-7 shadow-lift lg:hidden">
+      <div className="relative overflow-hidden bg-forest-950 px-5 pb-6 pt-6 lg:hidden">
         <span aria-hidden className="pointer-events-none absolute -right-12 -top-14 h-44 w-44 rounded-full bg-white/5" />
         <span aria-hidden className="pointer-events-none absolute -bottom-12 right-8 h-28 w-28 rounded-full bg-gold-400/10" />
         <div className="relative flex items-start justify-between gap-4">
@@ -538,7 +538,7 @@ export function DashboardOverview({ data, onNavigate }: DashboardOverviewProps) 
       </div>
 
       {/* Stats */}
-      <div className="flex gap-3 overflow-x-auto pb-1 no-scrollbar sm:grid sm:grid-cols-2 sm:gap-3 sm:overflow-visible sm:pb-0 lg:grid-cols-4">
+      <div className="flex gap-3 overflow-x-auto px-4 pb-1 no-scrollbar sm:grid sm:grid-cols-2 sm:gap-3 sm:px-0 sm:overflow-visible sm:pb-0 lg:grid-cols-4">
         <StatCard
           icon={<FaBoxOpen className="h-5 w-5" aria-hidden />}
           iconClass="bg-forest-950/10 text-forest-950"
@@ -587,7 +587,7 @@ export function DashboardOverview({ data, onNavigate }: DashboardOverviewProps) 
       </div>
 
       {/* Content columns */}
-      <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-6">
+      <div className="grid items-start gap-5 px-4 sm:px-0 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-6">
         <div className="min-w-0 space-y-5 lg:space-y-6">
           <RecentOrdersCard orders={orders} loading={loading} onNavigate={onNavigate} />
           <RecentMessagesCard messages={messages} loading={loading} onNavigate={onNavigate} />
