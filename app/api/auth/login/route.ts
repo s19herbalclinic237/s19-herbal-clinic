@@ -54,5 +54,5 @@ export async function POST(request: Request) {
     message: "Signed in successfully.",
     user: toAuthUser(user),
   });
-  return setSessionCookie(res, sessionToken);
+  return setSessionCookie(res, sessionToken, request);
 }

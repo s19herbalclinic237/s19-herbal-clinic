@@ -110,9 +110,11 @@ export default async function HomePage() {
 
         <Container className="relative z-10 w-full py-24 md:py-32">
           <BlurIn>
-            <h1 className="mt-6 max-w-3xl text-balance text-white drop-shadow-sm">
+            <h1 className="mt-6 max-w-3xl text-balance text-5xl text-white drop-shadow-sm md:text-7xl">
               {t("home.hero.titleA")}
-              <span className="block text-gold-400">{t("home.hero.titleB")}</span>
+              <span className="mt-3 block font-display text-lg font-semibold leading-snug text-gold-400 md:text-2xl">
+                {t("home.hero.titleB")}
+              </span>
             </h1>
             <p className="mt-7 max-w-2xl text-base leading-relaxed text-forest-100/90 md:text-lg">
               {t("home.hero.lead")}

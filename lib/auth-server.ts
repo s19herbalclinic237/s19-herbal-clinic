@@ -22,22 +22,42 @@ export function toAuthUser(u: Pick<IUser, "_id" | "name" | "email" | "role" | "e
   };
 }
 
-export function setSessionCookie(res: NextResponse, token: string): NextResponse {
+/**
+ * The session cookie should carry the `Secure` flag only when the browser is
+ * actually talking to us over HTTPS. Production deployments are HTTPS, but a
+ * phone may reach the same app over plain HTTP (LAN test, http:// tunnel,
+ * pre-SSL host). Setting `Secure` in that case silently makes browsers drop
+ * the cookie: the login response still returns the user body so the dashboard
+ * shell renders, yet every later API call (orders, messages, testimonials)
+ * arrives without the session cookie and answers 401 "Sign in to ...".
+ */
+function isHttpsRequest(request?: Request): boolean {
+  if (!request) return process.env.NODE_ENV === "production";
+  const forwarded = request.headers.get("x-forwarded-proto");
+  if (forwarded) return forwarded.split(",")[0].trim() === "https";
+  try {
+    return new URL(request.url).protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+export function setSessionCookie(res: NextResponse, token: string, request?: Request): NextResponse {
   res.cookies.set(SESSION_COOKIE, token, {
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    secure: isHttpsRequest(request),
     path: "/",
     maxAge: SESSION_DAYS * 24 * 60 * 60,
   });
   return res;
 }
 
-export function clearSessionCookie(res: NextResponse): NextResponse {
+export function clearSessionCookie(res: NextResponse, request?: Request): NextResponse {
   res.cookies.set(SESSION_COOKIE, "", {
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    secure: isHttpsRequest(request),
     path: "/",
     maxAge: 0,
   });
