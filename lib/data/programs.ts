@@ -174,10 +174,10 @@ export const telehealthSteps: TelehealthStep[] = [
   {
     step: "02",
     title: "Tailored Herbal Dispatch",
-    text: "Your prescribed herbal treatment pack is safely shipped to your city or country.",
+    text: "Your prescribed herbal package is safely shipped to your city or country.",
     titleFr: "Envoi d'herbes sur mesure",
     textFr:
-      "Votre pack de traitement à base de plantes est expédié en toute sécurité vers votre ville ou votre pays.",
+      "Votre pack de plantes prescrit est expédié en toute sécurité vers votre ville ou votre pays.",
   },
   {
     step: "03",

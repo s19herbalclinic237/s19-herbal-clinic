@@ -445,7 +445,7 @@ export default async function HomePage() {
               {
                 icon: <FaGlobe className="h-5 w-5 text-gold-400" aria-hidden />,
                 title: t("home.location.coverage"),
-                lines: ["Cameroon: Douala, Yaoundé, Bamenda, Buea", "International: worldwide express"],
+                lines: ["Cameroon: Nationwide — Douala, Yaoundé, Bamenda, Buea and more", "International: worldwide express"],
               },
             ].map((c, i) => (
               <ScaleIn key={c.title} delay={i * 0.08}>
