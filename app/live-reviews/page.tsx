@@ -55,19 +55,11 @@ export default async function LiveReviewsPage() {
             <p className="mt-4 text-sm text-muted">{t("liveReviews.empty")}</p>
           </div>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="columns-1 gap-6 sm:columns-2 lg:columns-3">
             {items.map(({ video: v, blocked }) => (
-              <figure
-                key={v.id}
-                className="flex h-full flex-col rounded-lg border border-line bg-white p-6 shadow-card transition-shadow hover:shadow-lift"
-              >
-                {v.title ? (
-                  <figcaption className="mb-1">
-                    <p className="font-display text-base font-semibold text-ink">{v.title}</p>
-                  </figcaption>
-                ) : null}
-                <StoryVideo url={v.url} blocked={blocked} />
-              </figure>
+              <div key={v.id} className="mb-6 break-inside-avoid">
+                <StoryVideo url={v.url} blocked={blocked} bare />
+              </div>
             ))}
           </div>
         )}
