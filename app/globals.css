@@ -146,6 +146,36 @@ body {
   scrollbar-width: none;
 }
 
+/* Print-to-PDF support for medical records and prescriptions. The record
+   detail panel carries .print-area; on print everything else is hidden. */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+  .print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: #ffffff;
+    padding: 0;
+    box-shadow: none;
+  }
+  .print-area table {
+    page-break-inside: auto;
+  }
+  .print-area tr {
+    page-break-inside: avoid;
+  }
+  .print-hidden {
+    display: none !important;
+  }
+}
+
 /* OrbitImages */
 .orbit-container {
   position: relative;

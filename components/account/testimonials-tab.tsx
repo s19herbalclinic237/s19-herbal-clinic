@@ -6,7 +6,7 @@ import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Textarea } from "@/components/ui/form";
 import { formatDate, TestimonialStatusBadge } from "@/components/account/badges";
-import { FaCommentDots, FaPlus } from "react-icons/fa6";
+import { FaCommentDots, FaPlus, FaStar } from "react-icons/fa6";
 
 interface TestimonialView {
   _id: string;
@@ -29,6 +29,7 @@ export function TestimonialsTab() {
   const [country, setCountry] = useState("");
   const [program, setProgram] = useState("");
   const [text, setText] = useState("");
+  const [rating, setRating] = useState(5);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -56,7 +57,7 @@ export function TestimonialsTab() {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, city, country, program, text }),
+        body: JSON.stringify({ name, city, country, program, text, rating }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Could not save your testimony.");
@@ -101,6 +102,30 @@ export function TestimonialsTab() {
             </Field>
             <Field label="Program or Product" required>
               <Input required value={program} onChange={(e) => setProgram(e.target.value)} placeholder="e.g. Diabetes &amp; Metabolic Health Support" maxLength={100} />
+            </Field>
+          </div>
+          <div className="mt-4">
+            <Field label="Your Rating" hint="How was your visit with S19?">
+              <div className="flex items-center gap-1.5">
+                {[1, 2, 3, 4, 5].map((value) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => setRating(value)}
+                    aria-label={`${value} star${value === 1 ? "" : "s"}`}
+                    className="cursor-pointer p-0.5 text-xl transition-transform hover:scale-110"
+                  >
+                    {value <= rating ? (
+                      <FaStar className="text-gold-500" aria-hidden />
+                    ) : (
+                      <FaStar className="text-forest-200" aria-hidden />
+                    )}
+                  </button>
+                ))}
+                <span className="ml-2 text-xs font-semibold text-muted">
+                  {rating === 5 ? "Excellent" : rating === 4 ? "Good" : rating === 3 ? "Okay" : rating === 2 ? "Poor" : "Very poor"}
+                </span>
+              </div>
             </Field>
           </div>
           <div className="mt-4">

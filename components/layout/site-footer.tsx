@@ -28,6 +28,7 @@ const companyLinks: { key: TranslationKey; href: string }[] = [
   { key: "footer.approach", href: "/about" },
   { key: "footer.catalog", href: "/shop" },
   { key: "footer.blog", href: "/blog" },
+  { key: "footer.library", href: "/health-library" },
   { key: "footer.stories", href: "/patient-stories" },
   { key: "footer.liveReviews", href: "/live-reviews" },
   { key: "footer.contactUs", href: "/contact" },

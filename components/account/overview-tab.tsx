@@ -17,14 +17,19 @@ import { CLINIC, waLink } from "@/lib/site";
 import {
   FaArrowRight,
   FaBoxOpen,
+  FaCalendarCheck,
   FaCircleUser,
   FaClock,
   FaCommentDots,
   FaEnvelope,
   FaEnvelopeOpen,
+  FaFileMedical,
   FaGear,
   FaLocationDot,
+  FaPeopleGroup,
+  FaPills,
   FaRegCircleXmark,
+  FaStar,
   FaWhatsapp,
 } from "react-icons/fa6";
 
@@ -369,6 +374,20 @@ const quickActions: {
   tab: PatientTabId;
 }[] = [
   {
+    label: "Book appointment",
+    sub: "Clinic or video",
+    icon: <FaCalendarCheck className="h-4 w-4" aria-hidden />,
+    iconClass: "bg-forest-950/10 text-forest-950",
+    tab: "appointments",
+  },
+  {
+    label: "Rate your visit",
+    sub: "Reviews & stories",
+    icon: <FaStar className="h-4 w-4" aria-hidden />,
+    iconClass: "bg-gold-400/15 text-[#8a6e1a]",
+    tab: "testimonials",
+  },
+  {
     label: "View orders",
     sub: "History & tracking",
     icon: <FaBoxOpen className="h-4 w-4" aria-hidden />,
@@ -383,11 +402,25 @@ const quickActions: {
     tab: "messages",
   },
   {
-    label: "Share your story",
-    sub: "Testimonies",
-    icon: <FaCommentDots className="h-4 w-4" aria-hidden />,
+    label: "Medical records",
+    sub: "Visits, labs, scans",
+    icon: <FaFileMedical className="h-4 w-4" aria-hidden />,
+    iconClass: "bg-sky-50 text-sky-700",
+    tab: "records",
+  },
+  {
+    label: "Prescriptions",
+    sub: "Dosage instructions",
+    icon: <FaPills className="h-4 w-4" aria-hidden />,
     iconClass: "bg-forest-100 text-forest-800",
-    tab: "testimonials",
+    tab: "prescriptions",
+  },
+  {
+    label: "Family profile",
+    sub: "Manage dependants",
+    icon: <FaPeopleGroup className="h-4 w-4" aria-hidden />,
+    iconClass: "bg-teal-50 text-teal-700",
+    tab: "family",
   },
   {
     label: "Account settings",

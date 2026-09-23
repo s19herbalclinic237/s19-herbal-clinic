@@ -13,6 +13,7 @@ const dict = {
   "nav.telehealth": { en: "Tele-Health", fr: "Télé-santé" },
   "nav.shop": { en: "Shop", fr: "Boutique" },
   "nav.blog": { en: "Blog", fr: "Blog" },
+  "nav.library": { en: "Learn", fr: "Apprendre" },
   "nav.about": { en: "About", fr: "À propos" },
   "nav.stories": { en: "Testimonials", fr: "Témoignages" },
   "nav.account": { en: "My Account", fr: "Mon compte" },
@@ -258,6 +259,7 @@ const dict = {
   "footer.approach": { en: "Our Approach", fr: "Notre approche" },
   "footer.catalog": { en: "Herbal Catalog", fr: "Catalogue de plantes" },
   "footer.blog": { en: "Health Blog", fr: "Blog santé" },
+  "footer.library": { en: "Health Library", fr: "Bibliothèque santé" },
   "footer.contactUs": { en: "Contact Us", fr: "Contactez-nous" },
   "footer.trackOrder": { en: "Track Your Order", fr: "Suivre votre commande" },
   "footer.refundReturns": { en: "Refund & Returns", fr: "Remboursements & Retours" },
@@ -1116,6 +1118,58 @@ const dict = {
   },
   "account.bookConsultation": { en: "Book a Consultation", fr: "Réserver une consultation" },
   "account.backHome": { en: "Back to Home", fr: "Retour à l'accueil" },
+
+  "library.meta.title": { en: "Health Education Library | S19 Herbal Clinic", fr: "Bibliothèque d'éducation santé | Clinique S19" },
+  "library.meta.description": {
+    en: "Trusted health education from S19 Herbal Clinic - articles and patient videos on diabetes, heart health, digestion, women's and men's health, detox and natural healing.",
+    fr: "Des conseils santé fiables de la Clinique S19 - articles et vidéos sur le diabète, la santé du cœur, la digestion, la santé des femmes et des hommes, la détox et la guérison naturelle.",
+  },
+  "library.hero.eyebrow": { en: "Health Education Library", fr: "Bibliothèque d'éducation santé" },
+  "library.hero.title": { en: "Understand Your Body, Heal Naturally", fr: "Comprendre son corps, guérir naturellement" },
+  "library.hero.lead": {
+    en: "Simple, science-based articles and real patient videos covering the conditions S19 treats every day - so you can make informed decisions for yourself and your family.",
+    fr: "Des articles simples et fondés sur la science, ainsi que des vidéos de vrais patients, sur les pathologies que S19 traite chaque jour - pour décider en toute connaissance de cause pour vous et votre famille.",
+  },
+  "library.hero.alt": {
+    en: "Healthy food and herbs arranged on a table at the S19 clinic",
+    fr: "Aliments sains et plantes disposés sur une table à la clinique S19",
+  },
+  "library.topics.all": { en: "All topics", fr: "Tous les sujets" },
+  "library.topics.diabetes": { en: "Diabetes & blood sugar", fr: "Diabète et glycémie" },
+  "library.topics.heart": { en: "Heart & blood pressure", fr: "Cœur et tension" },
+  "library.topics.digestion": { en: "Digestion & stomach", fr: "Digestion et estomac" },
+  "library.topics.women": { en: "Women's health", fr: "Santé des femmes" },
+  "library.topics.men": { en: "Men's & prostate", fr: "Santé des hommes et prostate" },
+  "library.topics.detox": { en: "Detox & immunity", fr: "Détox et immunité" },
+  "library.articles.title": { en: "Health Articles", fr: "Articles santé" },
+  "library.articles.lead": {
+    en: "Short, practical articles written by the S19 team.",
+    fr: "Des articles courts et pratiques rédigés par l'équipe S19.",
+  },
+  "library.videos.title": { en: "In Their Own Words", fr: "Dans leurs propres mots" },
+  "library.videos.lead": {
+    en: "Real patients sharing their healing journeys on video.",
+    fr: "De vrais patients qui partagent leur parcours de guérison en vidéo.",
+  },
+  "library.empty.articles": {
+    en: "No articles for this topic yet. Check back soon or ask the clinic on WhatsApp.",
+    fr: "Aucun article pour ce sujet pour l'instant. Revenez bientôt ou demandez à la clinique sur WhatsApp.",
+  },
+  "library.empty.videos": {
+    en: "No videos for this topic yet. Browse all patient stories on the Live Reviews page.",
+    fr: "Aucune vidéo pour ce sujet pour l'instant. Parcourez toutes les histoires de patients sur la page Témoignages vidéo.",
+  },
+  "library.readArticle": { en: "Read article", fr: "Lire l'article" },
+  "library.watchAll": { en: "Watch all stories", fr: "Voir toutes les histoires" },
+  "library.cta.title": {
+    en: "Not sure where to start?",
+    fr: "Vous ne savez pas par où commencer ?",
+  },
+  "library.cta.text": {
+    en: "Book a consultation - in the clinic or by video call - and a qualified practitioner will guide you.",
+    fr: "Réservez une consultation - à la clinique ou en visioconférence - et un praticien qualifié vous guidera.",
+  },
+  "library.cta.button": { en: "Book a consultation", fr: "Réserver une consultation" },
 } as const;
 
 export type TranslationKey = keyof typeof dict;

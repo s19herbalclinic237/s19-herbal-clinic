@@ -14,6 +14,10 @@ import { OrdersTab } from "@/components/account/orders-tab";
 import { MessagesTab } from "@/components/account/messages-tab";
 import { TestimonialsTab } from "@/components/account/testimonials-tab";
 import { SettingsTab } from "@/components/account/settings-tab";
+import { AppointmentsTab } from "@/components/account/appointments-tab";
+import { RecordsTab } from "@/components/account/records-tab";
+import { PrescriptionsTab } from "@/components/account/prescriptions-tab";
+import { FamilyTab } from "@/components/account/family-tab";
 import { ProductsTab } from "@/components/admin/products-tab";
 import { AdminOrdersTab } from "@/components/admin/orders-tab";
 import { AdminTestimonialsTab } from "@/components/admin/testimonials-tab";
@@ -21,22 +25,33 @@ import { MessagingTab } from "@/components/admin/messaging-tab";
 import { PostsTab } from "@/components/admin/posts-tab";
 import { SubscribersTab } from "@/components/admin/subscribers-tab";
 import { AdminVideosTab } from "@/components/admin/video-reviews-tab";
+import { DoctorsTab } from "@/components/admin/doctors-tab";
+import { AdminAppointmentsTab } from "@/components/admin/admin-appointments-tab";
+import { AdminMedicalRecordsTab } from "@/components/admin/medical-records-tab";
+import { AdminPrescriptionsTab } from "@/components/admin/prescriptions-tab";
 import { buttonLinkClasses } from "@/components/ui/button";
 import { S19_ASSETS } from "@/lib/site-assets";
 import {
   FaArrowRightFromBracket,
   FaBars,
   FaBoxOpen,
+  FaCalendarCheck,
   FaCheck,
   FaCommentDots,
   FaEnvelope,
+  FaFileMedical,
+  FaFilePrescription,
+  FaFolderOpen,
   FaGear,
   FaHouse,
   FaNewspaper,
+  FaPeopleGroup,
+  FaPills,
   FaShieldHalved,
   FaTableCellsLarge,
   FaTags,
   FaTruckFast,
+  FaUserDoctor,
   FaUserGear,
   FaUsers,
   FaVideo,
@@ -51,7 +66,11 @@ type TabId =
   | "admin-messaging"
   | "admin-posts"
   | "admin-subscribers"
-  | "admin-videos";
+  | "admin-videos"
+  | "admin-doctors"
+  | "admin-appointments"
+  | "admin-records"
+  | "admin-prescriptions";
 
 interface NavItem {
   id: TabId;
@@ -66,6 +85,11 @@ const patientTabs: NavItem[] = [
     icon: <FaTableCellsLarge className="h-4 w-4" aria-hidden />,
   },
   {
+    id: "appointments",
+    label: "Appointments",
+    icon: <FaCalendarCheck className="h-4 w-4" aria-hidden />,
+  },
+  {
     id: "orders",
     label: "Orders",
     icon: <FaBoxOpen className="h-4 w-4" aria-hidden />,
@@ -74,6 +98,21 @@ const patientTabs: NavItem[] = [
     id: "messages",
     label: "Messages",
     icon: <FaEnvelope className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "records",
+    label: "Medical Records",
+    icon: <FaFileMedical className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "prescriptions",
+    label: "Prescriptions",
+    icon: <FaPills className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "family",
+    label: "Family",
+    icon: <FaPeopleGroup className="h-4 w-4" aria-hidden />,
   },
   {
     id: "testimonials",
@@ -92,6 +131,26 @@ const adminTabs: NavItem[] = [
     id: "admin-products",
     label: "Products",
     icon: <FaTags className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "admin-doctors",
+    label: "Doctors",
+    icon: <FaUserDoctor className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "admin-appointments",
+    label: "Appointments",
+    icon: <FaCalendarCheck className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "admin-records",
+    label: "Medical Records",
+    icon: <FaFolderOpen className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "admin-prescriptions",
+    label: "Prescriptions",
+    icon: <FaFilePrescription className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-orders",
@@ -231,6 +290,18 @@ export function DashboardScreen() {
     switch (tab) {
       case "overview":
         return <DashboardOverview data={data} onNavigate={openTab} />;
+      case "appointments":
+        return (
+          <>
+            <PageHeader
+              title="Appointments"
+              subtitle="Book, reschedule or cancel consultations with the clinic"
+            />
+            <div className="px-4 sm:px-0">
+              <AppointmentsTab />
+            </div>
+          </>
+        );
       case "orders":
         return (
           <>
@@ -250,6 +321,42 @@ export function DashboardScreen() {
             <PageHeader title="Messages" subtitle="Updates and notes from the clinic" />
             <div className="px-4 sm:px-0">
               <MessagesTab />
+            </div>
+          </>
+        );
+      case "records":
+        return (
+          <>
+            <PageHeader
+              title="Medical Records"
+              subtitle="Visits, diagnoses, lab results and scans - downloadable as PDF"
+            />
+            <div className="px-4 sm:px-0">
+              <RecordsTab />
+            </div>
+          </>
+        );
+      case "prescriptions":
+        return (
+          <>
+            <PageHeader
+              title="Prescriptions"
+              subtitle="Your current and past treatment plans with dosage instructions"
+            />
+            <div className="px-4 sm:px-0">
+              <PrescriptionsTab />
+            </div>
+          </>
+        );
+      case "family":
+        return (
+          <>
+            <PageHeader
+              title="Family"
+              subtitle="Manage profiles for your children and loved ones"
+            />
+            <div className="px-4 sm:px-0">
+              <FamilyTab />
             </div>
           </>
         );
@@ -334,6 +441,42 @@ export function DashboardScreen() {
             <PageHeader title="Live Reviews" subtitle="Manage video testimonials" />
             <div className="px-4 sm:px-0">
               <AdminVideosTab />
+            </div>
+          </>
+        ) : null;
+      case "admin-doctors":
+        return isAdmin ? (
+          <>
+            <PageHeader title="Doctors" subtitle="Manage practitioners and their weekly availability" />
+            <div className="px-4 sm:px-0">
+              <DoctorsTab />
+            </div>
+          </>
+        ) : null;
+      case "admin-appointments":
+        return isAdmin ? (
+          <>
+            <PageHeader title="Appointments" subtitle="Confirm, complete or cancel patient bookings" />
+            <div className="px-4 sm:px-0">
+              <AdminAppointmentsTab />
+            </div>
+          </>
+        ) : null;
+      case "admin-records":
+        return isAdmin ? (
+          <>
+            <PageHeader title="Medical Records" subtitle="Log visits, diagnoses, lab results and scans" />
+            <div className="px-4 sm:px-0">
+              <AdminMedicalRecordsTab />
+            </div>
+          </>
+        ) : null;
+      case "admin-prescriptions":
+        return isAdmin ? (
+          <>
+            <PageHeader title="Prescriptions" subtitle="Issue treatment plans with dosage instructions" />
+            <div className="px-4 sm:px-0">
+              <AdminPrescriptionsTab />
             </div>
           </>
         ) : null;
@@ -508,7 +651,7 @@ export function DashboardScreen() {
         aria-label="Account menu"
         className="fixed inset-x-0 bottom-0 z-50 border-t border-forest-100 bg-white/95 pb-[max(0.4rem,env(safe-area-inset-bottom))] pt-1.5 backdrop-blur lg:hidden"
       >
-        <div className="mx-auto flex max-w-md items-stretch justify-between gap-1 px-2">
+        <div className="no-scrollbar mx-auto flex max-w-md items-stretch gap-1 overflow-x-auto px-2">
           {patientTabs.map((item) => {
             const active = tab === item.id;
             return (
@@ -516,7 +659,7 @@ export function DashboardScreen() {
                 key={item.id}
                 type="button"
                 onClick={() => openTab(item.id)}
-                className={`relative flex min-w-0 flex-1 cursor-pointer flex-col items-center gap-1 rounded-lg px-1 py-1.5 ${
+                className={`relative flex w-[64px] shrink-0 cursor-pointer flex-col items-center gap-1 rounded-lg px-1 py-1.5 sm:w-[72px] ${
                   active ? "bg-forest-50" : ""
                 }`}
               >

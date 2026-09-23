@@ -6,6 +6,13 @@ export function formatDate(iso: string | Date): string {
   return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
 
+/** Formats a full ISO date/time (e.g. record dates) as "12 Mar 2026". */
+export function formatDayDate(iso: string | Date): string {
+  const d = typeof iso === "string" ? new Date(iso) : iso;
+  if (Number.isNaN(d.getTime())) return "";
+  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+}
+
 const orderStatusClasses: Record<string, string> = {
   Pending: "border-amber-300 bg-amber-50 text-amber-800",
   Processing: "border-sky-300 bg-sky-50 text-sky-800",
@@ -47,6 +54,63 @@ export function TestimonialStatusBadge({ status }: { status: string }) {
       }`}
     >
       {testimonialStatusLabels[status] || status}
+    </span>
+  );
+}
+
+const appointmentStatusClasses: Record<string, string> = {
+  pending: "border-amber-300 bg-amber-50 text-amber-800",
+  confirmed: "border-forest-300 bg-forest-50 text-forest-800",
+  completed: "border-indigo-300 bg-indigo-50 text-indigo-800",
+  cancelled: "border-red-300 bg-red-50 text-red-700",
+};
+
+const appointmentStatusLabels: Record<string, string> = {
+  pending: "Awaiting confirmation",
+  confirmed: "Confirmed",
+  completed: "Completed",
+  cancelled: "Cancelled",
+};
+
+export function AppointmentStatusBadge({ status }: { status: string }) {
+  return (
+    <span
+      className={`inline-flex items-center rounded-full border px-2.5 py-[3px] text-[10px] font-semibold uppercase tracking-wide ${
+        appointmentStatusClasses[status] || "border-line-strong bg-cream text-muted"
+      }`}
+    >
+      {appointmentStatusLabels[status] || status}
+    </span>
+  );
+}
+
+export const RecordTypeLabel: Record<string, string> = {
+  visit: "Visit",
+  diagnosis: "Diagnosis",
+  lab: "Lab result",
+  scan: "Scan / Imaging",
+  note: "Clinical note",
+};
+
+export const RecordTypeClass: Record<string, string> = {
+  visit: "border-forest-300 bg-forest-50 text-forest-800",
+  diagnosis: "border-sky-300 bg-sky-50 text-sky-800",
+  lab: "border-amber-300 bg-amber-50 text-amber-800",
+  scan: "border-indigo-300 bg-indigo-50 text-indigo-800",
+  note: "border-zinc-300 bg-zinc-50 text-zinc-700",
+};
+
+export function PrescriptionStatusBadge({ status }: { status: string }) {
+  const active = status === "active";
+  return (
+    <span
+      className={
+        active
+          ? "inline-flex items-center rounded-full border border-forest-300 bg-forest-50 px-2.5 py-[3px] text-[10px] font-semibold uppercase tracking-wide text-forest-800"
+          : "inline-flex items-center rounded-full border border-zinc-300 bg-zinc-50 px-2.5 py-[3px] text-[10px] font-semibold uppercase tracking-wide text-zinc-600"
+      }
+    >
+      {active ? "Active" : "Past"}
     </span>
   );
 }

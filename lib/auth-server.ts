@@ -10,7 +10,24 @@ import type { IUser } from "@/lib/models/User";
 
 export type { AuthUser } from "@/lib/auth";
 
-export function toAuthUser(u: Pick<IUser, "_id" | "name" | "email" | "role" | "emailVerified" | "phone" | "createdAt" | "avatar">): AuthUser {
+type AuthUserPick = Pick<
+  IUser,
+  | "_id"
+  | "name"
+  | "email"
+  | "role"
+  | "emailVerified"
+  | "phone"
+  | "createdAt"
+  | "avatar"
+  | "dob"
+  | "gender"
+  | "address"
+  | "emergencyContact"
+  | "idCardUrl"
+>;
+
+export function toAuthUser(u: AuthUserPick): AuthUser {
   return {
     id: String(u._id),
     name: u.name,
@@ -19,6 +36,11 @@ export function toAuthUser(u: Pick<IUser, "_id" | "name" | "email" | "role" | "e
     emailVerified: u.emailVerified,
     phone: u.phone,
     avatar: u.avatar || undefined,
+    dob: u.dob,
+    gender: u.gender,
+    address: u.address,
+    emergencyContact: u.emergencyContact,
+    idCardUrl: u.idCardUrl,
     createdAt: (u.createdAt as unknown as Date).toISOString(),
   };
 }
@@ -80,9 +102,23 @@ export async function getSessionUser(): Promise<AuthUser | null> {
       await Session.deleteOne({ _id: session._id }).exec();
       return null;
     }
-    const u = session.user as (Pick<IUser, "_id" | "name" | "email" | "role" | "emailVerified" | "phone" | "createdAt" | "avatar"> & { _id: unknown });
+    const u = session.user as (AuthUserPick & { _id: unknown });
     if (!u || !u._id) return null;
-    return toAuthUser({ _id: String(u._id), name: u.name, email: u.email, role: u.role, emailVerified: u.emailVerified, phone: u.phone, avatar: u.avatar, createdAt: u.createdAt });
+    return toAuthUser({
+      _id: String(u._id),
+      name: u.name,
+      email: u.email,
+      role: u.role,
+      emailVerified: u.emailVerified,
+      phone: u.phone,
+      avatar: u.avatar,
+      dob: u.dob,
+      gender: u.gender,
+      address: u.address,
+      emergencyContact: u.emergencyContact,
+      idCardUrl: u.idCardUrl,
+      createdAt: u.createdAt,
+    });
   } catch (error) {
     console.error("[auth] getSessionUser error:", error);
     return null;

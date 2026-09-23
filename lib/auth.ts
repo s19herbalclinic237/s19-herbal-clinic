@@ -14,6 +14,13 @@ export interface AuthUser {
   emailVerified: boolean;
   phone?: string;
   avatar?: string;
+  /** YYYY-MM-DD */
+  dob?: string;
+  gender?: "male" | "female" | "other";
+  address?: string;
+  emergencyContact?: { name?: string; phone?: string; relation?: string };
+  /** Cloudinary URL of the patient's ID document. */
+  idCardUrl?: string;
   createdAt: string;
 }
 

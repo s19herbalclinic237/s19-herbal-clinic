@@ -8,8 +8,12 @@ import { useEffect, useState } from "react";
  */
 export type PatientTabId =
   | "overview"
+  | "appointments"
   | "orders"
   | "messages"
+  | "records"
+  | "prescriptions"
+  | "family"
   | "testimonials"
   | "settings";
 
