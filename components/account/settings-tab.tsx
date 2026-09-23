@@ -1,13 +1,20 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/form";
 import { PasswordInput } from "@/components/ui/password-input";
 import { UserAvatar } from "@/components/account/user-avatar";
-import { FaArrowRightFromBracket, FaCamera, FaFileCirclePlus, FaFileLines, FaTrashCan } from "react-icons/fa6";
+import {
+  FaArrowRightFromBracket,
+  FaCamera,
+  FaFileCirclePlus,
+  FaFileLines,
+  FaTrashCan,
+  FaXmark,
+} from "react-icons/fa6";
 
 export function SettingsTab() {
   const { user, updateAuthUser, logout } = useAuth();
@@ -23,7 +30,6 @@ export function SettingsTab() {
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [uploadingId, setUploadingId] = useState(false);
   const avatarInputRef = useRef<HTMLInputElement | null>(null);
-  const idInputRef = useRef<HTMLInputElement | null>(null);
 
   const [current, setCurrent] = useState("");
   const [next, setNext] = useState("");
@@ -104,11 +110,12 @@ export function SettingsTab() {
     }
   }
 
-  async function uploadIdCard(file: File) {
+  async function uploadIdCard(file: File, side: "front" | "back") {
     setUploadingId(true);
     try {
       const formData = new FormData();
       formData.append("file", file);
+      formData.append("side", side);
       const res = await fetch("/api/auth/id-card", {
         method: "POST",
         credentials: "include",
@@ -117,23 +124,22 @@ export function SettingsTab() {
       const data = await res.json();
       if (!res.ok || !data.user) throw new Error(data.error || "Upload failed.");
       updateAuthUser(data.user);
-      toast.success("ID document uploaded.");
+      toast.success(side === "back" ? "Back of ID document uploaded." : "Front of ID document uploaded.");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not upload your ID document.");
     } finally {
       setUploadingId(false);
-      if (idInputRef.current) idInputRef.current.value = "";
     }
   }
 
-  async function removeIdCard() {
+  async function removeIdCard(field: "idCardFrontUrl" | "idCardBackUrl") {
     setUploadingId(true);
     try {
       const res = await fetch("/api/auth/profile", {
         method: "PATCH",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ idCardUrl: "" }),
+        body: JSON.stringify({ [field]: "" }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Could not remove the document.");
@@ -314,50 +320,25 @@ export function SettingsTab() {
       >
         <h3 className="text-sm font-bold text-ink">ID document</h3>
         <p className="mt-1.5 text-xs text-muted">
-          NIN / passport / birth certificate photo or scan so the clinic can identify you. JPG,
-          PNG, WebP, AVIF or PDF up to 8 MB.
+          Upload the front and back of your NIN, passport or birth certificate so the clinic can
+          identify you. You&apos;ll see a preview of each side before anything is saved. JPG, PNG,
+          WebP, AVIF or PDF up to 8 MB per side.
         </p>
-        <div className="mt-4 flex flex-wrap items-center gap-3">
-          <input
-            ref={idInputRef}
-            type="file"
-            accept="image/jpeg,image/png,image/webp,image/avif,application/pdf"
-            className="hidden"
-            aria-label="Choose an ID document"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) void uploadIdCard(file);
-            }}
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          <IdSlot
+            label="Front of document"
+            savedUrl={user?.idCardFrontUrl}
+            uploading={uploadingId}
+            onUpload={(file) => void uploadIdCard(file, "front")}
+            onRemove={() => void removeIdCard("idCardFrontUrl")}
           />
-          {user?.idCardUrl ? (
-            <a
-              href={user.idCardUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex h-9 items-center gap-2 rounded-lg border border-line-strong bg-white px-3.5 text-xs font-semibold text-forest-800 transition-colors hover:border-forest-400"
-            >
-              <FaFileLines className="h-3.5 w-3.5" aria-hidden />
-              View uploaded document
-            </a>
-          ) : (
-            <Button
-              type="button"
-              variant="secondary"
-              disabled={uploadingId}
-              onClick={() => idInputRef.current?.click()}
-            >
-              <FaFileCirclePlus className="h-4 w-4" aria-hidden />
-              {uploadingId ? "Uploading..." : "Upload ID document"}
-            </Button>
-          )}
-          {user?.idCardUrl ? (
-            <>
-              <Button type="button" variant="outline" disabled={uploadingId} onClick={() => void removeIdCard()}>
-                <FaTrashCan className="h-4 w-4" aria-hidden />
-                Remove
-              </Button>
-            </>
-          ) : null}
+          <IdSlot
+            label="Back of document"
+            savedUrl={user?.idCardBackUrl}
+            uploading={uploadingId}
+            onUpload={(file) => void uploadIdCard(file, "back")}
+            onRemove={() => void removeIdCard("idCardBackUrl")}
+          />
         </div>
       </form>
 
@@ -391,6 +372,136 @@ export function SettingsTab() {
           Sign out
         </Button>
       </div>
+    </div>
+  );
+}
+
+function isImageUrl(url: string): boolean {
+  return /\.(jpe?g|png|webp|avif)(\?.*)?$/i.test(url);
+}
+
+function IdSlot({
+  label,
+  savedUrl,
+  uploading,
+  onUpload,
+  onRemove,
+}: {
+  label: string;
+  savedUrl?: string;
+  uploading: boolean;
+  onUpload: (file: File) => void;
+  onRemove: () => void;
+}) {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [pending, setPending] = useState<{ file: File; preview: string } | null>(null);
+
+  // Release the object URL when the preview is dismissed.
+  useEffect(() => {
+    return () => {
+      if (pending) URL.revokeObjectURL(pending.preview);
+    };
+  }, [pending]);
+
+  function chooseFile(file: File) {
+    if (pending) URL.revokeObjectURL(pending.preview);
+    setPending({
+      file,
+      preview: file.type.startsWith("image/") ? URL.createObjectURL(file) : "",
+    });
+    if (inputRef.current) inputRef.current.value = "";
+  }
+
+  return (
+    <div className="rounded-lg border border-line-strong bg-cream/40 p-4">
+      <p className="text-xs font-bold uppercase tracking-wide text-ink">{label}</p>
+
+      {pending ? (
+        <div className="mt-3">
+          {pending.preview ? (
+            // Preview before anything is saved.
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={pending.preview}
+              alt={`${label} preview`}
+              className="max-h-44 w-full rounded-md border border-line bg-white object-contain"
+            />
+          ) : (
+            <p className="flex items-center gap-2 rounded-md border border-line bg-white px-3 py-2 text-xs text-muted">
+              <FaFileLines className="h-4 w-4 shrink-0 text-forest-700" aria-hidden />
+              <span className="truncate">{pending.file.name}</span>
+              <span className="shrink-0">(PDF)</span>
+            </p>
+          )}
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <Button type="button" size="sm" disabled={uploading} onClick={() => { const f = pending.file; setPending(null); onUpload(f); }}>
+              <FaFileCirclePlus className="h-3.5 w-3.5" aria-hidden />
+              {uploading ? "Saving..." : "Upload & save"}
+            </Button>
+            <button
+              type="button"
+              onClick={() => setPending(null)}
+              className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-lg border border-line-strong bg-white px-3 text-xs font-semibold text-muted hover:text-ink"
+            >
+              <FaXmark className="h-3 w-3" aria-hidden />
+              Cancel
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="mt-3">
+          {savedUrl ? (
+            <div className="space-y-2">
+              {isImageUrl(savedUrl) ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={savedUrl}
+                  alt={`${label} - saved`}
+                  className="max-h-44 w-full rounded-md border border-line bg-white object-contain"
+                />
+              ) : (
+                <a
+                  href={savedUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 rounded-md border border-line bg-white px-3 py-2 text-xs font-semibold text-forest-800 transition-colors hover:border-forest-400"
+                >
+                  <FaFileLines className="h-4 w-4 shrink-0 text-forest-700" aria-hidden />
+                  <span className="truncate">View saved document (PDF)</span>
+                </a>
+              )}
+              <div className="flex flex-wrap items-center gap-2">
+                <Button type="button" size="sm" variant="outline" disabled={uploading} onClick={() => inputRef.current?.click()}>
+                  <FaCamera className="h-3.5 w-3.5" aria-hidden />
+                  Replace
+                </Button>
+                <Button type="button" size="sm" variant="ghost" disabled={uploading} onClick={onRemove}>
+                  <FaTrashCan className="h-3.5 w-3.5" aria-hidden />
+                  Remove
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <input
+                ref={inputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/avif,application/pdf"
+                className="hidden"
+                aria-label={`Choose ${label.toLowerCase()}`}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) chooseFile(file);
+                }}
+              />
+              <Button type="button" variant="secondary" disabled={uploading} onClick={() => inputRef.current?.click()}>
+                <FaFileCirclePlus className="h-4 w-4" aria-hidden />
+                {uploading ? "Uploading..." : "Choose file"}
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

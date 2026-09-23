@@ -57,7 +57,6 @@ function VitalMini({ value, label }: { value: string; label: string }) {
 
 function StatCard({
   icon,
-  iconClass,
   label,
   value,
   sub,
@@ -65,7 +64,6 @@ function StatCard({
   onClick,
 }: {
   icon: ReactNode;
-  iconClass: string;
   label: string;
   value: ReactNode;
   sub: string;
@@ -78,9 +76,7 @@ function StatCard({
       onClick={onClick}
       className="flex min-w-[186px] shrink-0 cursor-pointer items-center gap-3.5 rounded-2xl bg-white p-4 text-left shadow-card ring-1 ring-transparent transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lift hover:ring-forest-200 sm:min-w-0 sm:flex-1"
     >
-      <span
-        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl sm:h-12 sm:w-12 ${iconClass}`}
-      >
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-forest-950/10 text-forest-950 sm:h-12 sm:w-12">
         {icon}
       </span>
       <span className="min-w-0">
@@ -282,7 +278,7 @@ function RecentMessagesCard({
         </EmptyState>
       ) : (
         <ul className="divide-y divide-forest-50">
-          {messages.slice(0, 3).map((m) => (
+          {messages.filter((m) => m.author !== "user").slice(0, 3).map((m) => (
             <li key={m._id} className={`px-5 py-4 ${m.read ? "" : "bg-gold-400/[0.07]"}`}>
               <div className="flex items-start justify-between gap-3">
                 <p className="min-w-0 truncate text-sm font-bold text-ink">
@@ -370,63 +366,54 @@ const quickActions: {
   label: string;
   sub: string;
   icon: ReactNode;
-  iconClass: string;
   tab: PatientTabId;
 }[] = [
   {
     label: "Book appointment",
     sub: "Clinic or video",
     icon: <FaCalendarCheck className="h-4 w-4" aria-hidden />,
-    iconClass: "bg-forest-950/10 text-forest-950",
     tab: "appointments",
   },
   {
     label: "Rate your visit",
     sub: "Reviews & stories",
     icon: <FaStar className="h-4 w-4" aria-hidden />,
-    iconClass: "bg-gold-400/15 text-[#8a6e1a]",
     tab: "testimonials",
   },
   {
     label: "View orders",
     sub: "History & tracking",
     icon: <FaBoxOpen className="h-4 w-4" aria-hidden />,
-    iconClass: "bg-forest-950/10 text-forest-950",
     tab: "orders",
   },
   {
     label: "Read messages",
     sub: "Clinic updates",
     icon: <FaEnvelopeOpen className="h-4 w-4" aria-hidden />,
-    iconClass: "bg-gold-400/15 text-[#8a6e1a]",
     tab: "messages",
   },
   {
     label: "Medical records",
     sub: "Visits, labs, scans",
     icon: <FaFileMedical className="h-4 w-4" aria-hidden />,
-    iconClass: "bg-sky-50 text-sky-700",
     tab: "records",
   },
   {
     label: "Prescriptions",
     sub: "Dosage instructions",
     icon: <FaPills className="h-4 w-4" aria-hidden />,
-    iconClass: "bg-forest-100 text-forest-800",
     tab: "prescriptions",
   },
   {
     label: "Family profile",
     sub: "Manage dependants",
     icon: <FaPeopleGroup className="h-4 w-4" aria-hidden />,
-    iconClass: "bg-teal-50 text-teal-700",
     tab: "family",
   },
   {
     label: "Account settings",
     sub: "Profile & password",
     icon: <FaGear className="h-4 w-4" aria-hidden />,
-    iconClass: "bg-amber-50 text-amber-700",
     tab: "settings",
   },
 ];
@@ -442,9 +429,7 @@ function QuickActions({ onNavigate }: { onNavigate: (tab: PatientTabId) => void 
             onClick={() => onNavigate(a.tab)}
             className="flex cursor-pointer flex-col items-center gap-2 rounded-xl border border-forest-100 bg-forest-50/50 px-3 py-4 text-center transition-all duration-200 hover:-translate-y-0.5 hover:border-forest-300 hover:bg-forest-100/70 hover:shadow-card"
           >
-            <span
-              className={`flex h-10 w-10 items-center justify-center rounded-xl text-base ${a.iconClass}`}
-            >
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-forest-950/10 text-forest-950">
               {a.icon}
             </span>
             <span>
@@ -574,7 +559,6 @@ export function DashboardOverview({ data, onNavigate }: DashboardOverviewProps) 
       <div className="flex gap-3 overflow-x-auto px-4 pb-1 no-scrollbar sm:grid sm:grid-cols-2 sm:gap-3 sm:px-0 sm:overflow-visible sm:pb-0 lg:grid-cols-4">
         <StatCard
           icon={<FaBoxOpen className="h-5 w-5" aria-hidden />}
-          iconClass="bg-forest-950/10 text-forest-950"
           label="Orders placed"
           value={loading ? "—" : orders.length}
           sub={
@@ -588,7 +572,6 @@ export function DashboardOverview({ data, onNavigate }: DashboardOverviewProps) 
         />
         <StatCard
           icon={<FaEnvelopeOpen className="h-5 w-5" aria-hidden />}
-          iconClass="bg-gold-400/15 text-[#8a6e1a]"
           label="Unread messages"
           value={loading ? "—" : unreadCount}
           sub={unreadCount > 0 ? "Waiting from the clinic" : "You're all caught up"}
@@ -597,7 +580,6 @@ export function DashboardOverview({ data, onNavigate }: DashboardOverviewProps) 
         />
         <StatCard
           icon={<FaCommentDots className="h-5 w-5" aria-hidden />}
-          iconClass="bg-forest-100 text-forest-800"
           label="Your stories"
           value={loading ? "—" : testimonials.length}
           sub={
@@ -611,7 +593,6 @@ export function DashboardOverview({ data, onNavigate }: DashboardOverviewProps) 
         />
         <StatCard
           icon={<FaCircleUser className="h-5 w-5" aria-hidden />}
-          iconClass="bg-amber-50 text-amber-700"
           label="Account"
           value={user?.emailVerified ? "Verified" : "Verify email"}
           sub={memberSince ? `Member since ${memberSince}` : "Update your profile"}

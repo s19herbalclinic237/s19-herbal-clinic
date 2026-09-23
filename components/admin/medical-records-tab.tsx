@@ -19,6 +19,7 @@ interface PatientOption {
   id: string;
   name: string;
   email: string;
+  familyMembers?: { id: string; name: string; relation?: string }[];
 }
 
 interface Attachment {
@@ -68,6 +69,8 @@ function RecordForm({
     initial?.attachments?.length ? initial.attachments : []
   );
   const [saving, setSaving] = useState(false);
+
+  const selectedPatient = patients.find((p) => p.id === userId);
 
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -128,7 +131,13 @@ function RecordForm({
 
       <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Field label="Patient" required>
-          <Select value={userId} onChange={(e) => setUserId(e.target.value)}>
+          <Select
+            value={userId}
+            onChange={(e) => {
+              setUserId(e.target.value);
+              setForMember("");
+            }}
+          >
             {patients.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.name} · {p.email}
@@ -157,7 +166,24 @@ function RecordForm({
           <Input value={doctorName} onChange={(e) => setDoctorName(e.target.value)} maxLength={100} placeholder="e.g. Dr. Nguema" />
         </Field>
         <Field label="For family member">
-          <Input value={forMember} onChange={(e) => setForMember(e.target.value)} maxLength={80} placeholder="Leave empty for the account holder" />
+          <Select
+            value={forMember}
+            onChange={(e) => setForMember(e.target.value)}
+            disabled={(selectedPatient?.familyMembers?.length || 0) === 0 && !forMember}
+          >
+            <option value="">
+              {selectedPatient ? `Account holder · ${selectedPatient.name}` : "Account holder"}
+            </option>
+            {selectedPatient?.familyMembers?.map((m) => (
+              <option key={m.id} value={m.name}>
+                {m.name}
+                {m.relation ? ` (${m.relation})` : ""}
+              </option>
+            ))}
+            {forMember && !selectedPatient?.familyMembers?.some((m) => m.name === forMember) ? (
+              <option value={forMember}>{forMember} (family member)</option>
+            ) : null}
+          </Select>
         </Field>
       </div>
 

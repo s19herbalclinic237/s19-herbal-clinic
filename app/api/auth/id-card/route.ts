@@ -46,6 +46,10 @@ export async function POST(request: Request) {
       { status: 415 }
     );
   }
+  const side = String(formData.get("side") || "front");
+  if (side !== "front" && side !== "back") {
+    return NextResponse.json({ error: "Please indicate which side of the document you uploaded." }, { status: 400 });
+  }
 
   const buffer = Buffer.from(await file.arrayBuffer());
   const baseFolder = process.env.CLOUDINARY_FOLDER || "s19-medical";
@@ -75,7 +79,7 @@ export async function POST(request: Request) {
 
     const updated = await User.findByIdAndUpdate(
       sessionUser.id,
-      { $set: { idCardUrl: result.secure_url } },
+      { $set: { [side === "back" ? "idCardBackUrl" : "idCardFrontUrl"]: result.secure_url } },
       { new: true }
     ).lean();
     if (!updated) {

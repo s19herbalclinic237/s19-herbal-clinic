@@ -14,6 +14,7 @@ import { Appointment } from "../lib/models/Appointment";
 import { MedicalRecord } from "../lib/models/MedicalRecord";
 import { Prescription } from "../lib/models/Prescription";
 import { hashPassword } from "../lib/auth";
+import { Message } from "../lib/models/Message";
 import { todayDateOnly, weekdayOf } from "../lib/appointments";
 
 dotenv.config({ path: path.resolve(process.cwd(), ".env") });
@@ -328,6 +329,32 @@ async function main() {
     },
   ]);
   console.log("Sample prescriptions seeded (1 active, 1 past).");
+
+  /* 5 ── Sample message thread (admin + patient reply) ───────────────── */
+  await Message.deleteMany({ user: userId });
+  const root = await Message.create({
+    user: userId,
+    author: "admin",
+    subject: "Your follow-up appointment is confirmed",
+    body: "Hello, your video follow-up with Dr. Nadège Mouna is confirmed. Bring any recent blood-sugar readings you have. - S19 Clinic",
+    read: false,
+  });
+  await Message.create({
+    user: userId,
+    author: "user",
+    subject: root.subject,
+    body: "Thank you, noted - I'll have my readings ready. - Clarisse's parent",
+    thread: String(root._id),
+    read: true,
+  });
+  await Message.create({
+    user: userId,
+    author: "admin",
+    subject: "Your latest lab results are available",
+    body: "Your most recent lab results have been added to your medical records. You can view and download them from your dashboard.",
+    read: false,
+  });
+  console.log("Sample message thread seeded (1 admin thread + 1 reply + 1 unread).");
 
   await mongoose.disconnect();
   console.log("\nDone. Demo login:");

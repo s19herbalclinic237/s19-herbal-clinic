@@ -38,8 +38,12 @@ export interface IUser {
   gender?: PersonGender;
   address?: string;
   emergencyContact?: EmergencyContact;
-  /** Cloudinary URL of the patient's ID document. */
+  /** Cloudinary URL of the patient's ID document (legacy single field). */
   idCardUrl?: string;
+  /** Cloudinary URL of the front of the patient's ID document. */
+  idCardFrontUrl?: string;
+  /** Cloudinary URL of the back of the patient's ID document. */
+  idCardBackUrl?: string;
   familyMembers?: FamilyMember[];
   createdAt: Date;
   updatedAt: Date;
@@ -67,6 +71,8 @@ const UserSchema = new Schema<IUser>(
       relation: { type: String, trim: true },
     },
     idCardUrl: { type: String, trim: true },
+    idCardFrontUrl: { type: String, trim: true },
+    idCardBackUrl: { type: String, trim: true },
     familyMembers: [
       {
         name: { type: String, required: true, trim: true },

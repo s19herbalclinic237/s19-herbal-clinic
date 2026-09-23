@@ -31,6 +31,8 @@ export interface MessageView {
   subject: string;
   body: string;
   read: boolean;
+  author?: "admin" | "user";
+  thread?: string;
   createdAt: string;
 }
 

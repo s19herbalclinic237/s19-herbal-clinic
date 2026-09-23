@@ -219,6 +219,67 @@ await req("/api/family-members", {
   label: "My family members",
 });
 
+console.log("── Messages & replies ─────────────────────────────────");
+const msgList = await req("/api/messages", {
+  expected: {
+    statuses: [200],
+    checks: {
+      "has messages": (d) => Array.isArray(d.messages) && d.messages.length > 0,
+      "has reply author": (d) => d.messages.some((m) => m.author === "admin"),
+    },
+  },
+  label: "My messages",
+});
+const adminRoot = (msgList.data?.messages || []).find((m) => m.author === "admin" && !m.thread);
+const userReply = (msgList.data?.messages || []).find((m) => m.author === "user");
+
+if (adminRoot) {
+  await req("/api/messages", {
+    method: "POST",
+    body: { threadId: adminRoot._id, text: "Good, thanks for the update." },
+    expected: {
+      statuses: [201],
+      checks: {
+        "reply created": (d) => d.message?.author === "user" && d.message?.thread === adminRoot._id,
+      },
+    },
+    label: "Reply inside a clinic thread",
+  });
+} else {
+  console.log("  ⚠ no admin thread found; skipping reply test");
+}
+
+await req("/api/messages", {
+  method: "POST",
+  body: { threadId: "000000000000000000000000", text: "Hello?" },
+  expected: { statuses: [404] },
+  label: "Reject reply to a foreign/invalid thread",
+});
+
+if (userReply) {
+  await req(`/api/messages/${userReply._id}/read`, {
+    method: "POST",
+    expected: { statuses: [404] },
+    label: "User cannot mark their own reply as read",
+  });
+}
+
+await req("/api/messages", {
+  method: "POST",
+  body: { subject: "New topic from smoke test", text: "Hello clinic, quick question." },
+  expected: {
+    statuses: [201],
+    checks: { "new thread created": (d) => d.message?.author === "user" && !d.message?.thread },
+  },
+  label: "Patient starts a new thread",
+});
+await req("/api/messages", {
+  method: "POST",
+  body: { threadId: adminRoot ? adminRoot._id : "", text: "x" },
+  expected: { statuses: [400] },
+  label: "Reject too-short reply",
+});
+
 console.log("── Cancellation ──────────────────────────────────────");
 if (bookedId) {
   await req(`/api/appointments/${bookedId}`, {

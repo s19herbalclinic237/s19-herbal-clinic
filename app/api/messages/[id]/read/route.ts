@@ -21,7 +21,7 @@ export async function POST(_request: Request, { params }: Props) {
   const { id } = await params;
   try {
     const res = await Message.updateOne(
-      { _id: id, user: user.id, read: false },
+      { _id: id, user: user.id, author: "admin", read: false },
       { $set: { read: true } }
     ).exec();
     if (res.matchedCount === 0) {

@@ -36,6 +36,7 @@ const companyLinks: { key: TranslationKey; href: string }[] = [
   { key: "footer.refundReturns", href: "/refund-and-returns" },
   { key: "footer.privacy", href: "/privacy" },
   { key: "footer.terms", href: "/terms" },
+  { key: "footer.cookies", href: "/cookies" },
 ];
 
 export async function SiteFooter() {

@@ -1,10 +1,16 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { Field, Input, Textarea } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "@/components/account/badges";
-import { FaArrowRotateLeft, FaEnvelope, FaUsers } from "react-icons/fa6";
+import {
+  FaArrowRotateLeft,
+  FaEnvelope,
+  FaPaperPlane,
+  FaPlus,
+  FaUsers,
+} from "react-icons/fa6";
 
 interface AdminUser {
   id: string;
@@ -17,6 +23,24 @@ interface AdminUser {
   createdAt: string;
   orderCount: number;
   unreadCount: number;
+  replyCount: number;
+}
+
+interface MsgView {
+  _id: string;
+  subject: string;
+  body: string;
+  read: boolean;
+  author?: "admin" | "user";
+  thread?: string;
+  createdAt: string;
+}
+
+interface ThreadView {
+  key: string;
+  subject: string;
+  messages: MsgView[];
+  lastAt: string;
 }
 
 export function MessagingTab() {
@@ -65,7 +89,9 @@ export function MessagingTab() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="font-display text-lg font-semibold text-ink">Message Users</p>
-          <p className="text-sm text-muted">Send reports, plans and medical information to your patients.</p>
+          <p className="text-sm text-muted">
+            Send reports, plans and medical information - and reply to your patients&apos; messages.
+          </p>
         </div>
         <Button variant="outline" size="sm" onClick={load}>
           <FaArrowRotateLeft className="h-3.5 w-3.5" aria-hidden />
@@ -80,16 +106,13 @@ export function MessagingTab() {
         <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
       ) : null}
       {selected ? (
-        <MessageForm
+        <Conversation
           user={selected}
-          onClose={() => setSelected(null)}
-          onSent={() => {
+          onClose={() => {
             setSelected(null);
-            setUsers((prev) =>
-              prev === null ? prev : prev.map((u) => (u.id === selected.id ? { ...u, unreadCount: u.unreadCount + 1 } : u))
-            );
-            notify("Message sent. The user will see it in their messages inbox.");
+            load();
           }}
+          onSent={() => notify("Message sent. The user will see it in their messages inbox.")}
         />
       ) : null}
 
@@ -120,13 +143,19 @@ export function MessagingTab() {
                   {u.phone ? ` · ${u.phone}` : ""} · joined {formatDate(u.createdAt)}
                 </p>
                 <p className="text-xs text-muted">
-                  {u.orderCount} order{u.orderCount === 1 ? "" : "s"} · {u.unreadCount} unread
+                  {u.orderCount} order{u.orderCount === 1 ? "" : "s"}
+                  {u.replyCount > 0 ? (
+                    <span className="font-bold text-forest-800">
+                      {" "}· {u.replyCount} new reply{u.replyCount === 1 ? "" : "s"}
+                    </span>
+                  ) : null}
+                  {" "}· {u.unreadCount} unread
                   {u.lastLoginAt ? ` · last login ${formatDate(u.lastLoginAt)}` : " · never logged in"}
                 </p>
               </div>
-              <Button size="sm" variant={u.unreadCount > 0 ? "gold" : "outline"} onClick={() => setSelected(u)}>
+              <Button size="sm" variant={u.replyCount > 0 || u.unreadCount > 0 ? "gold" : "outline"} onClick={() => setSelected(u)}>
                 <FaEnvelope className="h-3.5 w-3.5" aria-hidden />
-                Message
+                {u.replyCount > 0 ? `Conversations (${u.replyCount} new)` : "Message"}
               </Button>
             </li>
           ))}
@@ -136,13 +165,199 @@ export function MessagingTab() {
   );
 }
 
-function MessageForm({ user, onClose, onSent }: { user: AdminUser; onClose: () => void; onSent: () => void }) {
+function Conversation({
+  user,
+  onClose,
+  onSent,
+}: {
+  user: AdminUser;
+  onClose: () => void;
+  onSent: () => void;
+}) {
+  const [messages, setMessages] = useState<MsgView[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [openKey, setOpenKey] = useState<string | null>(null);
+  const [composing, setComposing] = useState(false);
+
+  const load = () => {
+    let active = true;
+    fetch(`/api/admin/messages?userId=${user.id}`, { credentials: "include" })
+      .then((r) => r.json())
+      .then((data) => {
+        if (!active) return;
+        if (data.error) setError(data.error);
+        else setMessages(Array.isArray(data.messages) ? data.messages : []);
+      })
+      .catch(() => {
+        if (active) setError("Could not load the conversation.");
+      });
+    return () => {
+      active = false;
+    };
+  };
+
+  useEffect(() => {
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user.id]);
+
+  const threads: ThreadView[] = useMemo(() => {
+    const list = messages || [];
+    const byKey = new Map<string, MsgView[]>();
+    for (const m of list) {
+      const key = m.thread || m._id;
+      const arr = byKey.get(key) || [];
+      arr.push(m);
+      byKey.set(key, arr);
+    }
+    return Array.from(byKey.entries())
+      .map(([key, arr]) => {
+        arr.sort((a, b) => +new Date(a.createdAt) - +new Date(b.createdAt));
+        const last = arr[arr.length - 1];
+        return { key, subject: arr[0].subject, messages: arr, lastAt: last.createdAt };
+      })
+      .sort((a, b) => +new Date(b.lastAt) - +new Date(a.lastAt));
+  }, [messages]);
+
+  const activeThread = threads.find((t) => t.key === openKey) || null;
+
+  return (
+    <div className="rounded-lg border border-forest-200 bg-forest-50/50 p-4 sm:p-5">
+      <div className="flex items-center justify-between gap-3">
+        <p className="font-display text-base font-semibold text-ink">
+          Conversation with {user.name}
+          <span className="ml-2 text-sm font-normal text-muted">{user.email}</span>
+        </p>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={load}>
+            <FaArrowRotateLeft className="h-3.5 w-3.5" aria-hidden />
+            Refresh
+          </Button>
+          <Button variant="ghost" size="sm" type="button" onClick={onClose}>
+            Close
+          </Button>
+        </div>
+      </div>
+
+      {error ? (
+        <p className="mt-2 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
+      ) : null}
+
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <Button size="sm" variant="outline" onClick={() => setComposing((v) => !v)}>
+          {composing ? "Cancel new" : (
+            <>
+              <FaPlus className="h-3.5 w-3.5" aria-hidden />
+              New message
+            </>
+          )}
+        </Button>
+      </div>
+
+      {composing ? (
+        <NewAdminMessage
+          user={user}
+          onSent={() => {
+            setComposing(false);
+            load();
+            onSent();
+          }}
+        />
+      ) : null}
+
+      {!messages ? (
+        <div className="mt-3 flex h-24 items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-forest-200 border-t-forest-800" />
+        </div>
+      ) : null}
+
+      {messages && messages.length === 0 ? (
+        <div className="mt-3 rounded-lg border border-line bg-white p-6 text-center">
+          <FaEnvelope className="mx-auto h-6 w-6 text-forest-300" aria-hidden />
+          <p className="mt-2 text-sm text-muted">
+            No conversations yet. Send the first message and it will appear here.
+          </p>
+        </div>
+      ) : null}
+
+      {messages && messages.length > 0 ? (
+        <div className="mt-3 grid gap-3 lg:grid-cols-[240px_1fr]">
+          <ul className="divide-y divide-line rounded-lg border border-line bg-white">
+            {threads.map((t) => (
+              <li key={t.key}>
+                <button
+                  type="button"
+                  onClick={() => setOpenKey(t.key)}
+                  className={`w-full cursor-pointer px-3 py-2.5 text-left transition-colors hover:bg-forest-50/60 ${
+                    openKey === t.key ? "bg-forest-50" : ""
+                  }`}
+                >
+                  <span className="block truncate text-xs font-bold text-ink">{t.subject}</span>
+                  <span className="mt-0.5 block text-[11px] text-muted">
+                    {formatDate(t.lastAt)}
+                    {t.messages[t.messages.length - 1].author === "user" ? " · from patient" : " · from clinic"}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          <div className="rounded-lg border border-line bg-white">
+            {activeThread ? (
+              <div className="flex flex-col">
+                <ul className="max-h-80 space-y-2 overflow-y-auto p-3.5">
+                  {activeThread.messages.map((m) => (
+                    <li
+                      key={m._id}
+                      className={`max-w-[85%] rounded-xl px-3.5 py-2.5 text-sm ${
+                        m.author === "admin"
+                          ? "bg-forest-950 text-white"
+                          : "ml-auto border border-line bg-cream/70 text-ink"
+                      }`}
+                    >
+                      <p className={`text-[10px] font-bold uppercase tracking-wide ${m.author === "admin" ? "text-gold-300" : "text-muted"}`}>
+                        {m.author === "admin" ? "Clinic" : user.name} · {formatDate(m.createdAt)}
+                      </p>
+                      <p className="mt-1 whitespace-pre-line leading-relaxed">{m.body}</p>
+                    </li>
+                  ))}
+                </ul>
+                <div className="border-t border-forest-100 p-3.5">
+                  <AdminReplyForm
+                    user={user}
+                    threadId={activeThread.key}
+                    onSent={() => {
+                      load();
+                      onSent();
+                    }}
+                  />
+                </div>
+              </div>
+            ) : (
+              <p className="p-6 text-center text-sm text-muted">
+                Choose a conversation on the left, or start a new message.
+              </p>
+            )}
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function NewAdminMessage({
+  user,
+  onSent,
+}: {
+  user: AdminUser;
+  onSent: () => void;
+}) {
   const [subject, setSubject] = useState("");
   const [text, setText] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const submit = async (e: React.FormEvent) => {
+  const submit = async (e: FormEvent) => {
     e.preventDefault();
     if (busy) return;
     setBusy(true);
@@ -165,16 +380,8 @@ function MessageForm({ user, onClose, onSent }: { user: AdminUser; onClose: () =
   };
 
   return (
-    <form onSubmit={submit} className="rounded-lg border border-forest-200 bg-forest-50/50 p-4 sm:p-5">
-      <div className="flex items-center justify-between gap-3">
-        <p className="font-display text-base font-semibold text-ink">
-          New message to {user.name}
-          <span className="ml-2 text-sm font-normal text-muted">{user.email}</span>
-        </p>
-        <Button variant="ghost" size="sm" type="button" onClick={onClose} disabled={busy}>
-          Cancel
-        </Button>
-      </div>
+    <form onSubmit={submit} className="mt-3 rounded-lg border border-forest-200 bg-white p-4">
+      <p className="text-sm font-bold text-ink">New message to {user.name}</p>
       {error ? (
         <p className="mt-2 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
       ) : null}
@@ -204,6 +411,64 @@ function MessageForm({ user, onClose, onSent }: { user: AdminUser; onClose: () =
           {busy ? "Sending…" : "Send message"}
         </Button>
       </div>
+    </form>
+  );
+}
+
+function AdminReplyForm({
+  user,
+  threadId,
+  onSent,
+}: {
+  user: AdminUser;
+  threadId: string;
+  onSent: () => void;
+}) {
+  const [text, setText] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  const submit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (busy || text.trim().length < 2) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/admin/messages", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user.id, text, thread: threadId }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { error?: string };
+      if (!res.ok) throw new Error(data.error || "Could not send the message.");
+      setText("");
+      onSent();
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <form onSubmit={submit} className="flex flex-wrap items-end gap-2">
+      <div className="min-w-52 flex-1">
+        <Field label="Reply">
+          <Textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            rows={2}
+            maxLength={5000}
+            placeholder="Reply in this conversation…"
+          />
+        </Field>
+      </div>
+      <Button type="submit" disabled={busy || text.trim().length < 2}>
+        <FaPaperPlane className="h-3.5 w-3.5" aria-hidden />
+        {busy ? "Sending…" : "Send reply"}
+      </Button>
+      {error ? <p className="w-full text-xs text-red-600">{error}</p> : null}
     </form>
   );
 }

@@ -720,11 +720,11 @@ export function AppointmentsTab() {
           ))}
         </div>
         <div className="flex items-center gap-2">
-          <Button size="sm" variant="outline" onClick={() => setBookMode("video")}>
+          <Button size="sm" variant="outline" onClick={() => { setBookMode("video"); setShowBook(true); }}>
             <FaVideo className="h-3.5 w-3.5" aria-hidden />
             Book video visit
           </Button>
-          <Button size="sm" onClick={() => setBookMode("clinic")}>
+          <Button size="sm" onClick={() => { setBookMode("clinic"); setShowBook(true); }}>
             <FaPlus className="h-3.5 w-3.5" aria-hidden />
             Book appointment
           </Button>

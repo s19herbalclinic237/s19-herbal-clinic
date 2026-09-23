@@ -19,8 +19,12 @@ export interface AuthUser {
   gender?: "male" | "female" | "other";
   address?: string;
   emergencyContact?: { name?: string; phone?: string; relation?: string };
-  /** Cloudinary URL of the patient's ID document. */
+  /** Cloudinary URL of the patient's ID document (legacy single field). */
   idCardUrl?: string;
+  /** Cloudinary URL of the front of the patient's ID document. */
+  idCardFrontUrl?: string;
+  /** Cloudinary URL of the back of the patient's ID document. */
+  idCardBackUrl?: string;
   createdAt: string;
 }
 

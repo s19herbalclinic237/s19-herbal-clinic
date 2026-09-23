@@ -25,6 +25,8 @@ export async function PATCH(request: Request) {
     address?: string;
     emergencyContact?: { name?: string; phone?: string; relation?: string };
     idCardUrl?: string;
+    idCardFrontUrl?: string;
+    idCardBackUrl?: string;
   };
   const name = payload.name?.trim();
   const phone = payload.phone?.trim() || undefined;
@@ -89,6 +91,20 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: "Please provide a valid document URL." }, { status: 400 });
   }
 
+  const idCardFrontRaw = payload.idCardFrontUrl;
+  const idCardFrontProvided = idCardFrontRaw !== undefined;
+  const idCardFrontUrl = idCardFrontRaw === undefined ? undefined : idCardFrontRaw.trim() || undefined;
+  if (idCardFrontUrl !== undefined && idCardFrontUrl !== "" && !/^https?:\/\//.test(idCardFrontUrl)) {
+    return NextResponse.json({ error: "Please provide a valid document URL." }, { status: 400 });
+  }
+
+  const idCardBackRaw = payload.idCardBackUrl;
+  const idCardBackProvided = idCardBackRaw !== undefined;
+  const idCardBackUrl = idCardBackRaw === undefined ? undefined : idCardBackRaw.trim() || undefined;
+  if (idCardBackUrl !== undefined && idCardBackUrl !== "" && !/^https?:\/\//.test(idCardBackUrl)) {
+    return NextResponse.json({ error: "Please provide a valid document URL." }, { status: 400 });
+  }
+
   const conn = await connectDb();
   if (!conn) {
     return NextResponse.json({ error: "Profile updates are temporarily unavailable." }, { status: 503 });
@@ -107,6 +123,8 @@ export async function PATCH(request: Request) {
           ...(addressProvided && address ? { address } : {}),
           ...(ecProvided ? { emergencyContact: { name: ecName, phone: ecPhone, relation: ecRelation } } : {}),
           ...(idCardProvided && idCardUrl ? { idCardUrl } : {}),
+          ...(idCardFrontProvided && idCardFrontUrl ? { idCardFrontUrl } : {}),
+          ...(idCardBackProvided && idCardBackUrl ? { idCardBackUrl } : {}),
         },
         ...(avatarProvided && avatar === "" ? { $unset: { avatar: 1 } } : {}),
         ...(dobProvided && !dob ? { $unset: { dob: 1 } } : {}),
@@ -116,6 +134,8 @@ export async function PATCH(request: Request) {
           ? { $unset: { emergencyContact: 1 } }
           : {}),
         ...(idCardProvided && !idCardUrl ? { $unset: { idCardUrl: 1 } } : {}),
+        ...(idCardFrontProvided && !idCardFrontUrl ? { $unset: { idCardFrontUrl: 1 } } : {}),
+        ...(idCardBackProvided && !idCardBackUrl ? { $unset: { idCardBackUrl: 1 } } : {}),
       },
       { new: true }
     ).lean();

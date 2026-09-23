@@ -18,6 +18,7 @@ interface PatientOption {
   id: string;
   name: string;
   email: string;
+  familyMembers?: { id: string; name: string; relation?: string }[];
 }
 
 interface Medication {
@@ -113,6 +114,8 @@ function PrescriptionForm({
   const [notes, setNotes] = useState(initial?.notes || "");
   const [saving, setSaving] = useState(false);
 
+  const selectedPatient = patients.find((p) => p.id === userId);
+
   function setMed(index: number, patch: Partial<Medication>) {
     setMedications((list) => list.map((m, i) => (i === index ? { ...m, ...patch } : m)));
   }
@@ -175,7 +178,13 @@ function PrescriptionForm({
 
       <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Field label="Patient" required>
-          <Select value={userId} onChange={(e) => setUserId(e.target.value)}>
+          <Select
+            value={userId}
+            onChange={(e) => {
+              setUserId(e.target.value);
+              setForMember("");
+            }}
+          >
             {patients.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.name} · {p.email}
@@ -193,7 +202,24 @@ function PrescriptionForm({
           <Input value={doctorName} onChange={(e) => setDoctorName(e.target.value)} maxLength={100} placeholder="e.g. Dr. Nguema" />
         </Field>
         <Field label="For family member">
-          <Input value={forMember} onChange={(e) => setForMember(e.target.value)} maxLength={80} placeholder="Leave empty for the account holder" />
+          <Select
+            value={forMember}
+            onChange={(e) => setForMember(e.target.value)}
+            disabled={(selectedPatient?.familyMembers?.length || 0) === 0 && !forMember}
+          >
+            <option value="">
+              {selectedPatient ? `Account holder · ${selectedPatient.name}` : "Account holder"}
+            </option>
+            {selectedPatient?.familyMembers?.map((m) => (
+              <option key={m.id} value={m.name}>
+                {m.name}
+                {m.relation ? ` (${m.relation})` : ""}
+              </option>
+            ))}
+            {forMember && !selectedPatient?.familyMembers?.some((m) => m.name === forMember) ? (
+              <option value={forMember}>{forMember} (family member)</option>
+            ) : null}
+          </Select>
         </Field>
         <Field label="Status">
           <Select value={status} onChange={(e) => setStatus(e.target.value as "active" | "expired")}>

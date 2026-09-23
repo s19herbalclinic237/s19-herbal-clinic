@@ -168,6 +168,51 @@ async function main() {
     const smokeDoctorId = newDoctor.data?.doctor?._id as string | undefined;
     if (smokeDoctorId) createdByIds.push(["doctor", smokeDoctorId]);
 
+    console.log("── Admin messaging ───────────────────────────────────────");
+    await req("/api/admin/users", {
+      expected: {
+        statuses: [200],
+        checks: {
+          "demo has family members": (d) => {
+            const u = (d.users || []).find((x: any) => x.email === "demo.patient@s19clinic.com");
+            return (
+              Array.isArray(u?.familyMembers) &&
+              u.familyMembers.length > 0 &&
+              u.familyMembers.some((m: any) => m.name === "Clarisse Kamdem")
+            );
+          },
+        },
+      },
+      label: "Users list includes family members",
+    });
+    const conv = await req(`/api/admin/messages?userId=${demo?.id}`, {
+      expected: {
+        statuses: [200],
+        checks: {
+          "conversation has messages": (d) => Array.isArray(d.messages) && d.messages.length > 0,
+          "has patient reply": (d) => d.messages.some((m: any) => m.author === "user"),
+        },
+      },
+      label: "Admin reads conversation (marks replies seen)",
+    });
+    const rootThread = conv.data?.messages?.find((m: any) => m.author === "admin" && !m.thread);
+    if (rootThread) {
+      await req("/api/admin/messages", {
+        method: "POST",
+        body: { userId: demo?.id, text: "Thanks for confirming - see you then.", thread: rootThread._id },
+        expected: {
+          statuses: [201],
+          checks: {
+            "reply stays in thread": (d) =>
+              d.message?.author === "admin" && d.message?.thread === rootThread._id,
+          },
+        },
+        label: "Admin replies inside thread",
+      });
+    } else {
+      console.log("  ⚠ no admin thread found; skipping admin thread reply test");
+    }
+
     console.log("── Admin appointments ────────────────────────────────────");
     const appts = await req("/api/admin/appointments", {
       expected: {

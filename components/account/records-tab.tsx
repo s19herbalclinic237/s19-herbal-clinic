@@ -32,6 +32,11 @@ interface RecordView {
   attachments: Attachment[];
 }
 
+interface FamilyOption {
+  _id: string;
+  name: string;
+}
+
 function RecordDetail({ record }: { record: RecordView }) {
   return (
     <div className="print-area">
@@ -145,6 +150,8 @@ function RecordCard({
 
 export function RecordsTab() {
   const [records, setRecords] = useState<RecordView[] | null>(null);
+  const [family, setFamily] = useState<FamilyOption[]>([]);
+  const [filter, setFilter] = useState("all");
   const [error, setError] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
@@ -160,10 +167,31 @@ export function RecordsTab() {
       .catch(() => {
         if (active) setError("Could not load your medical records.");
       });
+    fetch("/api/family-members", { credentials: "include" })
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data.members))
+          setFamily(data.members.map((m: FamilyOption) => ({ _id: m._id, name: m.name })));
+      })
+      .catch(() => undefined);
     return () => {
       active = false;
     };
   }, []);
+
+  const shown = records
+    ? records.filter((r) => {
+        if (filter === "self") return !r.forMember;
+        if (filter) return r.forMember === filter;
+        return true;
+      })
+    : null;
+
+  const chips: { key: string; label: string }[] = [
+    { key: "all", label: "All" },
+    { key: "self", label: "Me" },
+    ...family.map((f) => ({ key: f.name, label: f.name })),
+  ];
 
   return (
     <div className="space-y-4">
@@ -177,6 +205,25 @@ export function RecordsTab() {
         ) : null}
       </div>
 
+      {family.length > 0 ? (
+        <div className="flex flex-wrap items-center gap-1.5">
+          {chips.map((c) => (
+            <button
+              key={c.key}
+              type="button"
+              onClick={() => setFilter(c.key)}
+              className={
+                filter === c.key
+                  ? "rounded-full bg-forest-950 px-3 py-1.5 text-xs font-bold text-white"
+                  : "cursor-pointer rounded-full border border-line-strong bg-white px-3 py-1.5 text-xs font-semibold text-muted transition-colors hover:text-ink"
+              }
+            >
+              {c.label}
+            </button>
+          ))}
+        </div>
+      ) : null}
+
       {error ? (
         <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
       ) : null}
@@ -187,19 +234,22 @@ export function RecordsTab() {
         </div>
       ) : null}
 
-      {records && records.length === 0 ? (
+      {records && shown && shown.length === 0 ? (
         <div className="rounded-lg border border-line bg-white p-8 text-center">
           <FaFileMedical className="mx-auto h-7 w-7 text-forest-300" aria-hidden />
           <p className="mt-3 text-sm text-muted">
-            No medical records yet. Records from your visits, lab work and scans with the clinic
-            will appear here.
+            {records.length === 0
+              ? "No medical records yet. Records from your visits, lab work and scans with the clinic will appear here."
+              : filter === "all"
+                ? "No medical records match this view."
+                : `No medical records for ${filter} yet.`}
           </p>
         </div>
       ) : null}
 
-      {records && records.length > 0 ? (
+      {shown && shown.length > 0 ? (
         <ul className="space-y-3">
-          {records.map((r) => (
+          {shown.map((r) => (
             <RecordCard
               key={r._id}
               record={r}

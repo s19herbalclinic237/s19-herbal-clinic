@@ -25,6 +25,8 @@ type AuthUserPick = Pick<
   | "address"
   | "emergencyContact"
   | "idCardUrl"
+  | "idCardFrontUrl"
+  | "idCardBackUrl"
 >;
 
 export function toAuthUser(u: AuthUserPick): AuthUser {
@@ -41,6 +43,9 @@ export function toAuthUser(u: AuthUserPick): AuthUser {
     address: u.address,
     emergencyContact: u.emergencyContact,
     idCardUrl: u.idCardUrl,
+    // Existing accounts only have the legacy single field: treat it as the front.
+    idCardFrontUrl: u.idCardFrontUrl || u.idCardUrl || undefined,
+    idCardBackUrl: u.idCardBackUrl,
     createdAt: (u.createdAt as unknown as Date).toISOString(),
   };
 }
@@ -117,6 +122,8 @@ export async function getSessionUser(): Promise<AuthUser | null> {
       address: u.address,
       emergencyContact: u.emergencyContact,
       idCardUrl: u.idCardUrl,
+      idCardFrontUrl: u.idCardFrontUrl,
+      idCardBackUrl: u.idCardBackUrl,
       createdAt: u.createdAt,
     });
   } catch (error) {
