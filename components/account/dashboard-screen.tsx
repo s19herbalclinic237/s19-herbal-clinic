@@ -383,66 +383,45 @@ export function DashboardScreen() {
         );
       case "admin-products":
         return isAdmin ? (
-          <>
-            <PageHeader title="Products" subtitle="Manage the online catalog" />
-            <div className="px-4 sm:px-0">
-              <ProductsTab />
-            </div>
-          </>
+          <div className="px-4 sm:px-0">
+            <ProductsTab />
+          </div>
         ) : null;
       case "admin-orders":
         return isAdmin ? (
-          <>
-            <PageHeader title="Orders" subtitle="Review and update customer orders" />
-            <div className="px-4 sm:px-0">
-              <AdminOrdersTab />
-            </div>
-          </>
+          <div className="px-4 sm:px-0">
+            <AdminOrdersTab />
+          </div>
         ) : null;
       case "admin-testimonials":
         return isAdmin ? (
-          <>
-            <PageHeader title="Testimonials" subtitle="Review stories submitted by patients" />
-            <div className="px-4 sm:px-0">
-              <AdminTestimonialsTab />
-            </div>
-          </>
+          <div className="px-4 sm:px-0">
+            <AdminTestimonialsTab />
+          </div>
         ) : null;
       case "admin-messaging":
         return isAdmin ? (
-          <>
-            <PageHeader title="Users & Messages" subtitle="Manage accounts and send updates" />
-            <div className="px-4 sm:px-0">
-              <MessagingTab />
-            </div>
-          </>
+          <div className="px-4 sm:px-0">
+            <MessagingTab />
+          </div>
         ) : null;
       case "admin-posts":
         return isAdmin ? (
-          <>
-            <PageHeader title="Blog" subtitle="Write and manage articles" />
-            <div className="px-4 sm:px-0">
-              <PostsTab />
-            </div>
-          </>
+          <div className="px-4 sm:px-0">
+            <PostsTab />
+          </div>
         ) : null;
       case "admin-subscribers":
         return isAdmin ? (
-          <>
-            <PageHeader title="Subscribers" subtitle="Email newsletter subscribers" />
-            <div className="px-4 sm:px-0">
-              <SubscribersTab />
-            </div>
-          </>
+          <div className="px-4 sm:px-0">
+            <SubscribersTab />
+          </div>
         ) : null;
       case "admin-videos":
         return isAdmin ? (
-          <>
-            <PageHeader title="Live Reviews" subtitle="Manage video testimonials" />
-            <div className="px-4 sm:px-0">
-              <AdminVideosTab />
-            </div>
-          </>
+          <div className="px-4 sm:px-0">
+            <AdminVideosTab />
+          </div>
         ) : null;
       case "admin-doctors":
         return isAdmin ? (

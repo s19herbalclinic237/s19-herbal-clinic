@@ -410,7 +410,7 @@ export function AdminMedicalRecordsTab() {
             setShowForm(false);
             setEditingId(null);
             load();
-            notify("Medical record saved.");
+            notify("Medical record saved - patient notified.");
           }}
           onCancel={() => {
             setShowForm(false);

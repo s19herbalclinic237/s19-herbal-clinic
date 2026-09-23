@@ -117,8 +117,8 @@ export async function PATCH(request: Request, { params }: Params) {
 }
 
 /**
- * Soft delete: hides the doctor from public lists and booking. Past and
- * upcoming appointments keep their doctor reference so history stays intact.
+ * Deletes the doctor row entirely. Appointment history keeps the doctor id
+ * and shows a "Doctor" fallback label in past/upcoming bookings.
  */
 export async function DELETE(_request: Request, { params }: Params) {
   const denied = await adminGuard();
@@ -131,9 +131,9 @@ export async function DELETE(_request: Request, { params }: Params) {
   }
 
   try {
-    const doctor = await Doctor.findByIdAndUpdate(id, { $set: { active: false } }, { new: true }).lean();
+    const doctor = await Doctor.findByIdAndDelete(id).lean();
     if (!doctor) return NextResponse.json({ error: "Doctor not found." }, { status: 404 });
-    return NextResponse.json({ success: true, message: "Doctor hidden from booking." });
+    return NextResponse.json({ success: true, message: "Doctor deleted." });
   } catch (error) {
     console.error("[admin/doctors] delete failed:", error);
     return NextResponse.json({ error: "Could not remove the doctor." }, { status: 500 });

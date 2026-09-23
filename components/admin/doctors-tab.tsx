@@ -323,15 +323,15 @@ export function DoctorsTab() {
   }
 
   async function remove(doctor: DoctorView) {
-    if (!window.confirm(`Hide "${doctor.name}" from booking? (Appointments stay in history.)`)) return;
+    if (!window.confirm(`Delete "${doctor.name}" permanently? This cannot be undone.`)) return;
     try {
       const res = await fetch(`/api/admin/doctors/${doctor._id}`, { method: "DELETE", credentials: "include" });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Could not remove the doctor.");
-      setDoctors((prev) => (prev === null ? prev : prev.map((d) => (d._id === doctor._id ? { ...d, active: false } : d))));
-      notify(data.message || "Doctor hidden from booking.");
+      if (!res.ok) throw new Error(data.error || "Could not delete the doctor.");
+      setDoctors((prev) => (prev === null ? prev : prev.filter((d) => d._id !== doctor._id)));
+      notify(data.message || "Doctor deleted.");
     } catch (err) {
-      window.alert(err instanceof Error ? err.message : "Could not remove the doctor.");
+      window.alert(err instanceof Error ? err.message : "Could not delete the doctor.");
     }
   }
 

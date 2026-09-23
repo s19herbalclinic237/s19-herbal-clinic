@@ -356,7 +356,7 @@ export function AdminPrescriptionsTab() {
             setShowForm(false);
             setEditingId(null);
             load();
-            notify("Prescription saved.");
+            notify("Prescription saved - patient notified.");
           }}
           onCancel={() => {
             setShowForm(false);

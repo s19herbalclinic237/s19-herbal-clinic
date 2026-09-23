@@ -269,7 +269,13 @@ async function main() {
         notes: "Row created by the admin smoke suite.",
         attachments: [],
       },
-      expected: { statuses: [201], checks: { "record returned": (d) => !!d.record?._id } },
+      expected: {
+        statuses: [201],
+        checks: {
+          "record returned": (d) => !!d.record?._id,
+          "patient notified": (d) => d.notified === true,
+        },
+      },
       label: "Create medical record for demo patient",
     });
     const recordId = record.data?.record?._id as string | undefined;
@@ -287,11 +293,31 @@ async function main() {
           { name: "SmokeTonic", dosage: "5 ml", frequency: "1x daily", duration: "7 days", instructions: "Test only." },
         ],
       },
-      expected: { statuses: [201], checks: { "prescription returned": (d) => !!d.prescription?._id } },
+      expected: {
+        statuses: [201],
+        checks: {
+          "prescription returned": (d) => !!d.prescription?._id,
+          "patient notified": (d) => d.notified === true,
+        },
+      },
       label: "Issue prescription for demo patient",
     });
     const scriptId = script.data?.prescription?._id as string | undefined;
     if (scriptId) createdByIds.push(["prescription", scriptId]);
+
+    console.log("── Patient notifications ──────────────────────────────────");
+    await req(`/api/admin/messages?userId=${demo?.id}`, {
+      expected: {
+        statuses: [200],
+        checks: {
+          "record notification in inbox": (d) =>
+            (d.messages || []).some((m: any) => String(m.subject || "").startsWith("New medical record - Smoke test note")),
+          "prescription notification in inbox": (d) =>
+            (d.messages || []).some((m: any) => String(m.subject || "").startsWith("New prescription - SmokeTonic")),
+        },
+      },
+      label: "Patient inbox received record + prescription notifications",
+    });
 
     console.log("── Cleanup of created rows ───────────────────────────────");
     for (const [kind, id] of createdByIds) {

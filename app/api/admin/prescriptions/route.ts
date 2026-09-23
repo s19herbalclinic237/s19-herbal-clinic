@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/db";
 import { adminGuard } from "@/lib/admin-guard";
 import { Prescription, type Medication } from "@/lib/models/Prescription";
+import { notifyPatient } from "@/lib/notify";
 
 function parseMedications(raw: unknown): Medication[] {
   if (!Array.isArray(raw)) return [];
@@ -103,7 +104,24 @@ export async function POST(request: Request) {
       medications: meds,
       notes: String(notes || "").trim() || undefined,
     });
-    return NextResponse.json({ success: true, prescription }, { status: 201 });
+
+    // Notify the patient (and keep the doctor's name on record in their inbox).
+    const doctor = String(doctorName || "").trim();
+    const member = String(forMember || "").trim();
+    const medNames = meds.map((m) => m.name).join(", ");
+    const bodyLines = [
+      `A new prescription has been issued${doctor ? ` by ${doctor}` : " by the clinic"}: ${medNames}.`,
+      member ? `Patient: ${member}.` : "",
+      String(notes || "").trim() ? `Notes: ${String(notes || "").trim()}` : "",
+      "You can view the dosage instructions under Prescriptions in your dashboard.",
+    ].filter(Boolean);
+    const notified = await notifyPatient({
+      userId: cleanUserId,
+      subject: `New prescription - ${medNames}`,
+      body: bodyLines.join("\n"),
+    });
+
+    return NextResponse.json({ success: true, prescription, notified }, { status: 201 });
   } catch (error) {
     console.error("[admin/prescriptions] create failed:", error);
     return NextResponse.json({ error: "Could not save the prescription." }, { status: 500 });

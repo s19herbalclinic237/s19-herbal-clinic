@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/db";
 import { adminGuard } from "@/lib/admin-guard";
 import { MedicalRecord, type RecordAttachment, type MedicalRecordType } from "@/lib/models/MedicalRecord";
+import { notifyPatient } from "@/lib/notify";
 
 const TYPES: MedicalRecordType[] = ["visit", "diagnosis", "lab", "scan", "note"];
 
@@ -102,7 +103,24 @@ export async function POST(request: Request) {
       results: String(results || "").trim() || undefined,
       attachments: parseAttachments(attachments),
     });
-    return NextResponse.json({ success: true, record }, { status: 201 });
+
+    // Notify the patient (and keep the doctor's name on record in their inbox).
+    const doctor = String(doctorName || "").trim();
+    const member = String(forMember || "").trim();
+    const diagnosisText = String(diagnosis || "").trim();
+    const bodyLines = [
+      `A new medical record has been added${doctor ? ` by ${doctor}` : " by the clinic"}: "${cleanTitle}".`,
+      member ? `Patient: ${member}.` : "",
+      diagnosisText ? `Diagnosis: ${diagnosisText}` : "",
+      "You can view the full record under Medical Records in your dashboard.",
+    ].filter(Boolean);
+    const notified = await notifyPatient({
+      userId: cleanUserId,
+      subject: `New medical record - ${cleanTitle}`,
+      body: bodyLines.join("\n"),
+    });
+
+    return NextResponse.json({ success: true, record, notified }, { status: 201 });
   } catch (error) {
     console.error("[admin/medical-records] create failed:", error);
     return NextResponse.json({ error: "Could not save the medical record." }, { status: 500 });

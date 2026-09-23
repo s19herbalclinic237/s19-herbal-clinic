@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Select } from "@/components/ui/form";
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import { Field, Select, Textarea } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { formatFcfa } from "@/lib/utils";
 import { formatDate, OrderStatusBadge } from "@/components/account/badges";
-import { FaArrowRotateLeft, FaBoxesStacked } from "react-icons/fa6";
+import { FaArrowRotateLeft, FaBoxesStacked, FaEnvelope } from "react-icons/fa6";
 
 interface AdminUserRef {
   _id?: string;
@@ -44,6 +44,9 @@ export function AdminOrdersTab() {
   const [error, setError] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [savingId, setSavingId] = useState<string | null>(null);
+  const [composeId, setComposeId] = useState<string | null>(null);
+  const [composeText, setComposeText] = useState("");
+  const [sendingId, setSendingId] = useState<string | null>(null);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const load = (status = filter) => {
@@ -113,6 +116,37 @@ export function AdminOrdersTab() {
   const refresh = () => {
     setOrders(null);
     load();
+  };
+
+  const sendOrderMessage = async (o: AdminOrder, e: FormEvent) => {
+    e.preventDefault();
+    const text = composeText.trim();
+    if (!o.user?._id || text.length < 2) {
+      notify("Please write a message first.");
+      return;
+    }
+    setSendingId(o._id);
+    try {
+      const res = await fetch("/api/admin/messages", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: o.user._id,
+          subject: `About your order ${o.orderReference}`,
+          text,
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { error?: string };
+      if (!res.ok) throw new Error(data.error || "Could not send the message.");
+      setComposeId(null);
+      setComposeText("");
+      notify(`Message sent to ${o.customer.fullName}.`);
+    } catch (err) {
+      notify((err as Error).message);
+    } finally {
+      setSendingId(null);
+    }
   };
 
   const counts = useCounts(orders);
@@ -244,6 +278,56 @@ export function AdminOrdersTab() {
                   {formatDate(o.createdAt)} · {o.shipping.address}
                 </span>
               </div>
+
+              <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-line pt-3">
+                {o.user?._id ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setComposeId((cur) => (cur === o._id ? null : o._id));
+                      setComposeText("");
+                    }}
+                    className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-lg border border-line-strong bg-white px-3 text-xs font-semibold text-forest-800 transition-colors hover:border-forest-400"
+                  >
+                    <FaEnvelope className="h-3 w-3" aria-hidden />
+                    {composeId === o._id ? "Close message" : "Message customer"}
+                  </button>
+                ) : (
+                  <span className="text-xs text-muted">Guest order — customer has no account to message.</span>
+                )}
+              </div>
+
+              {composeId === o._id && o.user?._id ? (
+                <form
+                  onSubmit={(e) => void sendOrderMessage(o, e)}
+                  className="mt-3 rounded-lg border border-forest-200 bg-forest-50/50 p-4"
+                >
+                  <Field label={`Message about ${o.orderReference}`}>
+                    <Textarea
+                      rows={3}
+                      value={composeText}
+                      onChange={(e) => setComposeText(e.target.value)}
+                      placeholder={`e.g. Your order is ready for pickup tomorrow at the clinic.`}
+                      maxLength={2000}
+                    />
+                  </Field>
+                  <div className="mt-3 flex items-center justify-end gap-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setComposeId(null);
+                        setComposeText("");
+                      }}
+                      className="text-sm font-semibold text-muted hover:text-ink"
+                    >
+                      Cancel
+                    </button>
+                    <Button type="submit" size="sm" disabled={sendingId === o._id}>
+                      {sendingId === o._id ? "Sending..." : "Send message"}
+                    </Button>
+                  </div>
+                </form>
+              ) : null}
             </li>
           ))}
         </ul>
