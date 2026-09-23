@@ -28,7 +28,7 @@ export async function isDrivePreviewPlayable(previewUrl: string): Promise<boolea
   }
 }
 
-/** Checks the direct stream URL for a Drive file (what the <video> element uses). */
+/** Checks the direct stream URL for a Drive file (used server-side before embedding). */
 export async function isDriveDirectPlayable(src: string): Promise<boolean> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 10_000);
@@ -56,5 +56,5 @@ export async function isVideoEmbedBlocked(url?: string | null): Promise<boolean>
   if (!url) return false;
   const embed = getVideoEmbed(url);
   if (!embed || embed.kind !== "drive") return false;
-  return !(await isDriveDirectPlayable(embed.src));
+  return !(await isDriveDirectPlayable(embed.probeUrl));
 }

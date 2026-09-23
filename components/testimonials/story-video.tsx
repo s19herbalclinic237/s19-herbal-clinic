@@ -5,10 +5,12 @@ import { getVideoEmbed } from "@/lib/video";
  * Renders a patient video review. Supports YouTube, Vimeo and Google Drive
  * share links plus direct .mp4 / .webm file links.
  *
- * Google Drive reviews play edge-to-edge in the native <video> element using
- * the direct stream URL (no Drive chrome, no letterboxing). Pass `blocked`
- * (probed server-side) when a Drive file is private: instead of a broken
- * player, visitors see a clean message and a link to the source file.
+ * Google Drive reviews play edge-to-edge through the site's streaming proxy
+ * (same origin, Range support) so the native <video> element actually loads
+ * them — Drive's own download endpoint marks responses as attachments, which
+ * browsers refuse to play. Pass `blocked` (probed server-side) when a Drive
+ * file is private: instead of a broken player, visitors see a clean message
+ * and a link to the source file.
  *
  * Pass `bare` for Pinterest-style pinboards: the media renders edge-to-edge
  * with no label, border or card chrome and keeps its natural aspect ratio, so
