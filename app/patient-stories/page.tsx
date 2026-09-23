@@ -5,6 +5,7 @@ import { Reveal } from "@/components/ui/motion";
 import { StoriesForm } from "@/components/testimonials/stories-form";
 import { StoryVideo } from "@/components/testimonials/story-video";
 import { getApprovedTestimonials } from "@/lib/testimonials";
+import { isVideoEmbedBlocked } from "@/lib/video-probe";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { serverT, getServerLocale } from "@/lib/i18n-server";
 import { canonicalMeta } from "@/lib/seo";
@@ -37,6 +38,7 @@ export default async function PatientStoriesPage() {
   const t = await serverT();
   const locale = await getServerLocale();
   const stories = await getApprovedTestimonials(60, locale);
+  const blockedVideo = await Promise.all(stories.map((s) => isVideoEmbedBlocked(s.videoUrl)));
 
   return (
     <>
@@ -86,7 +88,9 @@ export default async function PatientStoriesPage() {
               <blockquote className="mt-4 flex-1 text-[15px] leading-relaxed text-ink/80">
                 &ldquo;{test.text}&rdquo;
               </blockquote>
-              {test.videoUrl ? <StoryVideo url={test.videoUrl} /> : null}
+              {test.videoUrl ? (
+                <StoryVideo url={test.videoUrl} blocked={blockedVideo[i]} />
+              ) : null}
               <figcaption className="mt-6 border-t border-line pt-4 text-sm">
                 <span className="font-bold text-ink">{test.name}</span>
                 <span className="mx-1.5 text-muted">·</span>
