@@ -3,6 +3,7 @@ import { isValidObjectId } from "mongoose";
 import { connectDb } from "@/lib/db";
 import { adminGuard } from "@/lib/admin-guard";
 import { Order } from "@/lib/models/Order";
+import { sendOrderStatusEmails } from "@/lib/email";
 
 const ORDER_STATUSES = [
   "Pending",
@@ -62,6 +63,16 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
   try {
     const order = await Order.findByIdAndUpdate(id, { $set: patch }, { new: true }).lean();
+
+    // Email the customer when the order status actually changes.
+    if (order && body.status !== undefined && order.status !== existing.status) {
+      try {
+        await sendOrderStatusEmails(order, existing.status);
+      } catch (error) {
+        console.error("[admin/orders] status email failed:", error);
+      }
+    }
+
     return NextResponse.json({ success: true, order });
   } catch (error) {
     console.error("[admin/orders] update failed:", error);

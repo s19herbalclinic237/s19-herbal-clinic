@@ -4,6 +4,7 @@ import { connectDb } from "@/lib/db";
 import { adminGuard } from "@/lib/admin-guard";
 import { Message } from "@/lib/models/Message";
 import { User } from "@/lib/models/User";
+import { sendClinicMessageEmail } from "@/lib/email";
 
 export async function GET(request: Request) {
   const denied = await adminGuard();
@@ -95,6 +96,21 @@ export async function POST(request: Request) {
       thread: threadRef,
       read: false,
     });
+
+    // Email the patient so they see the clinic message even when away from the app.
+    if (target.email) {
+      try {
+        await sendClinicMessageEmail({
+          to: target.email,
+          name: target.name,
+          subject: finalSubject,
+          body: text,
+        });
+      } catch (error) {
+        console.error("[admin/messages] patient email failed:", error);
+      }
+    }
+
     return NextResponse.json({ success: true, message }, { status: 201 });
   } catch (error) {
     console.error("[admin/messages] create failed:", error);

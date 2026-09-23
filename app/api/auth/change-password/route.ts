@@ -5,6 +5,7 @@ import { getSessionUser } from "@/lib/auth-server";
 import { User } from "@/lib/models/User";
 import { Session } from "@/lib/models/Session";
 import { SESSION_COOKIE, hashPassword, hashToken, passwordPolicyErrors, verifyPassword } from "@/lib/auth";
+import { sendPasswordChangedEmail } from "@/lib/email";
 
 export async function POST(request: Request) {
   const user = await getSessionUser();
@@ -51,6 +52,14 @@ export async function POST(request: Request) {
       user: user.id,
       ...(currentToken ? { tokenHash: { $ne: hashToken(currentToken) } } : {}),
     }).exec();
+
+    if (user.email) {
+      try {
+        await sendPasswordChangedEmail(user.email, user.name);
+      } catch (error) {
+        console.error("[change-password] notification email failed:", error);
+      }
+    }
 
     return NextResponse.json({ success: true, message: "Password changed. Other devices were signed out." });
   } catch (error) {

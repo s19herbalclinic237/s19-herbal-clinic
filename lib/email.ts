@@ -43,6 +43,18 @@ async function sendMail(to: string, subject: string, html: string) {
   await t.sendMail({ from: SMTP_FROM, to, subject, html });
 }
 
+/** Best-effort delivery: never throws, so a broken/misconfigured SMTP cannot
+ *  fail the API request that triggered the notification. Logs and returns. */
+async function safeSend(to: string, subject: string, html: string): Promise<boolean> {
+  try {
+    await sendMail(to, subject, html);
+    return true;
+  } catch (error) {
+    console.error("[email] delivery failed:", { to, subject, error });
+    return false;
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /* Email template kit                                                  */
 /* ------------------------------------------------------------------ */
@@ -221,7 +233,7 @@ export async function sendOrderConfirmation(order: IOrder) {
   const firstName = customer.fullName.trim().split(/\s+/)[0] || "there";
 
   // Customer copy
-  await sendMail(
+  await safeSend(
     customer.email,
     `Your order ${order.orderReference} has been received`,
     wrap({
@@ -267,7 +279,7 @@ export async function sendOrderConfirmation(order: IOrder) {
   // Admin copy
   if (ADMIN_EMAIL) {
     const notes = shipping.notes ? ` · ${shipping.notes}` : "";
-    await sendMail(
+    await safeSend(
       ADMIN_EMAIL,
       `New order ${order.orderReference}`,
       wrap({
@@ -315,7 +327,7 @@ export async function sendOrderConfirmation(order: IOrder) {
 
 export async function sendVerificationEmail(to: string, name: string, link: string) {
   const firstName = name.trim().split(/\s+/)[0] || "friend";
-  await sendMail(
+  await safeSend(
     to,
     "Confirm your S19 account email",
     wrap({
@@ -330,7 +342,7 @@ export async function sendVerificationEmail(to: string, name: string, link: stri
 
 export async function sendNewAccountNotification(name: string, email: string) {
   if (!ADMIN_EMAIL) return;
-  await sendMail(
+  await safeSend(
     ADMIN_EMAIL,
     `New account: ${email}`,
     wrap({
@@ -353,7 +365,7 @@ export async function sendNewAccountNotification(name: string, email: string) {
 
 export async function sendPasswordResetEmail(to: string, name: string, link: string) {
   const firstName = name.trim().split(/\s+/)[0] || "friend";
-  await sendMail(
+  await safeSend(
     to,
     "Reset your S19 account password",
     wrap({
@@ -389,7 +401,7 @@ export async function sendBookingNotification(data: {
 
   // Client copy
   if (data.email) {
-    await sendMail(
+    await safeSend(
       data.email,
       "We received your consultation request",
       wrap({
@@ -423,7 +435,7 @@ export async function sendBookingNotification(data: {
     if (data.mode) adminRows.push({ label: "Mode", value: esc(data.mode) });
     if (data.concern) adminRows.push({ label: "Concern", value: esc(data.concern) });
 
-    await sendMail(
+    await safeSend(
       ADMIN_EMAIL,
       "New consultation request from web",
       wrap({
@@ -441,4 +453,382 @@ export async function sendBookingNotification(data: {
       })
     );
   }
+}
+
+/* ------------------------------------------------------------------ */
+/* Appointments                                                        */
+/* ------------------------------------------------------------------ */
+
+export interface AppointmentEmailInput {
+  to: string;
+  patientName: string;
+  doctorName: string;
+  date: string;
+  time: string;
+  mode: "video" | "clinic";
+  forMember?: string;
+  concern?: string;
+  meetingUrl?: string;
+  phone?: string;
+}
+
+function appointmentModeLabel(mode: "video" | "clinic"): string {
+  return mode === "video" ? "Video consultation" : "In-clinic visit";
+}
+
+function appointmentRows(d: AppointmentEmailInput): string {
+  const rows: Array<{ label: string; value: string }> = [
+    { label: "Doctor", value: esc(d.doctorName) },
+    { label: "Date", value: esc(d.date) },
+    { label: "Time", value: esc(d.time) },
+    { label: "Mode", value: appointmentModeLabel(d.mode) },
+  ];
+  if (d.forMember) rows.push({ label: "Patient", value: esc(d.forMember) });
+  if (d.concern) rows.push({ label: "Health concern", value: esc(d.concern) });
+  if (d.phone) rows.push({ label: "Phone", value: esc(d.phone) });
+  if (d.meetingUrl) {
+    rows.push({
+      label: "Meeting link",
+      value: `<a href="${esc(d.meetingUrl)}" style="color:${C.btn}">${esc(d.meetingUrl)}</a>`,
+    });
+  }
+  return infoRows(rows);
+}
+
+export async function sendAppointmentBookedEmails(d: AppointmentEmailInput) {
+  const firstName = d.patientName.trim().split(/\s+/)[0] || "there";
+  const modeLabel = appointmentModeLabel(d.mode).toLowerCase();
+
+  await safeSend(
+    d.to,
+    `Appointment requested - ${d.date} at ${d.time}`,
+    wrap({
+      kicker: "Appointment request",
+      title: `Thank you, ${firstName}`,
+      lead:
+        `Your ${modeLabel} with ${esc(d.doctorName)} has been received. A member of our clinical team will confirm your booking shortly` +
+        (d.mode === "video" ? " and send you a secure join link." : "."),
+      sections: section("Your appointment", appointmentRows(d)),
+      cta: {
+        href: waLink("Hello S19 Herbal Clinic, I would like to confirm my appointment."),
+        label: "Message us on WhatsApp",
+      },
+      note: "To reschedule or cancel, sign in to your account and open the Appointments page.",
+    })
+  );
+
+  if (ADMIN_EMAIL) {
+    await safeSend(
+      ADMIN_EMAIL,
+      `New appointment: ${d.patientName} (${d.date} ${d.time})`,
+      wrap({
+        kicker: "Admin notification",
+        title: "New appointment requested",
+        lead: `${d.patientName} · ${d.date} at ${d.time}`,
+        sections: section("Appointment", appointmentRows(d)),
+        cta: {
+          href: waTo(
+            d.phone || d.to,
+            `Hello ${d.patientName}, this is S19 Herbal Clinic. We received your appointment request and would like to confirm it.`
+          ),
+          label: "WhatsApp the client",
+        },
+      })
+    );
+  }
+}
+
+export async function sendAppointmentRescheduledEmails(d: AppointmentEmailInput) {
+  const firstName = d.patientName.trim().split(/\s+/)[0] || "there";
+  const modeLabel = appointmentModeLabel(d.mode).toLowerCase();
+
+  await safeSend(
+    d.to,
+    `Appointment rescheduled - ${d.date} at ${d.time}`,
+    wrap({
+      kicker: "Appointment update",
+      title: `Your appointment was moved, ${firstName}`,
+      lead: `Your ${modeLabel} with ${esc(d.doctorName)} is now scheduled for ${d.date} at ${d.time}. The clinic will confirm the new slot.`,
+      sections: section("New appointment", appointmentRows(d)),
+    })
+  );
+
+  if (ADMIN_EMAIL) {
+    await safeSend(
+      ADMIN_EMAIL,
+      `Appointment rescheduled: ${d.patientName} (${d.date} ${d.time})`,
+      wrap({
+        kicker: "Admin notification",
+        title: "An appointment was rescheduled",
+        lead: `${d.patientName} moved their ${modeLabel} to ${d.date} at ${d.time}.`,
+        sections: section("Appointment", appointmentRows(d)),
+      })
+    );
+  }
+}
+
+export async function sendAppointmentCancelledEmails(d: AppointmentEmailInput) {
+  const firstName = d.patientName.trim().split(/\s+/)[0] || "there";
+  const modeLabel = appointmentModeLabel(d.mode).toLowerCase();
+
+  await safeSend(
+    d.to,
+    `Appointment cancelled - ${d.date} at ${d.time}`,
+    wrap({
+      kicker: "Appointment update",
+      title: `Your appointment was cancelled, ${firstName}`,
+      lead: `Your ${modeLabel} with ${esc(d.doctorName)} on ${d.date} at ${d.time} has been cancelled. If this was not expected, please contact the clinic.`,
+    })
+  );
+
+  if (ADMIN_EMAIL) {
+    await safeSend(
+      ADMIN_EMAIL,
+      `Appointment cancelled: ${d.patientName} (${d.date} ${d.time})`,
+      wrap({
+        kicker: "Admin notification",
+        title: "An appointment was cancelled",
+        lead: `${d.patientName} cancelled their ${modeLabel} with ${esc(d.doctorName)} on ${d.date} at ${d.time}.`,
+        sections: section("Appointment", appointmentRows(d)),
+      })
+    );
+  }
+}
+
+export async function sendAppointmentConfirmedEmails(d: AppointmentEmailInput) {
+  const firstName = d.patientName.trim().split(/\s+/)[0] || "there";
+  const modeLabel = appointmentModeLabel(d.mode).toLowerCase();
+
+  const cta = d.meetingUrl
+    ? { href: d.meetingUrl, label: d.mode === "video" ? "Open the meeting link" : "Open your dashboard" }
+    : { href: `${siteOrigin()}/account`, label: "Open your dashboard" };
+
+  await safeSend(
+    d.to,
+    `Appointment confirmed - ${d.date} at ${d.time}`,
+    wrap({
+      kicker: "Appointment confirmed",
+      title: `Your appointment is confirmed, ${firstName}`,
+      lead: `Your ${modeLabel} with ${esc(d.doctorName)} on ${d.date} at ${d.time} has been confirmed.${
+        d.mode === "video"
+          ? " Open the meeting link a few minutes before your appointment."
+          : " Please arrive a few minutes early."
+      }`,
+      sections: section("Appointment", appointmentRows(d)),
+      cta,
+      note: "Need to change something? Reply to this email or reach us on WhatsApp.",
+    })
+  );
+}
+
+export async function sendAppointmentProviderUpdateEmails(d: AppointmentEmailInput) {
+  const firstName = d.patientName.trim().split(/\s+/)[0] || "there";
+  const modeLabel = appointmentModeLabel(d.mode).toLowerCase();
+
+  await safeSend(
+    d.to,
+    `Your appointment was updated - ${d.date} at ${d.time}`,
+    wrap({
+      kicker: "Appointment update",
+      title: `Your appointment details changed, ${firstName}`,
+      lead: `The clinic updated your ${modeLabel}. It is now scheduled for ${d.date} at ${d.time}${d.meetingUrl ? " with a secure join link" : ""}.`,
+      sections: section("Appointment", appointmentRows(d)),
+      note: "If the new time does not suit you, please contact the clinic.",
+    })
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Orders                                                              */
+/* ------------------------------------------------------------------ */
+
+export async function sendOrderStatusEmails(order: IOrder, previousStatus: string) {
+  const { customer } = order;
+
+  let title = `Update on your order ${order.orderReference}`;
+  let lead = `Your order ${order.orderReference} is now marked as "${order.status}".`;
+  if (order.status === "Cancelled") {
+    title = `Your order ${order.orderReference} was cancelled`;
+    lead = `Your order ${order.orderReference} was cancelled. If you have already paid, we will arrange a refund or a clinic credit.`;
+  } else if (order.status === "Delivered") {
+    title = `Your order ${order.orderReference} was delivered`;
+    lead = "Great news — your order has been delivered. We hope it supports your health journey.";
+  } else if (order.status === "Ready for Pickup") {
+    lead = `Your order ${order.orderReference} is ready for pickup at the clinic (${esc(order.shipping.address)}).`;
+  } else if (order.status === "Out for Delivery") {
+    lead = `Your order ${order.orderReference} is on its way.`;
+  }
+
+  await safeSend(
+    customer.email,
+    `Update on your order ${order.orderReference}`,
+    wrap({
+      kicker: "Order update",
+      title,
+      lead,
+      sections:
+        section(
+          "Status",
+          infoRows([
+            { label: "Order reference", value: esc(order.orderReference) },
+            { label: "Current status", value: esc(order.status) },
+            { label: "Previous status", value: esc(previousStatus) },
+          ])
+        ) + section("Items", orderSummary(order)),
+      cta: { href: `${siteOrigin()}/account`, label: "View your orders" },
+      note: "Questions about this update? Reply to this email or message the clinic on WhatsApp.",
+    })
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Messages (clinic ⇄ patient)                                         */
+/* ------------------------------------------------------------------ */
+
+const MESSAGE_HTML = (body: string) =>
+  `<div style="margin:16px 0 0;background:${C.softRow};border:1px solid ${C.line};border-radius:8px;padding:14px 16px;font-size:14px;color:${C.ink};line-height:1.65;white-space:pre-wrap">${esc(body)}</div>`;
+
+export async function sendClinicMessageEmail(opts: {
+  to: string;
+  name?: string;
+  subject: string;
+  body: string;
+}) {
+  const firstName = (opts.name || "there").trim().split(/\s+/)[0] || "there";
+  await safeSend(
+    opts.to,
+    `New message from S19 Herbal Clinic: ${opts.subject}`,
+    wrap({
+      kicker: "Message from the clinic",
+      title: `Hello ${firstName}, you have a new message`,
+      lead: "The clinic sent you an update about your care.",
+      sections: section(opts.subject, MESSAGE_HTML(opts.body.slice(0, 3000))) ,
+      cta: { href: `${siteOrigin()}/account`, label: "Open your messages" },
+    })
+  );
+}
+
+export async function sendPatientReplyAdminEmail(opts: {
+  patientName: string;
+  email: string;
+  subject: string;
+  body: string;
+}) {
+  if (!ADMIN_EMAIL) return;
+  await safeSend(
+    ADMIN_EMAIL,
+    `Patient message: ${opts.subject}`,
+    wrap({
+      kicker: "Admin notification",
+      title: `New message from ${opts.patientName}`,
+      lead: `${opts.patientName} · ${opts.email}`,
+      sections: section(opts.subject, MESSAGE_HTML(opts.body.slice(0, 3000))),
+      cta: { href: `${siteOrigin()}/account`, label: "Open the messaging dashboard" },
+    })
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Medical records & prescriptions                                     */
+/* ------------------------------------------------------------------ */
+
+export async function sendRecordAddedEmail(opts: {
+  to: string;
+  patientName?: string;
+  doctorName?: string;
+  title: string;
+  forMember?: string;
+}) {
+  const firstName = (opts.patientName || "there").trim().split(/\s+/)[0] || "there";
+  await safeSend(
+    opts.to,
+    `New medical record - ${opts.title}`,
+    wrap({
+      kicker: "Medical update",
+      title: `A new medical record was added, ${firstName}`,
+      lead: `${opts.doctorName || "The clinic"} added a new record${
+        opts.forMember ? ` for ${esc(opts.forMember)}` : ""
+      }: "${esc(opts.title)}".`,
+      sections: section("Record", infoRows([
+        { label: "Record", value: esc(opts.title) },
+        ...(opts.forMember ? [{ label: "Patient", value: esc(opts.forMember) }] : []),
+        ...(opts.doctorName ? [{ label: "Clinician", value: esc(opts.doctorName) }] : []),
+      ])),
+      cta: { href: `${siteOrigin()}/account`, label: "View my records" },
+    })
+  );
+}
+
+export async function sendPrescriptionIssuedEmail(opts: {
+  to: string;
+  patientName?: string;
+  doctorName?: string;
+  medications: string;
+  forMember?: string;
+}) {
+  const firstName = (opts.patientName || "there").trim().split(/\s+/)[0] || "there";
+  await safeSend(
+    opts.to,
+    `New prescription - ${opts.medications}`,
+    wrap({
+      kicker: "Medical update",
+      title: `A new prescription was issued, ${firstName}`,
+      lead: `${opts.doctorName || "The clinic"} issued a new prescription${
+        opts.forMember ? ` for ${esc(opts.forMember)}` : ""
+      }: ${esc(opts.medications)}.`,
+      sections: section("Prescription", infoRows([
+        { label: "Medications", value: esc(opts.medications) },
+        ...(opts.forMember ? [{ label: "Patient", value: esc(opts.forMember) }] : []),
+        ...(opts.doctorName ? [{ label: "Clinician", value: esc(opts.doctorName) }] : []),
+      ])),
+      cta: { href: `${siteOrigin()}/account`, label: "View my prescriptions" },
+    })
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Account security & site activity                                    */
+/* ------------------------------------------------------------------ */
+
+export async function sendPasswordChangedEmail(to: string, name?: string) {
+  const firstName = (name || "there").trim().split(/\s+/)[0] || "there";
+  await safeSend(
+    to,
+    "Your S19 password was changed",
+    wrap({
+      kicker: "Security",
+      title: `Your password was changed, ${firstName}`,
+      lead: "The password for your S19 Herbal Clinic account was just changed. If that was you, no further action is needed.",
+      note: "If you did not change your password, please contact the clinic immediately so we can secure your account.",
+    })
+  );
+}
+
+export async function sendTestimonialLiveEmail(to: string, name: string, text: string) {
+  const firstName = name.trim().split(/\s+/)[0] || "there";
+  await safeSend(
+    to,
+    "Your story is now live on s19clinic.com",
+    wrap({
+      kicker: "Good news",
+      title: `Your story is live, ${firstName}`,
+      lead: "Thank you for sharing your experience at S19 Herbal Clinic. Your testimonial has been approved and is now visible on our website.",
+      sections: text ? section("Your story", MESSAGE_HTML(text.slice(0, 600))) : "",
+      cta: { href: `${siteOrigin()}/patient-stories`, label: "View patient stories" },
+    })
+  );
+}
+
+export async function sendNewsletterWelcomeEmail(to: string, name?: string) {
+  const firstName = (name || "there").trim().split(/\s+/)[0] || "there";
+  await safeSend(
+    to,
+    "Welcome to the S19 Herbal Clinic newsletter",
+    wrap({
+      kicker: "Newsletter",
+      title: `Welcome aboard, ${firstName}`,
+      lead: "You are now subscribed to news from S19 Herbal Clinic — updates on our programs, special offers and health tips.",
+      note: "You can unsubscribe at any time using the link included in our newsletter emails.",
+    })
+  );
 }

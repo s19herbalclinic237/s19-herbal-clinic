@@ -5,6 +5,12 @@ import { Doctor } from "@/lib/models/Doctor";
 import { Appointment } from "@/lib/models/Appointment";
 import { Message } from "@/lib/models/Message";
 import { DATE_RE, TIME_RE, openSlotTimes, todayDateOnly, weekdayOf } from "@/lib/appointments";
+import {
+  sendAppointmentCancelledEmails,
+  sendAppointmentConfirmedEmails,
+  sendAppointmentProviderUpdateEmails,
+  type AppointmentEmailInput,
+} from "@/lib/email";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -153,6 +159,46 @@ export async function PATCH(request: Request, { params }: Params) {
       .populate("user", "name email phone")
       .populate("doctor", "name specialty specialtyFr")
       .lean();
+
+    // Email the patient when the clinic confirms, cancels, or moves a slot.
+    if (updated) {
+      const patient = (updated.user ?? undefined) as
+        | { name?: string; email?: string; phone?: string }
+        | undefined;
+      const doctorObj = (updated.doctor ?? undefined) as { name?: string } | undefined;
+      const oldStatus = appointment.status;
+      const movedSlot =
+        (doctorId !== undefined && doctorId.trim() !== String(appointment.doctor)) ||
+        (date !== undefined && date.trim() !== appointment.date) ||
+        (time !== undefined && time.trim() !== appointment.time);
+
+      if (patient?.email) {
+        const payload: AppointmentEmailInput = {
+          to: patient.email,
+          patientName: patient.name || "there",
+          doctorName: doctorObj?.name || "the clinic",
+          date: targetDate,
+          time: targetTime,
+          mode: updated.mode === "video" ? "video" : "clinic",
+          forMember: updated.forMember,
+          concern: updated.concern,
+          meetingUrl:
+            (set.meetingUrl as string | undefined) || appointment.meetingUrl || undefined,
+          phone: patient.phone,
+        };
+        try {
+          if (status === "confirmed" && oldStatus !== "confirmed") {
+            await sendAppointmentConfirmedEmails(payload);
+          } else if (status === "cancelled" && oldStatus !== "cancelled") {
+            await sendAppointmentCancelledEmails(payload);
+          } else if (movedSlot) {
+            await sendAppointmentProviderUpdateEmails(payload);
+          }
+        } catch (error) {
+          console.error("[admin/appointments] notification email failed:", error);
+        }
+      }
+    }
 
     return NextResponse.json({ success: true, appointment: updated });
   } catch (error) {

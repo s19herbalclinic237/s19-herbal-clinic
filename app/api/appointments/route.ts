@@ -12,6 +12,7 @@ import {
   weekdayOf,
 } from "@/lib/appointments";
 import { CLINIC } from "@/lib/site";
+import { sendAppointmentBookedEmails } from "@/lib/email";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -156,6 +157,25 @@ export async function POST(request: Request) {
         `\nThe clinic will confirm shortly. If anything changes, please let us know on WhatsApp: ${CLINIC.phone}`,
       read: false,
     });
+
+    // Email the patient a copy of the request and alert the clinic.
+    if (user.email) {
+      try {
+        await sendAppointmentBookedEmails({
+          to: user.email,
+          patientName: user.name || "there",
+          doctorName: doctorDoc.name,
+          date: cleanDate,
+          time: cleanTime,
+          mode: cleanMode === "video" ? "video" : "clinic",
+          forMember: cleanForMember || undefined,
+          concern: cleanConcern || undefined,
+          phone: (user as { phone?: string }).phone,
+        });
+      } catch (error) {
+        console.error("[appointments] booking email failed:", error);
+      }
+    }
 
     return NextResponse.json(
       { success: true, appointment, message: "Appointment requested. The clinic will confirm." },

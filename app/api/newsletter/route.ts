@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/db";
 import { Subscriber } from "@/lib/models/Subscriber";
+import { sendNewsletterWelcomeEmail } from "@/lib/email";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -39,6 +40,17 @@ export async function POST(request: Request) {
         name: typeof name === "string" ? name.trim() || undefined : undefined,
       });
     }
+
+    // Send a welcome email (best-effort).
+    try {
+      await sendNewsletterWelcomeEmail(
+        cleanEmail,
+        typeof name === "string" ? name.trim() || undefined : undefined
+      );
+    } catch (error) {
+      console.error("[newsletter] welcome email failed:", error);
+    }
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("[newsletter] subscribe failed:", error);

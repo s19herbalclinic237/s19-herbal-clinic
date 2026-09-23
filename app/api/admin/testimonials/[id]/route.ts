@@ -3,6 +3,7 @@ import { isValidObjectId } from "mongoose";
 import { connectDb } from "@/lib/db";
 import { adminGuard } from "@/lib/admin-guard";
 import { Testimonial } from "@/lib/models/Testimonial";
+import { sendTestimonialLiveEmail } from "@/lib/email";
 
 const STATUSES = ["pending", "approved", "rejected"] as const;
 
@@ -117,6 +118,20 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     const testimonial = await Testimonial.findByIdAndUpdate(id, { $set: patch }, { new: true })
       .populate("user", "name email")
       .lean();
+
+    // Let the author know when their story goes live.
+    if (patch.status === "approved" && existing.status !== "approved") {
+      const submitterEmail =
+        (testimonial?.user as { email?: string } | null | undefined)?.email || testimonial?.email;
+      if (submitterEmail) {
+        try {
+          await sendTestimonialLiveEmail(submitterEmail, testimonial?.name || "friend", testimonial?.text || "");
+        } catch (error) {
+          console.error("[admin/testimonials] live email failed:", error);
+        }
+      }
+    }
+
     return NextResponse.json({ success: true, testimonial });
   } catch (error) {
     console.error("[admin/testimonials] update failed:", error);

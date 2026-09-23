@@ -3,6 +3,7 @@ import { isValidObjectId } from "mongoose";
 import { connectDb } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth-server";
 import { Message } from "@/lib/models/Message";
+import { sendPatientReplyAdminEmail } from "@/lib/email";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -76,6 +77,18 @@ export async function POST(request: Request) {
         thread: root._id,
         read: false,
       });
+      if (user.email) {
+        try {
+          await sendPatientReplyAdminEmail({
+            patientName: user.name || "Patient",
+            email: user.email,
+            subject: root.subject,
+            body: text,
+          });
+        } catch (error) {
+          console.error("[messages] admin email failed:", error);
+        }
+      }
       return NextResponse.json({ success: true, message }, { status: 201 });
     }
 
@@ -90,6 +103,18 @@ export async function POST(request: Request) {
       body: text,
       read: false,
     });
+    if (user.email) {
+      try {
+        await sendPatientReplyAdminEmail({
+          patientName: user.name || "Patient",
+          email: user.email,
+          subject,
+          body: text,
+        });
+      } catch (error) {
+        console.error("[messages] admin email failed:", error);
+      }
+    }
     return NextResponse.json({ success: true, message }, { status: 201 });
   } catch (error) {
     console.error("[messages] send failed:", error);

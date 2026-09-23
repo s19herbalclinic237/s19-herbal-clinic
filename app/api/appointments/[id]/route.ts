@@ -3,13 +3,8 @@ import { connectDb } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth-server";
 import { Doctor } from "@/lib/models/Doctor";
 import { Appointment } from "@/lib/models/Appointment";
-import {
-  DATE_RE,
-  TIME_RE,
-  openSlotTimes,
-  todayDateOnly,
-  weekdayOf,
-} from "@/lib/appointments";
+import { DATE_RE, TIME_RE, openSlotTimes, todayDateOnly, weekdayOf } from "@/lib/appointments";
+import { sendAppointmentCancelledEmails, sendAppointmentRescheduledEmails } from "@/lib/email";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -53,6 +48,24 @@ export async function PATCH(request: Request, { params }: Params) {
 
     if (action === "cancel") {
       await Appointment.updateOne({ _id: id }, { $set: { status: "cancelled" } });
+      const doctorDoc = await Doctor.findById(String(appointment.doctor)).select("name").lean();
+      if (user.email) {
+        try {
+          await sendAppointmentCancelledEmails({
+            to: user.email,
+            patientName: user.name || "there",
+            doctorName: doctorDoc?.name || "the clinic",
+            date: appointment.date,
+            time: appointment.time,
+            mode: appointment.mode === "video" ? "video" : "clinic",
+            forMember: appointment.forMember,
+            concern: appointment.concern,
+            phone: (user as { phone?: string }).phone,
+          });
+        } catch (error) {
+          console.error("[appointments] cancel email failed:", error);
+        }
+      }
       return NextResponse.json({ success: true, message: "Appointment cancelled." });
     }
 
@@ -107,6 +120,24 @@ export async function PATCH(request: Request, { params }: Params) {
     const updated = await Appointment.findById(id)
       .populate("doctor", "name specialty specialtyFr photo")
       .lean();
+
+    if (user.email) {
+      try {
+        await sendAppointmentRescheduledEmails({
+          to: user.email,
+          patientName: user.name || "there",
+          doctorName: doctorDoc.name,
+          date: cleanDate,
+          time: cleanTime,
+          mode: appointment.mode === "video" ? "video" : "clinic",
+          forMember: appointment.forMember,
+          concern: appointment.concern,
+          phone: (user as { phone?: string }).phone,
+        });
+      } catch (error) {
+        console.error("[appointments] reschedule email failed:", error);
+      }
+    }
 
     return NextResponse.json({
       success: true,

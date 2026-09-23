@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/db";
 import { adminGuard } from "@/lib/admin-guard";
 import { Prescription, type Medication } from "@/lib/models/Prescription";
+import { User } from "@/lib/models/User";
 import { notifyPatient } from "@/lib/notify";
+import { sendPrescriptionIssuedEmail } from "@/lib/email";
 
 function parseMedications(raw: unknown): Medication[] {
   if (!Array.isArray(raw)) return [];
@@ -120,6 +122,22 @@ export async function POST(request: Request) {
       subject: `New prescription - ${medNames}`,
       body: bodyLines.join("\n"),
     });
+
+    // Email the patient the same update (best-effort).
+    const patient = await User.findById(cleanUserId).select("name email").lean();
+    if (patient?.email) {
+      try {
+        await sendPrescriptionIssuedEmail({
+          to: patient.email,
+          patientName: patient.name,
+          doctorName: doctor || undefined,
+          forMember: member || undefined,
+          medications: medNames,
+        });
+      } catch (error) {
+        console.error("[admin/prescriptions] email failed:", error);
+      }
+    }
 
     return NextResponse.json({ success: true, prescription, notified }, { status: 201 });
   } catch (error) {

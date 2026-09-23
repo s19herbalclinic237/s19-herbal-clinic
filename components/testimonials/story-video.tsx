@@ -3,11 +3,12 @@ import { getVideoEmbed } from "@/lib/video";
 
 /**
  * Renders a patient video review. Supports YouTube, Vimeo and Google Drive
- * share links (embedded) plus direct .mp4 / .webm file links (<video>).
+ * share links plus direct .mp4 / .webm file links.
  *
- * Pass `blocked` (probed server-side) when a Google Drive file is private:
- * instead of renting Google's "401. That's an error" frame inside the iframe,
- * visitors see a clean message and a link to the source file.
+ * Google Drive reviews play edge-to-edge in the native <video> element using
+ * the direct stream URL (no Drive chrome, no letterboxing). Pass `blocked`
+ * (probed server-side) when a Drive file is private: instead of a broken
+ * player, visitors see a clean message and a link to the source file.
  */
 export function StoryVideo({ url, blocked = false }: { url: string; blocked?: boolean }) {
   const embed = getVideoEmbed(url);
@@ -22,9 +23,7 @@ export function StoryVideo({ url, blocked = false }: { url: string; blocked?: bo
         Video review
       </p>
       <div className="mt-2 overflow-hidden rounded-lg border border-forest-100 bg-forest-950/5 shadow-sm">
-        {embed.kind === "file" ? (
-          <video src={embed.src} controls preload="metadata" className="aspect-video w-full" />
-        ) : isBlocked ? (
+        {isBlocked ? (
           <div className="flex aspect-video w-full flex-col items-center justify-center gap-2.5 bg-forest-950/10 px-6 text-center">
             <FaCircleExclamation className="h-8 w-8 text-gold-500" aria-hidden />
             <p className="text-sm font-bold text-ink">
@@ -42,6 +41,14 @@ export function StoryVideo({ url, blocked = false }: { url: string; blocked?: bo
               Open in Google Drive
             </a>
           </div>
+        ) : embed.kind === "file" || embed.kind === "drive" ? (
+          <video
+            src={embed.src}
+            controls
+            preload="metadata"
+            playsInline
+            className="aspect-video w-full bg-forest-950/5 object-contain"
+          />
         ) : (
           <iframe
             src={embed.embedUrl}

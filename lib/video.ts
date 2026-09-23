@@ -10,7 +10,7 @@
 export type VideoEmbed =
   | { kind: "youtube"; embedUrl: string }
   | { kind: "vimeo"; embedUrl: string }
-  | { kind: "drive"; embedUrl: string }
+  | { kind: "drive"; embedUrl: string; src: string }
   | { kind: "file"; src: string };
 
 export function getVideoEmbed(url?: string | null): VideoEmbed | null {
@@ -19,11 +19,16 @@ export function getVideoEmbed(url?: string | null): VideoEmbed | null {
   if (!trimmed) return null;
 
   // Google Drive: https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+  // `embedUrl` is the classic preview iframe; `src` is Google's direct
+  // stream URL so publicly shared review videos can play edge-to-edge in
+  // the native <video> element (no Drive chrome, no letterboxing).
   const driveMatch = trimmed.match(/drive\.google\.com\/file\/d\/([^/?#]+)/);
   if (driveMatch && driveMatch[1]) {
+    const fileId = driveMatch[1];
     return {
       kind: "drive",
-      embedUrl: `https://drive.google.com/file/d/${driveMatch[1]}/preview`,
+      embedUrl: `https://drive.google.com/file/d/${fileId}/preview`,
+      src: `https://drive.usercontent.google.com/download?id=${fileId}&export=download&confirm=t`,
     };
   }
 

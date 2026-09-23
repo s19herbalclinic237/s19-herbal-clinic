@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/db";
 import { adminGuard } from "@/lib/admin-guard";
 import { MedicalRecord, type RecordAttachment, type MedicalRecordType } from "@/lib/models/MedicalRecord";
+import { User } from "@/lib/models/User";
 import { notifyPatient } from "@/lib/notify";
+import { sendRecordAddedEmail } from "@/lib/email";
 
 const TYPES: MedicalRecordType[] = ["visit", "diagnosis", "lab", "scan", "note"];
 
@@ -119,6 +121,22 @@ export async function POST(request: Request) {
       subject: `New medical record - ${cleanTitle}`,
       body: bodyLines.join("\n"),
     });
+
+    // Email the patient the same update (best-effort).
+    const patient = await User.findById(cleanUserId).select("name email").lean();
+    if (patient?.email) {
+      try {
+        await sendRecordAddedEmail({
+          to: patient.email,
+          patientName: patient.name,
+          doctorName: doctor || undefined,
+          forMember: member || undefined,
+          title: cleanTitle,
+        });
+      } catch (error) {
+        console.error("[admin/medical-records] email failed:", error);
+      }
+    }
 
     return NextResponse.json({ success: true, record, notified }, { status: 201 });
   } catch (error) {
