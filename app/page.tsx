@@ -7,7 +7,7 @@ import { ProductCard } from "@/components/ui/product-card";
 import { BookingForm } from "@/components/sections/booking-form";
 import { CTABand } from "@/components/sections/cta-band";
 import { BlurIn, Reveal, ScaleIn, StaggerGroup, StaggerItem } from "@/components/ui/motion";
-import { StoryVideo } from "@/components/testimonials/story-video";
+import { VideoCarousel } from "@/components/home/video-carousel";
 import { getProducts } from "@/lib/catalog";
 import { getApprovedTestimonials } from "@/lib/testimonials";
 import { getActiveVideoReviews } from "@/lib/video-reviews";
@@ -73,8 +73,13 @@ export default async function HomePage() {
     .filter((p): p is NonNullable<typeof p> => typeof p !== "undefined");
   const testimonials = await getApprovedTestimonials(12, locale);
   const videoReviews = await getActiveVideoReviews();
-  const featuredVideo = videoReviews.length > 0 ? videoReviews[videoReviews.length - 1] : null;
-  const featuredVideoBlocked = featuredVideo ? await isVideoEmbedBlocked(featuredVideo.url) : false;
+  const videoItems = await Promise.all(
+    videoReviews.map(async (v) => ({
+      url: v.url,
+      title: v.title,
+      blocked: await isVideoEmbedBlocked(v.url),
+    }))
+  );
 
   const careLinks = [
     {
@@ -178,20 +183,16 @@ export default async function HomePage() {
           </Reveal>
 
           <Reveal delay={0.1}>
-            <div className="mx-auto mt-12 max-w-3xl">
-              {featuredVideo ? (
-                <div className="overflow-hidden rounded-2xl border border-white/15 bg-forest-900/50 shadow-lift">
-                  <StoryVideo url={featuredVideo.url} blocked={featuredVideoBlocked} bare />
-                </div>
-              ) : (
-                <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/15 bg-forest-900/50 px-8 py-14 text-center">
-                  <FaCirclePlay className="h-8 w-8 text-gold-400" aria-hidden />
-                  <p className="max-w-sm text-sm leading-relaxed text-forest-200">
-                    {t("home.videos.empty")}
-                  </p>
-                </div>
-              )}
-            </div>
+            {videoItems.length > 0 ? (
+              <VideoCarousel items={videoItems} />
+            ) : (
+              <div className="mx-auto mt-12 flex max-w-3xl flex-col items-center gap-3 rounded-2xl border border-white/15 bg-forest-900/50 px-8 py-14 text-center">
+                <FaCirclePlay className="h-8 w-8 text-gold-400" aria-hidden />
+                <p className="max-w-sm text-sm leading-relaxed text-forest-200">
+                  {t("home.videos.empty")}
+                </p>
+              </div>
+            )}
           </Reveal>
 
           <Reveal delay={0.15}>

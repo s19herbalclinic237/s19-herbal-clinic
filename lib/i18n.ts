@@ -150,10 +150,12 @@ const dict = {
   "home.videos.kicker": { en: "Patient Stories on Video", fr: "Témoignages de patients en vidéo" },
   "home.videos.title": { en: "Hear it from our patients, on video.", fr: "Écoutez nos patients, en vidéo." },
   "home.videos.lead": {
-    en: "Real patients telling their own healing stories on camera. Watch a featured story below, then explore the full collection of video reviews.",
-    fr: "De vrais patients racontent leurs histoires de guérison en vidéo. Regardez un témoignage vedette ci-dessous, puis explorez toute la collection d'avis vidéo.",
+    en: "Real patients telling their own healing stories on camera. Swipe through the latest video reviews, then explore the full collection.",
+    fr: "De vrais patients racontent leurs histoires de guérison en vidéo. Parcourez les témoignages vidéo les plus récents, puis explorez toute la collection.",
   },
   "home.videos.cta": { en: "Watch all video reviews", fr: "Voir tous les avis vidéo" },
+  "home.videos.prev": { en: "Previous videos", fr: "Vidéos précédentes" },
+  "home.videos.next": { en: "Next videos", fr: "Vidéos suivantes" },
   "home.videos.empty": {
     en: "New patient videos are being prepared. The clinic will publish them here shortly.",
     fr: "De nouvelles vidéos de patients sont en préparation. La clinique les publiera ici très bientôt.",
