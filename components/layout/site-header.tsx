@@ -37,7 +37,7 @@ const nav = [
   { key: "nav.telehealth", href: "/telehealth" },
   { key: "nav.shop", href: "/shop" },
   { key: "nav.blog", href: "/blog" },
-  { key: "nav.library", href: "/health-library" },
+  { key: "nav.videos", href: "/live-reviews" },
   { key: "nav.stories", href: "/patient-stories" },
   { key: "nav.about", href: "/about" },
 ] as const;

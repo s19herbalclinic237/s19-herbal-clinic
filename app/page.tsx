@@ -159,6 +159,52 @@ export default async function HomePage() {
         </Container>
       </div>
 
+      {/* VIDEO TESTIMONIALS - featured patient review + link to the full library */}
+      <section
+        id="home-video-reviews"
+        className="relative scroll-mt-20 overflow-hidden border-t border-forest-900 bg-forest-950 py-16 md:py-24"
+      >
+        <div className="pointer-events-none absolute -top-20 left-1/4 h-72 w-72 rounded-full bg-gold-400/10 blur-3xl" />
+        <div className="pointer-events-none absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-emerald-400/10 blur-3xl" />
+        <Container className="relative z-10">
+          <Reveal>
+            <div className="mx-auto max-w-2xl text-center">
+              <Kicker dark center>{t("home.videos.kicker")}</Kicker>
+              <h2 className="mt-4 text-white">{t("home.videos.title")}</h2>
+              <p className="mt-4 text-[15px] leading-relaxed text-forest-200">
+                {t("home.videos.lead")}
+              </p>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <div className="mx-auto mt-12 max-w-3xl">
+              {featuredVideo ? (
+                <div className="overflow-hidden rounded-2xl border border-white/15 bg-forest-900/50 shadow-lift">
+                  <StoryVideo url={featuredVideo.url} blocked={featuredVideoBlocked} bare />
+                </div>
+              ) : (
+                <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/15 bg-forest-900/50 px-8 py-14 text-center">
+                  <FaCirclePlay className="h-8 w-8 text-gold-400" aria-hidden />
+                  <p className="max-w-sm text-sm leading-relaxed text-forest-200">
+                    {t("home.videos.empty")}
+                  </p>
+                </div>
+              )}
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.15}>
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+              <Link href="/live-reviews" className={buttonLinkClasses("gold", "xl")}>
+                <FaCirclePlay className="h-4 w-4" aria-hidden />
+                {t("home.videos.cta")}
+              </Link>
+            </div>
+          </Reveal>
+        </Container>
+      </section>
+
       {/* TREATMENT PROGRAMS (merged with Why S19 principles) */}
       <Section>
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
@@ -447,52 +493,6 @@ export default async function HomePage() {
           </div>
         </Reveal>
       </Section>
-
-      {/* VIDEO TESTIMONIALS - featured patient review + link to the full library */}
-      <section
-        id="home-video-reviews"
-        className="relative scroll-mt-20 overflow-hidden border-t border-forest-900 bg-forest-950 py-16 md:py-24"
-      >
-        <div className="pointer-events-none absolute -top-20 left-1/4 h-72 w-72 rounded-full bg-gold-400/10 blur-3xl" />
-        <div className="pointer-events-none absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-emerald-400/10 blur-3xl" />
-        <Container className="relative z-10">
-          <Reveal>
-            <div className="mx-auto max-w-2xl text-center">
-              <Kicker dark center>{t("home.videos.kicker")}</Kicker>
-              <h2 className="mt-4 text-white">{t("home.videos.title")}</h2>
-              <p className="mt-4 text-[15px] leading-relaxed text-forest-200">
-                {t("home.videos.lead")}
-              </p>
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.1}>
-            <div className="mx-auto mt-12 max-w-3xl">
-              {featuredVideo ? (
-                <div className="overflow-hidden rounded-2xl border border-white/15 bg-forest-900/50 shadow-lift">
-                  <StoryVideo url={featuredVideo.url} blocked={featuredVideoBlocked} bare />
-                </div>
-              ) : (
-                <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/15 bg-forest-900/50 px-8 py-14 text-center">
-                  <FaCirclePlay className="h-8 w-8 text-gold-400" aria-hidden />
-                  <p className="max-w-sm text-sm leading-relaxed text-forest-200">
-                    {t("home.videos.empty")}
-                  </p>
-                </div>
-              )}
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.15}>
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-              <Link href="/live-reviews" className={buttonLinkClasses("gold", "xl")}>
-                <FaCirclePlay className="h-4 w-4" aria-hidden />
-                {t("home.videos.cta")}
-              </Link>
-            </div>
-          </Reveal>
-        </Container>
-      </section>
 
       {/* LOCATION - full-bleed image band */}
       <section className="relative overflow-hidden py-24 md:py-28">

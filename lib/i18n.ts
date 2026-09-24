@@ -13,7 +13,7 @@ const dict = {
   "nav.telehealth": { en: "Tele-Health", fr: "Télé-santé" },
   "nav.shop": { en: "Shop", fr: "Boutique" },
   "nav.blog": { en: "Blog", fr: "Blog" },
-  "nav.library": { en: "Learn", fr: "Apprendre" },
+  "nav.videos": { en: "Videos", fr: "Vidéos" },
   "nav.about": { en: "About", fr: "À propos" },
   "nav.stories": { en: "Testimonials", fr: "Témoignages" },
   "nav.account": { en: "My Account", fr: "Mon compte" },
