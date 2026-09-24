@@ -759,8 +759,8 @@ export function AppointmentsTab() {
         <div className="rounded-lg border border-line bg-white p-8 text-center">
           <FaCalendarCheck className="mx-auto h-7 w-7 text-forest-300" aria-hidden />
           <p className="mt-3 text-sm text-muted">
-            No appointments here yet. Book a consultation with the S19 clinic - in person or by
-            video call.
+            No appointments here yet. Book a consultation with the S19 clinic - in person or
+            online consultation.
           </p>
           <div className="mt-4 flex justify-center gap-2">
             <Button size="sm" onClick={() => setShowBook(true)}>

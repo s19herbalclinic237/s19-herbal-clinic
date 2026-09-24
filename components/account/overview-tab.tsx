@@ -9,8 +9,15 @@ import {
   type OrderSummary,
   type PatientTabId,
   type TestimonialView,
+  type TreatmentPlanView,
 } from "@/components/account/dashboard-data";
-import { formatDate, OrderStatusBadge, TestimonialStatusBadge } from "@/components/account/badges";
+import {
+  daysUntil,
+  formatDate,
+  OrderStatusBadge,
+  TestimonialStatusBadge,
+  TreatmentPhaseBadge,
+} from "@/components/account/badges";
 import { UserAvatar } from "@/components/account/user-avatar";
 import { formatFcfa } from "@/lib/utils";
 import { CLINIC, waLink } from "@/lib/site";
@@ -18,6 +25,7 @@ import {
   FaArrowRight,
   FaBoxOpen,
   FaCalendarCheck,
+  FaCalendarDays,
   FaCircleUser,
   FaClock,
   FaCommentDots,
@@ -25,6 +33,7 @@ import {
   FaEnvelopeOpen,
   FaFileMedical,
   FaGear,
+  FaHourglassHalf,
   FaLocationDot,
   FaPeopleGroup,
   FaPills,
@@ -362,6 +371,73 @@ function YourStoryCard({
   );
 }
 
+function TreatmentPlanCard({
+  plans,
+  loading,
+  onNavigate,
+}: {
+  plans: TreatmentPlanView[];
+  loading: boolean;
+  onNavigate: (tab: PatientTabId) => void;
+}) {
+  const featured = plans.find((p) => p.phase === "active") ?? plans[0];
+  const left = featured ? daysUntil(featured.endDate) : 0;
+
+  return (
+    <Card
+      title="Treatment Plan"
+      action={
+        plans.length > 0 ? <CardAction onClick={() => onNavigate("treatment")}>View all</CardAction> : null
+      }
+    >
+      {loading ? (
+        <ListSkeleton rows={2} />
+      ) : !featured ? (
+        <EmptyState
+          icon={<FaCalendarDays className="h-5 w-5" aria-hidden />}
+          title="No treatment plan yet"
+          sub="The clinic builds every patient a personalized 3-month or 6-month plan. It will appear here with its start and end dates as soon as it is set up."
+        />
+      ) : (
+        <div className="px-5 py-4">
+          <div className="flex items-start justify-between gap-3">
+            <p className="min-w-0 truncate text-sm font-bold text-ink">{featured.title}</p>
+            <TreatmentPhaseBadge phase={featured.phase} />
+          </div>
+          <p className="mt-2 text-xs leading-relaxed text-muted">
+            {featured.phase === "scheduled" ? "Starts" : "Started"}{" "}
+            <span className="font-semibold text-ink">{formatDate(featured.startDate)}</span>
+            {" · "}
+            {featured.phase === "expired" ? "Ended" : "Ends"}{" "}
+            <span className="font-semibold text-ink">{formatDate(featured.endDate)}</span>
+            {featured.forMember ? ` · ${featured.forMember}` : ""}
+          </p>
+          {featured.phase === "active" ? (
+            <p className="mt-3 inline-flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800">
+              <FaHourglassHalf className="h-3.5 w-3.5" aria-hidden />
+              {left > 0
+                ? `${left} day${left === 1 ? "" : "s"} left on this treatment`
+                : "Final day of treatment"}
+            </p>
+          ) : featured.phase === "scheduled" ? (
+            <p className="mt-3 text-xs font-semibold text-sky-700">Not started yet</p>
+          ) : (
+            <p className="mt-3 text-xs font-semibold text-zinc-500">Completed</p>
+          )}
+          <button
+            type="button"
+            onClick={() => onNavigate("treatment")}
+            className="mt-4 inline-flex cursor-pointer items-center gap-1.5 text-xs font-semibold text-forest-800 transition-colors hover:text-gold-600"
+          >
+            View treatment timeline
+            <FaArrowRight className="h-3 w-3" aria-hidden />
+          </button>
+        </div>
+      )}
+    </Card>
+  );
+}
+
 const quickActions: {
   label: string;
   sub: string;
@@ -370,7 +446,7 @@ const quickActions: {
 }[] = [
   {
     label: "Book appointment",
-    sub: "Clinic or video",
+    sub: "Clinic or Online",
     icon: <FaCalendarCheck className="h-4 w-4" aria-hidden />,
     tab: "appointments",
   },
@@ -489,7 +565,7 @@ interface DashboardOverviewProps {
 
 export function DashboardOverview({ data, onNavigate }: DashboardOverviewProps) {
   const { user, resendVerification } = useAuth();
-  const { orders, messages, testimonials, unreadCount, loading } = data;
+  const { orders, messages, testimonials, plans, unreadCount, loading } = data;
   const [resent, setResent] = useState(false);
 
   const firstName = user?.name?.trim().split(/\s+/)[0] || "there";
@@ -603,6 +679,7 @@ export function DashboardOverview({ data, onNavigate }: DashboardOverviewProps) 
       {/* Content columns */}
       <div className="grid items-start gap-5 px-4 sm:px-0 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-6">
         <div className="min-w-0 space-y-5 lg:space-y-6">
+          <TreatmentPlanCard plans={plans} loading={loading} onNavigate={onNavigate} />
           <RecentOrdersCard orders={orders} loading={loading} onNavigate={onNavigate} />
           <RecentMessagesCard messages={messages} loading={loading} onNavigate={onNavigate} />
         </div>

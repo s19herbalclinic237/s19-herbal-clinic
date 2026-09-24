@@ -786,6 +786,39 @@ export async function sendPrescriptionIssuedEmail(opts: {
   );
 }
 
+function emailDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+}
+
+export async function sendTreatmentPlanEmail(opts: {
+  to: string;
+  patientName?: string;
+  title: string;
+  startDate: string;
+  endDate: string;
+  forMember?: string;
+}) {
+  const firstName = (opts.patientName || "there").trim().split(/\s+/)[0] || "there";
+  await safeSend(
+    opts.to,
+    `Treatment plan - ${opts.title}`,
+    wrap({
+      kicker: "Treatment plan",
+      title: `Your treatment plan is set, ${firstName}`,
+      lead: `The clinic has scheduled your personalized treatment plan${
+        opts.forMember ? ` for ${esc(opts.forMember)}` : ""
+      }. Track it from your patient portal, where you can see when it started, when it ends and its live status.`,
+      sections: section("Treatment plan", infoRows([
+        { label: "Plan", value: esc(opts.title) },
+        { label: "Starts", value: emailDate(opts.startDate) },
+        { label: "Ends", value: emailDate(opts.endDate) },
+        ...(opts.forMember ? [{ label: "Patient", value: esc(opts.forMember) }] : []),
+      ])),
+      cta: { href: `${siteOrigin()}/account`, label: "View my treatment plan" },
+    })
+  );
+}
+
 /* ------------------------------------------------------------------ */
 /* Account security & site activity                                    */
 /* ------------------------------------------------------------------ */

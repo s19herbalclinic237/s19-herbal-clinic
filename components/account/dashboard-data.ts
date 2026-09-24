@@ -13,6 +13,7 @@ export type PatientTabId =
   | "messages"
   | "records"
   | "prescriptions"
+  | "treatment"
   | "family"
   | "testimonials"
   | "settings";
@@ -47,10 +48,26 @@ export interface TestimonialView {
   createdAt: string;
 }
 
+export type TreatmentPlanPhase = "active" | "expired" | "scheduled";
+
+export interface TreatmentPlanView {
+  _id: string;
+  forMember?: string;
+  title: string;
+  program?: string;
+  startDate: string;
+  endDate: string;
+  notes?: string;
+  phase: TreatmentPlanPhase;
+  /** Whole days the plan spans (start..end, inclusive). */
+  days: number;
+}
+
 export interface DashboardData {
   orders: OrderSummary[];
   messages: MessageView[];
   testimonials: TestimonialView[];
+  plans: TreatmentPlanView[];
   unreadCount: number;
   loading: boolean;
 }
@@ -74,24 +91,28 @@ export function useDashboardData(): DashboardData {
   const [orders, setOrders] = useState<OrderSummary[]>([]);
   const [messages, setMessages] = useState<MessageView[]>([]);
   const [testimonials, setTestimonials] = useState<TestimonialView[]>([]);
+  const [plans, setPlans] = useState<TreatmentPlanView[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
     (async () => {
-      const [oRes, mRes, tRes] = await Promise.all([
+      const [oRes, mRes, tRes, pRes] = await Promise.all([
         readJson<{ orders?: OrderSummary[] }>("/api/orders"),
         readJson<{ messages?: MessageView[]; unreadCount?: number }>("/api/messages"),
         readJson<{ testimonials?: TestimonialView[] }>("/api/testimonials"),
+        readJson<{ plans?: TreatmentPlanView[] }>("/api/treatment-plans"),
       ]);
       if (!active) return;
       const o = Array.isArray(oRes?.orders) ? (oRes!.orders as OrderSummary[]) : [];
       const m = Array.isArray(mRes?.messages) ? (mRes!.messages as MessageView[]) : [];
       const t = Array.isArray(tRes?.testimonials) ? (tRes!.testimonials as TestimonialView[]) : [];
+      const p = Array.isArray(pRes?.plans) ? (pRes!.plans as TreatmentPlanView[]) : [];
       setOrders(o);
       setMessages(m);
       setTestimonials(t);
+      setPlans(p);
       setUnreadCount(
         typeof mRes?.unreadCount === "number" ? mRes.unreadCount : m.filter((x) => !x.read).length
       );
@@ -102,5 +123,5 @@ export function useDashboardData(): DashboardData {
     };
   }, []);
 
-  return { orders, messages, testimonials, unreadCount, loading };
+  return { orders, messages, testimonials, plans, unreadCount, loading };
 }

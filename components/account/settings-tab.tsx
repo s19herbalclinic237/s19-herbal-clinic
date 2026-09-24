@@ -38,6 +38,10 @@ export function SettingsTab() {
 
   async function saveProfile(e: FormEvent) {
     e.preventDefault();
+    if (!gender.trim()) {
+      toast.error("Please select your gender - it is required.");
+      return;
+    }
     setSavingProfile(true);
     try {
       const res = await fetch("/api/auth/profile", {
@@ -245,13 +249,16 @@ export function SettingsTab() {
               onChange={(e) => setDob(e.target.value)}
             />
           </Field>
-          <Field label="Gender">
+          <Field label="Gender" required>
             <select
               value={gender}
               onChange={(e) => setGender(e.target.value)}
               className="w-full rounded-md border border-line-strong bg-white px-3 py-2 text-sm text-ink focus:border-forest-500 focus:outline-none focus:ring-2 focus:ring-forest-500/20"
+              required
             >
-              <option value="">Prefer not to say</option>
+              <option value="" disabled>
+                Select gender
+              </option>
               <option value="male">Male</option>
               <option value="female">Female</option>
               <option value="other">Other</option>

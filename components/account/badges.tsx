@@ -114,3 +114,40 @@ export function PrescriptionStatusBadge({ status }: { status: string }) {
     </span>
   );
 }
+
+const treatmentPhaseClasses: Record<string, string> = {
+  active: "border-emerald-300 bg-emerald-50 text-emerald-800",
+  expired: "border-zinc-300 bg-zinc-50 text-zinc-600",
+  scheduled: "border-sky-300 bg-sky-50 text-sky-800",
+};
+
+const treatmentPhaseLabels: Record<string, string> = {
+  active: "Active Treatment",
+  expired: "Expired Treatment Plan",
+  scheduled: "Scheduled",
+};
+
+/** Live signal for a treatment plan: ACTIVE TREATMENT / EXPIRED TREATMENT PLAN / SCHEDULED. */
+export function TreatmentPhaseBadge({ phase }: { phase: string }) {
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-[3px] text-[10px] font-semibold uppercase tracking-wide ${
+        treatmentPhaseClasses[phase] || "border-line-strong bg-cream text-muted"
+      }`}
+    >
+      {phase === "active" ? (
+        <span className="h-1.5 w-1.5 shrink-0 animate-pulse rounded-full bg-emerald-500" aria-hidden />
+      ) : null}
+      {treatmentPhaseLabels[phase] || phase}
+    </span>
+  );
+}
+
+/** Whole days from today until the given date (0 means today, negative = already passed). */
+export function daysUntil(iso: string | Date): number {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const target = new Date(iso);
+  target.setHours(0, 0, 0, 0);
+  return Math.round((target.getTime() - today.getTime()) / 86_400_000);
+}

@@ -17,6 +17,7 @@ import { SettingsTab } from "@/components/account/settings-tab";
 import { AppointmentsTab } from "@/components/account/appointments-tab";
 import { RecordsTab } from "@/components/account/records-tab";
 import { PrescriptionsTab } from "@/components/account/prescriptions-tab";
+import { TreatmentTab } from "@/components/account/treatment-tab";
 import { FamilyTab } from "@/components/account/family-tab";
 import { ProductsTab } from "@/components/admin/products-tab";
 import { AdminOrdersTab } from "@/components/admin/orders-tab";
@@ -29,6 +30,7 @@ import { DoctorsTab } from "@/components/admin/doctors-tab";
 import { AdminAppointmentsTab } from "@/components/admin/admin-appointments-tab";
 import { AdminMedicalRecordsTab } from "@/components/admin/medical-records-tab";
 import { AdminPrescriptionsTab } from "@/components/admin/prescriptions-tab";
+import { TreatmentPlansTab } from "@/components/admin/treatment-plans-tab";
 import { buttonLinkClasses } from "@/components/ui/button";
 import { S19_ASSETS } from "@/lib/site-assets";
 import {
@@ -36,6 +38,7 @@ import {
   FaBars,
   FaBoxOpen,
   FaCalendarCheck,
+  FaCalendarDays,
   FaCheck,
   FaCommentDots,
   FaEnvelope,
@@ -70,7 +73,8 @@ type TabId =
   | "admin-doctors"
   | "admin-appointments"
   | "admin-records"
-  | "admin-prescriptions";
+  | "admin-prescriptions"
+  | "admin-treatment-plans";
 
 interface NavItem {
   id: TabId;
@@ -108,6 +112,11 @@ const patientTabs: NavItem[] = [
     id: "prescriptions",
     label: "Prescriptions",
     icon: <FaPills className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "treatment",
+    label: "Treatment Plan",
+    icon: <FaCalendarDays className="h-4 w-4" aria-hidden />,
   },
   {
     id: "family",
@@ -151,6 +160,11 @@ const adminTabs: NavItem[] = [
     id: "admin-prescriptions",
     label: "Prescriptions",
     icon: <FaFilePrescription className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "admin-treatment-plans",
+    label: "Treatment Plans",
+    icon: <FaCalendarDays className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-orders",
@@ -348,6 +362,18 @@ export function DashboardScreen() {
             </div>
           </>
         );
+      case "treatment":
+        return (
+          <>
+            <PageHeader
+              title="Treatment Plan"
+              subtitle="Your personalized treatment timeline - when it started, when it ends and its live status"
+            />
+            <div className="px-4 sm:px-0">
+              <TreatmentTab />
+            </div>
+          </>
+        );
       case "family":
         return (
           <>
@@ -456,6 +482,18 @@ export function DashboardScreen() {
             <PageHeader title="Prescriptions" subtitle="Issue treatment plans with dosage instructions" />
             <div className="px-4 sm:px-0">
               <AdminPrescriptionsTab />
+            </div>
+          </>
+        ) : null;
+      case "admin-treatment-plans":
+        return isAdmin ? (
+          <>
+            <PageHeader
+              title="Treatment Plans"
+              subtitle="Set each patient's personalized treatment start & end dates - patients see a live Active / Expired signal"
+            />
+            <div className="px-4 sm:px-0">
+              <TreatmentPlansTab />
             </div>
           </>
         ) : null;
@@ -656,7 +694,11 @@ export function DashboardScreen() {
                     active ? "text-forest-950" : "text-muted"
                   }`}
                 >
-                  {item.id === "testimonials" ? "Stories" : item.label}
+                  {item.id === "testimonials"
+                    ? "Stories"
+                    : item.id === "treatment"
+                      ? "Treatment"
+                      : item.label}
                 </span>
                 <span
                   className={`h-1 w-1 rounded-full ${active ? "bg-gold-500" : "bg-transparent"}`}
