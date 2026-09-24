@@ -60,5 +60,5 @@ _Beyond herbal medicine, S19 offers supportive and alternative therapies inspire
 
 Contact us to discuss your health concerns and begin a personalized assessment. 
 
-**WhatsApp / Phone:** +237 672 595-989 **Email:** s19herbs@gmail.com **Location:** Immeuble Cathédrale, 3e étage, Appartement E305, Bafoussam, Cameroun 
+**WhatsApp / Phone:** +237 672 595-989 **Email:** info@s19herbalclinic.com **Location:** Immeuble Cathédrale, 3e étage, Appartement E305, Bafoussam, Cameroun 
 

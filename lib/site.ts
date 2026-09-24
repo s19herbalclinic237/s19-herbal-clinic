@@ -59,7 +59,7 @@ export const CLINIC = {
   phone: "+237 672 595 989",
   phoneHref: "+237672595989",
   whatsappNumber: "237672595989",
-  email: "s19herbs@gmail.com",
+  email: "info@s19herbalclinic.com",
   address: "Immeuble Cathédrale, 3rd Floor, Apartment E305, Bafoussam, Cameroon",
   addressFr: "Immeuble Cathédrale, 3ᵉ étage, Appartement E305, Bafoussam, Cameroun",
   hours: "Monday - Saturday: 8:00 AM - 6:00 PM",

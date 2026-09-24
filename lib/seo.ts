@@ -199,7 +199,7 @@ export function clinicJsonLd() {
         logo: `${base}/icon1.png`,
         image: [`${base}/open-graph-thumbnail.png`],
         telephone: "+237672595989",
-        email: "s19herbs@gmail.com",
+        email: "info@s19herbalclinic.com",
         priceRange: "FCFA",
         currenciesAccepted: "XAF",
         address: {

@@ -145,6 +145,19 @@ const dict = {
   "home.testimonials.kicker": { en: "Patient stories", fr: "Témoignages de patients" },
   "home.testimonials.title": { en: "Care that people talk about.", fr: "Des soins dont les gens parlent." },
   "home.testimonials.cta": { en: "Share your experience with S19", fr: "Partagez votre expérience avec S19" },
+  "home.testimonials.watchVideos": { en: "Watch video reviews", fr: "Voir les avis vidéo" },
+
+  "home.videos.kicker": { en: "Patient Stories on Video", fr: "Témoignages de patients en vidéo" },
+  "home.videos.title": { en: "Hear it from our patients, on video.", fr: "Écoutez nos patients, en vidéo." },
+  "home.videos.lead": {
+    en: "Real patients telling their own healing stories on camera. Watch a featured story below, then explore the full collection of video reviews.",
+    fr: "De vrais patients racontent leurs histoires de guérison en vidéo. Regardez un témoignage vedette ci-dessous, puis explorez toute la collection d'avis vidéo.",
+  },
+  "home.videos.cta": { en: "Watch all video reviews", fr: "Voir tous les avis vidéo" },
+  "home.videos.empty": {
+    en: "New patient videos are being prepared. The clinic will publish them here shortly.",
+    fr: "De nouvelles vidéos de patients sont en préparation. La clinique les publiera ici très bientôt.",
+  },
 
   "stories.meta.title": { en: "Patient Stories & Reviews", fr: "Histoires et avis de patients" },
   "stories.meta.description": {
@@ -221,6 +234,14 @@ const dict = {
   "home.consultFee.note": {
     en: "The same standard consultation fee applies for both online and in-person consultations.",
     fr: "Les mêmes frais de consultation standard s'appliquent aux consultations en ligne et en personne.",
+  },
+  "home.booking.accommodation": {
+    en: "Travelling to Bafoussam? Affordable on-site accommodation is available — with free Starlink internet & cable TV.",
+    fr: "Vous voyagez vers Bafoussam ? Un hébergement abordable est disponible sur place — avec Internet Starlink gratuit & TV câblée.",
+  },
+  "home.booking.accommodationLink": {
+    en: "See accommodation details",
+    fr: "Voir les détails de l'hébergement",
   },
 
   "home.location.kicker": { en: "Find the clinic", fr: "Trouver la clinique" },
@@ -414,15 +435,15 @@ const dict = {
   "shop.alternativeOrder.kicker": { en: "No account? No problem.", fr: "Pas de compte ? Pas de problème." },
   "shop.alternativeOrder.title": { en: "Alternative Way to Order", fr: "Autre façon de commander" },
   "shop.alternativeOrder.text": {
-    en: "If you prefer, you can screenshot the product(s) you want and send the images to us on WhatsApp or by email at s19herbs@gmail.com.",
-    fr: "Si vous préférez, vous pouvez faire une capture d'écran du ou des produits souhaités et nous envoyer les images sur WhatsApp ou par e-mail à s19herbs@gmail.com.",
+    en: "If you prefer, you can screenshot the product(s) you want and send the images to us on WhatsApp or by email at info@s19herbalclinic.com.",
+    fr: "Si vous préférez, vous pouvez faire une capture d'écran du ou des produits souhaités et nous envoyer les images sur WhatsApp ou par e-mail à info@s19herbalclinic.com.",
   },
   "shop.alternativeOrder.details": {
     en: "Please include your full name, phone number, delivery location, and the quantity you need. Our team will reply to confirm availability, price, payment, and delivery.",
     fr: "Veuillez indiquer votre nom complet, votre numéro de téléphone, votre lieu de livraison et la quantité souhaitée. Notre équipe répondra pour confirmer la disponibilité, le prix, le paiement et la livraison.",
   },
   "shop.alternativeOrder.whatsapp": { en: "Send a screenshot on WhatsApp", fr: "Envoyer une capture d'écran sur WhatsApp" },
-  "shop.alternativeOrder.email": { en: "Email: s19herbs@gmail.com", fr: "Email : s19herbs@gmail.com" },
+  "shop.alternativeOrder.email": { en: "Email: info@s19herbalclinic.com", fr: "Email : info@s19herbalclinic.com" },
   "shop.contactPricing": { en: "Contact S19 for pricing", fr: "Contactez S19 pour le prix" },
 
   "addToCart.quantity": { en: "Quantity", fr: "Quantité" },
@@ -650,6 +671,52 @@ const dict = {
   "contact.hoursLabel": { en: "Opening Hours", fr: "Heures d'ouverture" },
   "contact.hoursValue": { en: "Monday – Saturday: 8:00 AM – 6:00 PM", fr: "Lundi – Samedi : 8h00 – 18h00" },
   "contact.hoursSub": { en: "Tele-Health consultations available on request", fr: "Consultations Télé-santé disponibles sur demande" },
+
+  "contact.accommodation.eyebrow": { en: "Patient accommodation", fr: "Hébergement des patients" },
+  "contact.accommodation.title": {
+    en: "Coming from outside Bafoussam?",
+    fr: "Vous venez de l'extérieur de Bafoussam ?",
+  },
+  "contact.accommodation.text": {
+    en: "Travelling from another town or region? S19 Herbal Clinic offers simple, comfortable and affordable accommodation within the clinic premises for patients who may need to stay during their visit, treatment, or follow-up.",
+    fr: "Vous voyagez depuis une autre ville ou région ? La Clinique S19 propose un hébergement simple, confortable et abordable au sein même de la clinique, pour les patients qui doivent rester pendant leur visite, leur traitement ou leur suivi.",
+  },
+  "contact.accommodation.perkRoom.title": {
+    en: "Comfortable rooms on site",
+    fr: "Chambres confortables sur place",
+  },
+  "contact.accommodation.perkRoom.text": {
+    en: "Simple, comfortable and affordable rooms within the clinic premises.",
+    fr: "Des chambres simples, confortables et abordables au sein de la clinique.",
+  },
+  "contact.accommodation.perkInternet.title": {
+    en: "Free high-speed Starlink internet",
+    fr: "Internet Starlink haut débit gratuit",
+  },
+  "contact.accommodation.perkInternet.text": {
+    en: "Stay connected throughout your stay — at no extra cost.",
+    fr: "Restez connecté pendant tout le séjour — sans frais supplémentaires.",
+  },
+  "contact.accommodation.perkTv.title": {
+    en: "Cable TV during your stay",
+    fr: "TV câblée pendant votre séjour",
+  },
+  "contact.accommodation.perkTv.text": {
+    en: "Relax and unwind with cable TV in your room.",
+    fr: "Détendez-vous avec la TV câblée dans votre chambre.",
+  },
+  "contact.accommodation.note": {
+    en: "Just let us know when booking your appointment if you will need a room.",
+    fr: "Indiquez-nous simplement, lors de la réservation de votre rendez-vous, si vous aurez besoin d'une chambre.",
+  },
+  "contact.accommodation.cta": {
+    en: "Ask about a room on WhatsApp",
+    fr: "Demandez une chambre sur WhatsApp",
+  },
+  "contact.accommodation.tagline": {
+    en: "Book before you travel. Come prepared. Stay connected. Stay conveniently close to your care.",
+    fr: "Réservez avant de voyager. Venez préparé. Restez connecté. Restez commodément proche de vos soins.",
+  },
 
   "location.meta.title": { en: "Bafoussam Clinic & Delivery", fr: "Clinique de Bafoussam & Livraison" },
   "location.meta.description": {

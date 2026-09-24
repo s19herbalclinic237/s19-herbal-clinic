@@ -7,8 +7,11 @@ import { ProductCard } from "@/components/ui/product-card";
 import { BookingForm } from "@/components/sections/booking-form";
 import { CTABand } from "@/components/sections/cta-band";
 import { BlurIn, Reveal, ScaleIn, StaggerGroup, StaggerItem } from "@/components/ui/motion";
+import { StoryVideo } from "@/components/testimonials/story-video";
 import { getProducts } from "@/lib/catalog";
 import { getApprovedTestimonials } from "@/lib/testimonials";
+import { getActiveVideoReviews } from "@/lib/video-reviews";
+import { isVideoEmbedBlocked } from "@/lib/video-probe";
 import {
   localizedClinicalPrinciples,
   localizedFaqs,
@@ -32,6 +35,8 @@ import {
   FaStar,
   FaRegCircleCheck,
   FaStarOfLife,
+  FaCirclePlay,
+  FaBed,
 } from "react-icons/fa6";
 
 const FEATURED_SLUGS = ["s19-herbal-wine-reserve", "s19-sozo", "s19-malaria-typhoid-combo"];
@@ -67,6 +72,9 @@ export default async function HomePage() {
     .map((slug) => products.find((p) => p.slug === slug))
     .filter((p): p is NonNullable<typeof p> => typeof p !== "undefined");
   const testimonials = await getApprovedTestimonials(12, locale);
+  const videoReviews = await getActiveVideoReviews();
+  const featuredVideo = videoReviews.length > 0 ? videoReviews[videoReviews.length - 1] : null;
+  const featuredVideoBlocked = featuredVideo ? await isVideoEmbedBlocked(featuredVideo.url) : false;
 
   const careLinks = [
     {
@@ -321,6 +329,20 @@ export default async function HomePage() {
             <p className="mt-1 text-center text-sm text-forest-100/90 sm:text-left">{t("home.consultFee.note")}</p>
           </div>
 
+          <Link
+            href="/contact#accommodation"
+            className="group mb-14 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-gold-400/40 bg-gold-400/10 px-6 py-5 transition-colors hover:border-gold-400/70 hover:bg-gold-400/15"
+          >
+            <p className="max-w-2xl text-sm leading-relaxed text-forest-100">
+              <FaBed className="mr-2 inline h-4 w-4 text-gold-400" aria-hidden />
+              {t("home.booking.accommodation")}
+            </p>
+            <span className="inline-flex items-center gap-2 text-sm font-bold text-gold-300 transition-colors group-hover:text-gold-200">
+              {t("home.booking.accommodationLink")}
+              <FaArrowRight className="h-3.5 w-3.5" aria-hidden />
+            </span>
+          </Link>
+
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
             <div>
               <Reveal>
@@ -360,6 +382,15 @@ export default async function HomePage() {
           <div className="mx-auto max-w-2xl text-center">
             <Kicker center>{t("home.testimonials.kicker")}</Kicker>
             <h2 className="mt-4">{t("home.testimonials.title")}</h2>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+              <a
+                href="#home-video-reviews"
+                className="inline-flex items-center gap-2 rounded-full border border-forest-200 bg-white px-5 py-2.5 text-sm font-semibold text-forest-800 shadow-sm transition-colors hover:border-gold-400 hover:text-forest-950"
+              >
+                <FaCirclePlay className="h-4 w-4 text-gold-500" aria-hidden />
+                {t("home.testimonials.watchVideos")}
+              </a>
+            </div>
           </div>
         </Reveal>
         <Reveal className="mt-12">
@@ -416,6 +447,52 @@ export default async function HomePage() {
           </div>
         </Reveal>
       </Section>
+
+      {/* VIDEO TESTIMONIALS - featured patient review + link to the full library */}
+      <section
+        id="home-video-reviews"
+        className="relative scroll-mt-20 overflow-hidden border-t border-forest-900 bg-forest-950 py-16 md:py-24"
+      >
+        <div className="pointer-events-none absolute -top-20 left-1/4 h-72 w-72 rounded-full bg-gold-400/10 blur-3xl" />
+        <div className="pointer-events-none absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-emerald-400/10 blur-3xl" />
+        <Container className="relative z-10">
+          <Reveal>
+            <div className="mx-auto max-w-2xl text-center">
+              <Kicker dark center>{t("home.videos.kicker")}</Kicker>
+              <h2 className="mt-4 text-white">{t("home.videos.title")}</h2>
+              <p className="mt-4 text-[15px] leading-relaxed text-forest-200">
+                {t("home.videos.lead")}
+              </p>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <div className="mx-auto mt-12 max-w-3xl">
+              {featuredVideo ? (
+                <div className="overflow-hidden rounded-2xl border border-white/15 bg-forest-900/50 shadow-lift">
+                  <StoryVideo url={featuredVideo.url} blocked={featuredVideoBlocked} bare />
+                </div>
+              ) : (
+                <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/15 bg-forest-900/50 px-8 py-14 text-center">
+                  <FaCirclePlay className="h-8 w-8 text-gold-400" aria-hidden />
+                  <p className="max-w-sm text-sm leading-relaxed text-forest-200">
+                    {t("home.videos.empty")}
+                  </p>
+                </div>
+              )}
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.15}>
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+              <Link href="/live-reviews" className={buttonLinkClasses("gold", "xl")}>
+                <FaCirclePlay className="h-4 w-4" aria-hidden />
+                {t("home.videos.cta")}
+              </Link>
+            </div>
+          </Reveal>
+        </Container>
+      </section>
 
       {/* LOCATION - full-bleed image band */}
       <section className="relative overflow-hidden py-24 md:py-28">

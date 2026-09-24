@@ -66,7 +66,7 @@ This policy is intended to operate in accordance with applicable laws of the **R
 
 #### **S19 HERBAL CLINIC** 
 
-Bafoussam, Cameroon **Customer Service / WhatsApp:** +237 672 595-989 **Email:** s19herbs@gmail.com 
+Bafoussam, Cameroon **Customer Service / WhatsApp:** +237 672 595-989 **Email:** info@s19herbalclinic.com 
 
 S19 Herbal Clinic - Refund, Return & Exchange Policy 
 

@@ -35,7 +35,7 @@ export async function AlternativeOrderSection() {
                 {t("shop.alternativeOrder.whatsapp")}
               </a>
               <a
-                href="mailto:s19herbs@gmail.com?subject=Product%20Order%20Request"
+                href="mailto:info@s19herbalclinic.com?subject=Product%20Order%20Request"
                 className={buttonLinkClasses("outline", "lg")}
               >
                 <FaEnvelope className="h-4 w-4" aria-hidden />
