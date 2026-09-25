@@ -48,7 +48,7 @@ export interface TestimonialView {
   createdAt: string;
 }
 
-export type TreatmentPlanPhase = "active" | "expired" | "scheduled";
+export type TreatmentPlanPhase = "active" | "expired" | "scheduled" | "completed";
 
 export interface TreatmentPlanView {
   _id: string;
@@ -61,6 +61,34 @@ export interface TreatmentPlanView {
   phase: TreatmentPlanPhase;
   /** Whole days the plan spans (start..end, inclusive). */
   days: number;
+  /** Whole months the plan spans ("Y" in "Month X of Y"). */
+  months: number;
+  /** Current month of treatment (1-based) or null when not started. */
+  month: number | null;
+  /** Day of treatment (1-based) or null when not started. */
+  day: number | null;
+  daysLeft: number;
+  /** Fraction of the period elapsed, 0..1. */
+  elapsed: number;
+  /** Clinician-driven lifecycle; plans stay "active" until closed. */
+  status: "active" | "completed";
+  completedAt?: string;
+  completionReview?: {
+    improvements?: string;
+    resolved?: string;
+    unresolvedProblems?: string;
+    complications?: string;
+    followUpLabs?: string;
+    outcome: "maintenance" | "extended" | "completed" | "discontinued";
+    notes?: string;
+  };
+  monitoring?: {
+    glucose: boolean;
+    fastingStart: string;
+    fastingEnd: string;
+    postLunchStart: string;
+    postLunchEnd: string;
+  };
 }
 
 export interface DashboardData {

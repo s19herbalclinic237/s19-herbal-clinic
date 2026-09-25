@@ -5,6 +5,7 @@ import {
   TreatmentPlan,
   treatmentPlanDays,
   treatmentPlanPhase,
+  treatmentMonthInfo,
   type ITreatmentPlan,
 } from "@/lib/models/TreatmentPlan";
 
@@ -29,6 +30,11 @@ export async function GET() {
         ...p,
         phase: treatmentPlanPhase(p),
         days: treatmentPlanDays(p),
+        months: treatmentMonthInfo(p).totalMonths,
+        month: treatmentMonthInfo(p).month,
+        day: treatmentMonthInfo(p).day,
+        daysLeft: treatmentMonthInfo(p).daysLeft,
+        elapsed: treatmentMonthInfo(p).elapsed,
       })),
     });
   } catch (error) {

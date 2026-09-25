@@ -31,6 +31,7 @@ import { AdminAppointmentsTab } from "@/components/admin/admin-appointments-tab"
 import { AdminMedicalRecordsTab } from "@/components/admin/medical-records-tab";
 import { AdminPrescriptionsTab } from "@/components/admin/prescriptions-tab";
 import { TreatmentPlansTab } from "@/components/admin/treatment-plans-tab";
+import { TreatmentAlertsTab } from "@/components/admin/treatment-alerts-tab";
 import { buttonLinkClasses } from "@/components/ui/button";
 import { S19_ASSETS } from "@/lib/site-assets";
 import {
@@ -53,6 +54,7 @@ import {
   FaShieldHalved,
   FaTableCellsLarge,
   FaTags,
+  FaTriangleExclamation,
   FaTruckFast,
   FaUserDoctor,
   FaUserGear,
@@ -74,7 +76,8 @@ type TabId =
   | "admin-appointments"
   | "admin-records"
   | "admin-prescriptions"
-  | "admin-treatment-plans";
+  | "admin-treatment-plans"
+  | "admin-treatment-alerts";
 
 interface NavItem {
   id: TabId;
@@ -165,6 +168,11 @@ const adminTabs: NavItem[] = [
     id: "admin-treatment-plans",
     label: "Treatment Plans",
     icon: <FaCalendarDays className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "admin-treatment-alerts",
+    label: "Treatment Alerts",
+    icon: <FaTriangleExclamation className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-orders",
@@ -490,10 +498,22 @@ export function DashboardScreen() {
           <>
             <PageHeader
               title="Treatment Plans"
-              subtitle="Set each patient's personalized treatment start & end dates - patients see a live Active / Expired signal"
+              subtitle="Personalized treatment timelines, progress notes, reminders & installments, glucose monitoring and final reviews"
             />
             <div className="px-4 sm:px-0">
               <TreatmentPlansTab />
+            </div>
+          </>
+        ) : null;
+      case "admin-treatment-alerts":
+        return isAdmin ? (
+          <>
+            <PageHeader
+              title="Treatment Alerts"
+              subtitle="Missed glucose submissions, overdue payments, missed follow-ups, treatments ending, concerning readings and new complications"
+            />
+            <div className="px-4 sm:px-0">
+              <TreatmentAlertsTab onOpenPlans={() => openTab("admin-treatment-plans")} />
             </div>
           </>
         ) : null;

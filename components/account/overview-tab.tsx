@@ -408,10 +408,17 @@ function TreatmentPlanCard({
             {featured.phase === "scheduled" ? "Starts" : "Started"}{" "}
             <span className="font-semibold text-ink">{formatDate(featured.startDate)}</span>
             {" · "}
-            {featured.phase === "expired" ? "Ended" : "Ends"}{" "}
-            <span className="font-semibold text-ink">{formatDate(featured.endDate)}</span>
+            {featured.phase === "scheduled" || featured.phase === "active" ? "Expected completion" : "Completed"}{" "}
+            <span className="font-semibold text-ink">
+              {formatDate(featured.completedAt || featured.endDate)}
+            </span>
             {featured.forMember ? ` · ${featured.forMember}` : ""}
           </p>
+          {featured.phase === "active" ? (
+            <p className="mt-2 text-xs font-semibold text-forest-800">
+              Month {featured.month} of {featured.months} · Day {featured.day} of {featured.days}
+            </p>
+          ) : null}
           {featured.phase === "active" ? (
             <p className="mt-3 inline-flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800">
               <FaHourglassHalf className="h-3.5 w-3.5" aria-hidden />
@@ -421,8 +428,14 @@ function TreatmentPlanCard({
             </p>
           ) : featured.phase === "scheduled" ? (
             <p className="mt-3 text-xs font-semibold text-sky-700">Not started yet</p>
+          ) : featured.phase === "expired" ? (
+            <p className="mt-3 text-xs font-semibold text-amber-700">
+              Period ended - the clinic will record the final review
+            </p>
           ) : (
-            <p className="mt-3 text-xs font-semibold text-zinc-500">Completed</p>
+            <p className="mt-3 text-xs font-semibold text-indigo-700">
+              Completed {featured.completedAt ? formatDate(featured.completedAt) : ""}
+            </p>
           )}
           <button
             type="button"

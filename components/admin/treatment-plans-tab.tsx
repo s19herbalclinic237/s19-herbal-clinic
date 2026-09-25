@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/form";
 import { formatDate, TreatmentPhaseBadge } from "@/components/account/badges";
+import { TreatmentPlanDetail } from "@/components/admin/treatment-plan-detail";
 import {
   FaCalendarDays,
   FaChevronDown,
@@ -21,7 +22,7 @@ interface PatientOption {
   familyMembers?: { id: string; name: string; relation?: string }[];
 }
 
-type Phase = "active" | "expired" | "scheduled";
+type Phase = "active" | "expired" | "scheduled" | "completed";
 
 interface TreatmentPlanAdminView {
   _id: string;
@@ -34,6 +35,27 @@ interface TreatmentPlanAdminView {
   notes?: string;
   phase: Phase;
   days: number;
+  months: number;
+  month: number | null;
+  daysLeft: number;
+  status: "active" | "completed";
+  completedAt?: string;
+  completionReview?: {
+    improvements?: string;
+    resolved?: string;
+    unresolvedProblems?: string;
+    complications?: string;
+    followUpLabs?: string;
+    outcome: "maintenance" | "extended" | "completed" | "discontinued";
+    notes?: string;
+  };
+  monitoring?: {
+    glucose: boolean;
+    fastingStart: string;
+    fastingEnd: string;
+    postLunchStart: string;
+    postLunchEnd: string;
+  };
 }
 
 export function TreatmentPlansTab() {
@@ -112,8 +134,8 @@ export function TreatmentPlansTab() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-muted">
-          Track each patient&apos;s personalized treatment timeline - when it started, when it ends,
-          and a live Active / Expired signal on their portal.
+          Track each patient&apos;s personalized treatment timeline - dates, live phase, progress
+          notes, reminders &amp; installments, glucose monitoring and the end-of-treatment review.
         </p>
         {!showForm && !editing ? (
           <Button size="sm" onClick={() => setShowForm(true)}>
@@ -184,7 +206,9 @@ export function TreatmentPlansTab() {
                         ? "border-emerald-300 bg-emerald-50 text-emerald-700"
                         : p.phase === "scheduled"
                           ? "border-sky-300 bg-sky-50 text-sky-700"
-                          : "border-line-strong bg-cream text-muted"
+                          : p.phase === "completed"
+                            ? "border-indigo-300 bg-indigo-50 text-indigo-700"
+                            : "border-amber-300 bg-amber-50 text-amber-700"
                     }`}
                   >
                     <FaCalendarDays className="h-4 w-4" aria-hidden />
@@ -221,7 +245,19 @@ export function TreatmentPlansTab() {
                       <div className="flex justify-between gap-3 sm:block">
                         <dt className="text-[10px] font-bold uppercase tracking-wide text-muted">Duration</dt>
                         <dd className="mt-0.5 font-semibold text-ink">
-                          {p.days} day{p.days === 1 ? "" : "s"}
+                          {p.months} {p.months === 1 ? "month" : "months"} · {p.days} day{p.days === 1 ? "" : "s"}
+                        </dd>
+                      </div>
+                      <div className="flex justify-between gap-3 sm:block">
+                        <dt className="text-[10px] font-bold uppercase tracking-wide text-muted">Current position</dt>
+                        <dd className="mt-0.5 font-semibold text-ink">
+                          {p.phase === "active" && p.month
+                            ? `Month ${p.month} of ${p.months} · ${p.daysLeft} day${p.daysLeft === 1 ? "" : "s"} left`
+                            : p.phase === "completed"
+                              ? "Closed after final review"
+                              : p.phase === "expired"
+                                ? "Period ended - final review pending"
+                                : "Not started yet"}
                         </dd>
                       </div>
                       <div className="flex justify-between gap-3 sm:block">
@@ -264,6 +300,9 @@ export function TreatmentPlansTab() {
                         Delete
                       </button>
                     </div>
+                    <div className="mt-4 border-t border-forest-100 pt-4">
+                      <TreatmentPlanDetail plan={p} onChanged={load} />
+                    </div>
                   </div>
                 ) : null}
               </div>
@@ -286,7 +325,9 @@ function TreatmentPlanForm({
   onSaved: () => void;
   onCancel: () => void;
 }) {
-  const [userId, setUserId] = useState(initial ? String(initial.user._id) : patients[0]?.id || "");
+  const [userId, setUserId] = useState(
+    initial?.user?._id ? String(initial.user._id) : patients[0]?.id || ""
+  );
   const [forMember, setForMember] = useState(initial?.forMember || "");
   const [title, setTitle] = useState(initial?.title || "");
   const [program, setProgram] = useState(initial?.program || "");
@@ -298,6 +339,13 @@ function TreatmentPlanForm({
   );
   const [notes, setNotes] = useState(initial?.notes || "");
   const [saving, setSaving] = useState(false);
+  const [glucoseMonitoring, setGlucoseMonitoring] = useState(initial?.monitoring?.glucose || false);
+  const [monitoring, setMonitoring] = useState({
+    fastingStart: initial?.monitoring?.fastingStart || "06:00",
+    fastingEnd: initial?.monitoring?.fastingEnd || "10:00",
+    postLunchStart: initial?.monitoring?.postLunchStart || "14:00",
+    postLunchEnd: initial?.monitoring?.postLunchEnd || "16:00",
+  });
 
   const selectedPatient = patients.find((p) => p.id === userId);
 
@@ -339,6 +387,10 @@ function TreatmentPlanForm({
         startDate: `${startDate}T12:00:00`,
         endDate: `${endDate}T12:00:00`,
         notes: notes.trim() || undefined,
+        monitoring: {
+          glucose: glucoseMonitoring,
+          ...monitoring,
+        },
       };
       const res = await fetch(
         initial ? `/api/admin/treatment-plans/${initial._id}` : "/api/admin/treatment-plans",
@@ -458,6 +510,45 @@ function TreatmentPlanForm({
               </button>
             ))}
           </div>
+        </div>
+
+        <div className="sm:col-span-2 rounded-xl border border-sky-200 bg-sky-50/50 p-4">
+          <label className="flex cursor-pointer items-start gap-3">
+            <input
+              type="checkbox"
+              checked={glucoseMonitoring}
+              onChange={(e) => setGlucoseMonitoring(e.target.checked)}
+              className="mt-0.5 h-4 w-4 accent-sky-600"
+            />
+            <span className="text-sm font-bold text-ink">
+              Require daily glucose monitoring
+              <span className="mt-0.5 block text-xs font-normal text-muted">
+                Patients get fasting + post-lunch logging with optional meter-photo upload; the team
+                is alerted about missed and concerning readings.
+              </span>
+            </span>
+          </label>
+          {glucoseMonitoring ? (
+            <div className="mt-3 grid gap-3 sm:grid-cols-4">
+              {(
+                [
+                  ["fastingStart", "Fasting start"],
+                  ["fastingEnd", "Fasting end"],
+                  ["postLunchStart", "Post-lunch start"],
+                  ["postLunchEnd", "Post-lunch end"],
+                ] as const
+              ).map(([key, label]) => (
+                <label key={key} className="space-y-1.5">
+                  <span className="block text-[11px] font-semibold uppercase tracking-wide text-ink">{label}</span>
+                  <Input
+                    type="time"
+                    value={monitoring[key]}
+                    onChange={(e) => setMonitoring((m) => ({ ...m, [key]: e.target.value }))}
+                  />
+                </label>
+              ))}
+            </div>
+          ) : null}
         </div>
 
         <div className="sm:col-span-2">

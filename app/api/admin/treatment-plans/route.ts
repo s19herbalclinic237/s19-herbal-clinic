@@ -5,6 +5,7 @@ import {
   TreatmentPlan,
   treatmentPlanDays,
   treatmentPlanPhase,
+  treatmentMonthInfo,
 } from "@/lib/models/TreatmentPlan";
 import { User } from "@/lib/models/User";
 import { notifyPatient } from "@/lib/notify";
@@ -38,6 +39,10 @@ export async function GET(request: Request) {
         ...p,
         phase: treatmentPlanPhase(p),
         days: treatmentPlanDays(p),
+        months: treatmentMonthInfo(p).totalMonths,
+        month: treatmentMonthInfo(p).month,
+        daysLeft: treatmentMonthInfo(p).daysLeft,
+        elapsed: treatmentMonthInfo(p).elapsed,
       })),
     });
   } catch (error) {
@@ -90,6 +95,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Patient account not found." }, { status: 404 });
     }
 
+    const monitoringRaw = (raw.monitoring ?? {}) as Record<string, unknown>;
+    const monitoring = {
+      glucose: Boolean(monitoringRaw.glucose),
+      fastingStart: String(monitoringRaw.fastingStart || "06:00").slice(0, 5),
+      fastingEnd: String(monitoringRaw.fastingEnd || "10:00").slice(0, 5),
+      postLunchStart: String(monitoringRaw.postLunchStart || "14:00").slice(0, 5),
+      postLunchEnd: String(monitoringRaw.postLunchEnd || "16:00").slice(0, 5),
+    };
+
     const plan = await TreatmentPlan.create({
       user,
       forMember,
@@ -98,6 +112,7 @@ export async function POST(request: Request) {
       startDate,
       endDate,
       notes,
+      monitoring,
     });
 
     const patientName = (patient as { name?: string }).name || "there";
@@ -125,7 +140,14 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(
-      { plan: { ...plan.toObject(), phase: treatmentPlanPhase(plan), days: treatmentPlanDays(plan) } },
+      {
+        plan: {
+          ...plan.toObject(),
+          phase: treatmentPlanPhase(plan),
+          days: treatmentPlanDays(plan),
+          months: treatmentMonthInfo(plan).totalMonths,
+        },
+      },
       { status: 201 }
     );
   } catch (error) {

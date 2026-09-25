@@ -117,17 +117,23 @@ export function PrescriptionStatusBadge({ status }: { status: string }) {
 
 const treatmentPhaseClasses: Record<string, string> = {
   active: "border-emerald-300 bg-emerald-50 text-emerald-800",
-  expired: "border-zinc-300 bg-zinc-50 text-zinc-600",
+  expired: "border-amber-300 bg-amber-50 text-amber-800",
   scheduled: "border-sky-300 bg-sky-50 text-sky-800",
+  completed: "border-indigo-300 bg-indigo-50 text-indigo-800",
 };
 
 const treatmentPhaseLabels: Record<string, string> = {
   active: "Active Treatment",
-  expired: "Expired Treatment Plan",
+  expired: "Treatment Period Ended",
   scheduled: "Scheduled",
+  completed: "Completed",
 };
 
-/** Live signal for a treatment plan: ACTIVE TREATMENT / EXPIRED TREATMENT PLAN / SCHEDULED. */
+/**
+ * Live signal for a treatment plan: ACTIVE TREATMENT / TREATMENT PERIOD ENDED
+ * (end date passed, waiting for the clinician's final review) / COMPLETED
+ * (clinician closed the plan) / SCHEDULED.
+ */
 export function TreatmentPhaseBadge({ phase }: { phase: string }) {
   return (
     <span
@@ -137,6 +143,9 @@ export function TreatmentPhaseBadge({ phase }: { phase: string }) {
     >
       {phase === "active" ? (
         <span className="h-1.5 w-1.5 shrink-0 animate-pulse rounded-full bg-emerald-500" aria-hidden />
+      ) : null}
+      {phase === "expired" ? (
+        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" aria-hidden />
       ) : null}
       {treatmentPhaseLabels[phase] || phase}
     </span>
