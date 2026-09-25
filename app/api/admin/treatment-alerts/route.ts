@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/db";
-import { adminGuard } from "@/lib/admin-guard";
+import { clinicalGuard } from "@/lib/admin-guard";
 import { TreatmentPlan, treatmentPlanPhase, treatmentMonthInfo, type ITreatmentPlan } from "@/lib/models/TreatmentPlan";
 import { TreatmentReminder } from "@/lib/models/TreatmentReminder";
 import { TreatmentFollowUp } from "@/lib/models/TreatmentFollowUp";
@@ -45,7 +45,7 @@ const severityRank: Record<AlertSeverity, number> = { high: 3, medium: 2, low: 1
  * readings, newly reported complications and missed follow-up appointments.
  */
 export async function GET() {
-  const denied = await adminGuard();
+  const denied = await clinicalGuard();
   if (denied) return denied;
 
   const conn = await connectDb();

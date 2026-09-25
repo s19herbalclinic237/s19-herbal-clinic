@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { rateLimitRequest, rateLimitResponse } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -23,6 +24,14 @@ export async function GET(
   if (!DRIVE_ID_RE.test(fileId)) {
     return new Response("Invalid video.", { status: 400 });
   }
+
+  const rateLimit = await rateLimitRequest(request, {
+    scope: "video-stream",
+    limit: 120,
+    windowMs: 10 * 60 * 1000,
+    dimensions: [`file:${fileId}`],
+  });
+  if (!rateLimit.allowed) return rateLimitResponse(rateLimit);
 
   const upstream = `https://drive.usercontent.google.com/download?id=${encodeURIComponent(
     fileId

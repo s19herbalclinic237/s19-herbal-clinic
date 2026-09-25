@@ -594,7 +594,7 @@ export function DashboardOverview({ data, onNavigate }: DashboardOverviewProps) 
     (o) => o.status !== "Delivered" && o.status !== "Cancelled"
   ).length;
   const pendingStories = testimonials.filter((t) => t.status === "pending").length;
-  const memberSince = user?.createdAt ? new Date(user.createdAt).getFullYear() : null;
+  const memberSince = user?.createdAt ? formatDate(user.createdAt) : null;
 
   return (
     <div className="space-y-5 lg:space-y-6">

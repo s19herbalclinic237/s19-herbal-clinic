@@ -1,12 +1,20 @@
 import { NextResponse } from "next/server";
 import { getCloudinary } from "@/lib/cloudinary";
 import { adminGuard } from "@/lib/admin-guard";
+import { rateLimitRequest, rateLimitResponse } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   const denied = await adminGuard();
   if (denied) return denied;
+
+  const rateLimit = await rateLimitRequest(request, {
+    scope: "admin-cloudinary-upload",
+    limit: 60,
+    windowMs: 60 * 60 * 1000,
+  });
+  if (!rateLimit.allowed) return rateLimitResponse(rateLimit);
 
   const cloudinary = getCloudinary();
   if (!cloudinary) {

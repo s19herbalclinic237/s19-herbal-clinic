@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/db";
 import { Subscriber } from "@/lib/models/Subscriber";
 import { sendNewsletterWelcomeEmail } from "@/lib/email";
+import { rateLimitRequest, rateLimitResponse } from "@/lib/rate-limit";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -19,6 +20,14 @@ export async function POST(request: Request) {
   if (!EMAIL_RE.test(cleanEmail)) {
     return NextResponse.json({ error: "Please provide a valid email address." }, { status: 400 });
   }
+
+  const rateLimit = await rateLimitRequest(request, {
+    scope: "newsletter-subscribe",
+    limit: 5,
+    windowMs: 60 * 60 * 1000,
+    dimensions: [`email:${cleanEmail}`],
+  });
+  if (!rateLimit.allowed) return rateLimitResponse(rateLimit);
 
   const conn = await connectDb();
   if (!conn) {

@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { isValidObjectId } from "mongoose";
 import { connectDb } from "@/lib/db";
-import { adminGuard } from "@/lib/admin-guard";
+import { clinicalGuard } from "@/lib/admin-guard";
 import { Message } from "@/lib/models/Message";
 import { User } from "@/lib/models/User";
 import { sendClinicMessageEmail } from "@/lib/email";
 
 export async function GET(request: Request) {
-  const denied = await adminGuard();
+  const denied = await clinicalGuard();
   if (denied) return denied;
 
   const { searchParams } = new URL(request.url);
@@ -37,7 +37,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const denied = await adminGuard();
+  const denied = await clinicalGuard();
   if (denied) return denied;
 
   let body: Record<string, unknown>;

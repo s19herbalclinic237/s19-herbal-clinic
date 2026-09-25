@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/db";
-import { adminGuard } from "@/lib/admin-guard";
+import { clinicalGuard } from "@/lib/admin-guard";
 import { Prescription, type Medication } from "@/lib/models/Prescription";
 import { User } from "@/lib/models/User";
 import { notifyPatient } from "@/lib/notify";
@@ -27,7 +27,7 @@ function parseMedications(raw: unknown): Medication[] {
 }
 
 export async function GET(request: Request) {
-  const denied = await adminGuard();
+  const denied = await clinicalGuard();
   if (denied) return denied;
 
   const url = new URL(request.url);
@@ -53,7 +53,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const denied = await adminGuard();
+  const denied = await clinicalGuard();
   if (denied) return denied;
 
   let body: unknown;

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/db";
-import { adminGuard } from "@/lib/admin-guard";
+import { clinicalGuard } from "@/lib/admin-guard";
 import {
   GlucoseReading,
   isGlucoseConcerning,
@@ -8,7 +8,7 @@ import {
 
 /** All glucose readings (optionally filtered by plan), newest first, flagged. */
 export async function GET(request: Request) {
-  const denied = await adminGuard();
+  const denied = await clinicalGuard();
   if (denied) return denied;
 
   const url = new URL(request.url);

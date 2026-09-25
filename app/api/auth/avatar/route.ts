@@ -3,6 +3,7 @@ import { connectDb } from "@/lib/db";
 import { getSessionUser, toAuthUser } from "@/lib/auth-server";
 import { User } from "@/lib/models/User";
 import { getCloudinary } from "@/lib/cloudinary";
+import { rateLimitRequest, rateLimitResponse } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -14,6 +15,14 @@ export async function POST(request: Request) {
   if (!sessionUser) {
     return NextResponse.json({ error: "Sign in to update your avatar." }, { status: 401 });
   }
+
+  const rateLimit = await rateLimitRequest(request, {
+    scope: "avatar-upload",
+    limit: 20,
+    windowMs: 60 * 60 * 1000,
+    dimensions: [`user:${sessionUser.id}`],
+  });
+  if (!rateLimit.allowed) return rateLimitResponse(rateLimit);
 
   const cloudinary = getCloudinary();
   if (!cloudinary) {

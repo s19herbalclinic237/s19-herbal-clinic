@@ -1,6 +1,6 @@
 import { Schema, model, models, type Model } from "mongoose";
 
-export type UserRole = "admin" | "user";
+export type UserRole = "admin" | "doctor" | "user";
 
 export type PersonGender = "male" | "female" | "other";
 
@@ -54,7 +54,7 @@ const UserSchema = new Schema<IUser>(
     name: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     passwordHash: { type: String, required: true },
-    role: { type: String, enum: ["admin", "user"], default: "user" },
+    role: { type: String, enum: ["admin", "doctor", "user"], default: "user" },
     emailVerified: { type: Boolean, default: false },
     phone: { type: String, trim: true },
     avatar: { type: String, trim: true },

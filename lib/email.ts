@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import type { Transporter } from "nodemailer";
 import type { IOrder } from "@/lib/models/Order";
 import { formatFcfa, waLink } from "@/lib/utils";
 import { CLINIC } from "@/lib/site";
@@ -10,7 +11,7 @@ const SMTP_PASS = process.env.SMTP_PASS;
 const SMTP_FROM = process.env.SMTP_FROM || "S19 Herbal Clinic <no-reply@localhost>";
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
-let transporter: nodemailer.Transporter | null = null;
+let transporter: Transporter | null = null;
 
 export function siteOrigin(): string {
   const raw = process.env.NEXT_PUBLIC_SITE_URL;
@@ -43,6 +44,16 @@ async function sendMail(to: string, subject: string, html: string) {
   await t.sendMail({ from: SMTP_FROM, to, subject, html });
 }
 
+/** Narrow operational-mail entry point used by the backup worker. Callers must
+ *  never pass secrets, database records, media URLs, or other sensitive data. */
+export async function sendBackupNotification(
+  to: string,
+  subject: string,
+  html: string
+): Promise<void> {
+  await sendMail(to, subject, html);
+}
+
 /** Best-effort delivery: never throws, so a broken/misconfigured SMTP cannot
  *  fail the API request that triggered the notification. Logs and returns. */
 async function safeSend(to: string, subject: string, html: string): Promise<boolean> {
@@ -51,6 +62,45 @@ async function safeSend(to: string, subject: string, html: string): Promise<bool
     return true;
   } catch (error) {
     console.error("[email] delivery failed:", { to, subject, error });
+    return false;
+  }
+}
+
+export interface EmailAttachment {
+  filename: string;
+  /** Base64 string or Buffer; small lightweight backups pass a Buffer. */
+  content: Buffer | string;
+  contentType?: string;
+}
+
+/**
+ * Sends a transactional email with optional attachments (used by the lightweight
+ * emailed database backup). Returns false when SMTP is missing or delivery
+ * fails, so callers can record an operational notification status.
+ */
+export async function sendEmailWithAttachments(opts: {
+  to: string;
+  subject: string;
+  html: string;
+  attachments?: EmailAttachment[];
+}): Promise<boolean> {
+  const t = getTransporter();
+  if (!t) return false;
+  try {
+    await t.sendMail({
+      from: SMTP_FROM,
+      to: opts.to,
+      subject: opts.subject,
+      html: opts.html,
+      attachments: opts.attachments?.map((a) => ({
+        filename: a.filename,
+        content: a.content,
+        contentType: a.contentType,
+      })),
+    });
+    return true;
+  } catch (error) {
+    console.error("[email] attachment delivery failed:", { to: opts.to, subject: opts.subject, error });
     return false;
   }
 }

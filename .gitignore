@@ -28,3 +28,6 @@ next-env.d.ts
 
 # uploads
 /public/uploads/
+
+# Tesseract language data (optional local OCR experiment; not used by the app)
+*.traineddata

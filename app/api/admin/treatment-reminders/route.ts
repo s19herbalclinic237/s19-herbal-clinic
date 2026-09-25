@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/db";
-import { adminGuard } from "@/lib/admin-guard";
+import { clinicalGuard } from "@/lib/admin-guard";
 import { TreatmentReminder, type ITreatmentReminder } from "@/lib/models/TreatmentReminder";
 import { TreatmentPlan } from "@/lib/models/TreatmentPlan";
 
@@ -16,7 +16,7 @@ const REMINDER_KINDS = ["payment", "refill", "appointment", "lab", "monitoring",
 type ReminderKindT = (typeof REMINDER_KINDS)[number];
 
 export async function GET(request: Request) {
-  const denied = await adminGuard();
+  const denied = await clinicalGuard();
   if (denied) return denied;
 
   const url = new URL(request.url);
@@ -49,7 +49,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const denied = await adminGuard();
+  const denied = await clinicalGuard();
   if (denied) return denied;
 
   let body: unknown;

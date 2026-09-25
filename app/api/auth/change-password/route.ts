@@ -6,12 +6,21 @@ import { User } from "@/lib/models/User";
 import { Session } from "@/lib/models/Session";
 import { SESSION_COOKIE, hashPassword, hashToken, passwordPolicyErrors, verifyPassword } from "@/lib/auth";
 import { sendPasswordChangedEmail } from "@/lib/email";
+import { rateLimitRequest, rateLimitResponse } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
   const user = await getSessionUser();
   if (!user) {
     return NextResponse.json({ error: "Sign in to change your password." }, { status: 401 });
   }
+
+  const rateLimit = await rateLimitRequest(request, {
+    scope: "auth-change-password",
+    limit: 5,
+    windowMs: 15 * 60 * 1000,
+    dimensions: [`user:${user.id}`],
+  });
+  if (!rateLimit.allowed) return rateLimitResponse(rateLimit);
 
   let body: unknown;
   try {

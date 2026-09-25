@@ -5,6 +5,7 @@ import { Order, type IOrder } from "@/lib/models/Order";
 import { sendOrderConfirmation } from "@/lib/email";
 import { generateOrderReference } from "@/lib/utils";
 import type { CartItem } from "@/lib/cart-context";
+import { rateLimitRequest, rateLimitResponse } from "@/lib/rate-limit";
 
 const validModes = ["Pickup", "Cameroon Delivery", "Worldwide Delivery"];
 const validPayments = ["MTN Mobile Money", "Orange Money", "Bank Transfer", "Pay on Pickup or Delivery"];
@@ -65,6 +66,14 @@ export async function POST(request: Request) {
   if (!payload.payment?.method || !validPayments.includes(payload.payment.method)) {
     return NextResponse.json({ error: "Select a valid payment method." }, { status: 400 });
   }
+
+  const rateLimit = await rateLimitRequest(request, {
+    scope: "order-create",
+    limit: 10,
+    windowMs: 60 * 60 * 1000,
+    dimensions: [`email:${customer.email.trim().toLowerCase()}`],
+  });
+  if (!rateLimit.allowed) return rateLimitResponse(rateLimit);
 
   const subtotal = payload.items.reduce((n, i) => n + i.price * i.quantity, 0);
   const fee = Math.max(0, Number(payload.fee) || 0);

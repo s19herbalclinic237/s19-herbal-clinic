@@ -9,6 +9,7 @@ import {
   passwordPolicyErrors,
 } from "@/lib/auth";
 import { sendNewAccountNotification, sendVerificationEmail, siteOrigin } from "@/lib/email";
+import { rateLimitRequest, rateLimitResponse } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -32,6 +33,14 @@ export async function POST(request: Request) {
   if (passwordErrors.length > 0) {
     return NextResponse.json({ success: false, error: passwordErrors[0] }, { status: 400 });
   }
+
+  const rateLimit = await rateLimitRequest(request, {
+    scope: "auth-register",
+    limit: 5,
+    windowMs: 60 * 60 * 1000,
+    dimensions: [`email:${email}`],
+  });
+  if (!rateLimit.allowed) return rateLimitResponse(rateLimit);
 
   const conn = await connectDb();
   if (!conn) {

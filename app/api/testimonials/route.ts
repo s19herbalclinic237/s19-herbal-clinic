@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth-server";
 import { Testimonial } from "@/lib/models/Testimonial";
+import { rateLimitRequest, rateLimitResponse } from "@/lib/rate-limit";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -74,12 +75,21 @@ export async function POST(request: Request) {
   const cleanRating =
     Number.isInteger(parsedRating) && parsedRating >= 1 && parsedRating <= 5 ? parsedRating : 5;
 
+  const sessionUser = await getSessionUser();
+  const rateLimit = await rateLimitRequest(request, {
+    scope: "testimonial-create",
+    limit: 5,
+    windowMs: 24 * 60 * 60 * 1000,
+    dimensions: sessionUser ? [`user:${sessionUser.id}`] : undefined,
+  });
+  if (!rateLimit.allowed) return rateLimitResponse(rateLimit);
+
   const conn = await connectDb();
   if (!conn) {
     return NextResponse.json({ error: "Testimonials are temporarily unavailable." }, { status: 503 });
   }
 
-  const user = await getSessionUser();
+  const user = sessionUser;
 
   try {
     const testimonial = await Testimonial.create({

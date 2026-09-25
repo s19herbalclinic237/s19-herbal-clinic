@@ -2,8 +2,16 @@ import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/db";
 import { Inquiry } from "@/lib/models/Inquiry";
 import { sendBookingNotification } from "@/lib/email";
+import { rateLimitRequest, rateLimitResponse } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
+  const rateLimit = await rateLimitRequest(request, {
+    scope: "contact-create",
+    limit: 5,
+    windowMs: 60 * 60 * 1000,
+  });
+  if (!rateLimit.allowed) return rateLimitResponse(rateLimit);
+
   let body: unknown;
   try {
     body = await request.json();

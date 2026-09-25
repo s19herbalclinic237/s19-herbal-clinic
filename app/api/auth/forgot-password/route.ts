@@ -3,6 +3,7 @@ import { connectDb } from "@/lib/db";
 import { User } from "@/lib/models/User";
 import { createResetToken, isEmailValid } from "@/lib/auth";
 import { sendPasswordResetEmail, siteOrigin } from "@/lib/email";
+import { rateLimitRequest, rateLimitResponse } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -16,6 +17,14 @@ export async function POST(request: Request) {
   if (!isEmailValid(email)) {
     return NextResponse.json({ success: false, error: "Enter a valid email address." }, { status: 400 });
   }
+
+  const rateLimit = await rateLimitRequest(request, {
+    scope: "auth-forgot-password",
+    limit: 5,
+    windowMs: 60 * 60 * 1000,
+    dimensions: [`email:${email}`],
+  });
+  if (!rateLimit.allowed) return rateLimitResponse(rateLimit);
 
   const conn = await connectDb();
   if (!conn) {

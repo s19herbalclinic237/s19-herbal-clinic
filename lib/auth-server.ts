@@ -51,14 +51,14 @@ export function toAuthUser(u: AuthUserPick): AuthUser {
 }
 
 /**
- * The session cookie should carry the `Secure` flag only when the browser is
- * actually talking to us over HTTPS. Production deployments are HTTPS, but a
- * phone may reach the same app over plain HTTP (LAN test, http:// tunnel,
- * pre-SSL host). Setting `Secure` in that case silently makes browsers drop
- * the cookie: the login response still returns the user body so the dashboard
- * shell renders, yet every later API call (orders, messages, testimonials)
- * arrives without the session cookie and answers 401 "Sign in to ...".
+ * Development may be reached over a local HTTP tunnel. Production sessions are
+ * HTTPS-only regardless of proxy/header detection, so an accidental plain-HTTP
+ * request cannot create a usable session cookie.
  */
+function shouldUseSecureCookie(request?: Request): boolean {
+  return process.env.NODE_ENV === "production" || isHttpsRequest(request);
+}
+
 function isHttpsRequest(request?: Request): boolean {
   if (!request) return process.env.NODE_ENV === "production";
   const forwarded = request.headers.get("x-forwarded-proto");
@@ -74,7 +74,7 @@ export function setSessionCookie(res: NextResponse, token: string, request?: Req
   res.cookies.set(SESSION_COOKIE, token, {
     httpOnly: true,
     sameSite: "lax",
-    secure: isHttpsRequest(request),
+    secure: shouldUseSecureCookie(request),
     path: "/",
     maxAge: SESSION_DAYS * 24 * 60 * 60,
   });
@@ -85,7 +85,7 @@ export function clearSessionCookie(res: NextResponse, request?: Request): NextRe
   res.cookies.set(SESSION_COOKIE, "", {
     httpOnly: true,
     sameSite: "lax",
-    secure: isHttpsRequest(request),
+    secure: shouldUseSecureCookie(request),
     path: "/",
     maxAge: 0,
   });
@@ -139,4 +139,15 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
 export async function isAdmin(): Promise<boolean> {
   const user = await getSessionUser();
   return !!user && user.role === "admin";
+}
+
+export async function isDoctor(): Promise<boolean> {
+  const user = await getSessionUser();
+  return !!user && user.role === "doctor";
+}
+
+/** Clinical staff: administrators plus registered doctors. */
+export async function isStaff(): Promise<boolean> {
+  const user = await getSessionUser();
+  return !!user && (user.role === "admin" || user.role === "doctor");
 }

@@ -25,19 +25,19 @@ const sectionKeys = [
 
 const sections = [
   {
-    body: `These are strictly necessary for the site to work: your session cookie (keeps you signed in, e.g. "s19_session"), and security measures that protect login and checkout. They cannot be switched off and do not store unnecessary personal information.`,
+    body: `These are strictly necessary for the site to work: our session cookie (keeps you signed in to your account, called "s19_session"), and the security measures that protect login, order placement and checkout. They cannot be switched off and they do not store personal information beyond what is required to keep the session secure.`,
   },
   {
-    body: `We store a small language preference cookie (used to remember whether you browse in English or French) and use local storage to keep your shopping cart and delivery preferences between visits. This data stays in your browser and is only sent back to us when you use it.`,
+    body: `We store a small language preference cookie (called "s19_locale", to remember whether you browse in English or French) and use local storage in your browser to keep your shopping cart and delivery preferences between visits. Nothing in this group is sent to third parties, and you can clear it at any time without breaking the site.`,
   },
   {
-    body: "We keep anonymous, aggregated page-usage information so we can improve the site. This does not identify you personally, and we do not run intrusive advertising or tracking networks.",
+    body: `We do not run analytics, advertising or tracking cookies, and we do not use third-party advertising or tracking networks. We do not build profiles of visitors. If we ever add measurement tools in the future, we will only place them after obtaining your consent as required by applicable law (including the EU ePrivacy rules and Cameroon's Law No. 2024/017 on personal-data protection).`,
   },
   {
-    body: `Some pages load content from trusted third parties, for example video hosting or clinic schedules. Those providers may set their own cookies according to their own policies. Payment and delivery providers only receive the data needed to complete a transaction.`,
+    body: `A few parts of the site work with trusted third parties: mobile-money payments can open pages operated by MTN Mobile Money or Orange Money, and some videos are delivered by our hosting providers. Those providers may set their own cookies or local storage according to their own policies, and we only share with them the minimum information needed to complete the transaction. We do not control their technologies and recommend you review their policies if you use them.`,
   },
   {
-    body: `You can clear or block cookies in your browser settings at any time. Blocking essential cookies may prevent you from signing in or completing an order. The language preference and cart data in local storage can be cleared through your browser's site-data settings without affecting your account.`,
+    body: `You can clear or block cookies and local storage in your browser settings at any time. Blocking essential cookies may prevent you from signing in or completing an order. The language preference and cart data in local storage can be cleared through your browser's site-data settings without affecting your account. Because we do not use tracking or advertising cookies, there is no separate opt-out tool needed on this site: simply use your browser's controls.`,
   },
   {
     body: `Questions or requests about cookies can be sent to ${CLINIC.email} or by calling ${CLINIC.phone}.`,

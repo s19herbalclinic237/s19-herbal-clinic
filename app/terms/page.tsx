@@ -14,6 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
 const sectionKeys = [
   "terms.section.general",
   "terms.section.healthDisclaimer",
+  "terms.section.noGuarantee",
   "terms.section.telemedicine",
   "terms.section.appointments",
   "terms.section.records",
@@ -24,6 +25,7 @@ const sectionKeys = [
   "terms.section.messages",
   "terms.section.ids",
   "terms.section.liability",
+  "terms.section.governingLaw",
   "terms.section.changes",
 ] as const;
 
@@ -35,6 +37,10 @@ const sections = [
   {
     title: "Health Disclaimer",
     body: "S19 herbal products and programs support wellness and complement, but never replace, conventional medical care. Always consult a qualified health professional about your condition and before starting any new remedy, especially if you are pregnant, nursing, on medication, or under oncology care.",
+  },
+  {
+    title: "No Guaranteed Results",
+    body: `The clinic does not and cannot guarantee any particular health outcome, cure, or result from any product, consultation, program, or treatment. Individual results vary depending on the person, the condition, and how consistently the guidance is followed. Statements on this site are informational and are not medical claims approved by a regulatory authority.`,
   },
   {
     title: "Online Consultations (Telemedicine)",
@@ -75,6 +81,10 @@ const sections = [
   {
     title: "Liability",
     body: "Use of this website and its products is at your own risk. To the extent permitted by law, the clinic is not liable for indirect or consequential losses arising from use of the site or products. Nothing in these terms limits liability that cannot lawfully be limited.",
+  },
+  {
+    title: "Governing Law & Disputes",
+    body: `These terms are governed by the laws of the Republic of Cameroon, including Law No. 2010/012 of 21 December 2010 relating to cyber security and cyber criminality and Law No. 2024/017 of 23 December 2024 relating to the protection of personal data. In the event of a dispute, we will first try to resolve it amicably through our clinic team. If it cannot be resolved amicably, any claim shall be subject to the jurisdiction of the competent courts of Cameroon.`,
   },
   {
     title: "Changes to These Terms",

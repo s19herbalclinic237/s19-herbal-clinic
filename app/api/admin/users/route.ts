@@ -15,8 +15,8 @@ export async function GET() {
   }
 
   try {
-    const users = await User.find({ role: "user" })
-      .select("name email phone emailVerified isActive lastLoginAt createdAt familyMembers")
+    const users = await User.find({ role: { $in: ["user", "doctor"] } })
+      .select("name email phone role emailVerified isActive lastLoginAt createdAt familyMembers")
       .sort({ createdAt: -1 })
       .limit(300)
       .lean();
@@ -47,6 +47,7 @@ export async function GET() {
       name: u.name,
       email: u.email,
       phone: u.phone ?? "",
+      role: u.role,
       emailVerified: u.emailVerified,
       isActive: u.isActive,
       lastLoginAt: u.lastLoginAt ?? null,

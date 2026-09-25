@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/db";
 import { User } from "@/lib/models/User";
 import { hashToken } from "@/lib/auth";
+import { rateLimitRequest, rateLimitResponse } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -15,6 +16,14 @@ export async function POST(request: Request) {
   if (!token) {
     return NextResponse.json({ success: false, error: "Verification token is required." }, { status: 400 });
   }
+
+  const rateLimit = await rateLimitRequest(request, {
+    scope: "auth-verify-email",
+    limit: 20,
+    windowMs: 60 * 60 * 1000,
+    dimensions: [`token:${token}`],
+  });
+  if (!rateLimit.allowed) return rateLimitResponse(rateLimit);
 
   const conn = await connectDb();
   if (!conn) {

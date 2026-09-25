@@ -3,6 +3,7 @@ import { connectDb } from "@/lib/db";
 import { User } from "@/lib/models/User";
 import { createSession, verifyPassword, isEmailValid } from "@/lib/auth";
 import { setSessionCookie, toAuthUser } from "@/lib/auth-server";
+import { rateLimitRequest, rateLimitResponse } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -18,6 +19,14 @@ export async function POST(request: Request) {
   if (!isEmailValid(email) || !password) {
     return NextResponse.json({ success: false, error: "Enter your email and password." }, { status: 400 });
   }
+
+  const rateLimit = await rateLimitRequest(request, {
+    scope: "auth-login",
+    limit: 5,
+    windowMs: 15 * 60 * 1000,
+    dimensions: [`email:${email}`],
+  });
+  if (!rateLimit.allowed) return rateLimitResponse(rateLimit);
 
   const conn = await connectDb();
   if (!conn) {

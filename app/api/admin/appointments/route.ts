@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/db";
-import { adminGuard } from "@/lib/admin-guard";
+import { clinicalGuard } from "@/lib/admin-guard";
 import { Appointment } from "@/lib/models/Appointment";
+// Side-effect import registers the Doctor model for `populate("doctor", …)`.
+import "@/lib/models/Doctor";
 
 export async function GET(request: Request) {
-  const denied = await adminGuard();
+  const denied = await clinicalGuard();
   if (denied) return denied;
 
   const url = new URL(request.url);

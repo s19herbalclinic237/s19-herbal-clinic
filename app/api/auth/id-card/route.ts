@@ -3,6 +3,7 @@ import { connectDb } from "@/lib/db";
 import { getSessionUser, toAuthUser } from "@/lib/auth-server";
 import { User } from "@/lib/models/User";
 import { getCloudinary } from "@/lib/cloudinary";
+import { rateLimitRequest, rateLimitResponse } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -20,6 +21,14 @@ export async function POST(request: Request) {
   if (!sessionUser) {
     return NextResponse.json({ error: "Sign in to upload your ID document." }, { status: 401 });
   }
+
+  const rateLimit = await rateLimitRequest(request, {
+    scope: "id-card-upload",
+    limit: 10,
+    windowMs: 60 * 60 * 1000,
+    dimensions: [`user:${sessionUser.id}`],
+  });
+  if (!rateLimit.allowed) return rateLimitResponse(rateLimit);
 
   const cloudinary = getCloudinary();
   if (!cloudinary) {

@@ -10,7 +10,7 @@ export interface AuthUser {
   id: string;
   name: string;
   email: string;
-  role: "admin" | "user";
+  role: "admin" | "doctor" | "user";
   emailVerified: boolean;
   phone?: string;
   avatar?: string;

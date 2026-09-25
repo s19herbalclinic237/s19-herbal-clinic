@@ -32,6 +32,8 @@ import { AdminMedicalRecordsTab } from "@/components/admin/medical-records-tab";
 import { AdminPrescriptionsTab } from "@/components/admin/prescriptions-tab";
 import { TreatmentPlansTab } from "@/components/admin/treatment-plans-tab";
 import { TreatmentAlertsTab } from "@/components/admin/treatment-alerts-tab";
+import { RolesTab } from "@/components/admin/roles-tab";
+import { BackupsTab } from "@/components/admin/backups-tab";
 import { buttonLinkClasses } from "@/components/ui/button";
 import { S19_ASSETS } from "@/lib/site-assets";
 import {
@@ -58,9 +60,11 @@ import {
   FaTruckFast,
   FaUserDoctor,
   FaUserGear,
+  FaUserShield,
   FaUsers,
   FaVideo,
   FaXmark,
+  FaBoxArchive,
 } from "react-icons/fa6";
 
 type TabId =
@@ -77,7 +81,9 @@ type TabId =
   | "admin-records"
   | "admin-prescriptions"
   | "admin-treatment-plans"
-  | "admin-treatment-alerts";
+  | "admin-treatment-alerts"
+  | "admin-roles"
+  | "admin-backups";
 
 interface NavItem {
   id: TabId;
@@ -204,6 +210,54 @@ const adminTabs: NavItem[] = [
     label: "Live Reviews",
     icon: <FaVideo className="h-4 w-4" aria-hidden />,
   },
+  {
+    id: "admin-roles",
+    label: "Staff & Roles",
+    icon: <FaUserShield className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "admin-backups",
+    label: "Data Backups",
+    icon: <FaBoxArchive className="h-4 w-4" aria-hidden />,
+  },
+];
+
+/**
+ * Clinical-staff tabs available to the Doctor role. Doctors manage patients
+ * (appointments, records, prescriptions, treatment plans/alerts, messages)
+ * but never see store, content, subscriber, or user-administration tabs.
+ */
+const doctorTabs: NavItem[] = [
+  {
+    id: "admin-appointments",
+    label: "Appointments",
+    icon: <FaCalendarCheck className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "admin-records",
+    label: "Medical Records",
+    icon: <FaFolderOpen className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "admin-prescriptions",
+    label: "Prescriptions",
+    icon: <FaFilePrescription className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "admin-treatment-plans",
+    label: "Treatment Plans",
+    icon: <FaCalendarDays className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "admin-treatment-alerts",
+    label: "Treatment Alerts",
+    icon: <FaTriangleExclamation className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "admin-messaging",
+    label: "Patients & Messages",
+    icon: <FaUserGear className="h-4 w-4" aria-hidden />,
+  },
 ];
 
 function NavButton({
@@ -288,10 +342,47 @@ function BrandLogo({ dark = true }: { dark?: boolean }) {
 export function DashboardScreen() {
   const { user, logout } = useAuth();
   const data = useDashboardData();
-  const [tab, setTab] = useState<TabId>("overview");
+  const [tab, setTab] = useState<TabId>(() =>
+    user?.role === "doctor" ? "admin-appointments" : "overview"
+  );
   const [drawerOpen, setDrawerOpen] = useState(false);
   const scrollRef = useRef<HTMLElement | null>(null);
   const isAdmin = user?.role === "admin";
+  const isDoctor = user?.role === "doctor";
+  const isStaff = isAdmin || isDoctor;
+
+  const settingsTab = patientTabs.filter((t) => t.id === "settings");
+  const navSections: Array<{ label: string; items: NavItem[] }> = isDoctor
+    ? [
+        { label: "Clinical work", items: doctorTabs },
+        { label: "My account", items: settingsTab },
+      ]
+    : isAdmin
+      ? [
+          { label: "My account", items: patientTabs },
+          { label: "Clinic admin", items: adminTabs },
+        ]
+      : [{ label: "My account", items: patientTabs }];
+  const bottomNavItems = isDoctor ? doctorTabs : patientTabs;
+
+  const shortNavLabel = (item: NavItem) =>
+    item.id === "testimonials"
+      ? "Stories"
+      : item.id === "treatment"
+        ? "Treatment"
+        : item.id === "admin-appointments"
+          ? "Bookings"
+          : item.id === "admin-records"
+            ? "Records"
+            : item.id === "admin-prescriptions"
+              ? "Rx"
+              : item.id === "admin-treatment-plans"
+                ? "Plans"
+                : item.id === "admin-treatment-alerts"
+                  ? "Alerts"
+                  : item.id === "admin-messaging"
+                    ? "Messages"
+                    : item.label;
 
   const firstName = user?.name?.trim().split(/\s+/)[0] || "there";
   const greeting = getGreeting();
@@ -434,7 +525,7 @@ export function DashboardScreen() {
           </div>
         ) : null;
       case "admin-messaging":
-        return isAdmin ? (
+        return isStaff ? (
           <div className="px-4 sm:px-0">
             <MessagingTab />
           </div>
@@ -467,7 +558,7 @@ export function DashboardScreen() {
           </>
         ) : null;
       case "admin-appointments":
-        return isAdmin ? (
+        return isStaff ? (
           <>
             <PageHeader title="Appointments" subtitle="Confirm, complete or cancel patient bookings" />
             <div className="px-4 sm:px-0">
@@ -476,7 +567,7 @@ export function DashboardScreen() {
           </>
         ) : null;
       case "admin-records":
-        return isAdmin ? (
+        return isStaff ? (
           <>
             <PageHeader title="Medical Records" subtitle="Log visits, diagnoses, lab results and scans" />
             <div className="px-4 sm:px-0">
@@ -485,7 +576,7 @@ export function DashboardScreen() {
           </>
         ) : null;
       case "admin-prescriptions":
-        return isAdmin ? (
+        return isStaff ? (
           <>
             <PageHeader title="Prescriptions" subtitle="Issue treatment plans with dosage instructions" />
             <div className="px-4 sm:px-0">
@@ -494,7 +585,7 @@ export function DashboardScreen() {
           </>
         ) : null;
       case "admin-treatment-plans":
-        return isAdmin ? (
+        return isStaff ? (
           <>
             <PageHeader
               title="Treatment Plans"
@@ -506,7 +597,7 @@ export function DashboardScreen() {
           </>
         ) : null;
       case "admin-treatment-alerts":
-        return isAdmin ? (
+        return isStaff ? (
           <>
             <PageHeader
               title="Treatment Alerts"
@@ -514,6 +605,24 @@ export function DashboardScreen() {
             />
             <div className="px-4 sm:px-0">
               <TreatmentAlertsTab onOpenPlans={() => openTab("admin-treatment-plans")} />
+            </div>
+          </>
+        ) : null;
+      case "admin-roles":
+        return isAdmin ? (
+          <>
+            <PageHeader title="Staff & Roles" subtitle="Promote verified accounts to Doctor, or back to patient" />
+            <div className="px-4 sm:px-0">
+              <RolesTab />
+            </div>
+          </>
+        ) : null;
+      case "admin-backups":
+        return isAdmin ? (
+          <>
+            <PageHeader title="Data Backups" subtitle="Daily automated and manual full-database backups, emailed to the clinic admin" />
+            <div className="px-4 sm:px-0">
+              <BackupsTab />
             </div>
           </>
         ) : null;
@@ -551,6 +660,11 @@ export function DashboardScreen() {
                   <FaShieldHalved className="h-2.5 w-2.5" aria-hidden />
                   Clinic admin
                 </span>
+              ) : isDoctor ? (
+                <span className="inline-flex items-center gap-1 rounded-full border border-sky-500/50 bg-sky-500/10 px-2 py-0.5 text-[10px] font-bold text-sky-300">
+                  <FaUserDoctor className="h-2.5 w-2.5" aria-hidden />
+                  Doctor
+                </span>
               ) : null}
               {user?.emailVerified ? (
                 <span className="inline-flex items-center gap-1 rounded-full border border-forest-600 bg-forest-800/80 px-2 py-0.5 text-[10px] font-bold text-forest-100">
@@ -563,35 +677,24 @@ export function DashboardScreen() {
         </div>
 
         <nav className="min-h-0 flex-1 space-y-0.5 overflow-y-auto no-scrollbar px-3 py-3">
-          <p className="px-2 pb-1 pt-1.5 text-[9px] font-bold uppercase tracking-[0.2em] text-white/30">
-            My account
-          </p>
-          {patientTabs.map((item) => (
-            <NavButton
-              key={item.id}
-              item={item}
-              active={tab === item.id}
-              badge={
-                item.id === "messages" && data.unreadCount > 0 ? data.unreadCount : undefined
-              }
-              onClick={() => openTab(item.id)}
-            />
-          ))}
-          {isAdmin ? (
-            <>
-              <p className="px-2 pb-1 pt-3 text-[9px] font-bold uppercase tracking-[0.2em] text-white/30">
-                Clinic admin
+          {navSections.map((section) => (
+            <div key={section.label}>
+              <p className="px-2 pb-1 pt-1.5 text-[9px] font-bold uppercase tracking-[0.2em] text-white/30">
+                {section.label}
               </p>
-              {adminTabs.map((item) => (
+              {section.items.map((item) => (
                 <NavButton
                   key={item.id}
                   item={item}
                   active={tab === item.id}
+                  badge={
+                    item.id === "messages" && data.unreadCount > 0 ? data.unreadCount : undefined
+                  }
                   onClick={() => openTab(item.id)}
                 />
               ))}
-            </>
-          ) : null}
+            </div>
+          ))}
         </nav>
 
         <div className="space-y-1 border-t border-white/10 p-2.5">
@@ -689,7 +792,7 @@ export function DashboardScreen() {
         className="fixed inset-x-0 bottom-0 z-50 border-t border-forest-100 bg-white/95 pb-[max(0.4rem,env(safe-area-inset-bottom))] pt-1.5 backdrop-blur lg:hidden"
       >
         <div className="no-scrollbar mx-auto flex max-w-md items-stretch gap-1 overflow-x-auto px-2">
-          {patientTabs.map((item) => {
+          {bottomNavItems.map((item) => {
             const active = tab === item.id;
             return (
               <button
@@ -714,11 +817,7 @@ export function DashboardScreen() {
                     active ? "text-forest-950" : "text-muted"
                   }`}
                 >
-                  {item.id === "testimonials"
-                    ? "Stories"
-                    : item.id === "treatment"
-                      ? "Treatment"
-                      : item.label}
+                  {shortNavLabel(item)}
                 </span>
                 <span
                   className={`h-1 w-1 rounded-full ${active ? "bg-gold-500" : "bg-transparent"}`}
@@ -778,35 +877,26 @@ export function DashboardScreen() {
               </div>
 
               <nav className="flex-1 space-y-1 px-3 py-4">
-                <p className="px-2 pb-1.5 pt-2 text-[9px] font-bold uppercase tracking-[0.2em] text-white/30">
-                  My account
-                </p>
-                {patientTabs.map((item) => (
-                  <NavButton
-                    key={item.id}
-                    item={item}
-                    active={tab === item.id}
-                    badge={
-                      item.id === "messages" && data.unreadCount > 0 ? data.unreadCount : undefined
-                    }
-                    onClick={() => openTab(item.id)}
-                  />
-                ))}
-                {isAdmin ? (
-                  <>
-                    <p className="px-2 pb-1.5 pt-5 text-[9px] font-bold uppercase tracking-[0.2em] text-white/30">
-                      Clinic admin
+                {navSections.map((section) => (
+                  <div key={section.label}>
+                    <p className="px-2 pb-1.5 pt-2 text-[9px] font-bold uppercase tracking-[0.2em] text-white/30">
+                      {section.label}
                     </p>
-                    {adminTabs.map((item) => (
+                    {section.items.map((item) => (
                       <NavButton
                         key={item.id}
                         item={item}
                         active={tab === item.id}
+                        badge={
+                          item.id === "messages" && data.unreadCount > 0
+                            ? data.unreadCount
+                            : undefined
+                        }
                         onClick={() => openTab(item.id)}
                       />
                     ))}
-                  </>
-                ) : null}
+                  </div>
+                ))}
               </nav>
 
               <div className="space-y-1 border-t border-white/10 p-3">

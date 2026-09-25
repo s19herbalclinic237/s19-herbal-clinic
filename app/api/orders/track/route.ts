@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/db";
 import { Order } from "@/lib/models/Order";
+import { rateLimitRequest, rateLimitResponse } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -14,14 +15,24 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Reference and email are required." }, { status: 400 });
   }
 
+  const normalizedReference = reference.trim().toUpperCase();
+  const normalizedEmail = email.trim().toLowerCase();
+  const rateLimit = await rateLimitRequest(request, {
+    scope: "order-track",
+    limit: 20,
+    windowMs: 15 * 60 * 1000,
+    dimensions: [`reference:${normalizedReference}`, `email:${normalizedEmail}`],
+  });
+  if (!rateLimit.allowed) return rateLimitResponse(rateLimit);
+
   const conn = await connectDb();
   if (!conn) {
     return NextResponse.json({ error: "Tracking is temporarily unavailable." }, { status: 503 });
   }
 
   const order = await Order.findOne({
-    orderReference: reference.trim().toUpperCase(),
-    "customer.email": { $regex: `^${escapeRegex(email.trim().toLowerCase())}$`, $options: "i" },
+    orderReference: normalizedReference,
+    "customer.email": normalizedEmail,
   }).lean();
 
   if (!order) {
