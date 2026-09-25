@@ -340,7 +340,7 @@ The profile is not currently linked to a login or clinical writes.
 | `GET /api/messages` | Signed in | List account messages and unread count. |
 | `POST /api/messages` | Signed in | Start or reply to a clinic conversation. |
 | `POST /api/messages/[id]/read` | Owner | Mark a message read. |
-| `GET /api/admin/users` | Admin | List patient users and order/unread aggregates. |
+| `GET /api/admin/users` | Admin or Doctor (clinical) | List patient users and order/unread aggregates. |
 | `GET /api/admin/messages` | Admin or Doctor (clinical) | List a selected user's conversation and mark patient replies read. |
 | `POST /api/admin/messages` | Admin or Doctor (clinical) | Start/reply to a clinic message and notify patient. |
 

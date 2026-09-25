@@ -43,7 +43,6 @@ Rule of thumb: **clinical operations** (anything touching patient-facing clinica
 | Subscribers | `GET /api/admin/subscribers`, `PATCH /api/admin/subscribers/[id]`, `DELETE /api/admin/subscribers/[id]` |
 | Fan-out | `POST /api/admin/fanout` |
 | Video reviews | `GET/POST/DELETE /api/admin/video-reviews` |
-| Users/messages administration | `GET /api/admin/users` |
 | Roles | `GET/PATCH /api/admin/roles` |
 | Backups | `GET/POST /api/admin/backups` |
 | Generic uploads | `POST /api/upload`, `POST /api/translate` |
@@ -60,7 +59,7 @@ Rule of thumb: **clinical operations** (anything touching patient-facing clinica
 | Treatment reminders | `GET/POST /api/admin/treatment-reminders`, `PATCH/DELETE /api/admin/treatment-reminders/[id]` |
 | Glucose | `GET /api/admin/glucose` |
 | Treatment alerts | `GET /api/admin/treatment-alerts` |
-| Messaging | `GET/POST /api/admin/messages` |
+| Messaging | `GET /api/admin/users` (patient list for selection), `GET/POST /api/admin/messages` |
 
 Patients keep the existing own-account routes (`/api/appointments`, `/api/medical-records`, `/api/prescriptions`, `/api/treatment-plans`, `/api/glucose`, `/api/messages`, …), which scope every query to the session user's ID.
 

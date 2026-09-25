@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/db";
-import { adminGuard } from "@/lib/admin-guard";
+import { clinicalGuard } from "@/lib/admin-guard";
 import { User } from "@/lib/models/User";
 import { Order } from "@/lib/models/Order";
 import { Message } from "@/lib/models/Message";
 
 export async function GET() {
-  const denied = await adminGuard();
+  const denied = await clinicalGuard();
   if (denied) return denied;
 
   const conn = await connectDb();
