@@ -1,14 +1,16 @@
 "use client";
 
+import { parseDateOnly } from "@/lib/dates";
+
 export function formatDate(iso: string | Date): string {
-  const d = typeof iso === "string" ? new Date(iso) : iso;
+  const d = typeof iso === "string" ? parseDateOnly(iso) : iso;
   if (Number.isNaN(d.getTime())) return "";
   return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
 
 /** Formats a full ISO date/time (e.g. record dates) as "12 Mar 2026". */
 export function formatDayDate(iso: string | Date): string {
-  const d = typeof iso === "string" ? new Date(iso) : iso;
+  const d = typeof iso === "string" ? parseDateOnly(iso) : iso;
   if (Number.isNaN(d.getTime())) return "";
   return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }

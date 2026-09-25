@@ -28,7 +28,12 @@ export interface TreatmentAlert {
 }
 
 function todayIso(): string {
-  return new Date().toISOString().slice(0, 10);
+  // Local calendar date (YYYY-MM-DD) so comparisons with user-facing
+  // dates (reminder due dates, appointment dates) match the clinic's day.
+  const d = new Date();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${d.getFullYear()}-${mm}-${dd}`;
 }
 
 const severityRank: Record<AlertSeverity, number> = { high: 3, medium: 2, low: 1 };

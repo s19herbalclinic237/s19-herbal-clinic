@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { formatDayDate } from "@/components/account/badges";
+import { localDateString } from "@/lib/dates";
 import { cn } from "@/lib/utils";
 import {
   FaBell,
@@ -320,7 +321,7 @@ function FollowUpSection({ plan, onChanged }: { plan: AdminPlan; onChanged: () =
   const [editingId, setEditingId] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const blank = {
-    date: new Date().toISOString().slice(0, 10),
+    date: localDateString(),
     milestone: "monthly" as FollowUp["milestone"],
     milestoneLabel: "",
     improvements: "",
@@ -636,7 +637,7 @@ function RemindersSection({ plan }: { plan: AdminPlan }) {
   const [form, setForm] = useState({
     kind: "payment",
     title: "",
-    dueDate: new Date().toISOString().slice(0, 10),
+    dueDate: localDateString(),
     amountFcfa: "",
     notes: "",
   });
@@ -715,7 +716,7 @@ function RemindersSection({ plan }: { plan: AdminPlan }) {
     }
   }
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDateString();
 
   return (
     <div className="rounded-xl border border-line bg-white p-4">

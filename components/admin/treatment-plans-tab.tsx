@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/form";
 import { formatDate, TreatmentPhaseBadge } from "@/components/account/badges";
+import { localDateString } from "@/lib/dates";
 import { TreatmentPlanDetail } from "@/components/admin/treatment-plan-detail";
 import {
   FaCalendarDays,
@@ -332,7 +333,7 @@ function TreatmentPlanForm({
   const [title, setTitle] = useState(initial?.title || "");
   const [program, setProgram] = useState(initial?.program || "");
   const [startDate, setStartDate] = useState(
-    initial ? initial.startDate.slice(0, 10) : new Date().toISOString().slice(0, 10)
+    initial ? initial.startDate.slice(0, 10) : localDateString()
   );
   const [endDate, setEndDate] = useState(
     initial ? initial.endDate.slice(0, 10) : ""
@@ -350,11 +351,11 @@ function TreatmentPlanForm({
   const selectedPatient = patients.find((p) => p.id === userId);
 
   function quickDuration(days: number) {
-    const start = new Date(startDate);
+    const start = new Date(`${startDate}T12:00:00`);
     if (Number.isNaN(start.getTime())) return;
     const end = new Date(start);
     end.setDate(end.getDate() + days - 1);
-    setEndDate(end.toISOString().slice(0, 10));
+    setEndDate(localDateString(end));
   }
 
   async function submit(e: FormEvent) {

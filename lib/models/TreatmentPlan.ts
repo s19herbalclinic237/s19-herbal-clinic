@@ -120,9 +120,15 @@ export function treatmentPlanPhase(
   now: Date = new Date()
 ): TreatmentPlanPhase {
   if (plan.status === "completed") return "completed";
-  const start = new Date(plan.startDate).getTime();
-  const end = new Date(plan.endDate).getTime();
-  const t = now.getTime();
+  // Normalize to local midnight so a plan is "active" for the whole of its
+  // start/end calendar days regardless of the clock time they were stored at
+  // (the admin form stores local noon, which skews raw-timestamp compares).
+  const t = new Date(now);
+  const start = new Date(plan.startDate);
+  const end = new Date(plan.endDate);
+  t.setHours(0, 0, 0, 0);
+  start.setHours(0, 0, 0, 0);
+  end.setHours(0, 0, 0, 0);
   if (t < start) return "scheduled";
   if (t > end) return "expired";
   return "active";

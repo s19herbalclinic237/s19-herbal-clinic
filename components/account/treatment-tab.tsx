@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { TreatmentPhaseBadge, formatDayDate } from "@/components/account/badges";
+import { localDateString } from "@/lib/dates";
 import { cn } from "@/lib/utils";
 import {
   FaArrowRotateRight,
@@ -589,7 +590,7 @@ function TasksSection({
     );
   }
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDateString();
 
   return (
     <SectionCard
