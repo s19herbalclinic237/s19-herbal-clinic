@@ -38,12 +38,20 @@ export async function POST(request: Request) {
   if (user && !user.emailVerified) {
     const verifyToken = generateToken();
     user.verifyTokenHash = hashToken(verifyToken);
-    user.verifyExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    user.verifyExpires = new Date(Date.now() + 72 * 60 * 60 * 1000);
     await user.save();
     const verifyLink = `${siteOrigin()}/account/verify?token=${verifyToken}`;
-    sendVerificationEmail(email, user.name, verifyLink).catch((err) =>
-      console.error("[auth] resend-verification email failed:", err)
-    );
+    const emailSent = await sendVerificationEmail(email, user.name, verifyLink);
+    if (!emailSent) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "We could not send the verification email right now. Please try again in a few minutes, or contact the clinic on WhatsApp so we can verify your account.",
+        },
+        { status: 502 }
+      );
+    }
   }
 
   return NextResponse.json({

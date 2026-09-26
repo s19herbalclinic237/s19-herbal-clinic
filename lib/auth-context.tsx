@@ -5,6 +5,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -69,13 +70,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .then((data) => ({ user: data.success && data.user ? data.user : null }))
       .then(({ user }) => {
         setUser(user);
+        lastRoleRef.current = user?.role ?? null;
         setLoading(false);
       })
       .catch(() => {
         setUser(null);
+        lastRoleRef.current = null;
         setLoading(false);
       });
   }, []);
+
+  // Keep the session fresh: when the clinic promotes or demotes a user, the
+  // next time they return to the tab we pick up the new role. If the role
+  // actually changed we reload so every view switches over cleanly.
+  const lastRoleRef = useRef<AuthUser["role"] | null>(null);
+  useEffect(() => {
+    if (loading) return;
+    const sync = async () => {
+      if (document.visibilityState !== "visible") return;
+      try {
+        const data = await api<ApiResult>("/api/auth/me");
+        const next = data.success && data.user ? data.user : null;
+        const nextRole = next?.role ?? null;
+        if (next && lastRoleRef.current !== null && next.role !== lastRoleRef.current) {
+          window.location.reload();
+          return;
+        }
+        if (next) setUser(next);
+        lastRoleRef.current = nextRole;
+      } catch {
+        /* transient network issue - keep the current session */
+      }
+    };
+    const onFocus = () => {
+      void sync();
+    };
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onFocus);
+    return () => {
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onFocus);
+    };
+  }, [loading]);
 
   const login = useCallback(async (email: string, password: string) => {
     try {
@@ -96,12 +132,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = useCallback(async (name: string, email: string, password: string) => {
     try {
-      const data = await api<ApiResult>("/api/auth/register", {
+      const data = await api<ApiResult & { warning?: string }>("/api/auth/register", {
         method: "POST",
         body: JSON.stringify({ name, email, password }),
       });
       if (data.success) {
         toast.success(data.message || "Account created. Please verify your email.");
+        if (data.warning) toast(data.warning, { icon: "⚠️", duration: 8000 });
         return null;
       }
       return data.error || "Registration failed. Please try again.";

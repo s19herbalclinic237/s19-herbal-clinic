@@ -68,13 +68,13 @@ export async function POST(request: Request) {
 
   const verifyToken = generateToken();
   user.verifyTokenHash = hashToken(verifyToken);
-  user.verifyExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+  // Allow 72 hours so slow or delayed email delivery cannot expire the link
+  // before the patient has a chance to use it.
+  user.verifyExpires = new Date(Date.now() + 72 * 60 * 60 * 1000);
   await user.save();
 
   const verifyLink = `${siteOrigin()}/account/verify?token=${verifyToken}`;
-  sendVerificationEmail(email, name, verifyLink).catch((err) =>
-    console.error("[auth] verification email failed:", err)
-  );
+  const emailSent = await sendVerificationEmail(email, name, verifyLink);
   sendNewAccountNotification(name, email).catch((err) =>
     console.error("[auth] new-account notification failed:", err)
   );
@@ -83,6 +83,12 @@ export async function POST(request: Request) {
     {
       success: true,
       message: "Account created. Check your email to verify your address, then sign in.",
+      ...(emailSent
+        ? {}
+        : {
+            warning:
+              "We could not send the verification email right now. Please use \"Resend verification email\" after signing in, or contact the clinic on WhatsApp so we can verify your account.",
+          }),
     },
     { status: 201 }
   );

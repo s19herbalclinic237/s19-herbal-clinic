@@ -375,9 +375,9 @@ export async function sendOrderConfirmation(order: IOrder) {
   }
 }
 
-export async function sendVerificationEmail(to: string, name: string, link: string) {
+export async function sendVerificationEmail(to: string, name: string, link: string): Promise<boolean> {
   const firstName = name.trim().split(/\s+/)[0] || "friend";
-  await safeSend(
+  return safeSend(
     to,
     "Confirm your S19 account email",
     wrap({
@@ -385,7 +385,7 @@ export async function sendVerificationEmail(to: string, name: string, link: stri
       title: `Welcome to S19 Herbal Clinic, ${firstName}`,
       lead: `You created an account with the email address ${to}. Please confirm it to activate your account and keep it secure.`,
       cta: { href: link, label: "Verify my email address" },
-      note: `If the button does not work, copy and paste this link into your browser: ${link}. This link expires within 24 hours. If you did not create this account, you can ignore this email.`,
+      note: `If the button does not work, copy and paste this link into your browser: ${link}. This link expires within 72 hours. If you did not create this account, you can ignore this email.`,
     })
   );
 }
