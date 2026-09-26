@@ -65,7 +65,15 @@ export function RolesTab() {
       setRows((prev) =>
         prev === null ? prev : prev.map((x) => (x.id === row.id ? { ...x, ...patch } : x))
       );
-      notify(patch.role ? `Role changed to ${patch.role}.` : patch.isActive ? "Account activated." : "Account deactivated. Existing sessions were revoked.");
+      notify(
+          patch.role
+            ? patch.role === "doctor"
+              ? "Role changed to staff."
+              : "Role changed to patient."
+            : patch.isActive
+              ? "Account activated."
+              : "Account deactivated. Existing sessions were revoked."
+        );
     } catch (e) {
       notify((e as Error).message);
     }
@@ -86,7 +94,7 @@ export function RolesTab() {
           <p className="font-display text-lg font-semibold text-ink">Staff &amp; Roles</p>
           {rows ? (
             <p className="text-sm text-muted">
-              {doctors} doctor{doctors === 1 ? "" : "s"} · {rows.length} patient accounts
+              {doctors} staff member{doctors === 1 ? "" : "s"} · {rows.length} patient accounts
             </p>
           ) : null}
         </div>
@@ -104,7 +112,7 @@ export function RolesTab() {
       ) : null}
 
       <p className="rounded-lg border border-sky-200 bg-sky-50 px-3 py-2.5 text-xs leading-relaxed text-sky-800">
-        Doctors are clinical staff: they can manage appointments, medical records, prescriptions,
+        Staff are clinical team members: they can manage appointments, medical records, prescriptions,
         treatment plans and patient messages, but not the store, content, subscribers or other
         administration. A user needs a verified email before being promoted. Administrators are not listed here.
       </p>
@@ -129,7 +137,7 @@ export function RolesTab() {
               <tr key={r.id} className="border-b border-forest-50 last:border-0">
                 <td className="px-4 py-3">
                   <p className="font-semibold text-ink">
-                    {r.name} {r.role === "doctor" ? <FaUserDoctor className="inline h-3.5 w-3.5 text-forest-700" aria-label="Doctor" /> : null}
+                    {r.name} {r.role === "doctor" ? <FaUserDoctor className="inline h-3.5 w-3.5 text-forest-700" aria-label="Staff" /> : null}
                   </p>
                   <p className="text-xs text-muted">{r.email}{r.phone ? ` · ${r.phone}` : ""}</p>
                 </td>
@@ -170,7 +178,7 @@ export function RolesTab() {
                         disabled={!r.emailVerified || !r.isActive}
                         title={!r.emailVerified ? "Verify the email first" : undefined}
                       >
-                        Make doctor
+                        Make staff
                       </Button>
                     )}
                     {r.isActive ? (

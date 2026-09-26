@@ -365,24 +365,32 @@ export function DashboardScreen() {
       : [{ label: "My account", items: patientTabs }];
   const bottomNavItems = isDoctor ? doctorTabs : patientTabs;
 
+  // One-word labels for the compressed mobile bottom nav so items never
+  // truncate on small screens.
   const shortNavLabel = (item: NavItem) =>
-    item.id === "testimonials"
-      ? "Stories"
-      : item.id === "treatment"
-        ? "Treatment"
-        : item.id === "admin-appointments"
-          ? "Bookings"
-          : item.id === "admin-records"
-            ? "Records"
-            : item.id === "admin-prescriptions"
-              ? "Rx"
-              : item.id === "admin-treatment-plans"
-                ? "Plans"
-                : item.id === "admin-treatment-alerts"
-                  ? "Alerts"
-                  : item.id === "admin-messaging"
-                    ? "Messages"
-                    : item.label;
+    item.id === "overview"
+      ? "Home"
+      : item.id === "appointments" || item.id === "admin-appointments"
+        ? "Bookings"
+        : item.id === "orders"
+          ? "Orders"
+          : item.id === "messages" || item.id === "admin-messaging"
+            ? "Inbox"
+            : item.id === "records" || item.id === "admin-records"
+              ? "Records"
+              : item.id === "prescriptions" || item.id === "admin-prescriptions"
+                ? "Rx"
+                : item.id === "treatment" || item.id === "admin-treatment-plans"
+                  ? "Plan"
+                  : item.id === "admin-treatment-alerts"
+                    ? "Alerts"
+                    : item.id === "family"
+                      ? "Family"
+                      : item.id === "testimonials"
+                        ? "Stories"
+                        : item.id === "settings"
+                          ? "Settings"
+                          : item.label;
 
   const firstName = user?.name?.trim().split(/\s+/)[0] || "there";
   const greeting = getGreeting();
@@ -611,7 +619,7 @@ export function DashboardScreen() {
       case "admin-roles":
         return isAdmin ? (
           <>
-            <PageHeader title="Staff & Roles" subtitle="Promote verified accounts to Doctor, or back to patient" />
+            <PageHeader title="Staff & Roles" subtitle="Promote verified accounts to staff, or back to patient" />
             <div className="px-4 sm:px-0">
               <RolesTab />
             </div>
