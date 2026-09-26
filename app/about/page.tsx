@@ -27,6 +27,7 @@ import {
   differentiators,
   participation,
   patientJourney,
+  careBeyond,
   centralMessage,
   philosophyTagline,
   closingStatement,
@@ -482,6 +483,32 @@ export default async function AboutPage() {
                 </span>
                 <h3 className="mt-2 text-base font-bold text-ink">{j.step}</h3>
                 <p className="mt-1.5 text-sm leading-relaxed text-muted">{j.text}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </Section>
+
+      {/* CARE BEYOND THE JOURNEY */}
+      <Section>
+        <Reveal>
+          <div className="mx-auto max-w-2xl text-center">
+            <Kicker center>{t("about.beyond.kicker")}</Kicker>
+            <h2 className="mt-4">{t("about.beyond.title")}</h2>
+            <p className="mt-4 text-[15px] leading-relaxed text-muted">
+              {t("about.beyond.text")}
+            </p>
+          </div>
+        </Reveal>
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {careBeyond.map((c, i) => (
+            <Reveal key={c.title} delay={i * 0.05}>
+              <div className="h-full rounded-lg border border-line bg-white p-6 shadow-card">
+                <span className="font-display text-3xl font-semibold text-forest-100">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="mt-2 text-base font-bold text-ink">{c.title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-muted">{c.text}</p>
               </div>
             </Reveal>
           ))}

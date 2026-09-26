@@ -562,6 +562,12 @@ const dict = {
     en: "Eight stages, from first contact to long-term maintenance of better health.",
     fr: "Huit étapes, du premier contact au maintien à long terme d'une meilleure santé.",
   },
+  "about.beyond.kicker": { en: "Beyond the journey", fr: "Au-delà du parcours" },
+  "about.beyond.title": { en: "Care that goes further.", fr: "Des soins qui vont plus loin." },
+  "about.beyond.text": {
+    en: "Beyond the eight stages, these services run through everything S19 does - so they are never hidden inside the journey cards.",
+    fr: "Au-delà des huit étapes, ces services traversent tout ce que fait S19 - ils ne sont donc jamais cachés dans les cartes du parcours.",
+  },
   "about.central.kicker": { en: "S19 in 30 seconds", fr: "S19 en 30 secondes" },
   "about.central.text": {
     en: "We do not simply ask: “What medicine treats this disease?” We ask: “What is happening inside this person, what factors are contributing to it, what can be changed, and how can we measure whether those changes are working?”",
@@ -616,8 +622,8 @@ const dict = {
   },
   "programs.therapies.title": { en: "Therapies We Perform", fr: "Les thérapies que nous pratiquons" },
   "programs.therapies.text": {
-    en: "Beyond herbal medicine, S19 offers supportive and alternative therapies inspired by traditional healing practices and complemented by modern scientific wellness devices and instruments - including in-clinic electrolysis and therapy sessions - with the aim of supporting patient well-being and improving overall care outcomes.",
-    fr: "Au-delà de la phytothérapie, S19 propose des thérapies de soutien et alternatives inspirées des pratiques de guérison traditionnelles et complétées par des appareils et instruments de bien-être scientifiques modernes - notamment l'électrolyse en clinique et des séances de thérapie - dans le but de soutenir le bien-être des patients et d'améliorer les résultats globaux des soins.",
+    en: "Beyond herbal medicine, S19 offers supportive and alternative therapies inspired by traditional healing practices and complemented by modern scientific wellness approaches, including in-clinic non-invasive therapies, with the aim of supporting overall health and care outcomes.",
+    fr: "Au-delà de la phytothérapie, S19 propose des thérapies de soutien et alternatives inspirées des pratiques de guérison traditionnelles et complétées par des approches scientifiques modernes de bien-être, notamment des thérapies non invasives en clinique, dans le but de soutenir la santé globale et les résultats des soins.",
   },
   "programs.therapies.sessions": { en: "How sessions support your program", fr: "Comment les séances soutiennent votre programme" },
   "programs.therapies.item1": {

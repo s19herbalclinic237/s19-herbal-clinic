@@ -181,40 +181,84 @@ export const participation = [
 export const patientJourney = [
   {
     step: "Consult",
-    text: "Understand symptoms, history, diagnoses, medication and objectives.",
+    text: "Understand symptoms, medical history, previous diagnoses, medications, lifestyle and the patient's health objectives.",
   },
   {
     step: "Investigate",
-    text: "Review records and recommend relevant tests or investigations where appropriate.",
+    text: "Review existing medical records and recommend relevant laboratory tests, imaging or other investigations where appropriate.",
   },
   {
     step: "Identify",
-    text: "Determine important physiological, metabolic, nutritional and lifestyle factors.",
+    text: "Identify important physiological, metabolic, nutritional, lifestyle and other contributing factors that may be influencing the patient's condition.",
   },
   {
     step: "Personalize",
-    text: "Develop an individualized herbal, nutritional and lifestyle strategy.",
+    text: "Develop an individualized care plan combining herbal medicine, nutrition, lifestyle strategies and other appropriate supportive therapies.",
   },
   {
     step: "Implement",
-    text: "Begin the program with clear instructions and patient education.",
+    text: "Begin the treatment program with clear instructions, patient education and, where appropriate, in-clinic non-invasive supportive therapies.",
   },
   {
     step: "Monitor",
-    text: "Follow symptoms and objective health measurements where appropriate.",
+    text: "Follow symptoms, treatment tolerance, adherence and objective health measurements such as laboratory results, blood glucose, blood pressure or other relevant markers.",
   },
   {
     step: "Adjust",
-    text: "Modify the strategy according to tolerance, progress and new information.",
+    text: "Modify the treatment strategy according to progress, tolerance, repeat investigations and new clinical information.",
   },
   {
-    step: "Educate",
-    text: "Help the patient understand how to maintain better long-term health.",
+    step: "Maintain",
+    text: "Help the patient preserve improvements through continued education, nutrition, lifestyle practices, periodic follow-up and long-term prevention strategies.",
+  },
+];
+
+/**
+ * Additional services that support the S19 model beyond the eight journey
+ * stages. Surfaced on the About page so these are explicit and never hidden
+ * inside the journey cards.
+ */
+export const careBeyond = [
+  {
+    title: "Telehealth & WhatsApp follow-up",
+    text: "Consult remotely and send laboratory results, photos or updates without always being physically present.",
+  },
+  {
+    title: "Continuous follow-up during treatment",
+    text: "S19 actively follows patients throughout their program - not only at the start and the end.",
+  },
+  {
+    title: "Nutrition as part of care",
+    text: "Food is one of the most powerful influences on metabolism, so nutrition is built into every program.",
+  },
+  {
+    title: "In-clinic non-invasive supportive therapies",
+    text: "Wellness sessions that complement herbal and nutritional protocols during in-clinic programs.",
+  },
+  {
+    title: "Treatment duration & progress tracking",
+    text: "Structured programs with clear beginning, reassessment and completion points that patients can track.",
+  },
+  {
+    title: "Medication & treatment review",
+    text: "We review existing medications and consider herb-drug interactions before anything is prescribed.",
+  },
+  {
+    title: "Referral & medical collaboration",
+    text: "S19 is not an emergency facility; when hospital care, imaging, surgery or specialist assessment is needed, we refer and collaborate with conventional medicine.",
+  },
+  {
+    title: "Travelling & international patients",
+    text: "Telehealth, product delivery worldwide and accommodation support for patients travelling to Bafoussam.",
+  },
+  {
+    title: "Prevention",
+    text: "Beyond treating illness, we help correct risk factors and maintain better health over the long term.",
   },
 ];
 
 export const centralMessage =
-  "S19 Herbal Clinic combines non-conventional therapies, science-based herbal medicine, laboratory investigation, nutrition, lifestyle medicine, patient education and continuous monitoring to provide personalized, root-cause-oriented healthcare.";
+  "S19 Herbal Clinic combines science-based herbal medicine, laboratory investigation, nutrition, lifestyle medicine, patient education, continuous monitoring and in-clinic non-invasive supportive therapies to provide personalized healthcare focused on identifying and addressing important contributing factors.";
 
 export const philosophyTagline =
   "Science-Based Herbalism. Root-Cause Healthcare. Education. Investigation. Personalization. Monitoring.";
