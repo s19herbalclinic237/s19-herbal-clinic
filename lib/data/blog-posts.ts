@@ -64,7 +64,7 @@ Cet article est éducatif et ne remplace pas une consultation médicale. Discute
 ## Contactez-nous
 
 - WhatsApp : [Cliquez ici](https://wa.me/237672595989)
-- Email : Sweet19hoe@gmail.com
+- Email : info@s19herbalclinic.com
 - Telegram : [Cliquez ici](https://t.me/+jA0LRD7v5dJmOTNk)
 
 La consultation en ligne est gratuite. Nous pouvons répondre à vos questions et expédier nos produits vers tout pays avec un service DHL.`,
@@ -103,7 +103,7 @@ This article is educational and is not a substitute for a medical consultation. 
 ## Contact Us
 
 - WhatsApp: [Click here](https://wa.me/237672595989)
-- Email: Sweet19hoe@gmail.com
+- Email: info@s19herbalclinic.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
 Online consultation is free. We can answer your questions and ship our products to any country with a DHL service.`,
@@ -160,7 +160,7 @@ Cet article est éducatif et ne remplace pas une consultation médicale, en part
 ## Contactez-nous
 
 - WhatsApp : [Cliquez ici](https://wa.me/237672595989)
-- Email : Sweet19hoe@gmail.com
+- Email : info@s19herbalclinic.com
 - Telegram : [Cliquez ici](https://t.me/+jA0LRD7v5dJmOTNk)
 
 La consultation en ligne est gratuite. Nous pouvons répondre à vos questions et expédier nos produits vers tout pays avec un service DHL.`,
@@ -202,7 +202,7 @@ This article is educational and not a substitute for a medical consultation, esp
 ## Contact Us
 
 - WhatsApp: [Click here](https://wa.me/237672595989)
-- Email: Sweet19hoe@gmail.com
+- Email: info@s19herbalclinic.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
 Online consultation is free. We can answer your questions and ship our products to any country with a DHL service.`,
@@ -256,7 +256,7 @@ Cet article est éducatif et ne remplace pas une consultation. Si vous prenez de
 ## Contactez-nous
 
 - WhatsApp : [Cliquez ici](https://wa.me/237672595989)
-- Email : Sweet19hoe@gmail.com
+- Email : info@s19herbalclinic.com
 - Telegram : [Cliquez ici](https://t.me/+jA0LRD7v5dJmOTNk)
 
 La consultation en ligne est gratuite. Nous pouvons répondre à vos questions et expédier nos produits vers tout pays avec un service DHL.`,
@@ -295,7 +295,7 @@ This article is educational and not a substitute for a consultation. If you take
 ## Contact Us
 
 - WhatsApp: [Click here](https://wa.me/237672595989)
-- Email: Sweet19hoe@gmail.com
+- Email: info@s19herbalclinic.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
 Online consultation is free. We can answer your questions and ship our products to any country with a DHL service.`,
@@ -345,7 +345,7 @@ Cet article est éducatif et ne remplace pas des conseils diététiques personna
 ## Contactez-nous
 
 - WhatsApp : [Cliquez ici](https://wa.me/237672595989)
-- Email : Sweet19hoe@gmail.com
+- Email : info@s19herbalclinic.com
 - Telegram : [Cliquez ici](https://t.me/+jA0LRD7v5dJmOTNk)
 
 La consultation en ligne est gratuite. Nous pouvons répondre à vos questions et expédier nos produits vers tout pays avec un service DHL.`,
@@ -380,7 +380,7 @@ This article is educational and not a substitute for personalised dietary advice
 ## Contact Us
 
 - WhatsApp: [Click here](https://wa.me/237672595989)
-- Email: Sweet19hoe@gmail.com
+- Email: info@s19herbalclinic.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
 Online consultation is free. We can answer your questions and ship our products to any country with a DHL service.`,
@@ -431,7 +431,7 @@ Cet article est éducatif et ne remplace pas une évaluation médicale. Tout sym
 ## Contactez-nous
 
 - WhatsApp : [Cliquez ici](https://wa.me/237672595989)
-- Email : Sweet19hoe@gmail.com
+- Email : info@s19herbalclinic.com
 - Telegram : [Cliquez ici](https://t.me/+jA0LRD7v5dJmOTNk)
 
 La consultation en ligne est gratuite. Nous pouvons répondre à vos questions et expédier nos produits vers tout pays avec un service DHL.`,
@@ -467,7 +467,7 @@ This article is educational and not a substitute for a medical evaluation. Any n
 ## Contact Us
 
 - WhatsApp: [Click here](https://wa.me/237672595989)
-- Email: Sweet19hoe@gmail.com
+- Email: info@s19herbalclinic.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
 Online consultation is free. We can answer your questions and ship our products to any country with a DHL service.`,
@@ -511,7 +511,7 @@ Notre traitement alternatif pour le VHB est un régime complet de **45 à 60 jou
 Pour une consultation gratuite ou un achat :
 
 - WhatsApp : [Cliquez ici](https://wa.me/237672595989)
-- Email : Sweet19hoe@gmail.com
+- Email : info@s19herbalclinic.com
 - Telegram : [Cliquez ici](https://t.me/+jA0LRD7v5dJmOTNk)
 
 La consultation en ligne est gratuite. Nos produits peuvent être expédiés vers tout pays qui dispose d'un service d'expédition DHL. Le paquet de guérison du VHB est un petit paquet qui pèse généralement moins de 2 kg.
@@ -542,7 +542,7 @@ Our alternative treatment for HBV is a comprehensive **45 to 60-day regimen** in
 For free consultation or purchase:
 
 - WhatsApp: [Click here](https://wa.me/237672595989)
-- Email: Sweet19hoe@gmail.com
+- Email: info@s19herbalclinic.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
 Online consultation is free. Our products can be shipped to any country that has a DHL shipping service available. The HBV cure package is a small package that typically weighs less than 2kg.
@@ -624,7 +624,7 @@ Bien que la plupart des herbes soutiennent le corps harmonieusement ensemble, ce
 ## Contactez-nous
 
 - WhatsApp : [Cliquez ici](https://wa.me/237672595989)
-- Email : Sweet19hoe@gmail.com
+- Email : info@s19herbalclinic.com
 - Telegram : [Cliquez ici](https://t.me/+jA0LRD7v5dJmOTNk)
 
 La consultation en ligne est gratuite. Nos services s'étendent au traitement et à la guérison d'infections et de maladies non mentionnées sur notre blog.`,
@@ -689,7 +689,7 @@ While most herbs support the body harmoniously together, some herbs can interact
 ## Contact Us
 
 - WhatsApp: [Click here](https://wa.me/237672595989)
-- Email: Sweet19hoe@gmail.com
+- Email: info@s19herbalclinic.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
 Online consultation is free. Our services extend to treating and curing infections and diseases that are not mentioned on our blog.`,
@@ -748,7 +748,7 @@ L'impact de l'exercice et de la réduction alimentaire sur l'inversion de l'obé
 ## Contactez-nous
 
 - WhatsApp : [Cliquez ici](https://wa.me/237672595989)
-- Email : Sweet19hoe@gmail.com
+- Email : info@s19herbalclinic.com
 - Telegram : [Cliquez ici](https://t.me/+jA0LRD7v5dJmOTNk)
 
 La consultation en ligne est gratuite. Nos services s'étendent au traitement et à la guérison d'infections et de maladies non mentionnées sur notre blog.
@@ -794,7 +794,7 @@ The impact of exercise and food reduction on obesity reversal alone is minimal. 
 ## Contact Us
 
 - WhatsApp: [Click here](https://wa.me/237672595989)
-- Email: Sweet19hoe@gmail.com
+- Email: info@s19herbalclinic.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
 Online consultation is free. Our services extend to treating and curing infections and diseases that are not mentioned on our blog.
@@ -871,7 +871,7 @@ Il est crucial de se rappeler qu'**un cancer à un stade précoce peut souvent �
 Contactez-nous :
 
 - WhatsApp : [Cliquez ici](https://wa.me/237672595989)
-- Email : Sweet19hoe@gmail.com
+- Email : info@s19herbalclinic.com
 - Telegram : [Cliquez ici](https://t.me/+jA0LRD7v5dJmOTNk)
 
 Nos services s'étendent au traitement et à la guérison d'infections et de maladies non mentionnées sur notre blog, comme les maladies cardiovasculaires et l'obésité.
@@ -933,7 +933,7 @@ It is crucial to remember that **early-stage cancer can often be reversed**, mak
 Contact us:
 
 - WhatsApp: [Click here](https://wa.me/237672595989)
-- Email: Sweet19hoe@gmail.com
+- Email: info@s19herbalclinic.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
 Our services extend to treating and curing infections and diseases that are not mentioned on our blog, such as cardiovascular diseases and obesity.
@@ -991,7 +991,7 @@ Nos produits peuvent être expédiés vers tout pays qui dispose d'un service d'
 ## Pour plus d'informations
 
 - WhatsApp : [Cliquez ici](https://wa.me/237672595989)
-- Email : Sweet19hoe@gmail.com
+- Email : info@s19herbalclinic.com
 - Telegram : [Cliquez ici](https://t.me/+jA0LRD7v5dJmOTNk)
 
 La consultation en ligne est gratuite. Nous offrons également le traitement et la guérison de divers types d'IST/MST non mentionnés sur notre blog, y compris l'hépatite B, le staphylocoque, la chlamydia, la syphilis et la gonorrhée, ainsi que les PID et les infections urinaires (sauf les cas complexes d'infections urinaires, comme celles pendant la grossesse).
@@ -1034,7 +1034,7 @@ Our products can be shipped to any country that has a DHL shipping service avail
 ## For More Info
 
 - WhatsApp: [Click here](https://wa.me/237672595989)
-- Email: Sweet19hoe@gmail.com
+- Email: info@s19herbalclinic.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
 Online consultation is free. We also provide treatment and cure for various types of STIs/STDs not mentioned on our blog, including Hepatitis B, staphylococcus, chlamydia, syphilis and gonorrhea, as well as PID and UTIs (except complex cases of UTIs, such as those during pregnancy).
@@ -1099,7 +1099,7 @@ Nous expédions nos produits vers tout pays où un service d'expédition DHL est
 ## Pour plus d'informations
 
 - WhatsApp : [Cliquez ici](https://wa.me/237672595989)
-- Email : Sweet19hoe@gmail.com
+- Email : info@s19herbalclinic.com
 - Telegram : [Cliquez ici](https://t.me/+jA0LRD7v5dJmOTNk)
 
 La consultation en ligne est gratuite.
@@ -1151,7 +1151,7 @@ We ship our products to any country with the presence of a DHL shipping service.
 ## For More Info
 
 - WhatsApp: [Click here](https://wa.me/237672595989)
-- Email: Sweet19hoe@gmail.com
+- Email: info@s19herbalclinic.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
 Online consultation is free.
@@ -1211,7 +1211,7 @@ Nos produits peuvent être expédiés vers tout pays qui dispose d'un service d'
 ## Contactez-nous
 
 - WhatsApp : [Cliquez ici](https://wa.me/237672595989)
-- Email : Sweet19hoe@gmail.com
+- Email : info@s19herbalclinic.com
 - Telegram : [Cliquez ici](https://t.me/+jA0LRD7v5dJmOTNk)
 
 La consultation en ligne est gratuite. Nos services s'étendent au traitement et à la guérison d'infections et de maladies non mentionnées sur notre blog, comme la syphilis, la chlamydia, la gonorrhée, le staphylocoque, la vaginose bactérienne, le mycoplasma genitalium, la maladie inflammatoire pelvienne et les fibromes.
@@ -1260,7 +1260,7 @@ Our products can be shipped to any country that has a DHL shipping service avail
 ## Contact Us
 
 - WhatsApp: [Click here](https://wa.me/237672595989)
-- Email: Sweet19hoe@gmail.com
+- Email: info@s19herbalclinic.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
 Online consultation is free. Our services extend to treating and curing infections and diseases that are not mentioned on our blog, like syphilis, chlamydia, gonorrhea, staphylococcus, bacteria vaginosis, mycoplasma genitalium, pelvic inflammatory disease and fibroids.
