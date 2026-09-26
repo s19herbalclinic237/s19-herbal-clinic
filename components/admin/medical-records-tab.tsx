@@ -19,6 +19,7 @@ interface PatientOption {
   id: string;
   name: string;
   email: string;
+  mrn?: string;
   familyMembers?: { id: string; name: string; relation?: string }[];
 }
 
@@ -141,6 +142,7 @@ function RecordForm({
             {patients.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.name} · {p.email}
+                {p.mrn ? ` · MRN ${p.mrn}` : ""}
               </option>
             ))}
           </Select>

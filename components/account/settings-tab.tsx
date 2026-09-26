@@ -235,6 +235,21 @@ export function SettingsTab() {
       <form onSubmit={saveProfile} className="rounded-lg border border-line bg-white p-5">
         <h3 className="text-sm font-bold text-ink">Profile</h3>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div className="sm:col-span-2 rounded-lg border border-forest-100 bg-forest-50/60 px-4 py-3">
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-forest-700">
+              Medical Record Number (MRN)
+            </p>
+            {user?.mrn ? (
+              <p className="mt-1 font-display text-xl font-semibold tracking-wider text-ink">{user.mrn}</p>
+            ) : (
+              <p className="mt-1 text-sm text-muted">
+                Not assigned yet. Your MRN is issued by the clinic for your medical record.
+              </p>
+            )}
+            <p className="mt-1 text-[11px] text-muted">
+              The MRN is managed by the clinic and cannot be changed from this page.
+            </p>
+          </div>
           <Field label="Full Name" required>
             <Input required value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
           </Field>

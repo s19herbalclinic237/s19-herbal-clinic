@@ -44,6 +44,9 @@ export interface IUser {
   idCardFrontUrl?: string;
   /** Cloudinary URL of the back of the patient's ID document. */
   idCardBackUrl?: string;
+  /** Medical Record Number (MRN). Assigned and edited by clinic admins only.
+   *  Example: "S1900615". Sparse-unique: empty/unset values are allowed. */
+  mrn?: string;
   familyMembers?: FamilyMember[];
   createdAt: Date;
   updatedAt: Date;
@@ -73,6 +76,7 @@ const UserSchema = new Schema<IUser>(
     idCardUrl: { type: String, trim: true },
     idCardFrontUrl: { type: String, trim: true },
     idCardBackUrl: { type: String, trim: true },
+    mrn: { type: String, trim: true, uppercase: true },
     familyMembers: [
       {
         name: { type: String, required: true, trim: true },
@@ -89,6 +93,10 @@ const UserSchema = new Schema<IUser>(
   },
   { timestamps: true }
 );
+
+// One Medical Record Number per patient. Sparse so users without an MRN
+// (unassigned) never collide.
+UserSchema.index({ mrn: 1 }, { unique: true, sparse: true });
 
 export const User: Model<IUser> =
   (models.User as Model<IUser>) || model<IUser>("User", UserSchema);

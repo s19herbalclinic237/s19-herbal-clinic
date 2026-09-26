@@ -25,6 +25,8 @@ export interface AuthUser {
   idCardFrontUrl?: string;
   /** Cloudinary URL of the back of the patient's ID document. */
   idCardBackUrl?: string;
+  /** Medical Record Number (MRN), assigned by the clinic admin. Read-only for patients. */
+  mrn?: string;
   createdAt: string;
 }
 
