@@ -271,10 +271,10 @@ function Conversation({
 
   return (
     <div className="rounded-lg border border-forest-200 bg-forest-50/50 p-4 sm:p-5">
-      <div className="flex items-center justify-between gap-3">
-        <p className="font-display text-base font-semibold text-ink">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="min-w-0 font-display text-base font-semibold text-ink">
           Conversation with {user.name}
-          <span className="ml-2 text-sm font-normal text-muted">{user.email}</span>
+          <span className="ml-2 inline-block min-w-0 break-all text-sm font-normal text-muted">{user.email}</span>
         </p>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={load}>
