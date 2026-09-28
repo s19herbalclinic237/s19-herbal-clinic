@@ -3,6 +3,7 @@ import { connectDb } from "@/lib/db";
 import { Inquiry } from "@/lib/models/Inquiry";
 import { sendBookingNotification } from "@/lib/email";
 import { rateLimitRequest, rateLimitResponse } from "@/lib/rate-limit";
+import { isBotRequest } from "@/lib/bot-trap";
 
 export async function POST(request: Request) {
   const rateLimit = await rateLimitRequest(request, {
@@ -27,6 +28,11 @@ export async function POST(request: Request) {
     concern?: string;
     message?: string;
   };
+
+  // Honeypot trap: pretend the inquiry was saved so bots cannot notice.
+  if (isBotRequest(data as Record<string, unknown>)) {
+    return NextResponse.json({ ok: true }, { status: 201 });
+  }
 
   const type = data.type === "Contact" ? "Contact" : data.type === "Order" ? "Order" : "Booking";
   if (!data.fullName?.trim() || !data.phone?.trim()) {

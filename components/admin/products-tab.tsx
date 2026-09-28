@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Field, Input, Textarea } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { formatFcfa } from "@/lib/utils";
+import { validateImageFile } from "@/lib/image-upload";
 import {
   FaArrowRotateLeft,
   FaBoxOpen,
@@ -338,9 +339,11 @@ function ProductForm({
     setDraft((prev) => ({ ...prev, [key]: value }));
 
   const handleUpload = async (file: File) => {
+    const validationError = validateImageFile(file);
     setUploading(true);
     setFormError(null);
     try {
+      if (validationError) throw new Error(validationError);
       const formData = new FormData();
       formData.append("file", file);
       const res = await fetch("/api/upload", {

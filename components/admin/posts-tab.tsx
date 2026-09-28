@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Field, Input, Select, Textarea } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "@/components/account/badges";
+import { validateImageFile } from "@/lib/image-upload";
 import {
   FaArrowRotateLeft,
   FaCloudArrowUp,
@@ -317,9 +318,11 @@ function PostForm({
   const set = (key: keyof PostDraft, value: string | boolean) => setDraft((prev) => ({ ...prev, [key]: value }));
 
   const handleUpload = async (file: File) => {
+    const validationError = validateImageFile(file);
     setUploading(true);
     setFormError(null);
     try {
+      if (validationError) throw new Error(validationError);
       const formData = new FormData();
       formData.append("file", file);
       const res = await fetch("/api/upload", { method: "POST", credentials: "include", body: formData });
@@ -354,9 +357,11 @@ function PostForm({
   };
 
   const handleInlineUpload = async (file: File) => {
+    const validationError = validateImageFile(file);
     setInlineUploading(true);
     setFormError(null);
     try {
+      if (validationError) throw new Error(validationError);
       const formData = new FormData();
       formData.append("file", file);
       const res = await fetch("/api/upload", { method: "POST", credentials: "include", body: formData });

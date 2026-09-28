@@ -43,14 +43,16 @@ export function BookingForm() {
   const resolvedConcern =
     isOther && form.concernOther.trim() ? form.concernOther.trim() : form.concern;
 
-  async function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSubmitting(true);
     try {
+      const formData = new FormData(e.currentTarget);
+      const website = String(formData.get("website") ?? "");
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, concern: resolvedConcern, type: "Booking" }),
+        body: JSON.stringify({ ...form, concern: resolvedConcern, type: "Booking", website }),
       });
       if (!res.ok) throw new Error("Request failed");
       setDone(true);
@@ -90,6 +92,15 @@ export function BookingForm() {
 
   return (
     <form onSubmit={submit} className="space-y-4">
+      {/* Honeypot: hidden from humans, tempting for bots. */}
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute -left-[9999px] h-0 w-0 opacity-0"
+      />
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label={t("booking.fullName")} required>
           <Input required value={form.fullName} onChange={set("fullName")} placeholder={t("booking.namePlaceholder")} autoComplete="name" />

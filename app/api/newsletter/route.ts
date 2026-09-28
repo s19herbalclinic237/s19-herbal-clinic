@@ -3,6 +3,7 @@ import { connectDb } from "@/lib/db";
 import { Subscriber } from "@/lib/models/Subscriber";
 import { sendNewsletterWelcomeEmail } from "@/lib/email";
 import { rateLimitRequest, rateLimitResponse } from "@/lib/rate-limit";
+import { isBotRequest } from "@/lib/bot-trap";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -16,6 +17,11 @@ export async function POST(request: Request) {
 
   const { email, name } = (body ?? {}) as { email?: unknown; name?: unknown };
   const cleanEmail = String(email || "").trim().toLowerCase();
+
+  // Honeypot trap: fake success so bots cannot tell they were caught.
+  if (isBotRequest((body ?? {}) as Record<string, unknown>)) {
+    return NextResponse.json({ success: true });
+  }
 
   if (!EMAIL_RE.test(cleanEmail)) {
     return NextResponse.json({ error: "Please provide a valid email address." }, { status: 400 });

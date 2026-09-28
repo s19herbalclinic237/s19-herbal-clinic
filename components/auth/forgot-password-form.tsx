@@ -6,19 +6,23 @@ import { useAuth } from "@/lib/auth-context";
 import { AuthShell } from "@/components/auth/auth-shell";
 import { Field, Input } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
+import { useLocale } from "@/components/i18n/locale-provider";
 
 export function ForgotPasswordForm() {
   const { forgotPassword } = useAuth();
+  const { t } = useLocale();
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  async function submit(e: FormEvent) {
+  async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
+    const formData = new FormData(e.currentTarget);
+    const website = String(formData.get("website") ?? "");
     setSubmitting(true);
-    const err = await forgotPassword(email);
+    const err = await forgotPassword(email, website);
     setSubmitting(false);
     if (err) setError(err);
     else setSent(true);
@@ -26,34 +30,40 @@ export function ForgotPasswordForm() {
 
   return (
     <AuthShell
-      eyebrow="Account recovery"
-      title="Forgot your password?"
-      lead="Enter the email for your account and we will send you a link to reset your password."
+      eyebrow={t("auth.recoveryEyebrow")}
+      title={t("auth.forgotTitle")}
+      lead={t("auth.forgotLead")}
       footer={
         <>
-          Remember your password?{" "}
+          {t("auth.rememberPassword")}{" "}
           <Link href="/account" className="font-semibold text-forest-800 underline underline-offset-2">
-            Sign in
+            {t("auth.signIn")}
           </Link>
         </>
       }
     >
       {sent ? (
         <div className="rounded-lg border border-forest-200 bg-forest-50 px-4 py-5 text-sm text-ink">
-          <p>
-            If an account exists for <strong>{email}</strong>, a password reset link has been sent.
-            Check your inbox (and spam folder).
-          </p>
+          <p>{t("auth.forgotSent", { email })}</p>
         </div>
       ) : (
         <form onSubmit={submit} className="space-y-4">
-          <Field label="Email" required>
+          {/* Honeypot: hidden from humans, tempting for bots. */}
+          <input
+            type="text"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            className="absolute -left-[9999px] h-0 w-0 opacity-0"
+          />
+          <Field label={t("auth.email")} required>
             <Input
               required
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
+              placeholder={t("auth.emailPh")}
               autoComplete="email"
             />
           </Field>
@@ -63,7 +73,7 @@ export function ForgotPasswordForm() {
             </p>
           ) : null}
           <Button type="submit" size="lg" className="w-full" disabled={submitting}>
-            {submitting ? "Sending..." : "Send reset link"}
+            {submitting ? t("auth.sending") : t("auth.sendResetLink")}
           </Button>
         </form>
       )}

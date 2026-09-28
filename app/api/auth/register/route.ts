@@ -6,10 +6,13 @@ import {
   hashPassword,
   hashToken,
   isEmailValid,
+  isPhoneValid,
+  normalizePhone,
   passwordPolicyErrors,
 } from "@/lib/auth";
 import { sendNewAccountNotification, sendVerificationEmail, siteOrigin } from "@/lib/email";
 import { rateLimitRequest, rateLimitResponse } from "@/lib/rate-limit";
+import { isBotRequest } from "@/lib/bot-trap";
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -19,15 +22,37 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: false, error: "Invalid request body." }, { status: 400 });
   }
 
-  const name = String((body as { name?: unknown }).name ?? "").trim();
-  const email = String((body as { email?: unknown }).email ?? "").trim().toLowerCase();
-  const password = String((body as { password?: unknown }).password ?? "");
+  const data = (body ?? {}) as {
+    name?: unknown;
+    phone?: unknown;
+    email?: unknown;
+    password?: unknown;
+  };
+  const name = String(data.name ?? "").trim();
+  const phone = String(data.phone ?? "").trim();
+  const email = String(data.email ?? "").trim().toLowerCase();
+  const password = String(data.password ?? "");
+
+  // Honeypot trap: pretend the account was created (without doing any work)
+  // so bots cannot tell they were caught and keep grinding the rate limit.
+  if (isBotRequest(data as Record<string, unknown>)) {
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Account created. Check your email to verify your address, then sign in.",
+      },
+      { status: 201 }
+    );
+  }
 
   if (name.length < 2) {
     return NextResponse.json({ success: false, error: "Enter your full name." }, { status: 400 });
   }
   if (!isEmailValid(email)) {
     return NextResponse.json({ success: false, error: "Enter a valid email address." }, { status: 400 });
+  }
+  if (phone && !isPhoneValid(phone)) {
+    return NextResponse.json({ success: false, error: "Enter a valid phone number (6-15 digits)." }, { status: 400 });
   }
   const passwordErrors = passwordPolicyErrors(password);
   if (passwordErrors.length > 0) {
@@ -60,7 +85,14 @@ export async function POST(request: Request) {
 
   let user;
   try {
-    user = await User.create({ name, email, passwordHash: hashPassword(password), role: "user" });
+    user = await User.create({
+      name,
+      phone: phone || undefined,
+      phoneSearch: phone ? normalizePhone(phone) : undefined,
+      email,
+      passwordHash: hashPassword(password),
+      role: "user",
+    });
   } catch (error) {
     console.error("[auth] register create failed:", error);
     return NextResponse.json({ success: false, error: "Could not create your account. Please try again." }, { status: 500 });

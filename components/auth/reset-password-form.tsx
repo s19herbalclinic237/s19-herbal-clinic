@@ -8,11 +8,13 @@ import { AuthShell } from "@/components/auth/auth-shell";
 import { Field } from "@/components/ui/form";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Button } from "@/components/ui/button";
+import { useLocale } from "@/components/i18n/locale-provider";
 
 export function ResetPasswordForm() {
   const params = useSearchParams();
   const token = params.get("token") || "";
   const { resetPassword } = useAuth();
+  const { t } = useLocale();
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [done, setDone] = useState(false);
@@ -23,7 +25,7 @@ export function ResetPasswordForm() {
     e.preventDefault();
     setError(null);
     if (password !== confirm) {
-      setError("Passwords do not match.");
+      setError(t("auth.passwordsMismatch"));
       return;
     }
     setSubmitting(true);
@@ -36,13 +38,13 @@ export function ResetPasswordForm() {
   if (!token) {
     return (
       <AuthShell
-        eyebrow="Account recovery"
-        title="Invalid reset link"
-        lead="This password reset link is missing or invalid. Request a new one below."
+        eyebrow={t("auth.recoveryEyebrow")}
+        title={t("auth.invalidResetTitle")}
+        lead={t("auth.invalidResetLead")}
         footer={
           <>
             <Link href="/account/forgot-password" className="font-semibold text-forest-800 underline underline-offset-2">
-              Request a new reset link
+              {t("auth.requestNewLink")}
             </Link>
           </>
         }
@@ -52,31 +54,31 @@ export function ResetPasswordForm() {
 
   return (
     <AuthShell
-      eyebrow="Account recovery"
-      title="Choose a new password"
-      lead="Your new password must be at least 8 characters long."
+      eyebrow={t("auth.recoveryEyebrow")}
+      title={t("auth.resetTitle")}
+      lead={t("auth.resetLead")}
       footer={
         <>
-          Remember your password?{" "}
+          {t("auth.rememberPassword")}{" "}
           <Link href="/account" className="font-semibold text-forest-800 underline underline-offset-2">
-            Sign in
+            {t("auth.signIn")}
           </Link>
         </>
       }
     >
       {done ? (
         <div className="rounded-lg border border-forest-200 bg-forest-50 px-4 py-5 text-sm text-ink">
-          <p>Your password has been reset. You can now sign in with your new password.</p>
+          <p>{t("auth.resetDone")}</p>
           <Link
             href="/account"
             className="mt-4 inline-flex h-11 w-full items-center justify-center rounded-lg bg-forest-800 px-5 text-sm font-semibold text-white hover:bg-forest-900"
           >
-            Sign in
+            {t("auth.signIn")}
           </Link>
         </div>
       ) : (
         <form onSubmit={submit} className="space-y-4">
-          <Field label="New Password" hint="At least 8 characters.">
+          <Field label={t("auth.newPassword")} hint={t("auth.passwordHint")}>
             <PasswordInput
               required
               value={password}
@@ -85,7 +87,7 @@ export function ResetPasswordForm() {
               autoComplete="new-password"
             />
           </Field>
-          <Field label="Confirm New Password" required>
+          <Field label={t("auth.confirmNewPassword")} required>
             <PasswordInput
               required
               value={confirm}
@@ -100,7 +102,7 @@ export function ResetPasswordForm() {
             </p>
           ) : null}
           <Button type="submit" size="lg" className="w-full" disabled={submitting}>
-            {submitting ? "Saving..." : "Reset password"}
+            {submitting ? t("auth.saving") : t("auth.resetSubmit")}
           </Button>
         </form>
       )}

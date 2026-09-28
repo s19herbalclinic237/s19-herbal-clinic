@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/form";
 import { formatDate } from "@/components/account/badges";
-import { FaArrowRotateLeft, FaUserDoctor, FaUsers } from "react-icons/fa6";
+import { FaArrowRotateLeft, FaUserDoctor, FaUsers, FaTrashCan, FaXmark } from "react-icons/fa6";
 
 interface StaffRow {
   id: string;
@@ -24,6 +24,9 @@ export function RolesTab() {
   const [query, setQuery] = useState("");
   const [toast, setToast] = useState<string | null>(null);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [deleting, setDeleting] = useState<StaffRow | null>(null);
+  const [confirmWord, setConfirmWord] = useState("");
+  const [deletingBusy, setDeletingBusy] = useState(false);
 
   const notify = (message: string) => {
     setToast(message);
@@ -76,6 +79,29 @@ export function RolesTab() {
         );
     } catch (e) {
       notify((e as Error).message);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deleting) return;
+    setDeletingBusy(true);
+    try {
+      const res = await fetch(`/api/admin/users/${deleting.id}`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirm: confirmWord }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { error?: string };
+      if (!res.ok) throw new Error(data.error || "Delete failed.");
+      setRows((prev) => (prev === null ? prev : prev.filter((x) => x.id !== deleting.id)));
+      notify(`Account ${deleting.email} permanently deleted.`);
+      setDeleting(null);
+      setConfirmWord("");
+    } catch (e) {
+      notify((e as Error).message);
+    } finally {
+      setDeletingBusy(false);
     }
   };
 
@@ -190,6 +216,19 @@ export function RolesTab() {
                         Enable
                       </Button>
                     )}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-red-600 hover:bg-red-50"
+                      onClick={() => {
+                        setConfirmWord("");
+                        setDeleting(r);
+                      }}
+                      title={`Permanently delete ${r.email}`}
+                    >
+                      <FaTrashCan className="h-3.5 w-3.5" aria-hidden />
+                      Delete
+                    </Button>
                   </div>
                 </td>
               </tr>
@@ -202,6 +241,58 @@ export function RolesTab() {
           </p>
         ) : null}
       </div>
+
+      {deleting ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-forest-950/60 p-4">
+          <div className="w-full max-w-md rounded-2xl border border-line bg-white p-6 shadow-lift">
+            <div className="flex items-start justify-between gap-3">
+              <h3 className="font-display text-lg font-semibold text-red-700">Delete account</h3>
+              <button
+                type="button"
+                onClick={() => setDeleting(null)}
+                aria-label="Close"
+                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-line-strong bg-white text-muted hover:text-ink"
+              >
+                <FaXmark className="h-4 w-4" aria-hidden />
+              </button>
+            </div>
+            <p className="mt-3 text-sm leading-relaxed text-ink">
+              You are about to permanently delete{" "}
+              <strong>{deleting.name}</strong> (<span className="break-all">{deleting.email}</span>).
+              This removes their appointments, records, messages, treatment plans, glucose
+              readings and all account data. <strong className="text-red-700">This cannot be undone.</strong>
+            </p>
+            <div className="mt-4">
+              <label htmlFor="delete-confirm" className="block text-xs font-semibold uppercase tracking-wide text-ink">
+                Type the account email to confirm
+              </label>
+              <Input
+                id="delete-confirm"
+                value={confirmWord}
+                onChange={(e) => setConfirmWord(e.target.value)}
+                autoComplete="off"
+                placeholder={deleting.email}
+                className="mt-1.5"
+              />
+            </div>
+            <p className="mt-2 text-xs text-muted">
+              The account&apos;s orders are kept for financial records but detached from the deleted user.
+            </p>
+            <div className="mt-5 flex justify-end gap-3">
+              <Button variant="outline" onClick={() => setDeleting(null)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={() => void handleDelete()}
+                disabled={deletingBusy || confirmWord.trim().toLowerCase() !== deleting.email.toLowerCase()}
+                className="bg-red-700 hover:bg-red-800"
+              >
+                {deletingBusy ? "Deleting..." : "Delete permanently"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

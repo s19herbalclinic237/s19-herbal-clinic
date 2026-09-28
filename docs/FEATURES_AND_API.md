@@ -268,8 +268,8 @@ The profile is not currently linked to a login or clinical writes.
 
 | Method and path | Access | Action |
 | --- | --- | --- |
-| `POST /api/auth/register` | Public | Create account and send verification email/token. |
-| `POST /api/auth/login` | Public | Validate password, update last login, create session, set cookie. |
+| `POST /api/auth/register` | Public | Create account (name, optional phone, email, password) and send verification email/token. |
+| `POST /api/auth/login` | Public | Validate password for an email OR phone number, update last login, create session, set cookie. |
 | `POST /api/auth/logout` | Cookie session | Delete current session and clear cookie. |
 | `GET /api/auth/me` | Signed in | Return current safe authentication DTO. |
 | `POST /api/auth/verify-email` | Token | Verify email, mark token used, create session. |
@@ -341,6 +341,7 @@ The profile is not currently linked to a login or clinical writes.
 | `POST /api/messages` | Signed in | Start or reply to a clinic conversation. |
 | `POST /api/messages/[id]/read` | Owner | Mark a message read. |
 | `GET /api/admin/users` | Admin or Doctor (clinical) | List patient users and order/unread aggregates. |
+| `DELETE /api/admin/users/[id]` | Admin | Permanently delete a user account. Requires `{ "confirm": "<user email>" }` (case-insensitive). Rejects admin accounts and self; cascades sessions, tokens, cart, messages, appointments, records, prescriptions, treatment plans/reminders/follow-ups, glucose readings, testimonials; detaches orders. |
 | `GET /api/admin/messages` | Admin or Doctor (clinical) | List a selected user's conversation and mark patient replies read. |
 | `POST /api/admin/messages` | Admin or Doctor (clinical) | Start/reply to a clinic message and notify patient. |
 
@@ -371,7 +372,7 @@ The profile is not currently linked to a login or clinical writes.
 | `POST /api/admin/products` | Admin | Create product. |
 | `PATCH /api/admin/products/[id]` | Admin | Update product. |
 | `DELETE /api/admin/products/[id]` | Admin | Delete product. |
-| `POST /api/upload` | Admin | Upload product/blog media to Cloudinary. |
+| `POST /api/upload` | Admin | Upload product/blog/doctor media to Cloudinary. Images only (JPG/PNG/WebP/AVIF/GIF, max 5 MB); videos rejected. |
 | `GET /api/testimonials` | Signed in | List current user's submitted stories. |
 | `POST /api/testimonials` | Public or signed in | Submit story for moderation. |
 | `GET /api/admin/testimonials` | Admin | List/filter all stories. |

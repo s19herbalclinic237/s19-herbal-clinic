@@ -61,6 +61,22 @@ export function isEmailValid(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim().toLowerCase());
 }
 
+/**
+ * Normalizes a phone number into a canonical digits search form used for
+ * reliable sign-in lookups (users may type spaces, dashes, parentheses, or a
+ * leading "+" differently each time). E.g. "+237 672 595 989" -> "237672595989".
+ */
+export function normalizePhone(phone: string): string {
+  return phone.replace(/[^\d]/g, "");
+}
+
+/** Loose but sensible check for a phone number entered by a human. Optional
+ *  field on registration, so an empty value passes. */
+export function isPhoneValid(phone: string): boolean {
+  const digits = normalizePhone(phone);
+  return digits.length >= 6 && digits.length <= 15;
+}
+
 export function passwordPolicyErrors(password: string): string[] {
   const errors: string[] = [];
   if (password.length < 8) errors.push("Password must be at least 8 characters long.");

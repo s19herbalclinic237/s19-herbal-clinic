@@ -12,16 +12,18 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [message, setMessage] = useState<string | null>(null);
 
-  const submit = async (event: React.FormEvent) => {
+  const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (status === "sending") return;
     setStatus("sending");
     setMessage(null);
     try {
+      const formData = new FormData(event.currentTarget);
+      const website = String(formData.get("website") ?? "");
       const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, website }),
       });
       const data = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok) throw new Error(data.error || t("newsletter.errorDefault"));
@@ -36,6 +38,15 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
 
   return (
     <form onSubmit={submit} className={compact ? "" : "space-y-2"}>
+      {/* Honeypot: hidden from humans, tempting for bots. */}
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute -left-[9999px] h-0 w-0 opacity-0"
+      />
       <div className={`flex gap-2 ${compact ? "" : "max-w-md"}`}>
         <Input
           type="email"

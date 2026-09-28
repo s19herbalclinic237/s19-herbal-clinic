@@ -1284,6 +1284,110 @@ const dict = {
     fr: "Réservez une consultation - à la clinique ou en visioconférence - et un praticien qualifié vous guidera.",
   },
   "library.cta.button": { en: "Book a consultation", fr: "Réserver une consultation" },
+
+  // ── Account / auth screens (front-end only) ────────────────────────────
+  "auth.checkingSession": { en: "Checking your session…", fr: "Vérification de votre session…" },
+  "auth.login.title": { en: "Welcome back", fr: "Bon retour" },
+  "auth.register.title": { en: "Create your account", fr: "Créer votre compte" },
+  "auth.login.tab": { en: "Sign in", fr: "Se connecter" },
+  "auth.register.tab": { en: "Create account", fr: "Créer un compte" },
+  "auth.fullName": { en: "Full name", fr: "Nom complet" },
+  "auth.fullNamePh": { en: "Your full name", fr: "Votre nom complet" },
+  "auth.emailOrPhone": { en: "Email or phone", fr: "E-mail ou téléphone" },
+  "auth.email": { en: "Email", fr: "E-mail" },
+  "auth.emailPh": { en: "you@example.com", fr: "vous@exemple.com" },
+  "auth.phone": { en: "Phone / WhatsApp (optional)", fr: "Téléphone / WhatsApp (facultatif)" },
+  "auth.phonePh": { en: "+237 6xx xxx xxx", fr: "+237 6xx xxx xxx" },
+  "auth.password": { en: "Password", fr: "Mot de passe" },
+  "auth.passwordHint": { en: "At least 8 characters.", fr: "8 caractères minimum." },
+  "auth.confirmPassword": { en: "Confirm password", fr: "Confirmez le mot de passe" },
+  "auth.passwordsMismatch": {
+    en: "Passwords do not match.",
+    fr: "Les mots de passe ne correspondent pas.",
+  },
+  "auth.submitting": { en: "Please wait...", fr: "Veuillez patienter..." },
+  "auth.submitSignIn": { en: "Sign in", fr: "Se connecter" },
+  "auth.submitRegister": { en: "Create account", fr: "Créer un compte" },
+  "auth.forgotPassword": { en: "Forgot your password?", fr: "Mot de passe oublié ?" },
+  "auth.enterAccount": {
+    en: "Enter your email or phone and password.",
+    fr: "Saisissez votre e-mail ou téléphone et votre mot de passe.",
+  },
+  "auth.agreement": {
+    en: "By creating an account you agree to the S19 privacy and terms policies. We will send a verification email - please check your inbox.",
+    fr: "En créant un compte, vous acceptez les politiques de confidentialité et les conditions de S19. Nous vous enverrons un e-mail de vérification - veuillez vérifier votre boîte de réception.",
+  },
+  "auth.createdNotice": {
+    en: "Your account was created. We sent a verification link to {email} - please check your inbox, verify your email, then sign in.",
+    fr: "Votre compte a été créé. Un lien de vérification a été envoyé à {email} - veuillez vérifier votre boîte de réception, confirmer votre e-mail, puis vous connecter.",
+  },
+
+  "auth.recoveryEyebrow": { en: "Account recovery", fr: "Récupération de compte" },
+  "auth.forgotTitle": { en: "Forgot your password?", fr: "Mot de passe oublié ?" },
+  "auth.forgotLead": {
+    en: "Enter the email for your account and we will send you a link to reset your password.",
+    fr: "Saisissez l'e-mail de votre compte et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
+  },
+  "auth.rememberPassword": { en: "Remember your password?", fr: "Vous vous souvenez de votre mot de passe ?" },
+  "auth.forgotSent": {
+    en: "If an account exists for {email}, a password reset link has been sent. Check your inbox (and spam folder).",
+    fr: "Si un compte existe pour {email}, un lien de réinitialisation a été envoyé. Vérifiez votre boîte de réception (et vos courriers indésirables).",
+  },
+  "auth.sendResetLink": { en: "Send reset link", fr: "Envoyer le lien de réinitialisation" },
+  "auth.sending": { en: "Sending...", fr: "Envoi en cours..." },
+
+  "auth.resetTitle": { en: "Choose a new password", fr: "Choisissez un nouveau mot de passe" },
+  "auth.resetLead": {
+    en: "Your new password must be at least 8 characters long.",
+    fr: "Votre nouveau mot de passe doit contenir au moins 8 caractères.",
+  },
+  "auth.newPassword": { en: "New password", fr: "Nouveau mot de passe" },
+  "auth.confirmNewPassword": { en: "Confirm new password", fr: "Confirmez le nouveau mot de passe" },
+  "auth.resetDone": {
+    en: "Your password has been reset. You can now sign in with your new password.",
+    fr: "Votre mot de passe a été réinitialisé. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
+  },
+  "auth.saving": { en: "Saving...", fr: "Enregistrement en cours..." },
+  "auth.resetSubmit": { en: "Reset password", fr: "Réinitialiser le mot de passe" },
+  "auth.invalidResetTitle": { en: "Invalid reset link", fr: "Lien de réinitialisation invalide" },
+  "auth.invalidResetLead": {
+    en: "This password reset link is missing or invalid. Request a new one below.",
+    fr: "Ce lien de réinitialisation est manquant ou invalide. Demandez-en un nouveau ci-dessous.",
+  },
+  "auth.requestNewLink": { en: "Request a new reset link", fr: "Demander un nouveau lien de réinitialisation" },
+  "auth.signIn": { en: "Sign in", fr: "Se connecter" },
+
+  "auth.accountEyebrow": { en: "Account", fr: "Compte" },
+  "auth.verifyingTitle": { en: "Verifying your email...", fr: "Vérification de votre e-mail..." },
+  "auth.verifiedTitle": { en: "Email verified", fr: "E-mail vérifié" },
+  "auth.verifiedLead": {
+    en: "Your email address has been verified. You can now sign in to your account.",
+    fr: "Votre adresse e-mail a été vérifiée. Vous pouvez maintenant vous connecter à votre compte.",
+  },
+  "auth.goToAccount": { en: "Go to your account", fr: "Accéder à mon compte" },
+  "auth.verifyFailedTitle": { en: "Verification failed", fr: "Échec de la vérification" },
+  "auth.verifyFailedLead": {
+    en: "This verification link is invalid or has expired.",
+    fr: "Ce lien de vérification est invalide ou a expiré.",
+  },
+  "auth.signInNewLink": { en: "Sign in to request a new link", fr: "Se connecter pour demander un nouveau lien" },
+  "auth.alreadyVerified": { en: "Already verified?", fr: "Déjà vérifié ?" },
+
+  "auth.metaForgotTitle": { en: "Forgot password | S19 Herbal Clinic", fr: "Mot de passe oublié | Clinique S19" },
+  "auth.metaForgotDescription": {
+    en: "Reset your S19 Herbal Clinic account password.",
+    fr: "Réinitialisez le mot de passe de votre compte Clinique S19.",
+  },
+  "auth.metaResetTitle": { en: "Reset password | S19 Herbal Clinic", fr: "Réinitialiser le mot de passe | Clinique S19" },
+  "auth.metaResetDescription": {
+    en: "Choose a new password for your S19 Herbal Clinic account.",
+    fr: "Choisissez un nouveau mot de passe pour votre compte Clinique S19.",
+  },
+  "auth.metaVerifyTitle": { en: "Verify email | S19 Herbal Clinic", fr: "Vérifier l'e-mail | Clinique S19" },
+  "auth.metaVerifyDescription": {
+    en: "Confirm your email address for your S19 Herbal Clinic account.",
+    fr: "Confirmez votre adresse e-mail pour votre compte Clinique S19.",
+  },
 } as const;
 
 export type TranslationKey = keyof typeof dict;

@@ -31,3 +31,6 @@ next-env.d.ts
 
 # Tesseract language data (optional local OCR experiment; not used by the app)
 *.traineddata
+
+# personal / client-confidential documents (not shared with the repo)
+docs/E-CONTRACT-BRIEF.md

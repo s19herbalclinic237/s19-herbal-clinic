@@ -3,6 +3,7 @@ import { connectDb } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth-server";
 import { Testimonial } from "@/lib/models/Testimonial";
 import { rateLimitRequest, rateLimitResponse } from "@/lib/rate-limit";
+import { isBotRequest } from "@/lib/bot-trap";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -33,6 +34,14 @@ export async function POST(request: Request) {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+  }
+
+  // Honeypot trap: fake success so bots cannot tell they were caught.
+  if (isBotRequest((body ?? {}) as Record<string, unknown>)) {
+    return NextResponse.json(
+      { success: true, message: "Thank you! Your story is pending review." },
+      { status: 201 }
+    );
   }
 
   const { name, city, country, program, text, rating, email } = (body ?? {}) as {

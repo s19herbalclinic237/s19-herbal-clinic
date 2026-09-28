@@ -28,16 +28,18 @@ export function StoriesForm() {
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setForm((f) => ({ ...f, [key]: e.target.value }));
 
-  async function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (submitting) return;
     setSubmitting(true);
     setError(null);
     try {
+      const formData = new FormData(e.currentTarget);
+      const website = String(formData.get("website") ?? "");
       const res = await fetch("/api/testimonials", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, rating }),
+        body: JSON.stringify({ ...form, rating, website }),
       });
       const data = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok) throw new Error(data.error || "Request failed");
@@ -72,6 +74,15 @@ export function StoriesForm() {
 
   return (
     <form onSubmit={submit} className="rounded-xl border border-line bg-white p-6 shadow-card sm:p-8">
+      {/* Honeypot: hidden from humans, tempting for bots. */}
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute -left-[9999px] h-0 w-0 opacity-0"
+      />
       {error ? (
         <p className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
       ) : null}

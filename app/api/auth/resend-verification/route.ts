@@ -4,6 +4,7 @@ import { User } from "@/lib/models/User";
 import { generateToken, hashToken, isEmailValid } from "@/lib/auth";
 import { sendVerificationEmail, siteOrigin } from "@/lib/email";
 import { rateLimitRequest, rateLimitResponse } from "@/lib/rate-limit";
+import { isBotRequest } from "@/lib/bot-trap";
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -11,6 +12,11 @@ export async function POST(request: Request) {
     body = await request.json();
   } catch {
     return NextResponse.json({ success: false, error: "Invalid request body." }, { status: 400 });
+  }
+
+  // Honeypot trap: fake success so bots cannot tell they were caught.
+  if (isBotRequest((body ?? {}) as Record<string, unknown>)) {
+    return NextResponse.json({ success: true, message: "Verification email sent." });
   }
 
   const email = String((body as { email?: unknown }).email ?? "").trim().toLowerCase();

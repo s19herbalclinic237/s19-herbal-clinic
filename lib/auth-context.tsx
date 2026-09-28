@@ -32,12 +32,13 @@ async function api<T = ApiResult>(url: string, init?: RequestInit): Promise<T> {
 interface AuthContextValue {
   user: AuthUser | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<string | null>;
-  register: (name: string, email: string, password: string) => Promise<string | null>;
+  /** identifier is an email address OR a phone number. */
+  login: (identifier: string, password: string, bot?: string) => Promise<string | null>;
+  register: (name: string, phone: string, email: string, password: string, bot?: string) => Promise<string | null>;
   logout: () => Promise<void>;
   verifyEmail: (token: string) => Promise<string | null>;
   resendVerification: (email: string) => Promise<string | null>;
-  forgotPassword: (email: string) => Promise<string | null>;
+  forgotPassword: (email: string, bot?: string) => Promise<string | null>;
   resetPassword: (token: string, password: string) => Promise<string | null>;
   refreshUser: () => Promise<void>;
   updateAuthUser: (user: AuthUser) => void;
@@ -113,11 +114,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, [loading]);
 
-  const login = useCallback(async (email: string, password: string) => {
+  const login = useCallback(async (identifier: string, password: string, bot?: string) => {
     try {
       const data = await api<ApiResult>("/api/auth/login", {
         method: "POST",
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ identifier, password, website: bot }),
       });
       if (data.success && data.user) {
         setUser(data.user);
@@ -130,22 +131,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const register = useCallback(async (name: string, email: string, password: string) => {
-    try {
-      const data = await api<ApiResult & { warning?: string }>("/api/auth/register", {
-        method: "POST",
-        body: JSON.stringify({ name, email, password }),
-      });
-      if (data.success) {
-        toast.success(data.message || "Account created. Please verify your email.");
-        if (data.warning) toast(data.warning, { icon: "⚠️", duration: 8000 });
-        return null;
+  const register = useCallback(
+    async (name: string, phone: string, email: string, password: string, bot?: string) => {
+      try {
+        const data = await api<ApiResult & { warning?: string }>("/api/auth/register", {
+          method: "POST",
+          body: JSON.stringify({ name, phone, email, password, website: bot }),
+        });
+        if (data.success) {
+          toast.success(data.message || "Account created. Please verify your email.");
+          if (data.warning) toast(data.warning, { icon: "⚠️", duration: 8000 });
+          return null;
+        }
+        return data.error || "Registration failed. Please try again.";
+      } catch {
+        return "Registration failed. Please try again.";
       }
-      return data.error || "Registration failed. Please try again.";
-    } catch {
-      return "Registration failed. Please try again.";
-    }
-  }, []);
+    },
+    []
+  );
 
   const logout = useCallback(async () => {
     try {
@@ -185,11 +189,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const forgotPassword = useCallback(async (email: string) => {
+  const forgotPassword = useCallback(async (email: string, bot?: string) => {
     try {
       const data = await api<ApiResult>("/api/auth/forgot-password", {
         method: "POST",
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, website: bot }),
       });
       return data.error || null;
     } catch {

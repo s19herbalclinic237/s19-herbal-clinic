@@ -3,11 +3,14 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/form";
+import { validateImageFile } from "@/lib/image-upload";
 import {
   FaPencil,
   FaPlus,
   FaTrashCan,
   FaXmark,
+  FaCloudArrowUp,
+  FaImage,
 } from "react-icons/fa6";
 
 interface ScheduleRow {
@@ -72,6 +75,33 @@ function DoctorForm({
   );
   const [active, setActive] = useState(initial ? initial.active : true);
   const [saving, setSaving] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const photoFileRef = useRef<HTMLInputElement>(null);
+  const [photoError, setPhotoError] = useState<string | null>(null);
+
+  async function uploadPhoto(file: File) {
+    const validationError = validateImageFile(file);
+    setUploadingPhoto(true);
+    setPhotoError(null);
+    try {
+      if (validationError) throw new Error(validationError);
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        credentials: "include",
+        body: formData,
+      });
+      const data = (await res.json().catch(() => ({}))) as { secure_url?: string; error?: string };
+      if (!res.ok || !data.secure_url) throw new Error(data.error || "Upload failed.");
+      set("photo", data.secure_url);
+    } catch (err) {
+      setPhotoError(err instanceof Error ? err.message : "Upload failed. Paste an image URL instead.");
+    } finally {
+      setUploadingPhoto(false);
+      if (photoFileRef.current) photoFileRef.current.value = "";
+    }
+  }
 
   function set<K extends keyof typeof form>(key: K, value: string | number) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -146,8 +176,35 @@ function DoctorForm({
         <Field label="Phone">
           <Input value={form.phone} onChange={(e) => set("phone", e.target.value)} maxLength={30} />
         </Field>
-        <Field label="Photo URL">
-          <Input value={form.photo} onChange={(e) => set("photo", e.target.value)} placeholder="https://..." />
+        <Field label="Photo URL" hint="Or upload a photo from your device (JPG, PNG, WebP, AVIF or GIF, under 5 MB).">
+          <div className="flex gap-2">
+            <Input value={form.photo} onChange={(e) => set("photo", e.target.value)} placeholder="https://..." />
+            <Button
+              variant="outline"
+              size="md"
+              type="button"
+              disabled={uploadingPhoto}
+              onClick={() => photoFileRef.current?.click()}
+            >
+              {uploadingPhoto ? (
+                <FaCloudArrowUp className="h-4 w-4 animate-bounce" aria-hidden />
+              ) : (
+                <FaImage className="h-4 w-4" aria-hidden />
+              )}
+              {uploadingPhoto ? "Uploading…" : "Upload"}
+            </Button>
+            <input
+              ref={photoFileRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) void uploadPhoto(file);
+              }}
+            />
+          </div>
+          {photoError ? <p className="mt-1 text-xs text-red-600">{photoError}</p> : null}
         </Field>
         <Field label="Sort order">
           <Input

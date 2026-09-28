@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/db";
 import { getSessionUser, toAuthUser } from "@/lib/auth-server";
 import { User } from "@/lib/models/User";
+import { normalizePhone } from "@/lib/auth";
 
 export async function PATCH(request: Request) {
   const user = await getSessionUser();
@@ -116,7 +117,7 @@ export async function PATCH(request: Request) {
       {
         $set: {
           ...(name !== undefined ? { name } : {}),
-          ...(phone !== undefined ? { phone } : {}),
+          ...(phone !== undefined ? { phone, phoneSearch: normalizePhone(phone) } : {}),
           ...(avatarProvided && avatar !== "" ? { avatar } : {}),
           ...(dobProvided && dob ? { dob } : {}),
           ...(genderProvided && gender ? { gender } : {}),

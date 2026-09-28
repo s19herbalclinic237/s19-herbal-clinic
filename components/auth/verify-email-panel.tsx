@@ -7,16 +7,18 @@ import { useAuth } from "@/lib/auth-context";
 import { AuthShell } from "@/components/auth/auth-shell";
 import { buttonLinkClasses } from "@/components/ui/button";
 import { FaCheck, FaRegCircleXmark } from "react-icons/fa6";
+import { useLocale } from "@/components/i18n/locale-provider";
 
 export function VerifyEmailPanel() {
   const params = useSearchParams();
   const token = params.get("token") || "";
   const { verifyEmail } = useAuth();
+  const { t } = useLocale();
   const [state, setState] = useState<"verifying" | "verified" | "error">(
     token ? "verifying" : "error"
   );
   const [error, setError] = useState<string | null>(
-    token ? null : "This verification link is missing or invalid."
+    token ? null : t("auth.verifyFailedLead")
   );
 
   useEffect(() => {
@@ -40,16 +42,16 @@ export function VerifyEmailPanel() {
 
   const footer = (
     <>
-      Already verified?{" "}
+      {t("auth.alreadyVerified")}{" "}
       <Link href="/account" className="font-semibold text-forest-800 underline underline-offset-2">
-        Sign in
+        {t("auth.signIn")}
       </Link>
     </>
   );
 
   if (state === "verifying") {
     return (
-      <AuthShell eyebrow="Account" title="Verifying your email..." footer={footer}>
+      <AuthShell eyebrow={t("auth.accountEyebrow")} title={t("auth.verifyingTitle")} footer={footer}>
         <div className="flex justify-center py-4">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-forest-200 border-t-forest-800" />
         </div>
@@ -60,9 +62,9 @@ export function VerifyEmailPanel() {
   if (state === "verified") {
     return (
       <AuthShell
-        eyebrow="Account"
-        title="Email verified"
-        lead="Your email address has been verified. You can now sign in to your account."
+        eyebrow={t("auth.accountEyebrow")}
+        title={t("auth.verifiedTitle")}
+        lead={t("auth.verifiedLead")}
         footer={footer}
       >
         <div className="flex flex-col items-center gap-4 py-2">
@@ -70,7 +72,7 @@ export function VerifyEmailPanel() {
             <FaCheck className="h-6 w-6 text-forest-700" aria-hidden />
           </span>
           <Link href="/account" className={buttonLinkClasses("primary", "lg", "w-full")}>
-            Go to your account
+            {t("auth.goToAccount")}
           </Link>
         </div>
       </AuthShell>
@@ -79,9 +81,9 @@ export function VerifyEmailPanel() {
 
   return (
     <AuthShell
-      eyebrow="Account"
-      title="Verification failed"
-      lead={error || "This verification link is invalid or has expired."}
+      eyebrow={t("auth.accountEyebrow")}
+      title={t("auth.verifyFailedTitle")}
+      lead={error || t("auth.verifyFailedLead")}
       footer={footer}
     >
       <div className="flex flex-col items-center gap-4 py-2">
@@ -89,7 +91,7 @@ export function VerifyEmailPanel() {
           <FaRegCircleXmark className="h-6 w-6 text-red-500" aria-hidden />
         </span>
         <Link href="/account" className={buttonLinkClasses("outline", "lg", "w-full")}>
-          Sign in to request a new link
+          {t("auth.signInNewLink")}
         </Link>
       </div>
     </AuthShell>

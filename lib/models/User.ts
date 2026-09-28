@@ -28,6 +28,9 @@ export interface IUser {
   role: UserRole;
   emailVerified: boolean;
   phone?: string;
+  /** Digits-only normalized phone (e.g. "237672595989") used for reliable
+   *  phone sign-in lookups regardless of how the user formats the number. */
+  phoneSearch?: string;
   avatar?: string;
   isActive: boolean;
   lastLoginAt?: Date;
@@ -60,6 +63,7 @@ const UserSchema = new Schema<IUser>(
     role: { type: String, enum: ["admin", "doctor", "user"], default: "user" },
     emailVerified: { type: Boolean, default: false },
     phone: { type: String, trim: true },
+    phoneSearch: { type: String, trim: true },
     avatar: { type: String, trim: true },
     isActive: { type: Boolean, default: true },
     lastLoginAt: { type: Date },

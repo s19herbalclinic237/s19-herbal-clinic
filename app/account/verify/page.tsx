@@ -1,10 +1,15 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { VerifyEmailPanel } from "@/components/auth/verify-email-panel";
+import { serverT } from "@/lib/i18n-server";
 
-export const metadata = {
-  title: "Verify email | S19 Herbal Clinic",
-  description: "Confirm your email address for your S19 Herbal Clinic account.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await serverT();
+  return {
+    title: t("auth.metaVerifyTitle"),
+    description: t("auth.metaVerifyDescription"),
+  };
+}
 
 export default function VerifyEmailPage() {
   return (
