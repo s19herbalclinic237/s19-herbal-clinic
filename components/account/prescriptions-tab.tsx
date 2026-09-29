@@ -20,6 +20,7 @@ interface MedicationView {
   frequency: string;
   duration?: string;
   instructions?: string;
+  photo?: string;
 }
 
 interface PrescriptionView {
@@ -30,6 +31,7 @@ interface PrescriptionView {
   expiresAt?: string;
   status: "active" | "expired";
   medications: MedicationView[];
+  coverPhoto?: string;
   notes?: string;
 }
 
@@ -65,6 +67,21 @@ function PrescriptionDetail({ p }: { p: PrescriptionView }) {
           </button>
         </div>
 
+        {p.coverPhoto ? (
+          <div className="mt-4">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={p.coverPhoto}
+              alt={t("dash.prescriptions.coverPhotoAlt")}
+              className="max-h-56 w-full rounded-md border border-line bg-white object-contain"
+            />
+          </div>
+        ) : null}
+
+        {p.medications.some((m) => m.photo) ? (
+          <p className="mt-4 text-[10px] text-muted">{t("dash.prescriptions.photoHint")}</p>
+        ) : null}
+
         <table className="mt-4 w-full border-collapse text-sm">
           <thead>
             <tr className="border-b border-forest-200 text-left text-[10px] font-bold uppercase tracking-widest text-muted">
@@ -77,7 +94,19 @@ function PrescriptionDetail({ p }: { p: PrescriptionView }) {
           <tbody className="divide-y divide-forest-100">
             {p.medications.map((m, i) => (
               <tr key={i}>
-                <td className="py-2.5 pr-3 align-top font-bold text-ink">{m.name}</td>
+                <td className="py-2.5 pr-3 align-top">
+                  <div className="flex items-center gap-2.5">
+                    {m.photo ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={m.photo}
+                        alt={t("dash.prescriptions.medPhotoAlt", { name: m.name })}
+                        className="h-12 w-12 shrink-0 rounded-md border border-line bg-white object-cover"
+                      />
+                    ) : null}
+                    <span className="font-bold text-ink">{m.name}</span>
+                  </div>
+                </td>
                 <td className="py-2.5 pr-3 align-top text-muted">{m.dosage}</td>
                 <td className="py-2.5 pr-3 align-top text-muted">{m.frequency}</td>
                 <td className="py-2.5 align-top text-muted">{m.duration || "—"}</td>
@@ -125,6 +154,12 @@ function PrescriptionCard({
   onToggle: () => void;
 }) {
   const { t } = useLocale();
+  const thumbs = [
+    ...(p.coverPhoto ? [{ src: p.coverPhoto, name: t("dash.prescriptions.coverPhotoAlt") }] : []),
+    ...p.medications
+      .filter((m) => m.photo)
+      .map((m) => ({ src: m.photo as string, name: t("dash.prescriptions.medPhotoAlt", { name: m.name }) })),
+  ].slice(0, 3);
   return (
     <li className="overflow-hidden rounded-lg border border-line bg-white">
       <button
@@ -132,15 +167,29 @@ function PrescriptionCard({
         onClick={onToggle}
         className="flex w-full cursor-pointer items-center gap-3 px-4 py-4 text-left transition-colors hover:bg-forest-50/50 sm:px-5"
       >
-        <span
-          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border ${
-            p.status === "active"
-              ? "border-forest-300 bg-forest-50 text-forest-800"
-              : "border-line-strong bg-cream text-muted"
-          }`}
-        >
-          <FaPills className="h-4 w-4" aria-hidden />
-        </span>
+        {thumbs.length > 0 ? (
+          <span className="flex shrink-0 items-center gap-1.5">
+            {thumbs.map((thumb, i) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={i}
+                src={thumb.src}
+                alt={thumb.name}
+                className="h-11 w-11 rounded-xl border border-line bg-white object-cover"
+              />
+            ))}
+          </span>
+        ) : (
+          <span
+            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border ${
+              p.status === "active"
+                ? "border-forest-300 bg-forest-50 text-forest-800"
+                : "border-line-strong bg-cream text-muted"
+            }`}
+          >
+            <FaPills className="h-4 w-4" aria-hidden />
+          </span>
+        )}
         <span className="min-w-0 flex-1">
           <span className="block truncate text-sm font-bold text-ink">
             {p.medications.map((m) => m.name).join(" + ")}

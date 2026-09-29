@@ -107,7 +107,7 @@ Authorization: `adminGuard()` allows only `admin`; `clinicalGuard()` allows `adm
 ### Prescriptions
 
 - Read active/expired prescriptions for the account.
-- Display medications, dosage, frequency, duration, instructions, and notes.
+- Display medications, dosage, frequency, duration, instructions, notes, and the medication/prescription photos uploaded by the clinic.
 - Filter presentation by family member when applicable.
 
 ### Treatment plan

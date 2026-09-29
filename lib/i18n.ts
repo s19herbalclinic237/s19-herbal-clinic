@@ -1864,6 +1864,12 @@ const dict = {
   "dash.prescriptions.duration": { en: "Duration", fr: "Durée" },
   "dash.prescriptions.directions": { en: "Directions", fr: "Directives" },
   "dash.prescriptions.notes": { en: "Notes", fr: "Notes" },
+  "dash.prescriptions.medPhotoAlt": { en: "Photo of {name}", fr: "Photo de {name}" },
+  "dash.prescriptions.coverPhotoAlt": { en: "Prescription photo", fr: "Photo de l'ordonnance" },
+  "dash.prescriptions.photoHint": {
+    en: "These photos show you exactly which product to look for.",
+    fr: "Ces photos vous montrent exactement quel produit rechercher.",
+  },
   "dash.prescriptions.footer": {
     en: "S19 Herbal Clinic · Follow your provider's instructions. Contact the clinic before changing any treatment.",
     fr: "Clinique S19 · Suivez les instructions de votre prestataire. Contactez la clinique avant de modifier un traitement.",

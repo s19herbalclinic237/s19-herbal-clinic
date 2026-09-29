@@ -4,9 +4,12 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/form";
 import { formatDate, PrescriptionStatusBadge } from "@/components/account/badges";
+import { validateImageFile } from "@/lib/image-upload";
 import {
   FaChevronDown,
   FaChevronUp,
+  FaCloudArrowUp,
+  FaImage,
   FaPencil,
   FaPills,
   FaPlus,
@@ -27,6 +30,7 @@ interface Medication {
   frequency: string;
   duration?: string;
   instructions?: string;
+  photo?: string;
 }
 
 interface PrescriptionAdminView {
@@ -38,10 +42,104 @@ interface PrescriptionAdminView {
   expiresAt?: string;
   status: "active" | "expired";
   medications: Medication[];
+  coverPhoto?: string;
   notes?: string;
 }
 
 const emptyMed = { name: "", dosage: "", frequency: "", duration: "", instructions: "" };
+
+const UPLOAD_HINT = "Paste an image URL, or upload a photo from your device (JPG, PNG, WebP, AVIF or GIF, under 5 MB).";
+
+/**
+ * Image URL field with an inline Cloudinary upload, matching the pattern already
+ * used by the Doctors and Products tabs. Used for both the per-medication photo
+ * and the whole-prescription photo.
+ */
+function ImageUrlField({
+  label,
+  value,
+  onChange,
+  previewAlt,
+}: {
+  label: string;
+  value: string;
+  onChange: (url: string) => void;
+  previewAlt: string;
+}) {
+  const fileRef = useRef<HTMLInputElement | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function upload(file: File) {
+    const validationError = validateImageFile(file);
+    setUploading(true);
+    setError(null);
+    try {
+      if (validationError) throw new Error(validationError);
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        credentials: "include",
+        body: formData,
+      });
+      const data = (await res.json().catch(() => ({}))) as { secure_url?: string; error?: string };
+      if (!res.ok || !data.secure_url) throw new Error(data.error || "Upload failed.");
+      onChange(data.secure_url);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Upload failed. Paste an image URL instead.");
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  }
+
+  return (
+    <Field label={label} hint={UPLOAD_HINT}>
+      <div className="flex gap-2">
+        <Input value={value} onChange={(e) => onChange(e.target.value)} placeholder="https://..." />
+        <Button
+          variant="outline"
+          size="md"
+          type="button"
+          disabled={uploading}
+          onClick={() => fileRef.current?.click()}
+        >
+          {uploading ? (
+            <FaCloudArrowUp className="h-4 w-4 animate-bounce" aria-hidden />
+          ) : (
+            <FaImage className="h-4 w-4" aria-hidden />
+          )}
+          {uploading ? "Uploading…" : "Upload"}
+        </Button>
+        {value ? (
+          <Button variant="outline" size="md" type="button" aria-label="Remove image" onClick={() => onChange("")}>
+            <FaXmark className="h-4 w-4" aria-hidden />
+          </Button>
+        ) : null}
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) void upload(file);
+          }}
+        />
+      </div>
+      {value ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={value}
+          alt={previewAlt}
+          className="mt-2 h-24 w-24 rounded-md border border-line bg-white object-cover"
+        />
+      ) : null}
+      {error ? <p className="mt-1 text-xs text-red-600">{error}</p> : null}
+    </Field>
+  );
+}
 
 function MedRow({
   med,
@@ -73,6 +171,14 @@ function MedRow({
           <Field label="Instructions">
             <Input value={med.instructions || ""} onChange={(e) => onChange(index, { instructions: e.target.value })} placeholder="e.g. Take with warm water; avoid alcohol" maxLength={500} />
           </Field>
+        </div>
+        <div className="sm:col-span-2 lg:col-span-4">
+          <ImageUrlField
+            label="Medication photo"
+            value={med.photo || ""}
+            onChange={(url) => onChange(index, { photo: url })}
+            previewAlt={`Photo of ${med.name || "medication"}`}
+          />
         </div>
       </div>
       <div className="mt-2 flex justify-end">
@@ -111,6 +217,7 @@ function PrescriptionForm({
   const [medications, setMedications] = useState<Medication[]>(
     initial?.medications?.length ? initial.medications : [{ ...emptyMed }]
   );
+  const [coverPhoto, setCoverPhoto] = useState(initial?.coverPhoto || "");
   const [notes, setNotes] = useState(initial?.notes || "");
   const [saving, setSaving] = useState(false);
 
@@ -140,7 +247,8 @@ function PrescriptionForm({
         issuedDate: `${issuedDate}T12:00:00`,
         expiresAt: expiresAt ? `${expiresAt}T12:00:00` : undefined,
         status,
-        medications: cleaned,
+        medications: cleaned.map((m) => ({ ...m, photo: m.photo?.trim() || undefined })),
+        coverPhoto: coverPhoto.trim() || undefined,
         notes: notes.trim() || undefined,
       };
       const res = await fetch(
@@ -227,6 +335,14 @@ function PrescriptionForm({
             <option value="expired">Past / expired</option>
           </Select>
         </Field>
+        <div className="sm:col-span-2 lg:col-span-3">
+          <ImageUrlField
+            label="Prescription photo (optional)"
+            value={coverPhoto}
+            onChange={setCoverPhoto}
+            previewAlt="Prescription photo"
+          />
+        </div>
       </div>
 
       <div className="mt-5">
@@ -413,6 +529,14 @@ export function AdminPrescriptionsTab() {
                 </button>
                 {expandedId === p._id ? (
                   <div className="border-t border-forest-100 bg-cream/60 px-5 py-4">
+                    {p.coverPhoto ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={p.coverPhoto}
+                        alt="Prescription photo"
+                        className="mb-3 h-32 w-32 rounded-md border border-line bg-white object-cover"
+                      />
+                    ) : null}
                     <table className="w-full border-collapse text-sm">
                       <thead>
                         <tr className="border-b border-forest-200 text-left text-[10px] font-bold uppercase tracking-wide text-muted">
@@ -425,7 +549,19 @@ export function AdminPrescriptionsTab() {
                       <tbody className="divide-y divide-forest-100">
                         {p.medications.map((m, i) => (
                           <tr key={i}>
-                            <td className="py-2 pr-3 align-top font-bold text-ink">{m.name}</td>
+                            <td className="py-2 pr-3 align-top">
+                              <div className="flex items-center gap-2.5">
+                                {m.photo ? (
+                                  // eslint-disable-next-line @next/next/no-img-element
+                                  <img
+                                    src={m.photo}
+                                    alt={`Photo of ${m.name}`}
+                                    className="h-9 w-9 shrink-0 rounded-md border border-line bg-white object-cover"
+                                  />
+                                ) : null}
+                                <span className="font-bold text-ink">{m.name}</span>
+                              </div>
+                            </td>
                             <td className="py-2 pr-3 align-top text-muted">{m.dosage}</td>
                             <td className="py-2 pr-3 align-top text-muted">{m.frequency}</td>
                             <td className="py-2 align-top text-muted">{m.duration || "—"}</td>

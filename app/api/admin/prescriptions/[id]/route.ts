@@ -5,6 +5,15 @@ import { Prescription, type Medication } from "@/lib/models/Prescription";
 
 type Params = { params: Promise<{ id: string }> };
 
+/** Only absolute http(s) image URLs are stored, mirroring the attachment rule in
+ *  app/api/admin/medical-records/route.ts. */
+function cleanImageUrl(raw: unknown): string | undefined {
+  const url = String(raw || "").trim();
+  if (!url) return undefined;
+  if (!url.startsWith("http://") && !url.startsWith("https://")) return undefined;
+  return url.slice(0, 1000);
+}
+
 function parseMedications(raw: unknown): Medication[] {
   if (!Array.isArray(raw)) return [];
   const out: Medication[] = [];
@@ -20,6 +29,7 @@ function parseMedications(raw: unknown): Medication[] {
       frequency: frequency.slice(0, 120),
       duration: String(entry.duration || "").trim().slice(0, 120) || undefined,
       instructions: String(entry.instructions || "").trim().slice(0, 500) || undefined,
+      photo: cleanImageUrl(entry.photo),
     });
   }
   return out.slice(0, 20);
@@ -38,7 +48,7 @@ export async function PATCH(request: Request, { params }: Params) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { user, forMember, doctorName, issuedDate, expiresAt, status, medications, notes } =
+  const { user, forMember, doctorName, issuedDate, expiresAt, status, medications, coverPhoto, notes } =
     (body ?? {}) as Record<string, unknown>;
 
   const set: Record<string, unknown> = {};
@@ -67,6 +77,7 @@ export async function PATCH(request: Request, { params }: Params) {
     }
   }
   if (status !== undefined) set.status = status === "expired" ? "expired" : "active";
+  if (coverPhoto !== undefined) set.coverPhoto = cleanImageUrl(coverPhoto);
   if (notes !== undefined) set.notes = String(notes).trim() || undefined;
   if (medications !== undefined) {
     const meds = parseMedications(medications);

@@ -252,6 +252,7 @@ The clinic receives it; your status is **"Awaiting confirmation"**, you get a co
 
 - Tabs **Current** (active) and **Past** (expired), with family filters.
 - Expand a prescription to see the medication table (**Medication / Dosage / Frequency / Duration**), **Directions**, and **Notes**.
+- **Photos**: where the clinic has attached one, you see a thumbnail on the prescription card and a larger picture next to each medicine, so you can match it to the box or bottle on your shelf. A single photo of the whole prescription may also appear at the top.
 - **Download PDF** to keep a copy.
 
 ### 5.7 Treatment Plan
@@ -331,8 +332,9 @@ Staff accounts see a **"Clinical work"** section with **6 tabs** plus Settings. 
 
 ### 6.3 Prescriptions
 
-- **Issue prescription**: **Patient** (required), **Issued date**, **Valid until**, **Doctor / clinician**, **For family member**, **Status** (Active / Past).
-- Under **Medications**, add at least one row: **Medication (required)**, **Dosage (required)**, **Frequency (required)**, optional **Duration** and **Instructions** — use **Add medication** for each additional drug, bin icon to remove.
+- **Issue prescription**: **Patient** (required), **Issued date**, **Valid until**, **Doctor / clinician**, **For family member**, **Status** (Active / Past), and an optional **Prescription photo**.
+- Under **Medications**, add at least one row: **Medication (required)**, **Dosage (required)**, **Frequency (required)**, optional **Duration**, **Instructions** and **Medication photo** — use **Add medication** for each additional drug, bin icon to remove.
+- **Photos** are how the patient knows exactly which product you mean. For each medicine, paste an image URL or click **Upload** to send a photo from your device (JPG, PNG, WebP, AVIF or GIF, under 5 MB — it is stored on Cloudinary). Photograph the real box or bottle, straight-on and well lit. The **Prescription photo** field is for a single shot of the whole kit. Only `http`/`https` image URLs are stored.
 - optional **Notes** → **Issue prescription**. Patient is notified. Expand rows to edit/delete or review the dosage table and directions.
 
 ### 6.4 Treatment Plans

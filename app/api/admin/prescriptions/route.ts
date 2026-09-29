@@ -6,6 +6,15 @@ import { User } from "@/lib/models/User";
 import { notifyPatient } from "@/lib/notify";
 import { sendPrescriptionIssuedEmail } from "@/lib/email";
 
+/** Only absolute http(s) image URLs are stored, mirroring the attachment rule in
+ *  app/api/admin/medical-records/route.ts. */
+function cleanImageUrl(raw: unknown): string | undefined {
+  const url = String(raw || "").trim();
+  if (!url) return undefined;
+  if (!url.startsWith("http://") && !url.startsWith("https://")) return undefined;
+  return url.slice(0, 1000);
+}
+
 function parseMedications(raw: unknown): Medication[] {
   if (!Array.isArray(raw)) return [];
   const out: Medication[] = [];
@@ -21,6 +30,7 @@ function parseMedications(raw: unknown): Medication[] {
       frequency: frequency.slice(0, 120),
       duration: String(entry.duration || "").trim().slice(0, 120) || undefined,
       instructions: String(entry.instructions || "").trim().slice(0, 500) || undefined,
+      photo: cleanImageUrl(entry.photo),
     });
   }
   return out.slice(0, 20);
@@ -63,7 +73,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { user, forMember, doctorName, issuedDate, expiresAt, status, medications, notes } =
+  const { user, forMember, doctorName, issuedDate, expiresAt, status, medications, coverPhoto, notes } =
     (body ?? {}) as Record<string, unknown>;
 
   const cleanUserId = String(user || "").trim();
@@ -104,6 +114,7 @@ export async function POST(request: Request) {
       expiresAt: expires,
       status: status === "expired" ? "expired" : "active",
       medications: meds,
+      coverPhoto: cleanImageUrl(coverPhoto),
       notes: String(notes || "").trim() || undefined,
     });
 
