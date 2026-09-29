@@ -3,10 +3,52 @@ import { connectDb } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth-server";
 import { Doctor } from "@/lib/models/Doctor";
 import { Appointment } from "@/lib/models/Appointment";
-import { DATE_RE, TIME_RE, openSlotTimes, todayDateOnly, weekdayOf } from "@/lib/appointments";
+import { DATE_RE, TIME_RE, openSlotTimes, parseDateOnly, todayDateOnly, weekdayOf } from "@/lib/appointments";
 import { sendAppointmentCancelledEmails, sendAppointmentRescheduledEmails } from "@/lib/email";
+import { User } from "@/lib/models/User";
+import { notifyPatientWhatsApp, whatsappDay, whatsappFirstName } from "@/lib/whatsapp";
 
 type Params = { params: Promise<{ id: string }> };
+
+/**
+ * Best-effort WhatsApp copy of a slot change. Never throws and never fails the
+ * request: no account, no opt-in or a Meta outage is a silent no-op.
+ */
+async function notifyAppointmentWhatsApp(
+  userId: string,
+  template: "appointment_cancelled" | "appointment_rescheduled",
+  date: string,
+  time: string
+) {
+  try {
+    const patient = await User.findById(userId)
+      .select("name phoneSearch whatsappOptIn preferredLanguage")
+      .lean();
+    if (!patient) return;
+    const language = patient.preferredLanguage === "fr" ? "fr" : "en";
+    // `date` is a clinic-local YYYY-MM-DD string and `time` a separate "HH:mm"
+    // slot, so both are merged into one local Date before formatting.
+    const when = parseDateOnly(date);
+    const [hh, mm] = time.split(":").map(Number);
+    when.setHours(hh || 0, mm || 0, 0, 0);
+    const firstName = whatsappFirstName(patient.name);
+    // The cancel template has no time placeholder; booked/rescheduled do.
+    const params =
+      template === "appointment_cancelled"
+        ? [firstName, whatsappDay(when, language)]
+        : [
+            firstName,
+            whatsappDay(when, language),
+            when.toLocaleTimeString(language === "fr" ? "fr-FR" : "en-GB", {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+          ];
+    await notifyPatientWhatsApp(patient, { template, params });
+  } catch (error) {
+    console.error("[appointments] whatsapp failed:", error);
+  }
+}
 
 export async function PATCH(request: Request, { params }: Params) {
   const user = await getSessionUser();
@@ -66,6 +108,12 @@ export async function PATCH(request: Request, { params }: Params) {
           console.error("[appointments] cancel email failed:", error);
         }
       }
+      await notifyAppointmentWhatsApp(
+        user.id,
+        "appointment_cancelled",
+        appointment.date,
+        appointment.time
+      );
       return NextResponse.json({ success: true, message: "Appointment cancelled." });
     }
 
@@ -138,6 +186,8 @@ export async function PATCH(request: Request, { params }: Params) {
         console.error("[appointments] reschedule email failed:", error);
       }
     }
+
+    await notifyAppointmentWhatsApp(user.id, "appointment_rescheduled", cleanDate, cleanTime);
 
     return NextResponse.json({
       success: true,

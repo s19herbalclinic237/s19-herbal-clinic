@@ -2124,6 +2124,22 @@ const dict = {
   "dash.settings.emergencyRelation": { en: "Relationship", fr: "Lien" },
   "dash.settings.emergencyRelationPh": { en: "e.g. Spouse, Parent", fr: "ex. Conjoint(e), Parent" },
   "dash.settings.emailLocked": { en: "Your email is your sign-in and cannot be changed here.", fr: "Votre e-mail est votre identifiant et ne peut pas être modifié ici." },
+  "dash.settings.notifications": { en: "Notifications", fr: "Notifications" },
+  "dash.settings.waOptIn": { en: "Send me WhatsApp notifications", fr: "Recevoir mes notifications par WhatsApp" },
+  "dash.settings.waOptInHelp": {
+    en: "Appointment confirmations and changes, order updates, new prescriptions, medical records, treatment plans and clinic messages. Turn this off at any time.",
+    fr: "Confirmations et modifications de rendez-vous, suivi des commandes, nouvelles ordonnances, dossiers médicaux, plans de traitement et messages de la clinique. Vous pouvez le désactiver à tout moment.",
+  },
+  "dash.settings.waNeedsPhone": {
+    en: "Add your phone number above first, then you can turn this on.",
+    fr: "Ajoutez d'abord votre numéro de téléphone ci-dessus, puis vous pourrez l'activer.",
+  },
+  "dash.settings.waSaved": { en: "Notification preferences saved.", fr: "Préférences de notification enregistrées." },
+  "dash.settings.notifLanguage": { en: "Message language", fr: "Langue des messages" },
+  "dash.settings.notifLanguageHelp": {
+    en: "WhatsApp messages are sent in this language. Your dashboard language is unaffected.",
+    fr: "Les messages WhatsApp sont envoyés dans cette langue. La langue de votre tableau de bord n'est pas modifiée.",
+  },
   "dash.settings.saveProfile": { en: "Save profile", fr: "Enregistrer le profil" },
   "dash.settings.profileUpdated": { en: "Profile updated.", fr: "Profil mis à jour." },
   "dash.settings.profileError": { en: "Could not update your profile.", fr: "Impossible de mettre à jour votre profil." },

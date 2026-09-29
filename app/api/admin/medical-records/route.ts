@@ -5,6 +5,7 @@ import { MedicalRecord, type RecordAttachment, type MedicalRecordType } from "@/
 import { User } from "@/lib/models/User";
 import { notifyPatient } from "@/lib/notify";
 import { sendRecordAddedEmail } from "@/lib/email";
+import { notifyPatientWhatsApp, whatsappFirstName } from "@/lib/whatsapp";
 
 const TYPES: MedicalRecordType[] = ["visit", "diagnosis", "lab", "scan", "note"];
 
@@ -123,7 +124,9 @@ export async function POST(request: Request) {
     });
 
     // Email the patient the same update (best-effort).
-    const patient = await User.findById(cleanUserId).select("name email").lean();
+    const patient = await User.findById(cleanUserId)
+      .select("name email phoneSearch whatsappOptIn preferredLanguage")
+      .lean();
     if (patient?.email) {
       try {
         await sendRecordAddedEmail({
@@ -135,6 +138,18 @@ export async function POST(request: Request) {
         });
       } catch (error) {
         console.error("[admin/medical-records] email failed:", error);
+      }
+    }
+
+    // WhatsApp the patient the same update (best-effort, never fails the request).
+    if (patient) {
+      try {
+        await notifyPatientWhatsApp(patient, {
+          template: "record_added",
+          params: [whatsappFirstName(patient.name), cleanTitle],
+        });
+      } catch (error) {
+        console.error("[admin/medical-records] whatsapp failed:", error);
       }
     }
 

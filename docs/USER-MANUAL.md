@@ -294,6 +294,7 @@ Five cards:
    - If assigned, it shows large (e.g. `S1900617`); otherwise *"Not assigned yet"*.
    - **The MRN is managed by the clinic and cannot be changed from this page** — ask the clinic to change it.
    - Editable: **Full Name**, **Phone / WhatsApp**, **Date of Birth**, **Gender**, **Home Address**, and an **Emergency contact** (Name / Phone / Relationship).
+   - **Notifications** — tick **Send me WhatsApp notifications** to also be alerted on your phone about appointment confirmations and changes, order updates, new prescriptions, medical records, treatment plans and clinic messages. You can turn it off at any time. The tick box stays disabled until you have saved a phone number. **Message language** (English / Français) chooses the language of these WhatsApp messages only; it does not change your dashboard language.
    - **Email** is shown disabled — it is your sign-in and cannot be changed here.
    - **Save profile** to apply.
 3. **ID document** — upload **Front** and **Back** of your NIN, passport or birth certificate (JPG/PNG/WebP/AVIF/PDF, max 8 MB per side). A preview appears first, then **Upload & save** (or Cancel). You can **Replace** or **Remove** each side later.

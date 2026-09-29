@@ -5,6 +5,17 @@ import { Prescription, type Medication } from "@/lib/models/Prescription";
 import { User } from "@/lib/models/User";
 import { notifyPatient } from "@/lib/notify";
 import { sendPrescriptionIssuedEmail } from "@/lib/email";
+import { notifyPatientWhatsApp, whatsappFirstName } from "@/lib/whatsapp";
+
+/** WhatsApp message bodies are short, so cap the medication list at 3 names. */
+function summariseMedications(meds: Medication[], language: "en" | "fr"): string {
+  const names = meds.map((m) => m.name);
+  if (names.length <= 3) return names.join(", ");
+  const rest = names.length - 3;
+  return language === "fr"
+    ? `${names.slice(0, 3).join(", ")} et ${rest} autres`
+    : `${names.slice(0, 3).join(", ")} and ${rest} more`;
+}
 
 /** Only absolute http(s) image URLs are stored, mirroring the attachment rule in
  *  app/api/admin/medical-records/route.ts. */
@@ -135,7 +146,9 @@ export async function POST(request: Request) {
     });
 
     // Email the patient the same update (best-effort).
-    const patient = await User.findById(cleanUserId).select("name email").lean();
+    const patient = await User.findById(cleanUserId)
+      .select("name email phoneSearch whatsappOptIn preferredLanguage")
+      .lean();
     if (patient?.email) {
       try {
         await sendPrescriptionIssuedEmail({
@@ -147,6 +160,19 @@ export async function POST(request: Request) {
         });
       } catch (error) {
         console.error("[admin/prescriptions] email failed:", error);
+      }
+    }
+
+    // WhatsApp the patient the same update (best-effort, never fails the request).
+    if (patient) {
+      try {
+        const language = patient.preferredLanguage === "fr" ? "fr" : "en";
+        await notifyPatientWhatsApp(patient, {
+          template: "prescription_issued",
+          params: [whatsappFirstName(patient.name), summariseMedications(meds, language)],
+        });
+      } catch (error) {
+        console.error("[admin/prescriptions] whatsapp failed:", error);
       }
     }
 

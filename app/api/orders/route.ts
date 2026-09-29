@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth-server";
 import { Order, type IOrder } from "@/lib/models/Order";
+import { User } from "@/lib/models/User";
 import { sendOrderConfirmation } from "@/lib/email";
+import { notifyPatientWhatsApp, whatsappFirstName } from "@/lib/whatsapp";
 import { generateOrderReference } from "@/lib/utils";
 import type { CartItem } from "@/lib/cart-context";
 import { rateLimitRequest, rateLimitResponse } from "@/lib/rate-limit";
@@ -119,6 +121,34 @@ export async function POST(request: Request) {
   try {
     const order = await Order.create(orderData);
     sendOrderConfirmation(order.toObject() as unknown as IOrder).catch(() => {});
+    // WhatsApp is fire-and-forget: a missing account, a missing opt-in or a
+    // Meta outage must never turn a placed order into a failed request.
+    void (async () => {
+      try {
+        const userId = orderData.user;
+        const user = userId
+          ? await User.findById(userId)
+              .select("name phoneSearch whatsappOptIn preferredLanguage")
+              .lean()
+          : null;
+        await notifyPatientWhatsApp(
+          user
+            ? {
+                phoneSearch: user.phoneSearch,
+                phone: order.customer.phone,
+                whatsappOptIn: user.whatsappOptIn,
+                preferredLanguage: user.preferredLanguage,
+              }
+            : null,
+          {
+            template: "order_placed",
+            params: [whatsappFirstName(order.customer.fullName), order.orderReference],
+          }
+        );
+      } catch (error) {
+        console.error("[orders] whatsapp failed:", error);
+      }
+    })();
     return NextResponse.json({ orderReference: order.orderReference }, { status: 201 });
   } catch (error) {
     console.error("[orders] create failed:", error);

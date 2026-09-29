@@ -5,6 +5,7 @@ import { clinicalGuard } from "@/lib/admin-guard";
 import { Message } from "@/lib/models/Message";
 import { User } from "@/lib/models/User";
 import { sendClinicMessageEmail } from "@/lib/email";
+import { notifyPatientWhatsApp, whatsappFirstName } from "@/lib/whatsapp";
 
 export async function GET(request: Request) {
   const denied = await clinicalGuard();
@@ -109,6 +110,20 @@ export async function POST(request: Request) {
       } catch (error) {
         console.error("[admin/messages] patient email failed:", error);
       }
+    }
+
+    // WhatsApp the patient the same message (best-effort, never fails the request).
+    // `target` is the unprojected User document, so whatsappOptIn, phoneSearch
+    // and preferredLanguage are all present here.
+    try {
+      const waSubject =
+        finalSubject.length > 120 ? `${finalSubject.slice(0, 117).trimEnd()}…` : finalSubject;
+      await notifyPatientWhatsApp(target, {
+        template: "clinic_message",
+        params: [whatsappFirstName(target.name), waSubject],
+      });
+    } catch (error) {
+      console.error("[admin/messages] whatsapp failed:", error);
     }
 
     return NextResponse.json({ success: true, message }, { status: 201 });

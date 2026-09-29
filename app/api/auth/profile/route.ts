@@ -28,6 +28,8 @@ export async function PATCH(request: Request) {
     idCardUrl?: string;
     idCardFrontUrl?: string;
     idCardBackUrl?: string;
+    whatsappOptIn?: boolean;
+    preferredLanguage?: string;
   };
   const name = payload.name?.trim();
   const phone = payload.phone?.trim() || undefined;
@@ -106,6 +108,36 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: "Please provide a valid document URL." }, { status: 400 });
   }
 
+  // ── Notification consent ────────────────────────────────────────────────
+  // Meta requires explicit, recorded opt-in per patient, with a timestamp.
+  const optInRaw = payload.whatsappOptIn;
+  const optInProvided = optInRaw !== undefined;
+  const whatsappOptIn = optInRaw === true;
+  if (optInProvided && typeof optInRaw !== "boolean") {
+    return NextResponse.json({ error: "Invalid WhatsApp consent value." }, { status: 400 });
+  }
+
+  const langProvided = payload.preferredLanguage !== undefined;
+  const preferredLanguage = payload.preferredLanguage === "fr" ? "fr" : "en";
+  if (langProvided && payload.preferredLanguage !== "en" && payload.preferredLanguage !== "fr") {
+    return NextResponse.json({ error: "Please choose English or French." }, { status: 400 });
+  }
+
+  // Consent is meaningless without a number to send to, so refuse it early
+  // rather than storing an opt-in that can never be used.
+  if (optInProvided && whatsappOptIn && !phone && !user.phone) {
+    return NextResponse.json(
+      { error: "Add your phone number before turning on WhatsApp notifications." },
+      { status: 400 }
+    );
+  }
+
+  // Only re-stamp the consent time when consent actually changes, so
+  // whatsappOptInAt keeps meaning "when the patient agreed" - the thing a Meta
+  // policy review asks for - rather than "when they last edited their profile".
+  // Opting out leaves the original timestamp in place as audit history.
+  const consentChanged = optInProvided && whatsappOptIn !== (user.whatsappOptIn ?? false);
+
   const conn = await connectDb();
   if (!conn) {
     return NextResponse.json({ error: "Profile updates are temporarily unavailable." }, { status: 503 });
@@ -126,6 +158,10 @@ export async function PATCH(request: Request) {
           ...(idCardProvided && idCardUrl ? { idCardUrl } : {}),
           ...(idCardFrontProvided && idCardFrontUrl ? { idCardFrontUrl } : {}),
           ...(idCardBackProvided && idCardBackUrl ? { idCardBackUrl } : {}),
+          ...(optInProvided
+            ? { whatsappOptIn, ...(consentChanged && whatsappOptIn ? { whatsappOptInAt: new Date() } : {}) }
+            : {}),
+          ...(langProvided ? { preferredLanguage } : {}),
         },
         ...(avatarProvided && avatar === "" ? { $unset: { avatar: 1 } } : {}),
         ...(dobProvided && !dob ? { $unset: { dob: 1 } } : {}),

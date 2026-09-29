@@ -2,8 +2,10 @@ import { NextResponse } from "next/server";
 import { isValidObjectId } from "mongoose";
 import { connectDb } from "@/lib/db";
 import { adminGuard } from "@/lib/admin-guard";
-import { Order } from "@/lib/models/Order";
+import { Order, type OrderStatus } from "@/lib/models/Order";
+import { User } from "@/lib/models/User";
 import { sendOrderStatusEmails } from "@/lib/email";
+import { notifyPatientWhatsApp, whatsappFirstName } from "@/lib/whatsapp";
 
 const ORDER_STATUSES = [
   "Pending",
@@ -13,6 +15,30 @@ const ORDER_STATUSES = [
   "Delivered",
   "Cancelled",
 ] as const;
+
+/**
+ * Short, patient-facing status label for the WhatsApp `order_status` template.
+ * The English wording mirrors the status string lib/email.ts shows the customer
+ * ("Current status"). No French status map exists in the email module, so the
+ * French column is maintained here. Every value of OrderStatus is covered.
+ */
+const ORDER_STATUS_LABEL: Record<OrderStatus, { en: string; fr: string }> = {
+  Pending: { en: "Pending", fr: "En attente" },
+  Processing: { en: "Processing", fr: "En préparation" },
+  "Ready for Pickup": { en: "Ready for pickup", fr: "Prête pour le retrait" },
+  "Out for Delivery": { en: "Out for delivery", fr: "En cours de livraison" },
+  Delivered: { en: "Delivered", fr: "Livrée" },
+  Cancelled: { en: "Cancelled", fr: "Annulée" },
+};
+
+function orderStatusLabel(status: string | undefined, language: "en" | "fr"): string {
+  const known = (ORDER_STATUSES as readonly string[]).includes(String(status))
+    ? ORDER_STATUS_LABEL[status as OrderStatus]
+    : undefined;
+  // Unknown future status: fall back to the stored value rather than dropping
+  // the notification, so the patient at least sees what the clinic recorded.
+  return (known ? known[language] : String(status ?? "").trim()) || (language === "fr" ? "En cours" : "In progress");
+}
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const denied = await adminGuard();
@@ -71,6 +97,41 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       } catch (error) {
         console.error("[admin/orders] status email failed:", error);
       }
+
+      // Same trigger, separate channel. Opt-in, phone and language live on the
+      // User document, which is not populated on the order, so load the three
+      // fields the send actually reads. Never awaited: a WhatsApp failure must
+      // not change this response.
+      void (async () => {
+        try {
+          const userId = typeof order.user === "string" ? order.user : order.user?._id;
+          const user = userId
+            ? await User.findById(userId)
+                .select("name phoneSearch whatsappOptIn preferredLanguage")
+                .lean()
+            : null;
+          if (!user) return;
+          const language = user.preferredLanguage === "fr" ? "fr" : "en";
+          await notifyPatientWhatsApp(
+            {
+              phoneSearch: user.phoneSearch,
+              phone: order.customer.phone,
+              whatsappOptIn: user.whatsappOptIn,
+              preferredLanguage: user.preferredLanguage,
+            },
+            {
+              template: "order_status",
+              params: [
+                whatsappFirstName(user.name || order.customer.fullName),
+                order.orderReference,
+                orderStatusLabel(order.status, language),
+              ],
+            }
+          );
+        } catch (error) {
+          console.error("[admin/orders] status whatsapp failed:", error);
+        }
+      })();
     }
 
     return NextResponse.json({ success: true, order });

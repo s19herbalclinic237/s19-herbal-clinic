@@ -4,13 +4,14 @@ import { clinicalGuard } from "@/lib/admin-guard";
 import { Doctor } from "@/lib/models/Doctor";
 import { Appointment } from "@/lib/models/Appointment";
 import { Message } from "@/lib/models/Message";
-import { DATE_RE, TIME_RE, openSlotTimes, todayDateOnly, weekdayOf } from "@/lib/appointments";
+import { DATE_RE, TIME_RE, openSlotTimes, parseDateOnly, todayDateOnly, weekdayOf } from "@/lib/appointments";
 import {
   sendAppointmentCancelledEmails,
   sendAppointmentConfirmedEmails,
   sendAppointmentProviderUpdateEmails,
   type AppointmentEmailInput,
 } from "@/lib/email";
+import { notifyPatientWhatsApp, whatsappDay, whatsappFirstName } from "@/lib/whatsapp";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -156,14 +157,21 @@ export async function PATCH(request: Request, { params }: Params) {
     }
 
     const updated = await Appointment.findById(id)
-      .populate("user", "name email phone")
+      .populate("user", "name email phone phoneSearch whatsappOptIn preferredLanguage")
       .populate("doctor", "name specialty specialtyFr")
       .lean();
 
     // Email the patient when the clinic confirms, cancels, or moves a slot.
     if (updated) {
       const patient = (updated.user ?? undefined) as
-        | { name?: string; email?: string; phone?: string }
+        | {
+            name?: string;
+            email?: string;
+            phone?: string;
+            phoneSearch?: string;
+            whatsappOptIn?: boolean;
+            preferredLanguage?: string;
+          }
         | undefined;
       const doctorObj = (updated.doctor ?? undefined) as { name?: string } | undefined;
       const oldStatus = appointment.status;
@@ -196,6 +204,31 @@ export async function PATCH(request: Request, { params }: Params) {
           }
         } catch (error) {
           console.error("[admin/appointments] notification email failed:", error);
+        }
+      }
+
+      // WhatsApp the patient when the clinic confirms (best-effort).
+      if (patient && status === "confirmed" && oldStatus !== "confirmed") {
+        try {
+          const language = patient.preferredLanguage === "fr" ? "fr" : "en";
+          // `targetDate` is a clinic-local YYYY-MM-DD string and `targetTime` a
+          // separate "HH:mm" slot, so both are merged into one local Date.
+          const when = parseDateOnly(targetDate);
+          const [hh, mm] = targetTime.split(":").map(Number);
+          when.setHours(hh || 0, mm || 0, 0, 0);
+          await notifyPatientWhatsApp(patient, {
+            template: "appointment_confirmed",
+            params: [
+              whatsappFirstName(patient.name),
+              whatsappDay(when, language),
+              when.toLocaleTimeString(language === "fr" ? "fr-FR" : "en-GB", {
+                hour: "2-digit",
+                minute: "2-digit",
+              }),
+            ],
+          });
+        } catch (error) {
+          console.error("[admin/appointments] whatsapp failed:", error);
         }
       }
     }

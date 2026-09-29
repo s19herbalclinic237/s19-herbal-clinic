@@ -28,10 +28,15 @@ export function SettingsTab() {
   const [emergencyName, setEmergencyName] = useState(user?.emergencyContact?.name || "");
   const [emergencyPhone, setEmergencyPhone] = useState(user?.emergencyContact?.phone || "");
   const [emergencyRelation, setEmergencyRelation] = useState(user?.emergencyContact?.relation || "");
+  const [whatsappOptIn, setWhatsappOptIn] = useState(user?.whatsappOptIn ?? false);
+  const [notifLanguage, setNotifLanguage] = useState<"en" | "fr">(user?.preferredLanguage || "en");
   const [savingProfile, setSavingProfile] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [uploadingId, setUploadingId] = useState(false);
   const avatarInputRef = useRef<HTMLInputElement | null>(null);
+
+  // WhatsApp needs a number to send to, so the toggle stays off until one is saved.
+  const canOptIn = Boolean(phone.trim() || user?.phone);
 
   const [current, setCurrent] = useState("");
   const [next, setNext] = useState("");
@@ -61,6 +66,8 @@ export function SettingsTab() {
             phone: emergencyPhone,
             relation: emergencyRelation,
           },
+          whatsappOptIn,
+          preferredLanguage: notifLanguage,
         }),
       });
       const data = await res.json();
@@ -326,7 +333,43 @@ export function SettingsTab() {
           </div>
         </div>
 
-        <div className="mt-4">
+        <div className="mt-6 border-t border-forest-100 pt-5">
+          <h4 className="text-xs font-bold text-ink">{t("dash.settings.notifications")}</h4>
+          <label
+            className={`mt-3 flex items-start gap-3 rounded-lg border border-line bg-cream/40 px-4 py-3 ${
+              canOptIn ? "cursor-pointer" : "opacity-60"
+            }`}
+          >
+            <input
+              type="checkbox"
+              checked={whatsappOptIn}
+              disabled={!canOptIn}
+              onChange={(e) => setWhatsappOptIn(e.target.checked)}
+              className="mt-0.5 h-4 w-4 shrink-0 accent-forest-800"
+            />
+            <span className="min-w-0">
+              <span className="block text-sm font-semibold text-ink">{t("dash.settings.waOptIn")}</span>
+              <span className="mt-1 block text-xs text-muted">
+                {canOptIn ? t("dash.settings.waOptInHelp") : t("dash.settings.waNeedsPhone")}
+              </span>
+            </span>
+          </label>
+          <div className="mt-4 max-w-xs">
+            <Field label={t("dash.settings.notifLanguage")}>
+              <select
+                value={notifLanguage}
+                onChange={(e) => setNotifLanguage(e.target.value as "en" | "fr")}
+                className="w-full rounded-md border border-line-strong bg-white px-3 py-2 text-sm text-ink focus:border-forest-500 focus:outline-none focus:ring-2 focus:ring-forest-500/20"
+              >
+                <option value="en">English</option>
+                <option value="fr">Français</option>
+              </select>
+            </Field>
+            <p className="mt-1.5 text-xs text-muted">{t("dash.settings.notifLanguageHelp")}</p>
+          </div>
+        </div>
+
+        <div className="mt-6">
           <Field label={t("dash.settings.email")}>
             <Input value={user?.email || ""} disabled className="bg-cream text-muted" />
           </Field>

@@ -13,6 +13,9 @@ export interface AuthUser {
   role: "admin" | "doctor" | "user";
   emailVerified: boolean;
   phone?: string;
+  /** Digits-only form of `phone`. Same number, already exposed above; kept so
+   *  server-side channels (WhatsApp) can address the user without a re-query. */
+  phoneSearch?: string;
   avatar?: string;
   /** YYYY-MM-DD */
   dob?: string;
@@ -27,6 +30,9 @@ export interface AuthUser {
   idCardBackUrl?: string;
   /** Medical Record Number (MRN), assigned by the clinic admin. Read-only for patients. */
   mrn?: string;
+  /** Patient agreed to WhatsApp notifications (Meta requires recorded consent). */
+  whatsappOptIn?: boolean;
+  preferredLanguage?: "en" | "fr";
   createdAt: string;
 }
 

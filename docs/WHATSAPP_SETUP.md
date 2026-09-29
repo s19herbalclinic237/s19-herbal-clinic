@@ -1,0 +1,149 @@
+# WhatsApp notifications (Meta Cloud API)
+
+S19 Herbal Clinic can notify patients on WhatsApp for the same events it already
+emails about. This document is the setup runbook: what the code needs from you,
+how to create the message templates, and what it will and will not do.
+
+**Status: built and dormant.** Every code path is in place and type-checked, but
+nothing is sent until the environment variables below are set and the templates
+are approved in the WhatsApp Manager. Until then the calls are silent no-ops —
+the clinic behaves exactly as before.
+
+---
+
+## 1. What you need from Meta
+
+| Item | What it is | Where to get it |
+| --- | --- | --- |
+| Meta Business Portfolio | The business account that owns the number | business.facebook.com |
+| WhatsApp Business Account (WABA) | The account that holds templates and the phone number | WhatsApp Manager → Accounts |
+| Sending phone number | A dedicated number for the API | Add a number inside the WABA |
+| Phone Number ID | The number's API identifier | WhatsApp Manager → Phone numbers |
+| Permanent access token | A System User token (a temporary one expires in 24h) | Business Settings → Users → System Users → generate token for `whatsapp_business_messaging` |
+| Business verification | Legal name, website, registration documents | Business Settings → Security |
+
+Two practical notes:
+
+- **Use a dedicated number.** The clinic's everyday WhatsApp Business App number
+  can be migrated onto a WABA, but only after it is removed from the app. Until
+  that migration is done, keep using the app for manual replies.
+- **You can send while unverified**, capped at 250 business-initiated
+  conversations per rolling 24 hours. Completing business verification raises
+  that and improves your quality rating, which is what buys you more headroom.
+
+## 2. Environment variables
+
+Add to `.env.local` (and to the deployment platform's environment):
+
+```
+WHATSAPP_ACCESS_TOKEN=EAAG...            # permanent System User token
+WHATSAPP_PHONE_NUMBER_ID=123456789012345  # sending number's ID
+WHATSAPP_GRAPH_VERSION=v21.0              # optional, this is the default
+WHATSAPP_NAMESPACE=s19                    # optional, template name prefix
+```
+
+Then restart the server. Confirm with:
+
+```
+GET /api/admin/whatsapp
+```
+
+It returns `configured: true`, the number of patients who have opted in, and the
+full template list with the exact copy to paste into Meta. Secrets are never
+returned by this endpoint.
+
+## 3. Create the message templates
+
+Meta requires every business-initiated message to use a pre-approved template,
+so these must be created once by hand. `GET /api/admin/whatsapp` returns the
+authoritative list — create each one with the **Utility** category, in both
+`en` and `fr`.
+
+| Template name | Placeholders |
+| --- | --- |
+| `s19_appointment_booked` | `{{1}}` name, `{{2}}` date, `{{3}}` time |
+| `s19_appointment_confirmed` | `{{1}}` name, `{{2}}` date, `{{3}}` time |
+| `s19_appointment_rescheduled` | `{{1}}` name, `{{2}}` date, `{{3}}` time |
+| `s19_appointment_cancelled` | `{{1}}` name, `{{2}}` date |
+| `s19_order_placed` | `{{1}}` name, `{{2}}` order reference |
+| `s19_order_status` | `{{1}}` name, `{{2}}` reference, `{{3}}` status |
+| `s19_prescription_issued` | `{{1}}` name, `{{2}}` medications |
+| `s19_record_added` | `{{1}}` name, `{{2}}` record title |
+| `s19_treatment_plan` | `{{1}}` name, `{{2}}` plan title, `{{3}}` start date |
+| `s19_clinic_message` | `{{1}}` name, `{{2}}` subject |
+
+The placeholder order is fixed in code — `lib/whatsapp.ts` fills them
+positionally. If a live template's placeholders are in a different order, the
+message will read wrong rather than fail loudly, so copy them exactly as listed.
+
+## 4. Patient consent
+
+Meta requires explicit, recorded opt-in, and a pre-ticked box does not count.
+
+- Patients turn it on themselves in **Settings → Notifications**. The toggle
+  stays disabled until a phone number is saved, because consent without a number
+  can never be used.
+- Consent is stored as `whatsappOptIn` plus a `whatsappOptInAt` timestamp, which
+  is the evidence you would show in an audit.
+- Each patient also picks a **message language** (English or French) for
+  WhatsApp specifically. This is stored on the user record rather than read from
+  the site locale, because admin-triggered sends (a prescription issued from the
+  clinic dashboard) have no access to the patient's browser cookie.
+- Turning the toggle off stops all sends immediately.
+
+## 5. What gets sent
+
+| Event | Template | Trigger |
+| --- | --- | --- |
+| Appointment booked | `appointment_booked` | Patient books online |
+| Appointment confirmed | `appointment_confirmed` | Staff confirms in the dashboard |
+| Appointment rescheduled | `appointment_rescheduled` | Patient reschedules |
+| Appointment cancelled | `appointment_cancelled` | Patient cancels |
+| Order placed | `order_placed` | Checkout completes |
+| Order status change | `order_status` | Staff updates an order |
+| Prescription issued | `prescription_issued` | Staff issues a prescription |
+| Medical record added | `record_added` | Staff adds a record |
+| Treatment plan created | `treatment_plan` | Staff creates a plan |
+| Clinic message sent | `clinic_message` | Staff messages the patient |
+
+All ten fire alongside the existing email and in-app message — never instead of
+them, and a WhatsApp failure can never fail the API call that triggered it.
+
+**Not covered:** guest checkout (no account, so no consent record), marketing and
+newsletter sends (Meta classifies these differently and they need their own
+opt-in), and treatment/glucose reminders, which stay email-only for now.
+
+## 6. Safety behaviour
+
+`lib/whatsapp.ts` deliberately no-ops rather than failing when:
+
+- the Cloud API variables are not set;
+- the patient has not opted in;
+- the stored phone number is not a usable international number (fewer than 8
+  digits — usually a local number typed without a country code);
+- the recipient number is the clinic's own line, which would start a message
+  loop.
+
+All of these are normal states, not errors, so the surrounding request always
+succeeds. Genuine send failures are logged to the server console as
+`[whatsapp] send failed` with the Graph API response.
+
+## 7. Cost, as of Meta's 2026 pricing
+
+Meta bills **per message**, not per conversation, and from **1 October 2026**
+service messages and utility templates sent inside the 24-hour customer service
+window also become billable (with a small monthly free allowance per number).
+Rates vary by category and country — check Meta's pricing page for current
+Cameroon figures before committing to volume. At clinic scale the cost is
+pennies per month; the operational work is Meta onboarding and keeping template
+content in step with clinic policy.
+
+## 8. Still to do before launch
+
+- Submit the ten templates for approval and wait for `APPROVED` status.
+- Complete business verification.
+- Send a test to Meta's test recipient, then to a consenting patient's own number.
+- Add a delivery-status webhook if you want to track failures per patient — not
+  built; failures currently only appear in server logs.
+- Confirm the wording of each template with the clinic's policy on what may be
+  disclosed over WhatsApp, since a locked chat screen is less private than email.

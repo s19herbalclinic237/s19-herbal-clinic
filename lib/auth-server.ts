@@ -18,6 +18,7 @@ type AuthUserPick = Pick<
   | "role"
   | "emailVerified"
   | "phone"
+  | "phoneSearch"
   | "createdAt"
   | "avatar"
   | "dob"
@@ -28,6 +29,8 @@ type AuthUserPick = Pick<
   | "idCardFrontUrl"
   | "idCardBackUrl"
   | "mrn"
+  | "whatsappOptIn"
+  | "preferredLanguage"
 >;
 
 export function toAuthUser(u: AuthUserPick): AuthUser {
@@ -38,6 +41,7 @@ export function toAuthUser(u: AuthUserPick): AuthUser {
     role: u.role,
     emailVerified: u.emailVerified,
     phone: u.phone,
+    phoneSearch: u.phoneSearch,
     avatar: u.avatar || undefined,
     dob: u.dob,
     gender: u.gender,
@@ -48,6 +52,8 @@ export function toAuthUser(u: AuthUserPick): AuthUser {
     idCardFrontUrl: u.idCardFrontUrl || u.idCardUrl || undefined,
     idCardBackUrl: u.idCardBackUrl,
     mrn: u.mrn,
+    whatsappOptIn: u.whatsappOptIn ?? false,
+    preferredLanguage: u.preferredLanguage === "fr" ? "fr" : "en",
     createdAt: (u.createdAt as unknown as Date).toISOString(),
   };
 }
@@ -118,6 +124,7 @@ export async function getSessionUser(): Promise<AuthUser | null> {
       role: u.role,
       emailVerified: u.emailVerified,
       phone: u.phone,
+      phoneSearch: u.phoneSearch,
       avatar: u.avatar,
       dob: u.dob,
       gender: u.gender,
@@ -127,6 +134,8 @@ export async function getSessionUser(): Promise<AuthUser | null> {
       idCardFrontUrl: u.idCardFrontUrl,
       idCardBackUrl: u.idCardBackUrl,
       mrn: u.mrn,
+      whatsappOptIn: u.whatsappOptIn,
+      preferredLanguage: u.preferredLanguage,
       createdAt: u.createdAt,
     });
   } catch (error) {

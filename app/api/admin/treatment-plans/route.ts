@@ -10,6 +10,7 @@ import {
 import { User } from "@/lib/models/User";
 import { notifyPatient } from "@/lib/notify";
 import { sendTreatmentPlanEmail } from "@/lib/email";
+import { notifyPatientWhatsApp, whatsappDay, whatsappFirstName } from "@/lib/whatsapp";
 
 function fmtDate(d: Date): string {
   return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
@@ -90,7 +91,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "The end date must be after the start date." }, { status: 400 });
     }
 
-    const patient = await User.findById(user).select("name email").lean();
+    const patient = await User.findById(user)
+      .select("name email phoneSearch whatsappOptIn preferredLanguage")
+      .lean();
     if (!patient) {
       return NextResponse.json({ error: "Patient account not found." }, { status: 404 });
     }
@@ -137,6 +140,21 @@ export async function POST(request: Request) {
         endDate: endDate.toISOString(),
         forMember,
       });
+    }
+
+    // WhatsApp the patient the same update (best-effort, never fails the request).
+    try {
+      const language = patient.preferredLanguage === "fr" ? "fr" : "en";
+      await notifyPatientWhatsApp(patient, {
+        template: "treatment_plan",
+        params: [
+          whatsappFirstName(patient.name),
+          title,
+          whatsappDay(startDate, language),
+        ],
+      });
+    } catch (error) {
+      console.error("[admin treatment-plans] whatsapp failed:", error);
     }
 
     return NextResponse.json(

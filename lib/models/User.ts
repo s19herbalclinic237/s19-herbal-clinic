@@ -32,6 +32,14 @@ export interface IUser {
    *  phone sign-in lookups regardless of how the user formats the number. */
   phoneSearch?: string;
   avatar?: string;
+  /** Patient has explicitly agreed to receive WhatsApp notifications. Meta
+   *  requires recorded opt-in; a pre-ticked box does not count. */
+  whatsappOptIn?: boolean;
+  /** When the patient gave that consent (evidence for a Meta audit). */
+  whatsappOptInAt?: Date;
+  /** Language used for WhatsApp templates. Stored per patient because the
+   *  site locale is a client-side cookie, invisible to admin-triggered sends. */
+  preferredLanguage?: "en" | "fr";
   isActive: boolean;
   lastLoginAt?: Date;
   verifyTokenHash?: string;
@@ -65,6 +73,9 @@ const UserSchema = new Schema<IUser>(
     phone: { type: String, trim: true },
     phoneSearch: { type: String, trim: true },
     avatar: { type: String, trim: true },
+    whatsappOptIn: { type: Boolean, default: false },
+    whatsappOptInAt: { type: Date },
+    preferredLanguage: { type: String, enum: ["en", "fr"], default: "en" },
     isActive: { type: Boolean, default: true },
     lastLoginAt: { type: Date },
     verifyTokenHash: { type: String },

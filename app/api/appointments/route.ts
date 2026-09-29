@@ -8,11 +8,14 @@ import {
   DATE_RE,
   TIME_RE,
   openSlotTimes,
+  parseDateOnly,
   todayDateOnly,
   weekdayOf,
 } from "@/lib/appointments";
 import { CLINIC } from "@/lib/site";
 import { sendAppointmentBookedEmails } from "@/lib/email";
+import { User } from "@/lib/models/User";
+import { notifyPatientWhatsApp, whatsappDay, whatsappFirstName } from "@/lib/whatsapp";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -174,6 +177,34 @@ export async function POST(request: Request) {
         });
       } catch (error) {
         console.error("[appointments] booking email failed:", error);
+      }
+    }
+
+    // WhatsApp the patient the same request (best-effort, never fails the booking).
+    const patient = await User.findById(user.id)
+      .select("name phoneSearch whatsappOptIn preferredLanguage")
+      .lean();
+    if (patient) {
+      try {
+        const language = patient.preferredLanguage === "fr" ? "fr" : "en";
+        // `date` is a clinic-local YYYY-MM-DD string and `time` a separate "HH:mm"
+        // slot, so both are merged into one local Date before formatting.
+        const when = parseDateOnly(cleanDate);
+        const [hh, mm] = cleanTime.split(":").map(Number);
+        when.setHours(hh || 0, mm || 0, 0, 0);
+        await notifyPatientWhatsApp(patient, {
+          template: "appointment_booked",
+          params: [
+            whatsappFirstName(patient.name),
+            whatsappDay(when, language),
+            when.toLocaleTimeString(language === "fr" ? "fr-FR" : "en-GB", {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+          ],
+        });
+      } catch (error) {
+        console.error("[appointments] booking whatsapp failed:", error);
       }
     }
 
