@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Field, Input, Textarea } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
+import { useLocale } from "@/components/i18n/locale-provider";
 import { formatDate } from "@/components/account/badges";
 import {
   FaEnvelopeOpen,
@@ -31,6 +32,7 @@ interface ThreadView {
 }
 
 export function MessagesTab() {
+  const { t } = useLocale();
   const [messages, setMessages] = useState<MessageView[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [openKey, setOpenKey] = useState<string | null>(null);
@@ -46,7 +48,7 @@ export function MessagesTab() {
         else setMessages(Array.isArray(data.messages) ? data.messages : []);
       })
       .catch(() => {
-        if (active) setError("Could not load your messages.");
+        if (active) setError(t("dash.messages.loadError"));
       });
     return () => {
       active = false;
@@ -55,7 +57,7 @@ export function MessagesTab() {
 
   useEffect(() => {
     return load();
-  }, []);
+  }, [t]);
 
   const threads: ThreadView[] = useMemo(() => {
     const list = messages || [];
@@ -83,7 +85,7 @@ export function MessagesTab() {
   }, [messages]);
 
   function markThreadRead(key: string) {
-    const thread = threads.find((t) => t.key === key);
+    const thread = threads.find((th) => th.key === key);
     if (!thread) return;
     for (const m of thread.messages) {
       if (m.author === "admin" && !m.read) {
@@ -102,15 +104,12 @@ export function MessagesTab() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-muted">
-          Messages from the clinic - order updates, reports and follow-up notes. Reply to any
-          conversation and the team will see it.
-        </p>
+        <p className="text-sm text-muted">{t("dash.messages.intro")}</p>
         <Button size="sm" onClick={() => setComposing((v) => !v)}>
-          {composing ? "Cancel" : (
+          {composing ? t("dash.messages.cancel") : (
             <>
               <FaPlus className="h-3.5 w-3.5" aria-hidden />
-              New message
+              {t("dash.messages.new")}
             </>
           )}
         </Button>
@@ -138,75 +137,76 @@ export function MessagesTab() {
       {messages && messages.length === 0 ? (
         <div className="rounded-lg border border-line bg-white p-8 text-center">
           <FaEnvelopeOpen className="mx-auto h-7 w-7 text-forest-300" aria-hidden />
-          <p className="mt-3 text-sm text-muted">
-            No conversations yet. The clinic will reach out here with order updates, reports, and
-            news - or start one yourself with &quot;New message&quot;.
-          </p>
+          <p className="mt-3 text-sm text-muted">{t("dash.messages.empty")}</p>
         </div>
       ) : null}
 
       {messages && messages.length > 0 ? (
         <ul className="space-y-3">
-          {threads.map((t) => (
-            <li
-              key={t.key}
-              className={`overflow-hidden rounded-lg border bg-white ${t.unread ? "border-gold-300" : "border-line"}`}
-            >
-              <button
-                type="button"
-                onClick={() => {
-                  setOpenKey(openKey === t.key ? null : t.key);
-                  if (openKey !== t.key) markThreadRead(t.key);
-                }}
-                className="flex w-full cursor-pointer items-center gap-3 px-4 py-3.5 text-left transition-colors hover:bg-forest-50/50 sm:px-5"
+          {threads.map((thread) => {
+            const lastMsg = thread.messages[thread.messages.length - 1];
+            return (
+              <li
+                key={thread.key}
+                className={`overflow-hidden rounded-lg border bg-white ${thread.unread ? "border-gold-300" : "border-line"}`}
               >
-                <span className="min-w-0 flex-1">
-                  <span className="flex items-center gap-2 text-sm font-bold text-ink">
-                    {t.unread ? (
-                      <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-gold-500" aria-hidden />
-                    ) : null}
-                    <span className="truncate">{t.subject}</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpenKey(openKey === thread.key ? null : thread.key);
+                    if (openKey !== thread.key) markThreadRead(thread.key);
+                  }}
+                  className="flex w-full cursor-pointer items-center gap-3 px-4 py-3.5 text-left transition-colors hover:bg-forest-50/50 sm:px-5"
+                >
+                  <span className="min-w-0 flex-1">
+                    <span className="flex items-center gap-2 text-sm font-bold text-ink">
+                      {thread.unread ? (
+                        <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-gold-500" aria-hidden />
+                      ) : null}
+                      <span className="truncate">{thread.subject}</span>
+                    </span>
+                    <span className={`mt-0.5 block truncate text-xs ${thread.unread ? "font-semibold text-forest-800" : "text-muted"}`}>
+                      {lastMsg.author === "user"
+                        ? `${t("dash.messages.you")}: ${lastMsg.body}`
+                        : `${t("dash.messages.clinicShort")}: ${lastMsg.body}`}
+                    </span>
                   </span>
-                  <span className={`mt-0.5 block truncate text-xs ${t.unread ? "font-semibold text-forest-800" : "text-muted"}`}>
-                    {t.messages[t.messages.length - 1].author === "user" ? "You: " : "Clinic: "}
-                    {t.messages[t.messages.length - 1].body}
+                  <span className="flex shrink-0 items-center gap-2 text-xs text-muted">
+                    <span>{formatDate(thread.lastAt)}</span>
+                    {openKey === thread.key ? (
+                      <FaChevronUp className="h-3 w-3" aria-hidden />
+                    ) : (
+                      <FaChevronDown className="h-3 w-3" aria-hidden />
+                    )}
                   </span>
-                </span>
-                <span className="flex shrink-0 items-center gap-2 text-xs text-muted">
-                  <span>{formatDate(t.lastAt)}</span>
-                  {openKey === t.key ? (
-                    <FaChevronUp className="h-3 w-3" aria-hidden />
-                  ) : (
-                    <FaChevronDown className="h-3 w-3" aria-hidden />
-                  )}
-                </span>
-              </button>
-              {openKey === t.key ? (
-                <div className="border-t border-forest-100 bg-cream/60 px-4 py-4 sm:px-5">
-                  <ul className="space-y-2.5">
-                    {t.messages.map((m) => (
-                      <li
-                        key={m._id}
-                        className={`max-w-[85%] rounded-xl px-3.5 py-2.5 text-sm ${
-                          m.author === "user"
-                            ? "ml-auto bg-forest-950 text-white"
-                            : "border border-line bg-white text-ink"
-                        }`}
-                      >
-                        <p className={`text-[10px] font-bold uppercase tracking-wide ${m.author === "user" ? "text-gold-300" : "text-muted"}`}>
-                          {m.author === "user" ? "You" : "S19 Clinic"} · {formatDate(m.createdAt)}
-                        </p>
-                        <p className="mt-1 whitespace-pre-line leading-relaxed">{m.body}</p>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="mt-4 border-t border-forest-100 pt-4">
-                    <ReplyForm threadId={t.key} onSent={load} />
+                </button>
+                {openKey === thread.key ? (
+                  <div className="border-t border-forest-100 bg-cream/60 px-4 py-4 sm:px-5">
+                    <ul className="space-y-2.5">
+                      {thread.messages.map((m) => (
+                        <li
+                          key={m._id}
+                          className={`max-w-[85%] rounded-xl px-3.5 py-2.5 text-sm ${
+                            m.author === "user"
+                              ? "ml-auto bg-forest-950 text-white"
+                              : "border border-line bg-white text-ink"
+                          }`}
+                        >
+                          <p className={`text-[10px] font-bold uppercase tracking-wide ${m.author === "user" ? "text-gold-300" : "text-muted"}`}>
+                            {m.author === "user" ? t("dash.messages.you") : t("dash.messages.clinic")} · {formatDate(m.createdAt)}
+                          </p>
+                          <p className="mt-1 whitespace-pre-line leading-relaxed">{m.body}</p>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="mt-4 border-t border-forest-100 pt-4">
+                      <ReplyForm threadId={thread.key} onSent={load} />
+                    </div>
                   </div>
-                </div>
-              ) : null}
-            </li>
-          ))}
+                ) : null}
+              </li>
+            );
+          })}
         </ul>
       ) : null}
     </div>
@@ -214,6 +214,7 @@ export function MessagesTab() {
 }
 
 function NewThreadForm({ onSent }: { onSent: () => void }) {
+  const { t } = useLocale();
   const [subject, setSubject] = useState("");
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
@@ -232,10 +233,10 @@ function NewThreadForm({ onSent }: { onSent: () => void }) {
         body: JSON.stringify({ subject, text }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Could not send your message.");
+      if (!res.ok) throw new Error(data.error || t("dash.messages.sendError"));
       onSent();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not send your message.");
+      setError(err instanceof Error ? err.message : t("dash.messages.sendError"));
     } finally {
       setBusy(false);
     }
@@ -243,21 +244,21 @@ function NewThreadForm({ onSent }: { onSent: () => void }) {
 
   return (
     <form onSubmit={submit} className="rounded-lg border border-forest-200 bg-forest-50/50 p-4 sm:p-5">
-      <p className="font-display text-base font-semibold text-ink">New message to the clinic</p>
+      <p className="font-display text-base font-semibold text-ink">{t("dash.messages.newThread")}</p>
       {error ? (
         <p className="mt-2 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
       ) : null}
       <div className="mt-3 space-y-4">
-        <Field label="Subject" required>
+        <Field label={t("dash.messages.subject")} required>
           <Input
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
             required
             maxLength={120}
-            placeholder="e.g. Question about my treatment plan"
+            placeholder={t("dash.messages.subjectPh")}
           />
         </Field>
-        <Field label="Message" required>
+        <Field label={t("dash.messages.message")} required>
           <Textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
@@ -265,14 +266,14 @@ function NewThreadForm({ onSent }: { onSent: () => void }) {
             minLength={2}
             maxLength={5000}
             rows={4}
-            placeholder="Write your question or update…"
+            placeholder={t("dash.messages.messagePh")}
           />
         </Field>
       </div>
       <div className="mt-4 flex justify-end">
         <Button type="submit" disabled={busy}>
           <FaPaperPlane className="h-3.5 w-3.5" aria-hidden />
-          {busy ? "Sending…" : "Send"}
+          {busy ? t("dash.messages.sending") : t("dash.messages.send")}
         </Button>
       </div>
     </form>
@@ -280,6 +281,7 @@ function NewThreadForm({ onSent }: { onSent: () => void }) {
 }
 
 function ReplyForm({ threadId, onSent }: { threadId: string; onSent: () => void }) {
+  const { t } = useLocale();
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -297,11 +299,11 @@ function ReplyForm({ threadId, onSent }: { threadId: string; onSent: () => void 
         body: JSON.stringify({ threadId, text }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Could not send your reply.");
+      if (!res.ok) throw new Error(data.error || t("dash.messages.replyError"));
       setText("");
       onSent();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not send your reply.");
+      setError(err instanceof Error ? err.message : t("dash.messages.replyError"));
     } finally {
       setBusy(false);
     }
@@ -310,19 +312,19 @@ function ReplyForm({ threadId, onSent }: { threadId: string; onSent: () => void 
   return (
     <form onSubmit={submit} className="flex flex-wrap items-end gap-2">
       <div className="min-w-52 flex-1">
-        <Field label="Reply">
+        <Field label={t("dash.messages.reply")}>
           <Textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
             rows={2}
             maxLength={5000}
-            placeholder="Write a reply for the clinic…"
+            placeholder={t("dash.messages.replyPh")}
           />
         </Field>
       </div>
       <Button type="submit" disabled={busy || text.trim().length < 2}>
         <FaPaperPlane className="h-3.5 w-3.5" aria-hidden />
-        {busy ? "Sending…" : "Send reply"}
+        {busy ? t("dash.messages.sending") : t("dash.messages.sendReply")}
       </Button>
       {error ? <p className="w-full text-xs text-red-600">{error}</p> : null}
     </form>

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/form";
 import { PasswordInput } from "@/components/ui/password-input";
 import { UserAvatar } from "@/components/account/user-avatar";
+import { useLocale } from "@/components/i18n/locale-provider";
 import {
   FaArrowRightFromBracket,
   FaCamera,
@@ -17,6 +18,7 @@ import {
 } from "react-icons/fa6";
 
 export function SettingsTab() {
+  const { t } = useLocale();
   const { user, updateAuthUser, logout } = useAuth();
   const [name, setName] = useState(user?.name || "");
   const [phone, setPhone] = useState(user?.phone || "");
@@ -39,7 +41,7 @@ export function SettingsTab() {
   async function saveProfile(e: FormEvent) {
     e.preventDefault();
     if (!gender.trim()) {
-      toast.error("Please select your gender - it is required.");
+      toast.error(t("dash.settings.genderRequired"));
       return;
     }
     setSavingProfile(true);
@@ -62,11 +64,11 @@ export function SettingsTab() {
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Could not update your profile.");
+      if (!res.ok) throw new Error(data.error || t("dash.settings.profileError"));
       if (data.user) updateAuthUser(data.user);
-      toast.success("Profile updated.");
+      toast.success(t("dash.settings.profileUpdated"));
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not update your profile.");
+      toast.error(err instanceof Error ? err.message : t("dash.settings.profileError"));
     } finally {
       setSavingProfile(false);
     }
@@ -83,11 +85,11 @@ export function SettingsTab() {
         body: formData,
       });
       const data = await res.json();
-      if (!res.ok || !data.user) throw new Error(data.error || "Upload failed.");
+      if (!res.ok || !data.user) throw new Error(data.error || t("dash.settings.uploadFailed"));
       updateAuthUser(data.user);
-      toast.success("Photo updated.");
+      toast.success(t("dash.settings.photoUpdated"));
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not upload your photo.");
+      toast.error(err instanceof Error ? err.message : t("dash.settings.photoError"));
     } finally {
       setUploadingAvatar(false);
       if (avatarInputRef.current) avatarInputRef.current.value = "";
@@ -104,11 +106,11 @@ export function SettingsTab() {
         body: JSON.stringify({ avatar: "" }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Could not remove your photo.");
+      if (!res.ok) throw new Error(data.error || t("dash.settings.photoRemoveError"));
       if (data.user) updateAuthUser(data.user);
-      toast.success("Photo removed.");
+      toast.success(t("dash.settings.photoRemoved"));
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not remove your photo.");
+      toast.error(err instanceof Error ? err.message : t("dash.settings.photoRemoveError"));
     } finally {
       setUploadingAvatar(false);
     }
@@ -126,11 +128,11 @@ export function SettingsTab() {
         body: formData,
       });
       const data = await res.json();
-      if (!res.ok || !data.user) throw new Error(data.error || "Upload failed.");
+      if (!res.ok || !data.user) throw new Error(data.error || t("dash.settings.uploadFailed"));
       updateAuthUser(data.user);
-      toast.success(side === "back" ? "Back of ID document uploaded." : "Front of ID document uploaded.");
+      toast.success(side === "back" ? t("dash.settings.idBackSaved") : t("dash.settings.idFrontSaved"));
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not upload your ID document.");
+      toast.error(err instanceof Error ? err.message : t("dash.settings.idError"));
     } finally {
       setUploadingId(false);
     }
@@ -146,11 +148,11 @@ export function SettingsTab() {
         body: JSON.stringify({ [field]: "" }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Could not remove the document.");
+      if (!res.ok) throw new Error(data.error || t("dash.settings.idRemoveError"));
       if (data.user) updateAuthUser(data.user);
-      toast.success("ID document removed.");
+      toast.success(t("dash.settings.idRemoved"));
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not remove the document.");
+      toast.error(err instanceof Error ? err.message : t("dash.settings.idRemoveError"));
     } finally {
       setUploadingId(false);
     }
@@ -159,7 +161,7 @@ export function SettingsTab() {
   async function changePassword(e: FormEvent) {
     e.preventDefault();
     if (next !== confirm) {
-      toast.error("New passwords do not match.");
+      toast.error(t("dash.settings.passwordMismatch"));
       return;
     }
     setSavingPassword(true);
@@ -171,13 +173,13 @@ export function SettingsTab() {
         body: JSON.stringify({ currentPassword: current, newPassword: next }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Could not change your password.");
+      if (!res.ok) throw new Error(data.error || t("dash.settings.passwordError"));
       setCurrent("");
       setNext("");
       setConfirm("");
-      toast.success(data.message || "Password changed.");
+      toast.success(data.message || t("dash.settings.passwordChanged"));
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not change your password.");
+      toast.error(err instanceof Error ? err.message : t("dash.settings.passwordError"));
     } finally {
       setSavingPassword(false);
     }
@@ -186,10 +188,8 @@ export function SettingsTab() {
   return (
     <div className="space-y-5">
       <form className="rounded-lg border border-line bg-white p-5">
-        <h3 className="text-sm font-bold text-ink">Profile photo</h3>
-        <p className="mt-1.5 text-xs text-muted">
-          A clear portrait helps the clinic recognise you. JPG, PNG, WebP or AVIF up to 4 MB.
-        </p>
+        <h3 className="text-sm font-bold text-ink">{t("dash.settings.profilePhoto")}</h3>
+        <p className="mt-1.5 text-xs text-muted">{t("dash.settings.photoHint")}</p>
         <div className="mt-4 flex flex-wrap items-center gap-4">
           <UserAvatar
             user={user}
@@ -202,7 +202,7 @@ export function SettingsTab() {
               type="file"
               accept="image/jpeg,image/png,image/webp,image/avif"
               className="hidden"
-              aria-label="Choose a profile photo"
+              aria-label={t("dash.settings.choosePhoto")}
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (file) void uploadAvatar(file);
@@ -215,7 +215,11 @@ export function SettingsTab() {
               onClick={() => avatarInputRef.current?.click()}
             >
               <FaCamera className="h-4 w-4" aria-hidden />
-              {uploadingAvatar ? "Uploading..." : user?.avatar ? "Change photo" : "Upload photo"}
+              {uploadingAvatar
+                ? t("dash.settings.uploading")
+                : user?.avatar
+                  ? t("dash.settings.changePhoto")
+                  : t("dash.settings.uploadPhoto")}
             </Button>
             {user?.avatar ? (
               <Button
@@ -225,7 +229,7 @@ export function SettingsTab() {
                 onClick={() => void removeAvatar()}
               >
                 <FaTrashCan className="h-4 w-4" aria-hidden />
-                Remove
+                {t("dash.settings.remove")}
               </Button>
             ) : null}
           </div>
@@ -233,30 +237,31 @@ export function SettingsTab() {
       </form>
 
       <form onSubmit={saveProfile} className="rounded-lg border border-line bg-white p-5">
-        <h3 className="text-sm font-bold text-ink">Profile</h3>
+        <h3 className="text-sm font-bold text-ink">{t("dash.settings.profile")}</h3>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <div className="sm:col-span-2 rounded-lg border border-forest-100 bg-forest-50/60 px-4 py-3">
             <p className="text-[11px] font-semibold uppercase tracking-wide text-forest-700">
-              Medical Record Number (MRN)
+              {t("dash.settings.mrn")}
             </p>
             {user?.mrn ? (
               <p className="mt-1 font-display text-xl font-semibold tracking-wider text-ink">{user.mrn}</p>
             ) : (
-              <p className="mt-1 text-sm text-muted">
-                Not assigned yet. Your MRN is issued by the clinic for your medical record.
-              </p>
+              <p className="mt-1 text-sm text-muted">{t("dash.settings.mrnMissing")}</p>
             )}
-            <p className="mt-1 text-[11px] text-muted">
-              The MRN is managed by the clinic and cannot be changed from this page.
-            </p>
+            <p className="mt-1 text-[11px] text-muted">{t("dash.settings.mrnNote")}</p>
           </div>
-          <Field label="Full Name" required>
+          <Field label={t("dash.settings.fullName")} required>
             <Input required value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
           </Field>
-          <Field label="Phone / WhatsApp">
-            <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+237 ..." autoComplete="tel" />
+          <Field label={t("dash.settings.phone")}>
+            <Input
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder={t("dash.settings.phonePh")}
+              autoComplete="tel"
+            />
           </Field>
-          <Field label="Date of Birth">
+          <Field label={t("dash.settings.dob")}>
             <Input
               type="date"
               value={dob}
@@ -264,7 +269,7 @@ export function SettingsTab() {
               onChange={(e) => setDob(e.target.value)}
             />
           </Field>
-          <Field label="Gender" required>
+          <Field label={t("dash.settings.gender")} required>
             <select
               value={gender}
               onChange={(e) => setGender(e.target.value)}
@@ -272,19 +277,19 @@ export function SettingsTab() {
               required
             >
               <option value="" disabled>
-                Select gender
+                {t("dash.settings.genderSelect")}
               </option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
+              <option value="male">{t("dash.settings.genderMale")}</option>
+              <option value="female">{t("dash.settings.genderFemale")}</option>
+              <option value="other">{t("dash.settings.genderOther")}</option>
             </select>
           </Field>
           <div className="sm:col-span-2">
-            <Field label="Home Address">
+            <Field label={t("dash.settings.address")}>
               <Input
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                placeholder="Street, town/city, country"
+                placeholder={t("dash.settings.addressPh")}
                 maxLength={250}
               />
             </Field>
@@ -292,29 +297,29 @@ export function SettingsTab() {
         </div>
 
         <div className="mt-6 border-t border-forest-100 pt-5">
-          <h4 className="text-xs font-bold text-ink">Emergency contact</h4>
+          <h4 className="text-xs font-bold text-ink">{t("dash.settings.emergency")}</h4>
           <div className="mt-3 grid gap-4 sm:grid-cols-3">
-            <Field label="Name">
+            <Field label={t("dash.settings.emergencyName")}>
               <Input
                 value={emergencyName}
                 onChange={(e) => setEmergencyName(e.target.value)}
-                placeholder="Full name"
+                placeholder={t("dash.settings.fullName")}
                 maxLength={100}
               />
             </Field>
-            <Field label="Phone">
+            <Field label={t("dash.settings.emergencyPhone")}>
               <Input
                 value={emergencyPhone}
                 onChange={(e) => setEmergencyPhone(e.target.value)}
-                placeholder="+237 ..."
+                placeholder={t("dash.settings.phonePh")}
                 maxLength={30}
               />
             </Field>
-            <Field label="Relationship">
+            <Field label={t("dash.settings.emergencyRelation")}>
               <Input
                 value={emergencyRelation}
                 onChange={(e) => setEmergencyRelation(e.target.value)}
-                placeholder="e.g. Spouse, Parent"
+                placeholder={t("dash.settings.emergencyRelationPh")}
                 maxLength={50}
               />
             </Field>
@@ -322,14 +327,14 @@ export function SettingsTab() {
         </div>
 
         <div className="mt-4">
-          <Field label="Email">
+          <Field label={t("dash.settings.email")}>
             <Input value={user?.email || ""} disabled className="bg-cream text-muted" />
           </Field>
-          <p className="mt-1.5 text-xs text-muted">Your email is your sign-in and cannot be changed here.</p>
+          <p className="mt-1.5 text-xs text-muted">{t("dash.settings.emailLocked")}</p>
         </div>
         <div className="mt-4">
           <Button type="submit" disabled={savingProfile}>
-            {savingProfile ? "Saving..." : "Save profile"}
+            {savingProfile ? t("dash.settings.saving") : t("dash.settings.saveProfile")}
           </Button>
         </div>
       </form>
@@ -340,22 +345,18 @@ export function SettingsTab() {
         }}
         className="rounded-lg border border-line bg-white p-5"
       >
-        <h3 className="text-sm font-bold text-ink">ID document</h3>
-        <p className="mt-1.5 text-xs text-muted">
-          Upload the front and back of your NIN, passport or birth certificate so the clinic can
-          identify you. You&apos;ll see a preview of each side before anything is saved. JPG, PNG,
-          WebP, AVIF or PDF up to 8 MB per side.
-        </p>
+        <h3 className="text-sm font-bold text-ink">{t("dash.settings.idDocument")}</h3>
+        <p className="mt-1.5 text-xs text-muted">{t("dash.settings.idHint")}</p>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <IdSlot
-            label="Front of document"
+            label={t("dash.settings.idFront")}
             savedUrl={user?.idCardFrontUrl}
             uploading={uploadingId}
             onUpload={(file) => void uploadIdCard(file, "front")}
             onRemove={() => void removeIdCard("idCardFrontUrl")}
           />
           <IdSlot
-            label="Back of document"
+            label={t("dash.settings.idBack")}
             savedUrl={user?.idCardBackUrl}
             uploading={uploadingId}
             onUpload={(file) => void uploadIdCard(file, "back")}
@@ -365,33 +366,33 @@ export function SettingsTab() {
       </form>
 
       <form onSubmit={changePassword} className="rounded-lg border border-line bg-white p-5">
-        <h3 className="text-sm font-bold text-ink">Change password</h3>
+        <h3 className="text-sm font-bold text-ink">{t("dash.settings.changePassword")}</h3>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <Field label="Current Password" required>
+          <Field label={t("dash.settings.currentPassword")} required>
             <PasswordInput required value={current} onChange={(e) => setCurrent(e.target.value)} autoComplete="current-password" />
           </Field>
           <div className="space-y-4">
-            <Field label="New Password" required hint="At least 8 characters.">
+            <Field label={t("dash.settings.newPassword")} required hint={t("dash.settings.passwordHint")}>
               <PasswordInput required value={next} onChange={(e) => setNext(e.target.value)} autoComplete="new-password" />
             </Field>
-            <Field label="Confirm New Password" required>
+            <Field label={t("dash.settings.confirmPassword")} required>
               <PasswordInput required value={confirm} onChange={(e) => setConfirm(e.target.value)} autoComplete="new-password" />
             </Field>
           </div>
         </div>
         <div className="mt-4">
           <Button type="submit" variant="secondary" disabled={savingPassword}>
-            {savingPassword ? "Updating..." : "Update password"}
+            {savingPassword ? t("dash.settings.updating") : t("dash.settings.updatePassword")}
           </Button>
         </div>
       </form>
 
       <div className="rounded-lg border border-line bg-white p-5">
-        <h3 className="text-sm font-bold text-ink">Sign out</h3>
-        <p className="mt-1.5 text-xs text-muted">You will need your email and password to sign back in.</p>
+        <h3 className="text-sm font-bold text-ink">{t("dash.settings.signOutTitle")}</h3>
+        <p className="mt-1.5 text-xs text-muted">{t("dash.settings.signOutNote")}</p>
         <Button variant="outline" className="mt-4" onClick={() => logout()}>
           <FaArrowRightFromBracket className="h-4 w-4" aria-hidden />
-          Sign out
+          {t("dash.settings.signOut")}
         </Button>
       </div>
     </div>
@@ -415,6 +416,7 @@ function IdSlot({
   onUpload: (file: File) => void;
   onRemove: () => void;
 }) {
+  const { t } = useLocale();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [pending, setPending] = useState<{ file: File; preview: string } | null>(null);
 
@@ -445,7 +447,7 @@ function IdSlot({
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={pending.preview}
-              alt={`${label} preview`}
+              alt={t("dash.settings.idPreview", { side: label })}
               className="max-h-44 w-full rounded-md border border-line bg-white object-contain"
             />
           ) : (
@@ -458,7 +460,7 @@ function IdSlot({
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <Button type="button" size="sm" disabled={uploading} onClick={() => { const f = pending.file; setPending(null); onUpload(f); }}>
               <FaFileCirclePlus className="h-3.5 w-3.5" aria-hidden />
-              {uploading ? "Saving..." : "Upload & save"}
+              {uploading ? t("dash.settings.saving") : t("dash.settings.uploadSave")}
             </Button>
             <button
               type="button"
@@ -466,7 +468,7 @@ function IdSlot({
               className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-lg border border-line-strong bg-white px-3 text-xs font-semibold text-muted hover:text-ink"
             >
               <FaXmark className="h-3 w-3" aria-hidden />
-              Cancel
+              {t("dash.settings.cancel")}
             </button>
           </div>
         </div>
@@ -478,7 +480,7 @@ function IdSlot({
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={savedUrl}
-                  alt={`${label} - saved`}
+                  alt={t("dash.settings.idSaved", { side: label })}
                   className="max-h-44 w-full rounded-md border border-line bg-white object-contain"
                 />
               ) : (
@@ -489,17 +491,17 @@ function IdSlot({
                   className="flex items-center gap-2 rounded-md border border-line bg-white px-3 py-2 text-xs font-semibold text-forest-800 transition-colors hover:border-forest-400"
                 >
                   <FaFileLines className="h-4 w-4 shrink-0 text-forest-700" aria-hidden />
-                  <span className="truncate">View saved document (PDF)</span>
+                  <span className="truncate">{t("dash.settings.viewPdf")}</span>
                 </a>
               )}
               <div className="flex flex-wrap items-center gap-2">
                 <Button type="button" size="sm" variant="outline" disabled={uploading} onClick={() => inputRef.current?.click()}>
                   <FaCamera className="h-3.5 w-3.5" aria-hidden />
-                  Replace
+                  {t("dash.settings.replace")}
                 </Button>
                 <Button type="button" size="sm" variant="ghost" disabled={uploading} onClick={onRemove}>
                   <FaTrashCan className="h-3.5 w-3.5" aria-hidden />
-                  Remove
+                  {t("dash.settings.remove")}
                 </Button>
               </div>
             </div>
@@ -510,7 +512,7 @@ function IdSlot({
                 type="file"
                 accept="image/jpeg,image/png,image/webp,image/avif,application/pdf"
                 className="hidden"
-                aria-label={`Choose ${label.toLowerCase()}`}
+                aria-label={t("dash.settings.chooseSide", { side: label })}
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (file) chooseFile(file);
@@ -518,7 +520,7 @@ function IdSlot({
               />
               <Button type="button" variant="secondary" disabled={uploading} onClick={() => inputRef.current?.click()}>
                 <FaFileCirclePlus className="h-4 w-4" aria-hidden />
-                {uploading ? "Uploading..." : "Choose file"}
+                {uploading ? t("dash.settings.uploading") : t("dash.settings.chooseFile")}
               </Button>
             </div>
           )}

@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useLocale } from "@/components/i18n/locale-provider";
+import type { TranslationKey } from "@/lib/i18n";
 import {
   formatDayDate,
   RecordTypeClass,
-  RecordTypeLabel,
+  RecordTypeKeys,
 } from "@/components/account/badges";
 import {
   FaChevronDown,
@@ -38,6 +40,7 @@ interface FamilyOption {
 }
 
 function RecordDetail({ record }: { record: RecordView }) {
+  const { t } = useLocale();
   return (
     <div className="print-area">
       <div className="border-t border-forest-100 bg-cream/60 px-5 py-5">
@@ -47,7 +50,7 @@ function RecordDetail({ record }: { record: RecordView }) {
             <p className="mt-1 text-xs text-muted">
               {formatDayDate(record.date)}
               {record.doctorName ? ` · ${record.doctorName}` : ""}
-              {record.forMember ? ` · Patient: ${record.forMember}` : ""}
+              {record.forMember ? t("dash.records.patient", { name: record.forMember }) : ""}
             </p>
           </div>
           <button
@@ -56,25 +59,25 @@ function RecordDetail({ record }: { record: RecordView }) {
             className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-lg bg-forest-950 px-3.5 text-xs font-bold text-white transition-colors hover:bg-forest-800 print:hidden"
           >
             <FaPrint className="h-3.5 w-3.5" aria-hidden />
-            Download PDF
+            {t("dash.records.downloadPdf")}
           </button>
         </div>
 
         {record.diagnosis ? (
           <div className="mt-4">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted">Diagnosis</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted">{t("dash.records.diagnosis")}</p>
             <p className="mt-1 text-sm text-ink">{record.diagnosis}</p>
           </div>
         ) : null}
         {record.results ? (
           <div className="mt-4">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted">Results</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted">{t("dash.records.results")}</p>
             <p className="mt-1 whitespace-pre-line text-sm text-ink">{record.results}</p>
           </div>
         ) : null}
         {record.notes ? (
           <div className="mt-4">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted">Notes</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted">{t("dash.records.notes")}</p>
             <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-muted">{record.notes}</p>
           </div>
         ) : null}
@@ -82,7 +85,7 @@ function RecordDetail({ record }: { record: RecordView }) {
         {record.attachments && record.attachments.length > 0 ? (
           <div className="mt-4">
             <p className="text-[10px] font-bold uppercase tracking-widest text-muted">
-              Attachments ({record.attachments.length})
+              {t("dash.records.attachments", { n: record.attachments.length })}
             </p>
             <ul className="mt-2 space-y-1.5">
               {record.attachments.map((a, i) => (
@@ -94,8 +97,8 @@ function RecordDetail({ record }: { record: RecordView }) {
                     className="inline-flex max-w-full items-center gap-2 rounded-md border border-line-strong bg-white px-3 py-2 text-xs font-semibold text-forest-800 transition-colors hover:border-forest-400"
                   >
                     <FaFileMedical className="h-3.5 w-3.5 shrink-0" aria-hidden />
-                    <span className="truncate">{a.name || "Document"}</span>
-                    <span className="shrink-0 text-muted">· open</span>
+                    <span className="truncate">{a.name || t("dash.records.document")}</span>
+                    <span className="shrink-0 text-muted">{t("dash.records.open")}</span>
                   </a>
                 </li>
               ))}
@@ -103,9 +106,7 @@ function RecordDetail({ record }: { record: RecordView }) {
           </div>
         ) : null}
 
-        <p className="mt-5 text-[10px] text-muted">
-          S19 Herbal Clinic · Document provided to the patient for personal records.
-        </p>
+        <p className="mt-5 text-[10px] text-muted">{t("dash.records.footer")}</p>
       </div>
     </div>
   );
@@ -120,6 +121,8 @@ function RecordCard({
   expanded: boolean;
   onToggle: () => void;
 }) {
+  const { t } = useLocale();
+  const typeKey = RecordTypeKeys[record.type] as TranslationKey | undefined;
   return (
     <li className="overflow-hidden rounded-lg border border-line bg-white">
       <button
@@ -135,7 +138,7 @@ function RecordCard({
         <span className="min-w-0 flex-1">
           <span className="block truncate text-sm font-bold text-ink">{record.title}</span>
           <span className="mt-0.5 block text-xs text-muted">
-            {RecordTypeLabel[record.type] || record.type} · {formatDayDate(record.date)}
+            {typeKey ? t(typeKey) : record.type} · {formatDayDate(record.date)}
             {record.doctorName ? ` · ${record.doctorName}` : ""}
           </span>
         </span>
@@ -149,6 +152,7 @@ function RecordCard({
 }
 
 export function RecordsTab() {
+  const { t } = useLocale();
   const [records, setRecords] = useState<RecordView[] | null>(null);
   const [family, setFamily] = useState<FamilyOption[]>([]);
   const [filter, setFilter] = useState("all");
@@ -165,7 +169,7 @@ export function RecordsTab() {
         else setRecords(Array.isArray(data.records) ? data.records : []);
       })
       .catch(() => {
-        if (active) setError("Could not load your medical records.");
+        if (active) setError(t("dash.records.loadError"));
       });
     fetch("/api/family-members", { credentials: "include" })
       .then((r) => r.json())
@@ -177,7 +181,7 @@ export function RecordsTab() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [t]);
 
   const shown = records
     ? records.filter((r) => {
@@ -187,21 +191,20 @@ export function RecordsTab() {
       })
     : null;
 
-  const chips: { key: string; label: string }[] = [
-    { key: "all", label: "All" },
-    { key: "self", label: "Me" },
-    ...family.map((f) => ({ key: f.name, label: f.name })),
+  const chips: { key: string; labelKey: TranslationKey; label?: string }[] = [
+    { key: "all", labelKey: "dash.records.all" },
+    { key: "self", labelKey: "dash.records.me" },
+    ...family.map((f) => ({ key: f.name, labelKey: "dash.records.all" as TranslationKey, label: f.name })),
   ];
 
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-muted">
-          Your visit history, diagnoses, lab results and scans - kept private and downloadable as
-          PDF.
-        </p>
+        <p className="text-sm text-muted">{t("dash.records.intro")}</p>
         {records && records.length > 0 ? (
-          <span className="text-xs font-semibold text-muted">{records.length} record{records.length === 1 ? "" : "s"}</span>
+          <span className="text-xs font-semibold text-muted">
+            {t(records.length === 1 ? "dash.records.countOne" : "dash.records.count", { n: records.length })}
+          </span>
         ) : null}
       </div>
 
@@ -218,7 +221,7 @@ export function RecordsTab() {
                   : "cursor-pointer rounded-full border border-line-strong bg-white px-3 py-1.5 text-xs font-semibold text-muted transition-colors hover:text-ink"
               }
             >
-              {c.label}
+              {c.label ?? t(c.labelKey)}
             </button>
           ))}
         </div>
@@ -239,10 +242,10 @@ export function RecordsTab() {
           <FaFileMedical className="mx-auto h-7 w-7 text-forest-300" aria-hidden />
           <p className="mt-3 text-sm text-muted">
             {records.length === 0
-              ? "No medical records yet. Records from your visits, lab work and scans with the clinic will appear here."
+              ? t("dash.records.emptyAll")
               : filter === "all"
-                ? "No medical records match this view."
-                : `No medical records for ${filter} yet.`}
+                ? t("dash.records.emptyFiltered")
+                : t("dash.records.emptyMember", { name: filter })}
           </p>
         </div>
       ) : null}
@@ -263,8 +266,7 @@ export function RecordsTab() {
       {records && records.length > 0 ? (
         <p className="flex items-start gap-2 rounded-md border border-line bg-white px-3 py-2.5 text-xs text-muted">
           <FaUserGroup className="mt-0.5 h-3.5 w-3.5 shrink-0 text-forest-700" aria-hidden />
-          Your records are only visible to you and the clinic team. Use &quot;Download PDF&quot; to keep a
-          copy for other providers.
+          {t("dash.records.privacy")}
         </p>
       ) : null}
     </div>

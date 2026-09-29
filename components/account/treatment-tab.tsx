@@ -2,8 +2,10 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { TreatmentPhaseBadge, formatDayDate } from "@/components/account/badges";
+import { useLocale } from "@/components/i18n/locale-provider";
 import { localDateString } from "@/lib/dates";
 import { cn } from "@/lib/utils";
+import type { TranslationKey } from "@/lib/i18n";
 import {
   FaArrowRotateRight,
   FaBell,
@@ -105,29 +107,31 @@ type GlucoseView = {
 
 /* ── Small helpers ─────────────────────────────────────────────────────── */
 
-function glucoseLevel(kind: "fasting" | "post-lunch", reading: number) {
+type TFunc = (key: TranslationKey, params?: Record<string, string | number>) => string;
+
+function glucoseLevel(t: TFunc, kind: "fasting" | "post-lunch", reading: number) {
   if (kind === "fasting") {
-    if (reading >= 126) return { label: "High", cls: "border-red-300 bg-red-50 text-red-700" };
-    if (reading >= 100) return { label: "Elevated", cls: "border-amber-300 bg-amber-50 text-amber-800" };
-    return { label: "Normal", cls: "border-forest-300 bg-forest-50 text-forest-800" };
+    if (reading >= 126) return { label: t("dash.treatment.level.high"), cls: "border-red-300 bg-red-50 text-red-700" };
+    if (reading >= 100) return { label: t("dash.treatment.level.elevated"), cls: "border-amber-300 bg-amber-50 text-amber-800" };
+    return { label: t("dash.treatment.level.normal"), cls: "border-forest-300 bg-forest-50 text-forest-800" };
   }
-  if (reading >= 200) return { label: "High", cls: "border-red-300 bg-red-50 text-red-700" };
-  if (reading >= 140) return { label: "Elevated", cls: "border-amber-300 bg-amber-50 text-amber-800" };
-  return { label: "Normal", cls: "border-forest-300 bg-forest-50 text-forest-800" };
+  if (reading >= 200) return { label: t("dash.treatment.level.high"), cls: "border-red-300 bg-red-50 text-red-700" };
+  if (reading >= 140) return { label: t("dash.treatment.level.elevated"), cls: "border-amber-300 bg-amber-50 text-amber-800" };
+  return { label: t("dash.treatment.level.normal"), cls: "border-forest-300 bg-forest-50 text-forest-800" };
 }
 
-function milestoneLabel(f: FollowUpView, plan: PlanView): string {
-  if (f.milestone === "baseline") return "Baseline";
-  if (f.milestone === "final") return "Final assessment";
-  if (f.milestone === "other") return f.milestoneLabel || "Review";
+function milestoneLabel(t: TFunc, f: FollowUpView, plan: PlanView): string {
+  if (f.milestone === "baseline") return t("dash.treatment.milestone.baseline");
+  if (f.milestone === "final") return t("dash.treatment.milestone.final");
+  if (f.milestone === "other") return f.milestoneLabel || t("dash.treatment.milestone.review");
   const start = new Date(plan.startDate);
   const monthLength = plan.days / plan.months;
   const dayIndex = Math.floor(
     (new Date(f.date).getTime() - start.getTime()) / 86_400_000
   );
-  if (dayIndex < 0) return "Review";
+  if (dayIndex < 0) return t("dash.treatment.milestone.review");
   const month = Math.min(plan.months, Math.floor((dayIndex + 1) / monthLength) + 1);
-  return `Month ${month}`;
+  return t("dash.treatment.milestone.month", { n: month });
 }
 
 function SymptomChips({ label, items, tone }: { label: string; items: string[]; tone: string }) {
@@ -186,17 +190,18 @@ function SectionCard({
 /* ── Plan hero: timeline + "Month X of Y" ──────────────────────────────── */
 
 function PlanHero({ p }: { p: PlanView }) {
+  const { t } = useLocale();
   const phaseNote =
     p.phase === "scheduled"
-      ? "Not started yet - the clinic will follow your progress once it begins."
+      ? t("dash.treatment.notScheduled")
       : p.phase === "expired"
-        ? "Your treatment period has ended. The clinic will record the final review and close your plan shortly."
+        ? t("dash.treatment.periodEnded")
         : p.phase === "completed"
           ? p.completionReview?.outcome === "maintenance"
-            ? "Treatment completed - you continue on a maintenance program."
+            ? t("dash.treatment.completedMaintenance")
             : p.completionReview?.outcome === "extended"
-              ? "Treatment completed - the clinic has extended your care in a new phase."
-              : "Treatment completed - the clinic closed your plan after the final review."
+              ? t("dash.treatment.completedExtended")
+              : t("dash.treatment.completedClosed")
           : null;
 
   return (
@@ -205,32 +210,32 @@ function PlanHero({ p }: { p: PlanView }) {
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-gold-400">
-              Personalized Treatment Plan
+              {t("dash.treatment.planLabel")}
             </p>
             <h2 className="mt-1 font-display text-lg font-bold text-white">{p.title}</h2>
-            {p.forMember ? <p className="mt-0.5 text-xs text-forest-200">Patient: {p.forMember}</p> : null}
+            {p.forMember ? <p className="mt-0.5 text-xs text-forest-200">{t("dash.treatment.patient", { name: p.forMember })}</p> : null}
           </div>
           <TreatmentPhaseBadge phase={p.phase} />
         </div>
 
         <div className="mt-4 grid gap-3 text-sm sm:grid-cols-3">
           <div className="rounded-xl bg-white/5 px-3.5 py-3">
-            <p className="text-[10px] font-bold uppercase tracking-wide text-forest-300">Started</p>
+            <p className="text-[10px] font-bold uppercase tracking-wide text-forest-300">{t("dash.treatment.started")}</p>
             <p className="mt-0.5 font-semibold text-white">{formatDayDate(p.startDate)}</p>
           </div>
           <div className="rounded-xl bg-white/5 px-3.5 py-3">
             <p className="text-[10px] font-bold uppercase tracking-wide text-forest-300">
-              {p.phase === "completed" ? "Completed" : "Expected completion"}
+              {t(p.phase === "completed" ? "dash.treatment.completed" : "dash.treatment.expectedCompletion")}
             </p>
             <p className="mt-0.5 font-semibold text-white">
               {formatDayDate(p.completedAt || p.endDate)}
             </p>
           </div>
           <div className="rounded-xl bg-white/5 px-3.5 py-3">
-            <p className="text-[10px] font-bold uppercase tracking-wide text-forest-300">Duration</p>
+            <p className="text-[10px] font-bold uppercase tracking-wide text-forest-300">{t("dash.treatment.duration")}</p>
             <p className="mt-0.5 font-semibold text-white">
-              {p.months} {p.months === 1 ? "month" : "months"}
-              {p.phase === "active" && p.month ? ` · Month ${p.month} of ${p.months}` : ""}
+              {t(p.months === 1 ? "dash.treatment.month" : "dash.treatment.months", { n: p.months })}
+              {p.phase === "active" && p.month ? t("dash.treatment.monthOf", { m: p.month, n: p.months }) : ""}
             </p>
           </div>
         </div>
@@ -240,15 +245,15 @@ function PlanHero({ p }: { p: PlanView }) {
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold text-forest-200">
                 {p.phase === "active" && p.month
-                  ? `Day ${p.day} of ${p.days} · Month ${p.month} of ${p.months}`
-                  : `Day 0 of ${p.days}`}
+                  ? t("dash.treatment.dayOf", { d: String(p.day), days: p.days, m: p.month, months: p.months })
+                  : t("dash.treatment.dayZero", { days: p.days })}
               </span>
               <span className="font-semibold text-gold-400">
                 {p.phase === "active"
                   ? p.daysLeft > 0
-                    ? `${p.daysLeft} day${p.daysLeft === 1 ? "" : "s"} remaining`
-                    : "Final day of treatment"
-                  : "Awaiting start"}
+                    ? t(p.daysLeft === 1 ? "dash.treatment.dayRemaining" : "dash.treatment.remaining", { n: p.daysLeft })
+                    : t("dash.treatment.finalDay")
+                  : t("dash.treatment.awaitingStart")}
               </span>
             </div>
             <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-white/10">
@@ -270,10 +275,12 @@ function PlanHero({ p }: { p: PlanView }) {
           <div className="mt-3 flex flex-wrap items-center gap-2 rounded-lg border border-sky-300/30 bg-sky-400/10 px-3 py-2 text-xs text-sky-100">
             <FaDroplet className="h-3.5 w-3.5 shrink-0 text-sky-300" aria-hidden />
             <span>
-              Daily glucose monitoring required - fasting{" "}
-              <span className="font-bold">{p.monitoring.fastingStart}–{p.monitoring.fastingEnd}</span>{" "}
-              and 2h post-lunch{" "}
-              <span className="font-bold">{p.monitoring.postLunchStart}–{p.monitoring.postLunchEnd}</span>.
+              {t("dash.treatment.glucoseMonitor", {
+                from: p.monitoring.fastingStart,
+                to: p.monitoring.fastingEnd,
+                pfrom: p.monitoring.postLunchStart,
+                pto: p.monitoring.postLunchEnd,
+              })}
             </span>
           </div>
         ) : null}
@@ -282,26 +289,26 @@ function PlanHero({ p }: { p: PlanView }) {
       {p.phase === "completed" && p.completionReview ? (
         <div className="border-b border-forest-100 bg-indigo-50/60 px-5 py-4 sm:px-6">
           <p className="text-[10px] font-bold uppercase tracking-wide text-indigo-700">
-            Final review · {p.completionReview.outcome}
+            {t("dash.treatment.finalReview", { outcome: p.completionReview.outcome })}
           </p>
           <div className="mt-2 grid gap-3 text-[13px] text-ink sm:grid-cols-2">
             {p.completionReview.improvements ? (
-              <p><span className="font-semibold">Improvements:</span> {p.completionReview.improvements}</p>
+              <p><span className="font-semibold">{t("dash.treatment.review.improvements")}</span> {p.completionReview.improvements}</p>
             ) : null}
             {p.completionReview.resolved ? (
-              <p><span className="font-semibold">Resolved:</span> {p.completionReview.resolved}</p>
+              <p><span className="font-semibold">{t("dash.treatment.review.resolved")}</span> {p.completionReview.resolved}</p>
             ) : null}
             {p.completionReview.unresolvedProblems ? (
-              <p><span className="font-semibold">Unresolved:</span> {p.completionReview.unresolvedProblems}</p>
+              <p><span className="font-semibold">{t("dash.treatment.review.unresolved")}</span> {p.completionReview.unresolvedProblems}</p>
             ) : null}
             {p.completionReview.complications ? (
-              <p><span className="font-semibold">Complications:</span> {p.completionReview.complications}</p>
+              <p><span className="font-semibold">{t("dash.treatment.review.complications")}</span> {p.completionReview.complications}</p>
             ) : null}
             {p.completionReview.followUpLabs ? (
-              <p><span className="font-semibold">Follow-up labs:</span> {p.completionReview.followUpLabs}</p>
+              <p><span className="font-semibold">{t("dash.treatment.review.followUpLabs")}</span> {p.completionReview.followUpLabs}</p>
             ) : null}
             {p.completionReview.notes ? (
-              <p className="sm:col-span-2"><span className="font-semibold">Notes:</span> {p.completionReview.notes}</p>
+              <p className="sm:col-span-2"><span className="font-semibold">{t("dash.treatment.review.notes")}</span> {p.completionReview.notes}</p>
             ) : null}
           </div>
         </div>
@@ -317,6 +324,7 @@ function GlucoseSection({ plan, readings, onSaved }: {
   readings: GlucoseView[];
   onSaved: () => void;
 }) {
+  const { t } = useLocale();
   const [open, setOpen] = useState(false);
   const [kind, setKind] = useState<"fasting" | "post-lunch">("fasting");
   const [reading, setReading] = useState("");
@@ -343,7 +351,7 @@ function GlucoseSection({ plan, readings, onSaved }: {
     e.preventDefault();
     const value = Number(reading);
     if (!Number.isFinite(value) || value < 10 || value > 900) {
-      setErr("Enter a valid reading between 10 and 900 mg/dL.");
+      setErr(t("dash.treatment.readingInvalid"));
       return;
     }
     setSaving(true);
@@ -359,8 +367,8 @@ function GlucoseSection({ plan, readings, onSaved }: {
       if (file) form.set("photo", file);
       const res = await fetch("/api/glucose", { method: "POST", credentials: "include", body: form });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Could not save the reading.");
-      setMsg("Reading saved. Thank you for monitoring your glucose!");
+      if (!res.ok) throw new Error(data.error || t("dash.treatment.readingSaveError"));
+      setMsg(t("dash.treatment.readingSaved"));
       setReading("");
       setMealInfo("");
       pickPhoto(null);
@@ -368,7 +376,7 @@ function GlucoseSection({ plan, readings, onSaved }: {
       setOpen(false);
       onSaved();
     } catch (error) {
-      setErr(error instanceof Error ? error.message : "Could not save the reading.");
+      setErr(error instanceof Error ? error.message : t("dash.treatment.readingSaveError"));
     } finally {
       setSaving(false);
     }
@@ -376,7 +384,7 @@ function GlucoseSection({ plan, readings, onSaved }: {
 
   return (
     <SectionCard
-      title="Diabetes monitoring"
+      title={t("dash.treatment.glucoseSection")}
       icon={<FaDroplet className="h-4 w-4 text-sky-600" aria-hidden />}
       action={
         plan.phase === "active" ? (
@@ -391,7 +399,7 @@ function GlucoseSection({ plan, readings, onSaved }: {
             )}
           >
             {open ? <FaXmark className="h-3 w-3" aria-hidden /> : <FaDroplet className="h-3 w-3" aria-hidden />}
-            {open ? "Close" : "Log reading"}
+            {t(open ? "dash.treatment.close" : "dash.treatment.logReading")}
           </button>
         ) : null
       }
@@ -400,19 +408,23 @@ function GlucoseSection({ plan, readings, onSaved }: {
         <span className={cn("inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-semibold",
           fastingDone ? "border-forest-300 bg-forest-50 text-forest-800" : "border-line-strong bg-cream text-muted")}>
           <FaCircleCheck className={cn("h-3 w-3", fastingDone ? "text-forest-600" : "text-muted")} aria-hidden />
-          Fasting {fastingDone ? "logged today" : "pending"}
+          {t("dash.treatment.fastingStatus", {
+            status: t(fastingDone ? "dash.treatment.loggedToday" : "dash.treatment.pending"),
+          })}
         </span>
         <span className={cn("inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-semibold",
           postLunchDone ? "border-forest-300 bg-forest-50 text-forest-800" : "border-line-strong bg-cream text-muted")}>
           <FaCircleCheck className={cn("h-3 w-3", postLunchDone ? "text-forest-600" : "text-muted")} aria-hidden />
-          2h post-lunch {postLunchDone ? "logged today" : "pending"}
+          {t("dash.treatment.postLunchStatus", {
+            status: t(postLunchDone ? "dash.treatment.loggedToday" : "dash.treatment.pending"),
+          })}
         </span>
       </div>
 
       {open ? (
         <form onSubmit={submit} className="mt-4 space-y-3 rounded-xl border border-sky-100 bg-sky-50/50 p-4">
           <div className="grid gap-3 sm:grid-cols-2">
-            <Field label="Reading type" required>
+            <Field label={t("dash.treatment.readingType")} required>
               <div className="flex gap-2">
                 {(["fasting", "post-lunch"] as const).map((k) => (
                   <button
@@ -426,12 +438,12 @@ function GlucoseSection({ plan, readings, onSaved }: {
                         : "border-line-strong bg-white text-muted hover:border-sky-400"
                     )}
                   >
-                    {k === "fasting" ? "Fasting (6–10 AM)" : "2h post-lunch"}
+                    {t(k === "fasting" ? "dash.treatment.fastingBtn" : "dash.treatment.postLunchBtn")}
                   </button>
                 ))}
               </div>
             </Field>
-            <Field label="Reading (mg/dL)" required>
+            <Field label={t("dash.treatment.readingValue")} required>
               <input
                 type="number"
                 min={10}
@@ -439,29 +451,29 @@ function GlucoseSection({ plan, readings, onSaved }: {
                 inputMode="numeric"
                 value={reading}
                 onChange={(e) => setReading(e.target.value)}
-                placeholder="e.g. 104"
+                placeholder={t("dash.treatment.readingPh")}
                 className="w-full rounded-lg border border-line-strong bg-white px-3 py-2 text-sm outline-none focus:border-forest-500"
                 required
               />
             </Field>
           </div>
           {kind === "post-lunch" ? (
-            <Field label="What did you eat? (optional)">
+            <Field label={t("dash.treatment.mealInfo")}>
               <input
                 type="text"
                 value={mealInfo}
                 onChange={(e) => setMealInfo(e.target.value)}
-                placeholder="e.g. Rice, beans and fish"
+                placeholder={t("dash.treatment.mealPh")}
                 maxLength={500}
                 className="w-full rounded-lg border border-line-strong bg-white px-3 py-2 text-sm outline-none focus:border-forest-500"
               />
             </Field>
           ) : null}
-          <Field label="Photo of the glucose meter result (optional)" hint="Clear photo of the meter screen. Max 6 MB.">
+          <Field label={t("dash.treatment.photoLabel")} hint={t("dash.treatment.photoHint")}>
             <div className="flex flex-wrap items-center gap-3">
               <label className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-lg border border-line-strong bg-white px-3 text-xs font-semibold text-ink hover:border-sky-400">
                 <FaCamera className="h-3.5 w-3.5" aria-hidden />
-                {photoName || "Choose photo"}
+                {photoName || t("dash.treatment.choosePhoto")}
                 <input
                   ref={fileRef}
                   type="file"
@@ -471,11 +483,11 @@ function GlucoseSection({ plan, readings, onSaved }: {
                 />
               </label>
               {photoPreview ? (
-                <img src={photoPreview} alt="Glucose meter result preview" className="h-14 w-14 rounded-lg border border-line object-cover" />
+                <img src={photoPreview} alt={t("dash.treatment.photoPreviewAlt")} className="h-14 w-14 rounded-lg border border-line object-cover" />
               ) : null}
               {photoName ? (
                 <button type="button" onClick={() => pickPhoto(null)} className="text-xs font-semibold text-red-600 hover:underline">
-                  Remove
+                  {t("dash.treatment.remove")}
                 </button>
               ) : null}
             </div>
@@ -488,7 +500,7 @@ function GlucoseSection({ plan, readings, onSaved }: {
               disabled={saving}
               className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-lg bg-sky-600 px-4 text-xs font-bold text-white transition-colors hover:bg-sky-700 disabled:opacity-50"
             >
-              {saving ? "Saving..." : "Save reading"}
+              {saving ? t("dash.treatment.saving") : t("dash.treatment.saveReading")}
             </button>
           </div>
         </form>
@@ -497,7 +509,7 @@ function GlucoseSection({ plan, readings, onSaved }: {
       {readings.length > 0 ? (
         <ul className="mt-4 space-y-2">
           {readings.slice(0, 6).map((r) => {
-            const level = glucoseLevel(r.kind, r.reading);
+            const level = glucoseLevel(t, r.kind, r.reading);
             return (
               <li key={r._id} className="flex flex-wrap items-center gap-3 rounded-lg border border-line bg-cream/50 px-3.5 py-2.5">
                 <span className={cn("inline-flex h-8 w-8 items-center justify-center rounded-lg", r.kind === "fasting" ? "bg-sky-100 text-sky-700" : "bg-amber-100 text-amber-700")}>
@@ -506,7 +518,7 @@ function GlucoseSection({ plan, readings, onSaved }: {
                 <span className="min-w-0 flex-1">
                   <span className="block text-sm font-bold text-ink">{r.reading} mg/dL</span>
                   <span className="block text-[11px] text-muted">
-                    {r.kind === "fasting" ? "Fasting" : "2h post-lunch"}
+                    {t(r.kind === "fasting" ? "dash.treatment.fasting" : "dash.treatment.postLunch")}
                     {r.mealInfo ? ` · ${r.mealInfo}` : ""} · {formatDayDate(r.createdAt)}
                   </span>
                 </span>
@@ -515,19 +527,19 @@ function GlucoseSection({ plan, readings, onSaved }: {
                 </span>
                 {r.photoUrl ? (
                   <a href={r.photoUrl} target="_blank" rel="noreferrer" className="text-[11px] font-semibold text-sky-700 underline underline-offset-2 hover:text-sky-900">
-                    View photo
+                    {t("dash.treatment.viewPhoto")}
                   </a>
                 ) : null}
               </li>
             );
           })}
           {readings.length > 6 ? (
-            <p className="pt-1 text-[11px] text-muted">Showing the 6 most recent readings.</p>
+            <p className="pt-1 text-[11px] text-muted">{t("dash.treatment.recent6")}</p>
           ) : null}
         </ul>
       ) : (
         <p className="mt-4 text-xs text-muted">
-          No readings yet - log your first fasting or post-lunch reading above.
+          {t("dash.treatment.noReadings")}
         </p>
       )}
     </SectionCard>
@@ -567,6 +579,7 @@ function TasksSection({
   reminders: ReminderView[];
   onMarkDone: (id: string) => void;
 }) {
+  const { t } = useLocale();
   const mine = useMemo(() => {
     const list = reminders
       .filter((r) => r.plan === plan._id)
@@ -579,12 +592,11 @@ function TasksSection({
   if (mine.pending.length === 0 && mine.done.length === 0) {
     return (
       <SectionCard
-        title="Today's tasks & reminders"
+        title={t("dash.treatment.tasksTitle")}
         icon={<FaListCheck className="h-4 w-4 text-forest-700" aria-hidden />}
       >
         <p className="text-xs text-muted">
-          The clinic will post reminders here for payments, refills, follow-up calls, lab tests and
-          daily monitoring.
+          {t("dash.treatment.tasksEmpty")}
         </p>
       </SectionCard>
     );
@@ -594,7 +606,7 @@ function TasksSection({
 
   return (
     <SectionCard
-      title="Today's tasks & reminders"
+      title={t("dash.treatment.tasksTitle")}
       icon={<FaListCheck className="h-4 w-4 text-forest-700" aria-hidden />}
     >
       {mine.pending.length > 0 ? (
@@ -619,7 +631,7 @@ function TasksSection({
                     ) : null}
                   </span>
                   <span className="block text-[11px] text-muted">
-                    {due ? "Due today" : past ? `Overdue · due ${formatDayDate(r.dueDate)}` : `Due ${formatDayDate(r.dueDate)}`}
+                    {due ? t("dash.treatment.dueToday") : past ? t("dash.treatment.overdue", { date: formatDayDate(r.dueDate) }) : t("dash.treatment.due", { date: formatDayDate(r.dueDate) })}
                     {r.notes ? ` · ${r.notes}` : ""}
                   </span>
                 </span>
@@ -629,18 +641,18 @@ function TasksSection({
                   className="inline-flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border border-forest-300 bg-white px-2.5 text-[11px] font-bold text-forest-800 transition-colors hover:bg-forest-50"
                 >
                   <FaCircleCheck className="h-3 w-3" aria-hidden />
-                  Done
+                  {t("dash.treatment.done")}
                 </button>
               </li>
             );
           })}
         </ul>
       ) : (
-        <p className="text-xs text-muted">All tasks done - great job!</p>
+        <p className="text-xs text-muted">{t("dash.treatment.allTasksDone")}</p>
       )}
       {mine.done.length > 0 ? (
         <div className="mt-3 border-t border-forest-100 pt-3">
-          <p className="text-[10px] font-bold uppercase tracking-wide text-muted">Recently done</p>
+          <p className="text-[10px] font-bold uppercase tracking-wide text-muted">{t("dash.treatment.recentlyDone")}</p>
           <ul className="mt-1.5 space-y-1">
             {mine.done.map((r) => (
               <li key={r._id} className="flex items-center gap-2 text-xs text-muted">
@@ -658,59 +670,59 @@ function TasksSection({
 /* ── Progress timeline (follow-ups) ────────────────────────────────────── */
 
 function ProgressSection({ plan, followUps }: { plan: PlanView; followUps: FollowUpView[] }) {
+  const { t } = useLocale();
   const mine = useMemo(
     () => followUps.filter((f) => f.plan === plan._id).sort((a, b) => (a.date < b.date ? -1 : 1)),
     [followUps, plan._id]
   );
 
   return (
-    <SectionCard title="Treatment progress" icon={<FaHeartPulse className="h-4 w-4 text-rose-600" aria-hidden />}>
+    <SectionCard title={t("dash.treatment.progressTitle")} icon={<FaHeartPulse className="h-4 w-4 text-rose-600" aria-hidden />}>
       {mine.length === 0 ? (
         <p className="text-xs text-muted">
-          The clinic records your progress at each follow-up - Baseline, Month 1, Month 2... Final
-          assessment. Updates will appear here as a dated history.
+          {t("dash.treatment.progressEmpty")}
         </p>
       ) : (
         <ol className="relative space-y-5 before:absolute before:left-[13px] before:top-2 before:bottom-2 before:w-px before:bg-forest-200">
           {mine.map((f) => {
             const v = f.vitals;
             const vitals: string[] = [];
-            if (v.weightKg !== undefined) vitals.push(`${v.weightKg} kg`);
+            if (v.weightKg !== undefined) vitals.push(t("dash.treatment.vital.weight", { n: v.weightKg }));
             if (v.systolicBp !== undefined && v.diastolicBp !== undefined)
-              vitals.push(`BP ${v.systolicBp}/${v.diastolicBp}`);
-            if (v.glucoseMgdl !== undefined) vitals.push(`Glucose ${v.glucoseMgdl} mg/dL`);
+              vitals.push(t("dash.treatment.vital.bp", { sys: v.systolicBp, dia: v.diastolicBp }));
+            if (v.glucoseMgdl !== undefined) vitals.push(t("dash.treatment.vital.glucose", { n: v.glucoseMgdl }));
             return (
               <li key={f._id} className="relative pl-9">
                 <span className="absolute left-0 top-0.5 flex h-7 w-7 items-center justify-center rounded-full border-2 border-forest-200 bg-white">
                   <span className="h-2 w-2 rounded-full bg-forest-600" />
                 </span>
-                <p className="text-xs font-bold text-forest-900">{milestoneLabel(f, plan)}</p>
+                <p className="text-xs font-bold text-forest-900">{milestoneLabel(t, f, plan)}</p>
                 <p className="text-[11px] text-muted">{formatDayDate(f.date)}{f.forMember ? ` · ${f.forMember}` : ""}</p>
                 {f.improvements ? (
                   <p className="mt-1.5 rounded-lg bg-forest-50 px-3 py-2 text-xs leading-relaxed text-ink">
-                    <span className="font-semibold text-forest-800">Improvements:</span> {f.improvements}
+                    <span className="font-semibold text-forest-800">{t("dash.treatment.review.improvements")}</span> {f.improvements}
                   </p>
                 ) : null}
                 <div className="mt-2.5 grid gap-2.5 sm:grid-cols-2">
-                  <SymptomChips label="Resolved" items={f.resolvedSymptoms} tone="border-forest-300 bg-forest-50 text-forest-800" />
-                  <SymptomChips label="Improved" items={f.improvedSymptoms} tone="border-teal-300 bg-teal-50 text-teal-800" />
-                  <SymptomChips label="Persistent" items={f.persistentSymptoms} tone="border-amber-300 bg-amber-50 text-amber-800" />
-                  <SymptomChips label="New / complications" items={f.newSymptoms} tone="border-red-300 bg-red-50 text-red-700" />
-                  <SymptomChips label="Adverse reactions" items={f.adverseReactions} tone="border-rose-300 bg-rose-50 text-rose-700" />
+                  <SymptomChips label={t("dash.treatment.chips.resolved")} items={f.resolvedSymptoms} tone="border-forest-300 bg-forest-50 text-forest-800" />
+                  <SymptomChips label={t("dash.treatment.chips.improved")} items={f.improvedSymptoms} tone="border-teal-300 bg-teal-50 text-teal-800" />
+                  <SymptomChips label={t("dash.treatment.chips.persistent")} items={f.persistentSymptoms} tone="border-amber-300 bg-amber-50 text-amber-800" />
+                  <SymptomChips label={t("dash.treatment.chips.new")} items={f.newSymptoms} tone="border-red-300 bg-red-50 text-red-700" />
+                  <SymptomChips label={t("dash.treatment.chips.adverse")} items={f.adverseReactions} tone="border-rose-300 bg-rose-50 text-rose-700" />
                 </div>
                 {vitals.length > 0 ? (
                   <p className="mt-2.5 text-xs text-muted">
-                    <span className="font-semibold text-ink">Vitals:</span> {vitals.join(" · ")}
+                    <span className="font-semibold text-ink">{t("dash.treatment.vitals")}</span> {vitals.join(" · ")}
                   </p>
                 ) : null}
                 {f.followUpLabs ? (
                   <p className="mt-1.5 text-xs text-muted">
-                    <span className="font-semibold text-ink">Follow-up labs:</span> {f.followUpLabs}
+                    <span className="font-semibold text-ink">{t("dash.treatment.followUpLabsLabel")}</span> {f.followUpLabs}
                   </p>
                 ) : null}
                 {f.clinicianNotes ? (
                   <p className="mt-1.5 text-xs leading-relaxed text-muted">
-                    <span className="font-semibold text-ink">Clinician notes:</span> {f.clinicianNotes}
+                    <span className="font-semibold text-ink">{t("dash.treatment.clinicianNotes")}</span> {f.clinicianNotes}
                   </p>
                 ) : null}
               </li>
@@ -725,6 +737,7 @@ function ProgressSection({ plan, followUps }: { plan: PlanView; followUps: Follo
 /* ── Tab shell ─────────────────────────────────────────────────────────── */
 
 export function TreatmentTab() {
+  const { t } = useLocale();
   const [plans, setPlans] = useState<PlanView[] | null>(null);
   const [reminders, setReminders] = useState<ReminderView[]>([]);
   const [followUps, setFollowUps] = useState<FollowUpView[]>([]);
@@ -749,7 +762,7 @@ export function TreatmentTab() {
         if (Array.isArray(g.readings)) setGlucose(g.readings as GlucoseView[]);
       })
       .catch(() => {
-        if (active) setError("Could not load your treatment dashboard.");
+        if (active) setError(t("dash.treatment.loadError"));
       })
       .finally(() => {
         if (active) setRefreshing(false);
@@ -757,7 +770,7 @@ export function TreatmentTab() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [t]);
 
   useEffect(load, [load]);
 
@@ -770,12 +783,12 @@ export function TreatmentTab() {
         body: JSON.stringify({ status: "done" }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Could not update the reminder.");
+      if (!res.ok) throw new Error(data.error || t("dash.treatment.reminderError"));
       setReminders((prev) =>
         prev.map((r) => (r._id === id ? { ...r, status: "done", overdue: false } : r))
       );
     } catch (err) {
-      window.alert(err instanceof Error ? err.message : "Could not update the reminder.");
+      window.alert(err instanceof Error ? err.message : t("dash.treatment.reminderError"));
     }
   }
 
@@ -783,8 +796,7 @@ export function TreatmentTab() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-muted">
-          Your personalized treatment dashboard - timeline, progress, today&apos;s tasks and
-          required readings, all in one place.
+          {t("dash.treatment.intro")}
         </p>
         <button
           type="button"
@@ -796,7 +808,7 @@ export function TreatmentTab() {
           className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-lg border border-line-strong bg-white px-3 text-xs font-semibold text-ink transition-colors hover:border-forest-400 disabled:opacity-50"
         >
           <FaArrowRotateRight className={cn("h-3.5 w-3.5", refreshing && "animate-spin")} aria-hidden />
-          Refresh
+          {t("dash.treatment.refresh")}
         </button>
       </div>
 
@@ -814,8 +826,7 @@ export function TreatmentTab() {
         <div className="rounded-lg border border-line bg-white p-10 text-center">
           <FaCalendarDays className="mx-auto h-8 w-8 text-forest-300" aria-hidden />
           <p className="mt-3 text-sm text-muted">
-            No treatment plan yet. The clinic sets up a personalized 3-month or 6-month plan for you -
-            once it is ready, your treatment dashboard will appear here.
+            {t("dash.treatment.emptyPlan")}
           </p>
         </div>
       ) : null}

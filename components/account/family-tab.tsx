@@ -4,6 +4,8 @@ import { useEffect, useState, type FormEvent } from "react";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/form";
+import { useLocale } from "@/components/i18n/locale-provider";
+import type { TranslationKey } from "@/lib/i18n";
 import {
   FaPencil,
   FaPlus,
@@ -21,12 +23,18 @@ interface FamilyMemberView {
   notes?: string;
 }
 
-const RELATION_LABELS: Record<string, string> = {
-  child: "Child",
-  spouse: "Spouse",
-  parent: "Parent",
-  sibling: "Sibling",
-  other: "Other",
+const RELATION_KEYS: Record<string, TranslationKey> = {
+  child: "dash.family.relation.child",
+  spouse: "dash.family.relation.spouse",
+  parent: "dash.family.relation.parent",
+  sibling: "dash.family.relation.sibling",
+  other: "dash.family.relation.other",
+};
+
+const GENDER_KEYS: Record<string, TranslationKey> = {
+  male: "dash.family.male",
+  female: "dash.family.female",
+  other: "dash.family.other",
 };
 
 const emptyForm = {
@@ -46,6 +54,7 @@ function FamilyForm({
   onSave: (member: FamilyMemberView) => void;
   onCancel: () => void;
 }) {
+  const { t } = useLocale();
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState(
     initial
@@ -62,7 +71,7 @@ function FamilyForm({
   async function submit(e: FormEvent) {
     e.preventDefault();
     if (form.name.trim().length < 2) {
-      toast.error("Please provide the family member's name.");
+      toast.error(t("dash.family.nameRequired"));
       return;
     }
     const payload = {
@@ -84,14 +93,14 @@ function FamilyForm({
         }
       );
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Could not save the family member.");
+      if (!res.ok) throw new Error(data.error || t("dash.family.saveError"));
       const member: FamilyMemberView = initial
         ? { ...initial, ...payload, _id: initial._id }
         : data.member;
       onSave(member);
-      toast.success(initial ? "Family member updated." : "Family member added.");
+      toast.success(initial ? t("dash.family.updated") : t("dash.family.added"));
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not save the family member.");
+      toast.error(err instanceof Error ? err.message : t("dash.family.saveError"));
     } finally {
       setSaving(false);
     }
@@ -104,7 +113,7 @@ function FamilyForm({
     >
       <div className="flex items-center justify-between gap-3">
         <p className="text-xs font-bold text-ink">
-          {initial ? "Edit family member" : "Add a family member"}
+          {initial ? t("dash.family.editTitle") : t("dash.family.addTitle")}
         </p>
         <button
           type="button"
@@ -116,52 +125,52 @@ function FamilyForm({
         </button>
       </div>
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
-        <Field label="Full name" required>
+        <Field label={t("dash.family.fullName")} required>
           <Input
             required
             value={form.name}
             onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-            placeholder="e.g. Ada Tchoupo"
+            placeholder={t("dash.family.namePh")}
             maxLength={80}
           />
         </Field>
-        <Field label="Date of birth">
+        <Field label={t("dash.family.dob")}>
           <Input
             type="date"
             value={form.dob}
             onChange={(e) => setForm((f) => ({ ...f, dob: e.target.value }))}
           />
         </Field>
-        <Field label="Gender">
+        <Field label={t("dash.family.gender")}>
           <Select
             value={form.gender}
             onChange={(e) => setForm((f) => ({ ...f, gender: e.target.value }))}
           >
-            <option value="">Prefer not to say</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
+            <option value="">{t("dash.family.genderUndisclosed")}</option>
+            <option value="male">{t("dash.family.male")}</option>
+            <option value="female">{t("dash.family.female")}</option>
+            <option value="other">{t("dash.family.other")}</option>
           </Select>
         </Field>
-        <Field label="Relationship" required>
+        <Field label={t("dash.family.relationship")} required>
           <Select
             value={form.relation}
             onChange={(e) => setForm((f) => ({ ...f, relation: e.target.value }))}
           >
-            {Object.entries(RELATION_LABELS).map(([value, label]) => (
+            {Object.entries(RELATION_KEYS).map(([value, key]) => (
               <option key={value} value={value}>
-                {label}
+                {t(key)}
               </option>
             ))}
           </Select>
         </Field>
         <div className="sm:col-span-2">
-          <Field label="Notes (optional)">
+          <Field label={t("dash.family.notesLabel")}>
             <Textarea
               rows={2}
               value={form.notes}
               onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))}
-              placeholder="Allergies, medications, school, anything useful for the clinic"
+              placeholder={t("dash.family.notesPh")}
               maxLength={300}
             />
           </Field>
@@ -169,14 +178,18 @@ function FamilyForm({
       </div>
       <div className="mt-3 flex items-center gap-3">
         <Button type="submit" size="sm" disabled={saving}>
-          {saving ? "Saving..." : initial ? "Save changes" : "Add member"}
+          {saving
+            ? t("dash.family.saving")
+            : initial
+              ? t("dash.family.saveChanges")
+              : t("dash.family.addMember")}
         </Button>
         <button
           type="button"
           onClick={onCancel}
           className="text-xs font-semibold text-muted hover:text-ink"
         >
-          Cancel
+          {t("dash.family.cancel")}
         </button>
       </div>
     </form>
@@ -184,6 +197,7 @@ function FamilyForm({
 }
 
 export function FamilyTab() {
+  const { t } = useLocale();
   const [members, setMembers] = useState<FamilyMemberView[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -199,7 +213,7 @@ export function FamilyTab() {
         else setMembers(Array.isArray(data.members) ? data.members : []);
       })
       .catch(() => {
-        if (active) setError("Could not load your family members.");
+        if (active) setError(t("dash.family.loadError"));
       });
     return () => {
       active = false;
@@ -208,22 +222,22 @@ export function FamilyTab() {
 
   useEffect(() => {
     return load();
-  }, []);
+  }, [t]);
 
   async function remove(member: FamilyMemberView) {
-    if (!window.confirm(`Remove ${member.name} from your family profile?`)) return;
+    if (!window.confirm(t("dash.family.removePrompt", { name: member.name }))) return;
     try {
       const res = await fetch(`/api/family-members/${member._id}`, {
         method: "DELETE",
         credentials: "include",
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Could not remove the family member.");
+      if (!res.ok) throw new Error(data.error || t("dash.family.removeError"));
       setMembers(Array.isArray(data.members) ? data.members : []);
-      toast.success("Family member removed.");
+      toast.success(t("dash.family.removed"));
       setEditingId(null);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not remove the family member.");
+      toast.error(err instanceof Error ? err.message : t("dash.family.removeError"));
     }
   }
 
@@ -232,14 +246,11 @@ export function FamilyTab() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-muted">
-          Manage profiles for your children and loved ones so the clinic can care for the whole
-          family.
-        </p>
+        <p className="text-sm text-muted">{t("dash.family.intro")}</p>
         {!showForm && !editingMember ? (
           <Button size="sm" onClick={() => setShowForm(true)}>
             <FaPlus className="h-3.5 w-3.5" aria-hidden />
-            Add family member
+            {t("dash.family.addBtn")}
           </Button>
         ) : null}
       </div>
@@ -279,10 +290,7 @@ export function FamilyTab() {
       {members && members.length === 0 && !showForm ? (
         <div className="rounded-lg border border-line bg-white p-8 text-center">
           <FaUserGroup className="mx-auto h-7 w-7 text-forest-300" aria-hidden />
-          <p className="mt-3 text-sm text-muted">
-            No family members yet. Add a child or loved one to book visits and keep their records
-            under your account.
-          </p>
+          <p className="mt-3 text-sm text-muted">{t("dash.family.empty")}</p>
         </div>
       ) : null}
 
@@ -304,10 +312,14 @@ export function FamilyTab() {
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-sm font-bold text-ink">{m.name}</span>
                 <span className="mt-0.5 block text-xs text-muted">
-                  {RELATION_LABELS[m.relation] || m.relation}
-                  {m.dob ? ` · born ${m.dob}` : ""}
-                  {m.gender ? ` · ${m.gender}` : ""}
-                  {m.notes ? ` · ${m.notes}` : ""}
+                  {RELATION_KEYS[m.relation] ? t(RELATION_KEYS[m.relation]) : m.relation}
+                  {m.dob ? t("dash.family.born", { date: m.dob }) : ""}
+                  {m.gender
+                    ? t("dash.family.genderLabel", {
+                        gender: GENDER_KEYS[m.gender] ? t(GENDER_KEYS[m.gender]) : m.gender,
+                      })
+                    : ""}
+                  {m.notes ? t("dash.family.notesDetail", { notes: m.notes }) : ""}
                 </span>
               </span>
               <span className="flex shrink-0 items-center gap-1.5">

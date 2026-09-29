@@ -3,7 +3,9 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/form";
-import { formatDate, RecordTypeClass, RecordTypeLabel } from "@/components/account/badges";
+import { formatDate, RecordTypeClass, RecordTypeKeys } from "@/components/account/badges";
+import { useLocale } from "@/components/i18n/locale-provider";
+import type { TranslationKey } from "@/lib/i18n";
 import {
   FaChevronDown,
   FaChevronUp,
@@ -56,6 +58,7 @@ function RecordForm({
   onCancel: () => void;
 }) {
   const [userId, setUserId] = useState(initial ? String(initial.user._id) : patients[0]?.id || "");
+  const { t } = useLocale();
   const [forMember, setForMember] = useState(initial?.forMember || "");
   const [type, setType] = useState(initial?.type || "visit");
   const [title, setTitle] = useState(initial?.title || "");
@@ -149,9 +152,9 @@ function RecordForm({
         </Field>
         <Field label="Record type" required>
           <Select value={type} onChange={(e) => setType(e.target.value)}>
-            {Object.entries(RecordTypeLabel).map(([value, label]) => (
+            {Object.entries(RecordTypeKeys).map(([value, key]) => (
               <option key={value} value={value}>
-                {label}
+                {t(key)}
               </option>
             ))}
           </Select>
@@ -164,7 +167,7 @@ function RecordForm({
             <Input value={title} onChange={(e) => setTitle(e.target.value)} maxLength={200} placeholder="e.g. First consultation - type 2 diabetes plan" />
           </Field>
         </div>
-        <Field label="Doctor / clinician">
+        <Field label="Clinician">
           <Input value={doctorName} onChange={(e) => setDoctorName(e.target.value)} maxLength={100} placeholder="e.g. Dr. Nguema" />
         </Field>
         <Field label="For family member">
@@ -197,7 +200,7 @@ function RecordForm({
           <Textarea rows={3} value={results} onChange={(e) => setResults(e.target.value)} />
         </Field>
         <div className="sm:col-span-2">
-          <Field label="Doctor's notes">
+          <Field label="Clinician's notes">
             <Textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} />
           </Field>
         </div>
@@ -263,6 +266,8 @@ function RecordRow({
   expanded: boolean;
   onToggle: () => void;
 }) {
+  const { t } = useLocale();
+  const typeKey = RecordTypeKeys[r.type] as TranslationKey | undefined;
   return (
     <li className="overflow-hidden rounded-lg border border-line bg-white">
       <button
@@ -276,7 +281,7 @@ function RecordRow({
         <span className="min-w-0 flex-1">
           <span className="block truncate text-sm font-bold text-ink">{r.title}</span>
           <span className="mt-0.5 block truncate text-xs text-muted">
-            {r.user?.name || "Unknown"} · {RecordTypeLabel[r.type] || r.type} · {formatDate(r.date)}
+            {r.user?.name || "Unknown"} · {typeKey ? t(typeKey) : r.type} · {formatDate(r.date)}
           </span>
         </span>
         {expanded ? <FaChevronUp className="h-3.5 w-3.5 shrink-0 text-muted" aria-hidden /> : <FaChevronDown className="h-3.5 w-3.5 shrink-0 text-muted" aria-hidden />}

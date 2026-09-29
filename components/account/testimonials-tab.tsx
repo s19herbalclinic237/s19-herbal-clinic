@@ -3,6 +3,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
+import { useLocale } from "@/components/i18n/locale-provider";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Textarea } from "@/components/ui/form";
 import { formatDate, TestimonialStatusBadge } from "@/components/account/badges";
@@ -21,6 +22,7 @@ interface TestimonialView {
 
 export function TestimonialsTab() {
   const { user } = useAuth();
+  const { t } = useLocale();
   const [testimonials, setTestimonials] = useState<TestimonialView[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -42,12 +44,12 @@ export function TestimonialsTab() {
         else setTestimonials(Array.isArray(data.testimonials) ? data.testimonials : []);
       })
       .catch(() => {
-        if (active) setError("Could not load your testimonials.");
+        if (active) setError(t("dash.testimonials.loadError"));
       });
     return () => {
       active = false;
     };
-  }, []);
+  }, [t]);
 
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -60,7 +62,7 @@ export function TestimonialsTab() {
         body: JSON.stringify({ name, city, country, program, text, rating }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Could not save your testimony.");
+      if (!res.ok) throw new Error(data.error || t("dash.testimonials.saveError"));
       const created = data.testimonial as TestimonialView;
       setTestimonials((prev) => [created, ...(prev || [])]);
       setShowForm(false);
@@ -68,22 +70,33 @@ export function TestimonialsTab() {
       setCountry("");
       setProgram("");
       setText("");
-      toast.success("Thank you! Your testimony is pending review.");
+      toast.success(t("dash.testimonials.saved"));
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not save your testimony.");
+      toast.error(err instanceof Error ? err.message : t("dash.testimonials.saveError"));
     } finally {
       setSubmitting(false);
     }
   }
 
+  const ratingLabel =
+    rating === 5
+      ? t("dash.testimonials.ratingExcellent")
+      : rating === 4
+        ? t("dash.testimonials.ratingGood")
+        : rating === 3
+          ? t("dash.testimonials.ratingOkay")
+          : rating === 2
+            ? t("dash.testimonials.ratingPoor")
+            : t("dash.testimonials.ratingVeryPoor");
+
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-sm text-muted">The stories you have shared with the S19 community.</p>
+        <p className="text-sm text-muted">{t("dash.testimonials.intro")}</p>
         {!showForm ? (
           <Button variant="primary" size="sm" onClick={() => setShowForm(true)}>
             <FaPlus className="h-3 w-3" aria-hidden />
-            Drop a testimony
+            {t("dash.testimonials.drop")}
           </Button>
         ) : null}
       </div>
@@ -91,21 +104,21 @@ export function TestimonialsTab() {
       {showForm ? (
         <form onSubmit={submit} className="rounded-lg border border-line bg-white p-5">
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Your Name" required>
-              <Input required value={name} onChange={(e) => setName(e.target.value)} placeholder="Full name" maxLength={80} />
+            <Field label={t("dash.testimonials.name")} required>
+              <Input required value={name} onChange={(e) => setName(e.target.value)} placeholder={t("dash.testimonials.namePh")} maxLength={80} />
             </Field>
-            <Field label="City" required>
-              <Input required value={city} onChange={(e) => setCity(e.target.value)} placeholder="e.g. Bafoussam" maxLength={60} />
+            <Field label={t("dash.testimonials.city")} required>
+              <Input required value={city} onChange={(e) => setCity(e.target.value)} placeholder={t("dash.testimonials.cityPh")} maxLength={60} />
             </Field>
-            <Field label="Country (optional)">
-              <Input value={country} onChange={(e) => setCountry(e.target.value)} placeholder="e.g. Cameroun / USA" maxLength={60} />
+            <Field label={t("dash.testimonials.country")}>
+              <Input value={country} onChange={(e) => setCountry(e.target.value)} placeholder={t("dash.testimonials.countryPh")} maxLength={60} />
             </Field>
-            <Field label="Program or Product" required>
-              <Input required value={program} onChange={(e) => setProgram(e.target.value)} placeholder="e.g. Diabetes &amp; Metabolic Health Support" maxLength={100} />
+            <Field label={t("dash.testimonials.program")} required>
+              <Input required value={program} onChange={(e) => setProgram(e.target.value)} placeholder={t("dash.testimonials.programPh")} maxLength={100} />
             </Field>
           </div>
           <div className="mt-4">
-            <Field label="Your Rating" hint="How was your visit with S19?">
+            <Field label={t("dash.testimonials.rating")} hint={t("dash.testimonials.ratingHint")}>
               <div className="flex items-center gap-1.5">
                 {[1, 2, 3, 4, 5].map((value) => (
                   <button
@@ -122,34 +135,32 @@ export function TestimonialsTab() {
                     )}
                   </button>
                 ))}
-                <span className="ml-2 text-xs font-semibold text-muted">
-                  {rating === 5 ? "Excellent" : rating === 4 ? "Good" : rating === 3 ? "Okay" : rating === 2 ? "Poor" : "Very poor"}
-                </span>
+                <span className="ml-2 text-xs font-semibold text-muted">{ratingLabel}</span>
               </div>
             </Field>
           </div>
           <div className="mt-4">
-            <Field label="Your Testimony" required hint="Share your experience in at least 20 characters.">
+            <Field label={t("dash.testimonials.testimony")} required hint={t("dash.testimonials.testimonyHint")}>
               <Textarea
                 required
                 rows={4}
                 value={text}
                 onChange={(e) => setText(e.target.value)}
-                placeholder="How did S19 help you?..."
+                placeholder={t("dash.testimonials.testimonyPh")}
                 maxLength={2000}
               />
             </Field>
           </div>
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <Button type="submit" disabled={submitting}>
-              {submitting ? "Submitting..." : "Submit for review"}
+              {submitting ? t("dash.testimonials.submitting") : t("dash.testimonials.submit")}
             </Button>
             <button
               type="button"
               onClick={() => setShowForm(false)}
               className="text-sm font-semibold text-muted hover:text-ink"
             >
-              Cancel
+              {t("dash.testimonials.cancel")}
             </button>
           </div>
         </form>
@@ -168,25 +179,23 @@ export function TestimonialsTab() {
       {testimonials && testimonials.length === 0 && !showForm ? (
         <div className="rounded-lg border border-line bg-white p-8 text-center">
           <FaCommentDots className="mx-auto h-7 w-7 text-forest-300" aria-hidden />
-          <p className="mt-3 text-sm text-muted">
-            You have not dropped a testimony yet. Share your S19 story - it encourages others.
-          </p>
+          <p className="mt-3 text-sm text-muted">{t("dash.testimonials.empty")}</p>
         </div>
       ) : null}
 
       {testimonials && testimonials.length > 0 ? (
         <ul className="space-y-3">
-          {testimonials.map((t) => (
-            <li key={t._id} className="rounded-lg border border-line bg-white p-4 sm:p-5">
+          {testimonials.map((tst) => (
+            <li key={tst._id} className="rounded-lg border border-line bg-white p-4 sm:p-5">
               <div className="flex items-start justify-between gap-3">
-                <p className="text-sm font-bold text-ink">{t.program}</p>
-                <TestimonialStatusBadge status={t.status} />
+                <p className="text-sm font-bold text-ink">{tst.program}</p>
+                <TestimonialStatusBadge status={tst.status} />
               </div>
               <p className="mt-1 text-xs text-muted">
-                {t.name} · {t.city}
-                {t.country ? `, ${t.country}` : ""} · {formatDate(t.createdAt)}
+                {tst.name} · {tst.city}
+                {tst.country ? `, ${tst.country}` : ""} · {formatDate(tst.createdAt)}
               </p>
-              <p className="mt-3 text-sm leading-relaxed text-muted">{t.text}</p>
+              <p className="mt-3 text-sm leading-relaxed text-muted">{tst.text}</p>
             </li>
           ))}
         </ul>

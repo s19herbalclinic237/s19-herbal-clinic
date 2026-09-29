@@ -198,7 +198,7 @@ function PrescriptionForm({
         <Field label="Valid until">
           <Input type="date" value={expiresAt} onChange={(e) => setExpiresAt(e.target.value)} />
         </Field>
-        <Field label="Doctor / clinician">
+        <Field label="Clinician">
           <Input value={doctorName} onChange={(e) => setDoctorName(e.target.value)} maxLength={100} placeholder="e.g. Dr. Nguema" />
         </Field>
         <Field label="For family member">

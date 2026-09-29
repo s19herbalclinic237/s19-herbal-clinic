@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select } from "@/components/ui/form";
 import { AppointmentStatusBadge, formatDayDate } from "@/components/account/badges";
+import { useLocale } from "@/components/i18n/locale-provider";
 import { waLink } from "@/lib/site";
 import {
   FaCalendarCheck,
@@ -71,6 +72,7 @@ function BookAppointment({
   onDone: () => void;
   onCancel: () => void;
 }) {
+  const { t } = useLocale();
   const [step, setStep] = useState<1 | 2>(1);
   const [doctorId, setDoctorId] = useState("");
   const [date, setDate] = useState("");
@@ -114,7 +116,8 @@ function BookAppointment({
         });
       })
       .catch(() => {
-        if (active) setSlots({ key, items: null, error: "Could not load availability." });
+        if (active)
+          setSlots({ key, items: null, error: t("dash.appointments.loadAvailability") });
       });
     return () => {
       active = false;
@@ -124,7 +127,7 @@ function BookAppointment({
   async function submit(e: FormEvent) {
     e.preventDefault();
     if (!doctorId || !date || !time) {
-      toast.error("Choose a doctor, date and time first.");
+      toast.error(t("dash.appointments.chooseFirst"));
       return;
     }
     setSubmitting(true);
@@ -144,11 +147,11 @@ function BookAppointment({
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Could not book the appointment.");
-      toast.success(data.message || "Appointment requested.");
+      if (!res.ok) throw new Error(data.error || t("dash.appointments.bookError"));
+      toast.success(data.message || t("dash.appointments.booked"));
       onDone();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not book the appointment.");
+      toast.error(err instanceof Error ? err.message : t("dash.appointments.bookError"));
     } finally {
       setSubmitting(false);
     }
@@ -157,11 +160,11 @@ function BookAppointment({
   return (
     <form onSubmit={submit} className="rounded-lg border border-line bg-white p-5">
       <div className="flex items-center justify-between gap-3">
-        <h3 className="text-sm font-bold text-ink">Book an appointment</h3>
+        <h3 className="text-sm font-bold text-ink">{t("dash.appointments.bookTitle")}</h3>
         <button
           type="button"
           onClick={onCancel}
-          aria-label="Close booking form"
+          aria-label={t("dash.appointments.closeBooking")}
           className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-line-strong text-muted transition-colors hover:bg-forest-50"
         >
           <FaXmark className="h-4 w-4" aria-hidden />
@@ -171,7 +174,7 @@ function BookAppointment({
       {/* Step 1: doctor + date */}
       <div className="mt-4 space-y-4">
         <div className="grid gap-4 lg:grid-cols-2">
-          <Field label="1. Doctor" required>
+          <Field label={t("dash.appointments.stepDoctor")} required>
             <Select
               value={doctorId}
               onChange={(e) => {
@@ -180,7 +183,7 @@ function BookAppointment({
               }}
               required
             >
-              <option value="">Choose a doctor…</option>
+              <option value="">{t("dash.appointments.chooseDoctor")}</option>
               {doctors.map((d) => (
                 <option key={d._id} value={d._id}>
                   {doctorLabel(d)}
@@ -188,7 +191,7 @@ function BookAppointment({
               ))}
             </Select>
           </Field>
-          <Field label="2. Date" required>
+          <Field label={t("dash.appointments.stepDate")} required>
             <Input
               type="date"
               min={todayISO()}
@@ -206,11 +209,11 @@ function BookAppointment({
           <div>
             <p className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-ink">
               <FaCalendarCheck className="h-3.5 w-3.5 text-forest-700" aria-hidden />
-              Available times for {selectedDoctor.name}
+              {t("dash.appointments.availableFor", { name: selectedDoctor.name })}
             </p>
             {!canCheck ? (
               <p className="rounded-md border border-line bg-cream px-3 py-2 text-xs text-muted">
-                Choose a doctor and a future date to see available times.
+                {t("dash.appointments.pickDoctorDate")}
               </p>
             ) : !slotsUpToDate ? (
               <div className="flex h-16 items-center justify-center">
@@ -222,7 +225,7 @@ function BookAppointment({
               </p>
             ) : slots.items && slots.items.length === 0 ? (
               <p className="rounded-md border border-line bg-cream px-3 py-2 text-xs text-muted">
-                No available slots that day. Try another date.
+                {t("dash.appointments.noSlots")}
               </p>
             ) : slots.items ? (
               <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 lg:grid-cols-8">
@@ -252,12 +255,20 @@ function BookAppointment({
         {step === 2 || doctorId ? (
           <div>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              <Field label="Consultation mode" required>
+              <Field label={t("dash.appointments.mode")} required>
                 <div className="grid grid-cols-2 gap-2">
                   {(
                     [
-                      { value: "clinic", label: "In-clinic", hint: "Bafoussam clinic" },
-                      { value: "video", label: "Video call", hint: "Telehealth" },
+                      {
+                        value: "clinic",
+                        label: t("dash.appointments.modeClinic"),
+                        hint: t("dash.appointments.modeClinicHint"),
+                      },
+                      {
+                        value: "video",
+                        label: t("dash.appointments.modeVideo"),
+                        hint: t("dash.appointments.modeVideoHint"),
+                      },
                     ] as const
                   ).map((m) => (
                     <button
@@ -282,9 +293,9 @@ function BookAppointment({
                   ))}
                 </div>
               </Field>
-              <Field label="Who is the visit for?">
+              <Field label={t("dash.appointments.whoFor")}>
                 <Select value={forMember} onChange={(e) => setForMember(e.target.value)}>
-                  <option value="self">Myself</option>
+                  <option value="self">{t("dash.appointments.myself")}</option>
                   {family.map((f) => (
                     <option key={f._id} value={f.name}>
                       {f.name} ({f.relation})
@@ -292,23 +303,23 @@ function BookAppointment({
                   ))}
                 </Select>
               </Field>
-              <Field label="Health concern (optional)">
+              <Field label={t("dash.appointments.concern")}>
                 <Select value={concern} onChange={(e) => setConcern(e.target.value)}>
-                  <option value="">General / not listed</option>
-                  <option>Diabetes / Blood sugar</option>
-                  <option>Hypertension / Heart health</option>
-                  <option>Prostate / Men&apos;s health</option>
-                  <option>Women&apos;s health / Hormones</option>
-                  <option>Gastritis / Digestion</option>
-                  <option>Liver / Kidney detox</option>
-                  <option>Integrative cancer care</option>
+                  <option value="">{t("dash.appointments.concernGeneral")}</option>
+                  <option>{t("dash.appointments.concernDiabetes")}</option>
+                  <option>{t("dash.appointments.concernHypertension")}</option>
+                  <option>{t("dash.appointments.concernProstate")}</option>
+                  <option>{t("dash.appointments.concernWomen")}</option>
+                  <option>{t("dash.appointments.concernGastritis")}</option>
+                  <option>{t("dash.appointments.concernLiver")}</option>
+                  <option>{t("dash.appointments.concernCancer")}</option>
                 </Select>
               </Field>
-              <Field label="Notes for the clinic (optional)">
+              <Field label={t("dash.appointments.notes")}>
                 <Input
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Anything the clinic should know"
+                  placeholder={t("dash.appointments.notesPh")}
                   maxLength={500}
                 />
               </Field>
@@ -318,13 +329,10 @@ function BookAppointment({
 
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <Button type="submit" disabled={submitting || !slotsUpToDate || !time}>
-            {submitting ? "Booking..." : "Request appointment"}
+            {submitting ? t("dash.appointments.booking") : t("dash.appointments.request")}
           </Button>
           {mode === "video" ? (
-            <p className="text-xs text-muted">
-              Video visits: the clinic will share your consultation link when your appointment is
-              confirmed.
-            </p>
+            <p className="text-xs text-muted">{t("dash.appointments.videoHint")}</p>
           ) : null}
         </div>
       </div>
@@ -343,6 +351,7 @@ function RescheduleForm({
   onDone: () => void;
   onCancel: () => void;
 }) {
+  const { t } = useLocale();
   const [date, setDate] = useState(appointment.date);
   const [slots, setSlots] = useState<{
     key: string;
@@ -374,7 +383,8 @@ function RescheduleForm({
         });
       })
       .catch(() => {
-        if (active) setSlots({ key, items: null, error: "Could not load availability." });
+        if (active)
+          setSlots({ key, items: null, error: t("dash.appointments.loadAvailability") });
       });
     return () => {
       active = false;
@@ -393,11 +403,11 @@ function RescheduleForm({
         body: JSON.stringify({ action: "reschedule", date, time }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Could not reschedule.");
-      toast.success(data.message || "Appointment rescheduled.");
+      if (!res.ok) throw new Error(data.error || t("dash.appointments.rescheduleError"));
+      toast.success(data.message || t("dash.appointments.rescheduled"));
       onDone();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not reschedule.");
+      toast.error(err instanceof Error ? err.message : t("dash.appointments.rescheduleError"));
     } finally {
       setSaving(false);
     }
@@ -408,9 +418,9 @@ function RescheduleForm({
       onSubmit={save}
       className="mt-3 rounded-md border border-forest-200 bg-forest-50/50 p-4"
     >
-      <p className="text-xs font-bold text-ink">Reschedule appointment</p>
+      <p className="text-xs font-bold text-ink">{t("dash.appointments.rescheduleTitle")}</p>
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
-        <Field label="New date">
+        <Field label={t("dash.appointments.newDate")}>
           <Input
             type="date"
             min={todayISO()}
@@ -422,10 +432,10 @@ function RescheduleForm({
             required
           />
         </Field>
-        <Field label="New time">
+        <Field label={t("dash.appointments.newTime")}>
           {!canCheck ? (
             <Select value={time} onChange={(e) => setTime(e.target.value)} required disabled>
-              <option value="">Pick a date first…</option>
+              <option value="">{t("dash.appointments.pickDate")}</option>
             </Select>
           ) : !slotsUpToDate ? (
             <div className="flex h-9 items-center">
@@ -441,9 +451,9 @@ function RescheduleForm({
               disabled={!slots.items}
             >
               {!slots.items ? (
-                <option value="">Pick a date first…</option>
+                <option value="">{t("dash.appointments.pickDate")}</option>
               ) : slots.items.length === 0 ? (
-                <option value="">No slots that day</option>
+                <option value="">{t("dash.appointments.noSlotsDay")}</option>
               ) : (
                 slots.items.map((s) => (
                   <option key={s} value={s}>
@@ -457,14 +467,14 @@ function RescheduleForm({
       </div>
       <div className="mt-3 flex items-center gap-3">
         <Button type="submit" size="sm" disabled={saving || !slotsUpToDate || !time}>
-          {saving ? "Saving..." : "Confirm reschedule"}
+          {saving ? t("dash.appointments.saving") : t("dash.appointments.confirmReschedule")}
         </Button>
         <button
           type="button"
           onClick={onCancel}
           className="text-xs font-semibold text-muted hover:text-ink"
         >
-          Cancel
+          {t("dash.appointments.cancel")}
         </button>
       </div>
     </form>
@@ -480,6 +490,7 @@ function AppointmentCard({
   appointment: AppointmentView;
   onChanged: () => void;
 }) {
+  const { t } = useLocale();
   const [rescheduling, setRescheduling] = useState(false);
   const [busy, setBusy] = useState(false);
 
@@ -488,7 +499,7 @@ function AppointmentCard({
     appointment.status === "completed" || appointment.date < todayISO();
 
   async function cancel() {
-    if (!window.confirm("Cancel this appointment?")) return;
+    if (!window.confirm(t("dash.appointments.cancelPrompt"))) return;
     setBusy(true);
     try {
       const res = await fetch(`/api/appointments/${appointment._id}`, {
@@ -498,33 +509,43 @@ function AppointmentCard({
         body: JSON.stringify({ action: "cancel" }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Could not cancel.");
-      toast.success(data.message || "Appointment cancelled.");
+      if (!res.ok) throw new Error(data.error || t("dash.appointments.cancelError"));
+      toast.success(data.message || t("dash.appointments.cancelled"));
       onChanged();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not cancel.");
+      toast.error(err instanceof Error ? err.message : t("dash.appointments.cancelError"));
     } finally {
       setBusy(false);
     }
   }
 
-  const reminderMessage = `Hello S19 Herbal Clinic, this is a friendly reminder about my ${
-    appointment.mode === "video" ? "video consultation" : "appointment"
-  } with ${appointment.doctor.name} on ${appointment.date} at ${appointment.time} (${
-    appointment.mode === "video" ? "telehealth" : "in-clinic"
-  }).`;
+  const reminderMessage = t("dash.appointments.reminderMsg", {
+    kind:
+      appointment.mode === "video"
+        ? t("dash.appointments.reminderVideo")
+        : t("dash.appointments.reminderAppt"),
+    doctor: appointment.doctor.name,
+    date: appointment.date,
+    time: appointment.time,
+    mode:
+      appointment.mode === "video"
+        ? t("dash.appointments.reminderTele")
+        : t("dash.appointments.reminderClinic"),
+  });
 
   return (
     <li className="rounded-lg border border-line bg-white p-4 sm:p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <p className="text-sm font-bold text-ink">{appointment.doctor?.name || "Clinic"}</p>
+            <p className="text-sm font-bold text-ink">
+              {appointment.doctor?.name || t("dash.appointments.clinic")}
+            </p>
             <AppointmentStatusBadge status={appointment.status} />
             {appointment.mode === "video" ? (
               <span className="inline-flex items-center gap-1 rounded-full border border-sky-300 bg-sky-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-sky-800">
                 <FaVideo className="h-2.5 w-2.5" aria-hidden />
-                Video
+                {t("dash.appointments.videoBadge")}
               </span>
             ) : null}
           </div>
@@ -545,19 +566,25 @@ function AppointmentCard({
 
       {appointment.forMember ? (
         <p className="mt-2 rounded-md bg-forest-50 px-2.5 py-1.5 text-xs text-forest-800">
-          Patient: <span className="font-semibold">{appointment.forMember}</span>
+          {t("dash.appointments.patient")}
+          <span className="font-semibold">{appointment.forMember}</span>
         </p>
       ) : null}
       {appointment.concern ? (
         <p className="mt-2 text-xs text-muted">
-          <span className="font-semibold text-ink">Concern:</span> {appointment.concern}
+          <span className="font-semibold text-ink">
+            {t("dash.appointments.concernLabel")}
+          </span>{" "}
+          {appointment.concern}
         </p>
       ) : null}
 
       {/* Video consultation surface */}
       {appointment.mode === "video" && !isPastAppointment ? (
         <div className="mt-3 rounded-md border border-sky-200 bg-sky-50/60 p-3">
-          <p className="text-xs font-bold text-forest-900">Video consultation</p>
+          <p className="text-xs font-bold text-forest-900">
+            {t("dash.appointments.videoConsult")}
+          </p>
           {appointment.meetingUrl ? (
             <a
               href={appointment.meetingUrl}
@@ -566,11 +593,11 @@ function AppointmentCard({
               className="mt-2 inline-flex h-9 items-center gap-2 rounded-lg bg-forest-900 px-3.5 text-xs font-bold text-white transition-colors hover:bg-forest-800"
             >
               <FaVideo className="h-3.5 w-3.5" aria-hidden />
-              Join consultation
+              {t("dash.appointments.join")}
             </a>
           ) : (
             <p className="mt-1.5 text-xs text-muted">
-              Your join link will appear here once the clinic confirms your appointment.
+              {t("dash.appointments.joinSoon")}
             </p>
           )}
         </div>
@@ -585,7 +612,7 @@ function AppointmentCard({
             className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-line-strong bg-white px-3 text-xs font-semibold text-forest-800 transition-colors hover:border-forest-400"
           >
             <FaWhatsapp className="h-3 w-3 text-[#25D366]" aria-hidden />
-            Set WhatsApp reminder
+            {t("dash.appointments.whatsappReminder")}
           </a>
           {appointment.status !== "completed" ? (
             <button
@@ -594,7 +621,7 @@ function AppointmentCard({
               className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-lg border border-line-strong bg-white px-3 text-xs font-semibold text-ink transition-colors hover:border-forest-400"
             >
               <FaPencil className="h-3 w-3" aria-hidden />
-              Reschedule
+              {t("dash.appointments.reschedule")}
             </button>
           ) : null}
           <button
@@ -604,7 +631,7 @@ function AppointmentCard({
             className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-lg border border-red-200 bg-white px-3 text-xs font-semibold text-red-700 transition-colors hover:bg-red-50"
           >
             <FaTrashCan className="h-3 w-3" aria-hidden />
-            Cancel appointment
+            {t("dash.appointments.cancelBtn")}
           </button>
         </div>
       ) : null}
@@ -626,6 +653,7 @@ function AppointmentCard({
 /* ── Tab shell ────────────────────────────────────────────────────────── */
 
 export function AppointmentsTab() {
+  const { t } = useLocale();
   const [appointments, setAppointments] = useState<AppointmentView[] | null>(null);
   const [doctors, setDoctors] = useState<DoctorView[]>([]);
   const [family, setFamily] = useState<FamilyView[]>([]);
@@ -644,12 +672,12 @@ export function AppointmentsTab() {
         else setAppointments(Array.isArray(data.appointments) ? data.appointments : []);
       })
       .catch(() => {
-        if (active) setError("Could not load your appointments.");
+        if (active) setError(t("dash.appointments.loadError"));
       });
     return () => {
       active = false;
     };
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     const first = load();
@@ -700,9 +728,9 @@ export function AppointmentsTab() {
         <div className="flex items-center gap-1 rounded-lg border border-line bg-white p-1">
           {(
             [
-              { value: "all", label: "All" },
-              { value: "upcoming", label: "Upcoming" },
-              { value: "past", label: "Past" },
+              { value: "all", label: t("dash.appointments.viewAll") },
+              { value: "upcoming", label: t("dash.appointments.viewUpcoming") },
+              { value: "past", label: t("dash.appointments.viewPast") },
             ] as const
           ).map((v) => (
             <button
@@ -722,11 +750,11 @@ export function AppointmentsTab() {
         <div className="flex items-center gap-2">
           <Button size="sm" variant="outline" onClick={() => { setBookMode("video"); setShowBook(true); }}>
             <FaVideo className="h-3.5 w-3.5" aria-hidden />
-            Book video visit
+            {t("dash.appointments.bookVideo")}
           </Button>
           <Button size="sm" onClick={() => { setBookMode("clinic"); setShowBook(true); }}>
             <FaPlus className="h-3.5 w-3.5" aria-hidden />
-            Book appointment
+            {t("dash.appointments.bookBtn")}
           </Button>
         </div>
       </div>
@@ -758,14 +786,11 @@ export function AppointmentsTab() {
       {appointments && shown.length === 0 ? (
         <div className="rounded-lg border border-line bg-white p-8 text-center">
           <FaCalendarCheck className="mx-auto h-7 w-7 text-forest-300" aria-hidden />
-          <p className="mt-3 text-sm text-muted">
-            No appointments here yet. Book a consultation with the S19 clinic - in person or
-            online consultation.
-          </p>
+          <p className="mt-3 text-sm text-muted">{t("dash.appointments.empty")}</p>
           <div className="mt-4 flex justify-center gap-2">
             <Button size="sm" onClick={() => setShowBook(true)}>
               <FaPlus className="h-3.5 w-3.5" aria-hidden />
-              Book your first appointment
+              {t("dash.appointments.bookFirst")}
             </Button>
           </div>
         </div>
@@ -785,7 +810,7 @@ export function AppointmentsTab() {
 
       {doctors.length === 0 && !showBook ? (
         <p className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
-          Online booking is not available right now. You can still reach the clinic on WhatsApp.
+          {t("dash.appointments.noBooking")}
         </p>
       ) : null}
     </div>

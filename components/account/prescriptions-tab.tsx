@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useLocale } from "@/components/i18n/locale-provider";
+import type { TranslationKey } from "@/lib/i18n";
 import {
   formatDayDate,
   PrescriptionStatusBadge,
@@ -37,19 +39,20 @@ interface FamilyOption {
 }
 
 function PrescriptionDetail({ p }: { p: PrescriptionView }) {
+  const { t } = useLocale();
   return (
     <div className="print-area">
       <div className="border-t border-forest-100 bg-cream/60 px-5 py-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="font-display text-base font-bold text-ink">
-              Prescription · {formatDayDate(p.issuedDate)}
+              {t("dash.prescriptions.title", { date: formatDayDate(p.issuedDate) })}
             </p>
             <p className="mt-1 text-xs text-muted">
-              Issued {formatDayDate(p.issuedDate)}
-              {p.doctorName ? ` by ${p.doctorName}` : ""}
-              {p.expiresAt ? ` · valid to ${formatDayDate(p.expiresAt)}` : ""}
-              {p.forMember ? ` · Patient: ${p.forMember}` : ""}
+              {t("dash.prescriptions.issued", { date: formatDayDate(p.issuedDate) })}
+              {p.doctorName ? t("dash.prescriptions.byDoctor", { name: p.doctorName }) : ""}
+              {p.expiresAt ? t("dash.prescriptions.validTo", { date: formatDayDate(p.expiresAt) }) : ""}
+              {p.forMember ? t("dash.prescriptions.patient", { name: p.forMember }) : ""}
             </p>
           </div>
           <button
@@ -58,17 +61,17 @@ function PrescriptionDetail({ p }: { p: PrescriptionView }) {
             className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-lg bg-forest-950 px-3.5 text-xs font-bold text-white transition-colors hover:bg-forest-800 print:hidden"
           >
             <FaPrint className="h-3.5 w-3.5" aria-hidden />
-            Download PDF
+            {t("dash.records.downloadPdf")}
           </button>
         </div>
 
         <table className="mt-4 w-full border-collapse text-sm">
           <thead>
             <tr className="border-b border-forest-200 text-left text-[10px] font-bold uppercase tracking-widest text-muted">
-              <th className="py-2 pr-3">Medication</th>
-              <th className="py-2 pr-3">Dosage</th>
-              <th className="py-2 pr-3">Frequency</th>
-              <th className="py-2">Duration</th>
+              <th className="py-2 pr-3">{t("dash.prescriptions.medication")}</th>
+              <th className="py-2 pr-3">{t("dash.prescriptions.dosage")}</th>
+              <th className="py-2 pr-3">{t("dash.prescriptions.frequency")}</th>
+              <th className="py-2">{t("dash.prescriptions.duration")}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-forest-100">
@@ -85,7 +88,7 @@ function PrescriptionDetail({ p }: { p: PrescriptionView }) {
 
         {p.medications.some((m) => m.instructions) ? (
           <div className="mt-4">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted">Directions</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted">{t("dash.prescriptions.directions")}</p>
             <ul className="mt-1.5 space-y-1.5">
               {p.medications.map(
                 (m, i) =>
@@ -101,15 +104,12 @@ function PrescriptionDetail({ p }: { p: PrescriptionView }) {
 
         {p.notes ? (
           <div className="mt-4">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted">Notes</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted">{t("dash.prescriptions.notes")}</p>
             <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-muted">{p.notes}</p>
           </div>
         ) : null}
 
-        <p className="mt-5 text-[10px] text-muted">
-          S19 Herbal Clinic · Follow your provider&apos;s instructions. Contact the clinic before
-          changing any treatment.
-        </p>
+        <p className="mt-5 text-[10px] text-muted">{t("dash.prescriptions.footer")}</p>
       </div>
     </div>
   );
@@ -124,6 +124,7 @@ function PrescriptionCard({
   expanded: boolean;
   onToggle: () => void;
 }) {
+  const { t } = useLocale();
   return (
     <li className="overflow-hidden rounded-lg border border-line bg-white">
       <button
@@ -145,7 +146,7 @@ function PrescriptionCard({
             {p.medications.map((m) => m.name).join(" + ")}
           </span>
           <span className="mt-0.5 block text-xs text-muted">
-            Issued {formatDayDate(p.issuedDate)}
+            {t("dash.prescriptions.issued", { date: formatDayDate(p.issuedDate) })}
             {p.forMember ? ` · ${p.forMember}` : ""}
           </span>
         </span>
@@ -160,6 +161,7 @@ function PrescriptionCard({
 }
 
 export function PrescriptionsTab() {
+  const { t } = useLocale();
   const [prescriptions, setPrescriptions] = useState<PrescriptionView[] | null>(null);
   const [family, setFamily] = useState<FamilyOption[]>([]);
   const [filter, setFilter] = useState("all");
@@ -177,7 +179,7 @@ export function PrescriptionsTab() {
         else setPrescriptions(Array.isArray(data.prescriptions) ? data.prescriptions : []);
       })
       .catch(() => {
-        if (active) setError("Could not load your prescriptions.");
+        if (active) setError(t("dash.prescriptions.loadError"));
       });
     fetch("/api/family-members", { credentials: "include" })
       .then((r) => r.json())
@@ -189,7 +191,7 @@ export function PrescriptionsTab() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [t]);
 
   const { active, past } = useMemo(() => {
     const list = prescriptions || [];
@@ -205,10 +207,10 @@ export function PrescriptionsTab() {
     return true;
   });
 
-  const chips: { key: string; label: string }[] = [
-    { key: "all", label: "All" },
-    { key: "self", label: "Me" },
-    ...family.map((f) => ({ key: f.name, label: f.name })),
+  const chips: { key: string; labelKey: TranslationKey; label?: string }[] = [
+    { key: "all", labelKey: "dash.prescriptions.all" },
+    { key: "self", labelKey: "dash.prescriptions.me" },
+    ...family.map((f) => ({ key: f.name, labelKey: "dash.prescriptions.all" as TranslationKey, label: f.name })),
   ];
 
   return (
@@ -224,7 +226,7 @@ export function PrescriptionsTab() {
                 : "cursor-pointer rounded-md px-3 py-1.5 text-xs font-semibold text-muted transition-colors hover:text-ink"
             }
           >
-            Current ({active.length})
+            {t("dash.prescriptions.current", { n: active.length })}
           </button>
           <button
             type="button"
@@ -235,7 +237,7 @@ export function PrescriptionsTab() {
                 : "cursor-pointer rounded-md px-3 py-1.5 text-xs font-semibold text-muted transition-colors hover:text-ink"
             }
           >
-            Past ({past.length})
+            {t("dash.prescriptions.past", { n: past.length })}
           </button>
         </div>
       </div>
@@ -253,7 +255,7 @@ export function PrescriptionsTab() {
                   : "cursor-pointer rounded-full border border-line-strong bg-white px-3 py-1.5 text-xs font-semibold text-muted transition-colors hover:text-ink"
               }
             >
-              {c.label}
+              {c.label ?? t(c.labelKey)}
             </button>
           ))}
         </div>
@@ -275,11 +277,11 @@ export function PrescriptionsTab() {
           <p className="mt-3 text-sm text-muted">
             {tab === "active"
               ? filter === "all"
-                ? "No current prescriptions. Your active treatment plans will appear here."
-                : `No current prescriptions for ${filter}.`
+                ? t("dash.prescriptions.emptyCurrentAll")
+                : t("dash.prescriptions.emptyCurrentMember", { name: filter })
               : filter === "all"
-                ? "No past prescriptions yet."
-                : `No past prescriptions for ${filter}.`}
+                ? t("dash.prescriptions.emptyPastAll")
+                : t("dash.prescriptions.emptyPastMember", { name: filter })}
           </p>
         </div>
       ) : null}

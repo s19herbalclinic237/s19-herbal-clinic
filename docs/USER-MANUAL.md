@@ -375,7 +375,7 @@ Staff accounts see a **"Clinical work"** section with **6 tabs** plus Settings. 
 
 Admins see everything under **My account** (the 10 patient tabs) **plus** the 15-tab **Clinic admin** section:
 
-Products · Doctors · Appointments · Medical Records · Prescriptions · Treatment Plans · Treatment Alerts · Orders · Testimonials · Users & Messages · Blog · Subscribers · Live Reviews · Staff & Roles · Data Backups
+Products · Staff · Appointments · Medical Records · Prescriptions · Treatment Plans · Treatment Alerts · Orders · Testimonials · Users & Messages · Blog · Subscribers · Live Reviews · Staff & Roles · Data Backups
 
 ### 7.1 Products
 
@@ -384,12 +384,12 @@ Products · Doctors · Appointments · Medical Records · Prescriptions · Treat
 - **Image**: paste an **Image URL** or click **Upload** (stores on Cloudinary and fills the URL).
 - Tick **Featured on home catalog** / **Visible in shop** → **Create product** (or **Save changes**).
 
-### 7.2 Doctors
+### 7.2 Staff
 
-- Clinic practitioners shown with specialty and weekly availability ("available N day(s)/week"); hidden doctors carry a **Hidden** badge.
-- **Add doctor**: **Name**, **Specialty** (+ French), Phone, Photo URL, Sort order, Bio (EN/FR).
+- Clinic team members shown with specialty and weekly availability ("available N day(s)/week"); hidden staff members carry a **Hidden** badge.
+- **Add staff member**: **Name**, **Specialty** (+ French), Phone, Photo URL, Sort order, Bio (EN/FR).
 - **Weekly availability**: **Add day** per working day → Day (Sun–Sat), Start, End, **Slot (min)** (15–120).
-- **Accepting bookings** controls whether the doctor appears in the patient booking screen.
+- **Accepting bookings** controls whether the staff member appears in the patient booking screen.
 - Toggle **Active** to hide/show; edit or delete rows.
 
 ### 7.3 Appointments

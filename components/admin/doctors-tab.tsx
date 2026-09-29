@@ -114,7 +114,7 @@ function DoctorForm({
   async function submit(e: FormEvent) {
     e.preventDefault();
     if (form.name.trim().length < 2) {
-      window.alert("Please provide the doctor's name.");
+      window.alert("Please provide the staff member's name.");
       return;
     }
     if (form.specialty.trim().length < 2) {
@@ -137,10 +137,10 @@ function DoctorForm({
         body: JSON.stringify(payload),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Could not save the doctor.");
+      if (!res.ok) throw new Error(data.error || "Could not save the staff member.");
       onSaved(data.doctor as DoctorView);
     } catch (err) {
-      window.alert(err instanceof Error ? err.message : "Could not save the doctor.");
+      window.alert(err instanceof Error ? err.message : "Could not save the staff member.");
     } finally {
       setSaving(false);
     }
@@ -152,7 +152,7 @@ function DoctorForm({
       className="rounded-lg border border-forest-200 bg-forest-50/50 p-5"
     >
       <div className="flex items-center justify-between gap-3">
-        <p className="text-sm font-bold text-ink">{initial ? "Edit doctor" : "Add a doctor"}</p>
+        <p className="text-sm font-bold text-ink">{initial ? "Edit staff member" : "Add a staff member"}</p>
         <button
           type="button"
           onClick={onCancel}
@@ -228,7 +228,7 @@ function DoctorForm({
       <div className="mt-5">
         <p className="text-xs font-semibold uppercase tracking-wide text-ink">Weekly availability</p>
         <p className="mt-1 text-xs text-muted">
-          Slots are generated automatically for each day. Leave empty on days the doctor is off.
+          Slots are generated automatically for each day. Leave empty on days the staff member is off.
         </p>
         <div className="mt-3 space-y-2">
           {schedule.map((row, index) => (
@@ -314,7 +314,7 @@ function DoctorForm({
         </label>
         <div className="flex flex-1 items-center justify-end gap-3">
           <Button type="submit" disabled={saving}>
-            {saving ? "Saving..." : initial ? "Save changes" : "Add doctor"}
+            {saving ? "Saving..." : initial ? "Save changes" : "Add staff member"}
           </Button>
           <button type="button" onClick={onCancel} className="text-sm font-semibold text-muted hover:text-ink">
             Cancel
@@ -349,7 +349,7 @@ export function DoctorsTab() {
         else setDoctors(Array.isArray(data.doctors) ? data.doctors : []);
       })
       .catch(() => {
-        if (active) setError("Could not load doctors.");
+        if (active) setError("Could not load staff.");
       });
     return () => {
       active = false;
@@ -373,7 +373,7 @@ export function DoctorsTab() {
       setDoctors((prev) =>
         prev === null ? prev : prev.map((d) => (d._id === doctor._id ? { ...d, active: !doctor.active } : d))
       );
-      notify(doctor.active ? "Doctor hidden from booking." : "Doctor is now accepting bookings.");
+      notify(doctor.active ? "Staff member hidden from booking." : "Staff member is now accepting bookings.");
     } catch (err) {
       window.alert(err instanceof Error ? err.message : "Update failed.");
     }
@@ -384,11 +384,11 @@ export function DoctorsTab() {
     try {
       const res = await fetch(`/api/admin/doctors/${doctor._id}`, { method: "DELETE", credentials: "include" });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Could not delete the doctor.");
+      if (!res.ok) throw new Error(data.error || "Could not delete the staff member.");
       setDoctors((prev) => (prev === null ? prev : prev.filter((d) => d._id !== doctor._id)));
-      notify(data.message || "Doctor deleted.");
+      notify(data.message || "Staff member deleted.");
     } catch (err) {
-      window.alert(err instanceof Error ? err.message : "Could not delete the doctor.");
+      window.alert(err instanceof Error ? err.message : "Could not delete the staff member.");
     }
   }
 
@@ -398,12 +398,12 @@ export function DoctorsTab() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-muted">
-          Doctors appear on the booking screen with their weekly availability.
+          Staff members appear on the booking screen with their weekly availability.
         </p>
         {!showForm && !editingDoctor ? (
           <Button size="sm" onClick={() => setShowForm(true)}>
             <FaPlus className="h-3.5 w-3.5" aria-hidden />
-            Add doctor
+            Add staff member
           </Button>
         ) : null}
       </div>
@@ -448,7 +448,7 @@ export function DoctorsTab() {
       {doctors && doctors.length === 0 && !showForm ? (
         <div className="rounded-lg border border-line bg-white p-8 text-center">
           <p className="text-sm text-muted">
-            No doctors yet. Add your clinic&apos;s practitioners so patients can book appointments.
+            No staff members yet. Add your clinic&apos;s team so patients can book appointments.
           </p>
         </div>
       ) : null}

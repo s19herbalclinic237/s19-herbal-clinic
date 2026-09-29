@@ -19,6 +19,8 @@ import {
   TreatmentPhaseBadge,
 } from "@/components/account/badges";
 import { UserAvatar } from "@/components/account/user-avatar";
+import { useLocale } from "@/components/i18n/locale-provider";
+import type { TranslationKey } from "@/lib/i18n";
 import { formatFcfa } from "@/lib/utils";
 import { CLINIC, waLink } from "@/lib/site";
 import {
@@ -42,11 +44,11 @@ import {
   FaWhatsapp,
 } from "react-icons/fa6";
 
-export function getGreeting(): string {
+export function getGreeting(): "morning" | "afternoon" | "evening" {
   const hour = new Date().getHours();
-  if (hour < 12) return "Good morning";
-  if (hour < 18) return "Good afternoon";
-  return "Good evening";
+  if (hour < 12) return "morning";
+  if (hour < 18) return "afternoon";
+  return "evening";
 }
 
 export { initialsOf } from "@/components/account/user-avatar";
@@ -190,11 +192,14 @@ function RecentOrdersCard({
   loading: boolean;
   onNavigate: (tab: PatientTabId) => void;
 }) {
+  const { t } = useLocale();
   return (
     <Card
-      title="Recent Orders"
+      title={t("dash.overview.recentOrders")}
       action={
-        orders.length > 0 ? <CardAction onClick={() => onNavigate("orders")}>View all</CardAction> : null
+        orders.length > 0 ? (
+          <CardAction onClick={() => onNavigate("orders")}>{t("dash.overview.viewAll")}</CardAction>
+        ) : null
       }
     >
       {loading ? (
@@ -202,14 +207,14 @@ function RecentOrdersCard({
       ) : orders.length === 0 ? (
         <EmptyState
           icon={<FaBoxOpen className="h-5 w-5" aria-hidden />}
-          title="No orders yet"
-          sub="Browse the online catalog and place your first order - we will track it here for you."
+          title={t("dash.overview.noOrdersTitle")}
+          sub={t("dash.overview.noOrdersSub")}
         >
           <Link
             href="/shop"
             className="inline-flex h-10 items-center justify-center rounded-lg bg-forest-950 px-4 text-sm font-semibold text-white transition-colors hover:bg-forest-800"
           >
-            Browse the catalog
+            {t("dash.overview.browseCatalog")}
           </Link>
         </EmptyState>
       ) : (
@@ -228,7 +233,7 @@ function RecentOrdersCard({
                   {formatDate(o.createdAt)} ·{" "}
                   {(() => {
                     const count = o.items.reduce((n, i) => n + i.quantity, 0);
-                    return `${count} item${count === 1 ? "" : "s"}`;
+                    return t(count === 1 ? "dash.overview.item" : "dash.overview.items", { n: count });
                   })()}
                 </span>
               </span>
@@ -238,7 +243,7 @@ function RecentOrdersCard({
               </span>
               <Link
                 href={`/order/${o.orderReference}`}
-                aria-label={`View order ${o.orderReference}`}
+                aria-label={t("dash.overview.viewOrder", { ref: o.orderReference })}
                 className="ml-1 shrink-0 text-forest-700 transition-colors hover:text-gold-600"
               >
                 <FaArrowRight className="h-3.5 w-3.5" aria-hidden />
@@ -260,12 +265,13 @@ function RecentMessagesCard({
   loading: boolean;
   onNavigate: (tab: PatientTabId) => void;
 }) {
+  const { t } = useLocale();
   return (
     <Card
-      title="Messages from the Clinic"
+      title={t("dash.overview.messagesFromClinic")}
       action={
         messages.length > 0 ? (
-          <CardAction onClick={() => onNavigate("messages")}>View all</CardAction>
+          <CardAction onClick={() => onNavigate("messages")}>{t("dash.overview.viewAll")}</CardAction>
         ) : null
       }
     >
@@ -274,15 +280,15 @@ function RecentMessagesCard({
       ) : messages.length === 0 ? (
         <EmptyState
           icon={<FaEnvelopeOpen className="h-5 w-5" aria-hidden />}
-          title="No messages yet"
-          sub="The clinic will reach out here with order updates and wellness notes."
+          title={t("dash.overview.noMessagesTitle")}
+          sub={t("dash.overview.noMessagesSub")}
         >
           <button
             type="button"
             onClick={() => onNavigate("messages")}
             className="inline-flex h-10 cursor-pointer items-center justify-center rounded-lg bg-forest-950 px-4 text-sm font-semibold text-white transition-colors hover:bg-forest-800"
           >
-            Open messages
+            {t("dash.overview.openMessages")}
           </button>
         </EmptyState>
       ) : (
@@ -321,13 +327,14 @@ function YourStoryCard({
   loading: boolean;
   onNavigate: (tab: PatientTabId) => void;
 }) {
+  const { t } = useLocale();
   const latest = testimonials[0];
   return (
     <Card
-      title="Your Story"
+      title={t("dash.overview.yourStory")}
       action={
         testimonials.length > 0 ? (
-          <CardAction onClick={() => onNavigate("testimonials")}>All</CardAction>
+          <CardAction onClick={() => onNavigate("testimonials")}>{t("dash.overview.all")}</CardAction>
         ) : null
       }
     >
@@ -336,15 +343,15 @@ function YourStoryCard({
       ) : !latest ? (
         <EmptyState
           icon={<FaCommentDots className="h-5 w-5" aria-hidden />}
-          title="Tell your S19 story"
-          sub="Share how your healing journey is going - it encourages others on the same path."
+          title={t("dash.overview.tellStoryTitle")}
+          sub={t("dash.overview.tellStorySub")}
         >
           <button
             type="button"
             onClick={() => onNavigate("testimonials")}
             className="inline-flex h-10 cursor-pointer items-center justify-center rounded-lg bg-forest-950 px-4 text-sm font-semibold text-white transition-colors hover:bg-forest-800"
           >
-            Drop a testimony
+            {t("dash.overview.dropTestimony")}
           </button>
         </EmptyState>
       ) : (
@@ -362,7 +369,7 @@ function YourStoryCard({
             onClick={() => onNavigate("testimonials")}
             className="mt-4 inline-flex cursor-pointer items-center gap-1.5 text-xs font-semibold text-forest-800 transition-colors hover:text-gold-600"
           >
-            Share another story
+            {t("dash.overview.shareAnother")}
             <FaArrowRight className="h-3 w-3" aria-hidden />
           </button>
         </div>
@@ -380,14 +387,17 @@ function TreatmentPlanCard({
   loading: boolean;
   onNavigate: (tab: PatientTabId) => void;
 }) {
+  const { t } = useLocale();
   const featured = plans.find((p) => p.phase === "active") ?? plans[0];
   const left = featured ? daysUntil(featured.endDate) : 0;
 
   return (
     <Card
-      title="Treatment Plan"
+      title={t("dash.overview.treatmentPlan")}
       action={
-        plans.length > 0 ? <CardAction onClick={() => onNavigate("treatment")}>View all</CardAction> : null
+        plans.length > 0 ? (
+          <CardAction onClick={() => onNavigate("treatment")}>{t("dash.overview.viewAll")}</CardAction>
+        ) : null
       }
     >
       {loading ? (
@@ -395,8 +405,8 @@ function TreatmentPlanCard({
       ) : !featured ? (
         <EmptyState
           icon={<FaCalendarDays className="h-5 w-5" aria-hidden />}
-          title="No treatment plan yet"
-          sub="The clinic builds every patient a personalized 3-month or 6-month plan. It will appear here with its start and end dates as soon as it is set up."
+          title={t("dash.overview.noPlanTitle")}
+          sub={t("dash.overview.noPlanSub")}
         />
       ) : (
         <div className="px-5 py-4">
@@ -405,36 +415,45 @@ function TreatmentPlanCard({
             <TreatmentPhaseBadge phase={featured.phase} />
           </div>
           <p className="mt-2 text-xs leading-relaxed text-muted">
-            {featured.phase === "scheduled" ? "Starts" : "Started"}{" "}
+            {featured.phase === "scheduled"
+              ? t("dash.overview.starts")
+              : t("dash.overview.started")}{" "}
             <span className="font-semibold text-ink">{formatDate(featured.startDate)}</span>
             {" · "}
-            {featured.phase === "scheduled" || featured.phase === "active" ? "Expected completion" : "Completed"}{" "}
+            {featured.phase === "scheduled" || featured.phase === "active"
+              ? t("dash.overview.expectedCompletion")
+              : t("dash.overview.completed")}{" "}
             <span className="font-semibold text-ink">
               {formatDate(featured.completedAt || featured.endDate)}
             </span>
             {featured.forMember ? ` · ${featured.forMember}` : ""}
           </p>
-          {featured.phase === "active" ? (
+          {featured.phase === "active" && (featured.month != null || featured.day != null) ? (
             <p className="mt-2 text-xs font-semibold text-forest-800">
-              Month {featured.month} of {featured.months} · Day {featured.day} of {featured.days}
+              {featured.month != null
+                ? t("dash.overview.monthOf", { m: featured.month, n: featured.months })
+                : null}
+              {featured.month != null && featured.day != null ? " · " : null}
+              {featured.day != null
+                ? t("dash.overview.dayOf", { d: featured.day, n: featured.days })
+                : null}
             </p>
           ) : null}
           {featured.phase === "active" ? (
             <p className="mt-3 inline-flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800">
               <FaHourglassHalf className="h-3.5 w-3.5" aria-hidden />
               {left > 0
-                ? `${left} day${left === 1 ? "" : "s"} left on this treatment`
-                : "Final day of treatment"}
+                ? t(left === 1 ? "dash.overview.dayLeft" : "dash.overview.daysLeft", { n: left })
+                : t("dash.overview.finalDay")}
             </p>
           ) : featured.phase === "scheduled" ? (
-            <p className="mt-3 text-xs font-semibold text-sky-700">Not started yet</p>
+            <p className="mt-3 text-xs font-semibold text-sky-700">{t("dash.overview.notStartedYet")}</p>
           ) : featured.phase === "expired" ? (
-            <p className="mt-3 text-xs font-semibold text-amber-700">
-              Period ended - the clinic will record the final review
-            </p>
+            <p className="mt-3 text-xs font-semibold text-amber-700">{t("dash.overview.periodEnded")}</p>
           ) : (
             <p className="mt-3 text-xs font-semibold text-indigo-700">
-              Completed {featured.completedAt ? formatDate(featured.completedAt) : ""}
+              {t("dash.overview.completed")}{" "}
+              {featured.completedAt ? formatDate(featured.completedAt) : ""}
             </p>
           )}
           <button
@@ -442,7 +461,7 @@ function TreatmentPlanCard({
             onClick={() => onNavigate("treatment")}
             className="mt-4 inline-flex cursor-pointer items-center gap-1.5 text-xs font-semibold text-forest-800 transition-colors hover:text-gold-600"
           >
-            View treatment timeline
+            {t("dash.overview.viewTimeline")}
             <FaArrowRight className="h-3 w-3" aria-hidden />
           </button>
         </div>
@@ -452,64 +471,65 @@ function TreatmentPlanCard({
 }
 
 const quickActions: {
-  label: string;
-  sub: string;
+  label: TranslationKey;
+  sub: TranslationKey;
   icon: ReactNode;
   tab: PatientTabId;
 }[] = [
   {
-    label: "Book appointment",
-    sub: "Clinic or Online",
+    label: "dash.overview.quick.book",
+    sub: "dash.overview.quick.bookSub",
     icon: <FaCalendarCheck className="h-4 w-4" aria-hidden />,
     tab: "appointments",
   },
   {
-    label: "Rate your visit",
-    sub: "Reviews & stories",
+    label: "dash.overview.quick.rate",
+    sub: "dash.overview.quick.rateSub",
     icon: <FaStar className="h-4 w-4" aria-hidden />,
     tab: "testimonials",
   },
   {
-    label: "View orders",
-    sub: "History & tracking",
+    label: "dash.overview.quick.orders",
+    sub: "dash.overview.quick.ordersSub",
     icon: <FaBoxOpen className="h-4 w-4" aria-hidden />,
     tab: "orders",
   },
   {
-    label: "Read messages",
-    sub: "Clinic updates",
+    label: "dash.overview.quick.messages",
+    sub: "dash.overview.quick.messagesSub",
     icon: <FaEnvelopeOpen className="h-4 w-4" aria-hidden />,
     tab: "messages",
   },
   {
-    label: "Medical records",
-    sub: "Visits, labs, scans",
+    label: "dash.overview.quick.records",
+    sub: "dash.overview.quick.recordsSub",
     icon: <FaFileMedical className="h-4 w-4" aria-hidden />,
     tab: "records",
   },
   {
-    label: "Prescriptions",
-    sub: "Dosage instructions",
+    label: "dash.overview.quick.prescriptions",
+    sub: "dash.overview.quick.prescriptionsSub",
     icon: <FaPills className="h-4 w-4" aria-hidden />,
     tab: "prescriptions",
   },
   {
-    label: "Family profile",
-    sub: "Manage dependants",
+    label: "dash.overview.quick.family",
+    sub: "dash.overview.quick.familySub",
     icon: <FaPeopleGroup className="h-4 w-4" aria-hidden />,
     tab: "family",
   },
   {
-    label: "Account settings",
-    sub: "Profile & password",
+    label: "dash.overview.quick.settings",
+    sub: "dash.overview.quick.settingsSub",
     icon: <FaGear className="h-4 w-4" aria-hidden />,
     tab: "settings",
   },
 ];
 
 function QuickActions({ onNavigate }: { onNavigate: (tab: PatientTabId) => void }) {
+  const { t } = useLocale();
   return (
-    <Card title="Quick Actions">
+    <Card title={t("dash.overview.quickActions")}>
       <div className="grid grid-cols-2 gap-3 p-5">
         {quickActions.map((a) => (
           <button
@@ -522,8 +542,8 @@ function QuickActions({ onNavigate }: { onNavigate: (tab: PatientTabId) => void 
               {a.icon}
             </span>
             <span>
-              <span className="block text-xs font-bold text-ink">{a.label}</span>
-              <span className="mt-0.5 block text-[10px] text-muted">{a.sub}</span>
+              <span className="block text-xs font-bold text-ink">{t(a.label)}</span>
+              <span className="mt-0.5 block text-[10px] text-muted">{t(a.sub)}</span>
             </span>
           </button>
         ))}
@@ -533,22 +553,21 @@ function QuickActions({ onNavigate }: { onNavigate: (tab: PatientTabId) => void 
 }
 
 function HelpCard() {
+  const { t } = useLocale();
   return (
     <section className="relative overflow-hidden rounded-2xl bg-forest-950 p-5 text-white">
       <span aria-hidden className="pointer-events-none absolute -right-8 -top-10 h-28 w-28 rounded-full bg-white/5" />
       <div className="relative">
-        <p className="font-display text-base font-bold">Need help?</p>
-        <p className="mt-1 text-xs leading-relaxed text-forest-200">
-          Questions about your order, a remedy, or your account?
-        </p>
+        <p className="font-display text-base font-bold">{t("dash.overview.help.title")}</p>
+        <p className="mt-1 text-xs leading-relaxed text-forest-200">{t("dash.overview.help.text")}</p>
         <a
-          href={waLink("Hello S19 Herbal Clinic, I have a question about my account or my order.")}
+          href={waLink(t("dash.overview.help.waMessage"))}
           target="_blank"
           rel="noreferrer"
           className="mt-4 flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-gold-400 text-sm font-bold text-forest-950 transition-colors hover:bg-gold-300"
         >
           <FaWhatsapp className="h-4 w-4" aria-hidden />
-          Chat on WhatsApp
+          {t("dash.overview.help.chat")}
         </a>
         <ul className="mt-4 space-y-2.5 text-xs text-forest-200">
           <li className="flex gap-2.5">
@@ -577,12 +596,19 @@ interface DashboardOverviewProps {
 }
 
 export function DashboardOverview({ data, onNavigate }: DashboardOverviewProps) {
+  const { t } = useLocale();
   const { user, resendVerification } = useAuth();
   const { orders, messages, testimonials, plans, unreadCount, loading } = data;
   const [resent, setResent] = useState(false);
 
-  const firstName = user?.name?.trim().split(/\s+/)[0] || "there";
+  const firstName = user?.name?.trim().split(/\s+/)[0] || t("dash.overview.fallbackName");
   const greeting = getGreeting();
+  const greetingKey = {
+    morning: "dash.shell.greeting.morning",
+    afternoon: "dash.shell.greeting.afternoon",
+    evening: "dash.shell.greeting.evening",
+  } as const;
+  const greetingText = t(greetingKey[greeting]);
   const dateLabel = new Date().toLocaleDateString("en-GB", {
     weekday: "long",
     day: "numeric",
@@ -593,7 +619,7 @@ export function DashboardOverview({ data, onNavigate }: DashboardOverviewProps) 
   const activeOrders = orders.filter(
     (o) => o.status !== "Delivered" && o.status !== "Cancelled"
   ).length;
-  const pendingStories = testimonials.filter((t) => t.status === "pending").length;
+  const pendingStories = testimonials.filter((tst) => tst.status === "pending").length;
   const memberSince = user?.createdAt ? formatDate(user.createdAt) : null;
 
   return (
@@ -603,7 +629,7 @@ export function DashboardOverview({ data, onNavigate }: DashboardOverviewProps) 
         <div className="flex items-start gap-2.5 rounded-2xl border border-gold-300/70 bg-gold-400/10 px-4 py-3 text-sm text-ink mx-4 sm:mx-0">
           <FaRegCircleXmark className="mt-0.5 h-4 w-4 shrink-0 text-gold-600" aria-hidden />
           <span>
-            Your email is not verified yet. Check your inbox for the verification link, or{" "}
+            {t("dash.overview.emailNotVerified")}{" "}
             <button
               type="button"
               onClick={async () => {
@@ -612,9 +638,9 @@ export function DashboardOverview({ data, onNavigate }: DashboardOverviewProps) 
               }}
               className="cursor-pointer font-semibold text-forest-800 underline underline-offset-2"
             >
-              resend it
+              {t("dash.overview.resendIt")}
             </button>
-            {resent ? " (sent - check your inbox)" : ""}
+            {resent ? t("dash.overview.resentNote") : ""}
           </span>
         </div>
       ) : null}
@@ -626,7 +652,7 @@ export function DashboardOverview({ data, onNavigate }: DashboardOverviewProps) 
         <div className="relative flex items-start justify-between gap-4">
           <div className="min-w-0">
             <p className="font-display text-[22px] font-bold leading-snug text-white">
-              {greeting},
+              {greetingText},
             </p>
             <p className="font-display text-[22px] font-bold leading-snug text-white">{firstName}</p>
             <p className="mt-2 text-xs leading-relaxed text-forest-200">{dateLabel}</p>
@@ -638,9 +664,12 @@ export function DashboardOverview({ data, onNavigate }: DashboardOverviewProps) 
           />
         </div>
         <div className="relative mt-5 grid grid-cols-3 gap-2">
-          <VitalMini value={loading ? "—" : String(orders.length)} label="Orders" />
-          <VitalMini value={loading ? "—" : String(unreadCount)} label="Unread" />
-          <VitalMini value={loading ? "—" : String(testimonials.length)} label="Stories" />
+          <VitalMini value={loading ? "—" : String(orders.length)} label={t("dash.overview.vitalOrders")} />
+          <VitalMini value={loading ? "—" : String(unreadCount)} label={t("dash.overview.vitalUnread")} />
+          <VitalMini
+            value={loading ? "—" : String(testimonials.length)}
+            label={t("dash.overview.vitalStories")}
+          />
         </div>
       </div>
 
@@ -648,43 +677,47 @@ export function DashboardOverview({ data, onNavigate }: DashboardOverviewProps) 
       <div className="flex gap-3 overflow-x-auto px-4 pb-1 no-scrollbar sm:grid sm:grid-cols-2 sm:gap-3 sm:px-0 sm:overflow-visible sm:pb-0 lg:grid-cols-4">
         <StatCard
           icon={<FaBoxOpen className="h-5 w-5" aria-hidden />}
-          label="Orders placed"
+          label={t("dash.overview.statOrders")}
           value={loading ? "—" : orders.length}
           sub={
             orders.length > 0
               ? activeOrders > 0
-                ? `${activeOrders} in progress`
-                : "All delivered"
-              : "No orders yet"
+                ? t("dash.overview.stat.inProgress", { n: activeOrders })
+                : t("dash.overview.stat.allDelivered")
+              : t("dash.overview.stat.noOrders")
           }
           onClick={() => onNavigate("orders")}
         />
         <StatCard
           icon={<FaEnvelopeOpen className="h-5 w-5" aria-hidden />}
-          label="Unread messages"
+          label={t("dash.overview.statUnread")}
           value={loading ? "—" : unreadCount}
-          sub={unreadCount > 0 ? "Waiting from the clinic" : "You're all caught up"}
-          badge={unreadCount > 0 ? "New" : undefined}
+          sub={unreadCount > 0 ? t("dash.overview.stat.unreadWaiting") : t("dash.overview.stat.caughtUp")}
+          badge={unreadCount > 0 ? t("dash.overview.stat.new") : undefined}
           onClick={() => onNavigate("messages")}
         />
         <StatCard
           icon={<FaCommentDots className="h-5 w-5" aria-hidden />}
-          label="Your stories"
+          label={t("dash.overview.statStories")}
           value={loading ? "—" : testimonials.length}
           sub={
             pendingStories > 0
-              ? `${pendingStories} awaiting review`
+              ? t("dash.overview.stat.storiesAwaiting", { n: pendingStories })
               : testimonials.length > 0
-                ? "Shared with S19"
-                : "Share your experience"
+                ? t("dash.overview.stat.storiesShared")
+                : t("dash.overview.stat.storiesShare")
           }
           onClick={() => onNavigate("testimonials")}
         />
         <StatCard
           icon={<FaCircleUser className="h-5 w-5" aria-hidden />}
-          label="Account"
-          value={user?.emailVerified ? "Verified" : "Verify email"}
-          sub={memberSince ? `Member since ${memberSince}` : "Update your profile"}
+          label={t("dash.overview.statAccount")}
+          value={user?.emailVerified ? t("dash.overview.stat.verified") : t("dash.overview.stat.verifyEmail")}
+          sub={
+            memberSince
+              ? t("dash.overview.stat.memberSince", { date: memberSince })
+              : t("dash.overview.stat.updateProfile")
+          }
           onClick={() => onNavigate("settings")}
         />
       </div>

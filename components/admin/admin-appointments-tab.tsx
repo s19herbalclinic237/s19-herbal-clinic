@@ -69,7 +69,7 @@ function AppointmentCard({
             {a.user?.email ? <span className="ml-2 font-normal text-muted">{a.user.email}</span> : null}
           </p>
           <p className="mt-0.5 text-xs text-muted">
-            {a.doctor?.name || "Doctor"} · {a.doctor?.specialty || ""}
+            {a.doctor?.name || "Staff member"} · {a.doctor?.specialty || ""}
           </p>
         </div>
         <div className="flex shrink-0 flex-wrap items-center gap-2">

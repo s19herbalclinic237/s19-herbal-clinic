@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { formatFcfa } from "@/lib/utils";
+import { useLocale } from "@/components/i18n/locale-provider";
 import { formatDate, OrderStatusBadge } from "@/components/account/badges";
 import { FaBoxOpen } from "react-icons/fa6";
 
@@ -16,6 +17,7 @@ interface OrderSummary {
 }
 
 function useOrders() {
+  const { t } = useLocale();
   const [orders, setOrders] = useState<OrderSummary[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,17 +31,18 @@ function useOrders() {
         else setOrders(Array.isArray(data.orders) ? data.orders : []);
       })
       .catch(() => {
-        if (active) setError("Could not load your orders.");
+        if (active) setError(t("dash.orders.loadError"));
       });
     return () => {
       active = false;
     };
-  }, []);
+  }, [t]);
 
   return { orders, error };
 }
 
 export function OrdersTab() {
+  const { t } = useLocale();
   const { orders, error } = useOrders();
 
   if (error) {
@@ -58,12 +61,12 @@ export function OrdersTab() {
     return (
       <div className="rounded-lg border border-line bg-white p-8 text-center">
         <FaBoxOpen className="mx-auto h-7 w-7 text-forest-300" aria-hidden />
-        <p className="mt-3 text-sm text-muted">You have not placed any orders yet.</p>
+        <p className="mt-3 text-sm text-muted">{t("dash.orders.empty")}</p>
         <Link
           href="/shop"
           className="mt-4 inline-flex h-11 items-center justify-center rounded-lg bg-forest-800 px-5 text-sm font-semibold text-white hover:bg-forest-900"
         >
-          Browse the catalog
+          {t("dash.orders.browse")}
         </Link>
       </div>
     );
@@ -71,26 +74,29 @@ export function OrdersTab() {
 
   return (
     <ul className="space-y-3">
-      {orders.map((o) => (
-        <li key={o._id} className="rounded-lg border border-line bg-white p-4 sm:p-5">
-          <div className="flex items-center justify-between gap-3">
-            <div className="min-w-0">
-              <p className="truncate font-semibold text-ink">{o.orderReference}</p>
-              <p className="text-xs text-muted">
-                {formatDate(o.createdAt)} · {o.items.reduce((n, i) => n + i.quantity, 0)} item
-                {o.items.reduce((n, i) => n + i.quantity, 0) === 1 ? "" : "s"}
-              </p>
+      {orders.map((o) => {
+        const count = o.items.reduce((n, i) => n + i.quantity, 0);
+        return (
+          <li key={o._id} className="rounded-lg border border-line bg-white p-4 sm:p-5">
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="truncate font-semibold text-ink">{o.orderReference}</p>
+                <p className="text-xs text-muted">
+                  {formatDate(o.createdAt)} ·{" "}
+                  {t(count === 1 ? "dash.orders.item" : "dash.orders.items", { n: count })}
+                </p>
+              </div>
+              <OrderStatusBadge status={o.status} />
             </div>
-            <OrderStatusBadge status={o.status} />
-          </div>
-          <div className="mt-3 flex items-center justify-between border-t border-line pt-3">
-            <p className="text-sm font-bold text-forest-800">{formatFcfa(o.total)}</p>
-            <Link href={`/order/${o.orderReference}`} className="text-sm font-semibold text-forest-700 underline underline-offset-2">
-              View & track
-            </Link>
-          </div>
-        </li>
-      ))}
+            <div className="mt-3 flex items-center justify-between border-t border-line pt-3">
+              <p className="text-sm font-bold text-forest-800">{formatFcfa(o.total)}</p>
+              <Link href={`/order/${o.orderReference}`} className="text-sm font-semibold text-forest-700 underline underline-offset-2">
+                {t("dash.orders.viewTrack")}
+              </Link>
+            </div>
+          </li>
+        );
+      })}
     </ul>
   );
 }

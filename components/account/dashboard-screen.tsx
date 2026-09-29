@@ -9,6 +9,9 @@ import {
   type PatientTabId,
 } from "@/components/account/dashboard-data";
 import { DashboardOverview, getGreeting } from "@/components/account/overview-tab";
+import { useLocale } from "@/components/i18n/locale-provider";
+import { LanguageSwitcher } from "@/components/i18n/language-switcher";
+import type { TranslationKey } from "@/lib/i18n";
 import { UserAvatar } from "@/components/account/user-avatar";
 import { OrdersTab } from "@/components/account/orders-tab";
 import { MessagesTab } from "@/components/account/messages-tab";
@@ -87,59 +90,59 @@ type TabId =
 
 interface NavItem {
   id: TabId;
-  label: string;
+  labelKey: TranslationKey;
   icon: ReactNode;
 }
 
 const patientTabs: NavItem[] = [
   {
     id: "overview",
-    label: "Dashboard",
+    labelKey: "dash.shell.nav.overview",
     icon: <FaTableCellsLarge className="h-4 w-4" aria-hidden />,
   },
   {
     id: "appointments",
-    label: "Appointments",
+    labelKey: "dash.shell.nav.appointments",
     icon: <FaCalendarCheck className="h-4 w-4" aria-hidden />,
   },
   {
     id: "orders",
-    label: "Orders",
+    labelKey: "dash.shell.nav.orders",
     icon: <FaBoxOpen className="h-4 w-4" aria-hidden />,
   },
   {
     id: "messages",
-    label: "Messages",
+    labelKey: "dash.shell.nav.messages",
     icon: <FaEnvelope className="h-4 w-4" aria-hidden />,
   },
   {
     id: "records",
-    label: "Medical Records",
+    labelKey: "dash.shell.nav.records",
     icon: <FaFileMedical className="h-4 w-4" aria-hidden />,
   },
   {
     id: "prescriptions",
-    label: "Prescriptions",
+    labelKey: "dash.shell.nav.prescriptions",
     icon: <FaPills className="h-4 w-4" aria-hidden />,
   },
   {
     id: "treatment",
-    label: "Treatment Plan",
+    labelKey: "dash.shell.nav.treatment",
     icon: <FaCalendarDays className="h-4 w-4" aria-hidden />,
   },
   {
     id: "family",
-    label: "Family",
+    labelKey: "dash.shell.nav.family",
     icon: <FaPeopleGroup className="h-4 w-4" aria-hidden />,
   },
   {
     id: "testimonials",
-    label: "Your Stories",
+    labelKey: "dash.shell.nav.testimonials",
     icon: <FaCommentDots className="h-4 w-4" aria-hidden />,
   },
   {
     id: "settings",
-    label: "Settings",
+    labelKey: "dash.shell.nav.settings",
     icon: <FaGear className="h-4 w-4" aria-hidden />,
   },
 ];
@@ -147,77 +150,77 @@ const patientTabs: NavItem[] = [
 const adminTabs: NavItem[] = [
   {
     id: "admin-products",
-    label: "Products",
+    labelKey: "dash.shell.nav.adminProducts",
     icon: <FaTags className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-doctors",
-    label: "Doctors",
+    labelKey: "dash.shell.nav.adminDoctors",
     icon: <FaUserDoctor className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-appointments",
-    label: "Appointments",
+    labelKey: "dash.shell.nav.adminAppointments",
     icon: <FaCalendarCheck className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-records",
-    label: "Medical Records",
+    labelKey: "dash.shell.nav.adminRecords",
     icon: <FaFolderOpen className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-prescriptions",
-    label: "Prescriptions",
+    labelKey: "dash.shell.nav.adminPrescriptions",
     icon: <FaFilePrescription className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-treatment-plans",
-    label: "Treatment Plans",
+    labelKey: "dash.shell.nav.adminTreatmentPlans",
     icon: <FaCalendarDays className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-treatment-alerts",
-    label: "Treatment Alerts",
+    labelKey: "dash.shell.nav.adminTreatmentAlerts",
     icon: <FaTriangleExclamation className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-orders",
-    label: "Orders",
+    labelKey: "dash.shell.nav.adminOrders",
     icon: <FaTruckFast className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-testimonials",
-    label: "Testimonials",
+    labelKey: "dash.shell.nav.adminTestimonials",
     icon: <FaCommentDots className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-messaging",
-    label: "Users & Messages",
+    labelKey: "dash.shell.nav.adminMessaging",
     icon: <FaUserGear className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-posts",
-    label: "Blog",
+    labelKey: "dash.shell.nav.adminPosts",
     icon: <FaNewspaper className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-subscribers",
-    label: "Subscribers",
+    labelKey: "dash.shell.nav.adminSubscribers",
     icon: <FaUsers className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-videos",
-    label: "Live Reviews",
+    labelKey: "dash.shell.nav.adminVideos",
     icon: <FaVideo className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-roles",
-    label: "Staff & Roles",
+    labelKey: "dash.shell.nav.adminRoles",
     icon: <FaUserShield className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-backups",
-    label: "Data Backups",
+    labelKey: "dash.shell.nav.adminBackups",
     icon: <FaBoxArchive className="h-4 w-4" aria-hidden />,
   },
 ];
@@ -230,32 +233,32 @@ const adminTabs: NavItem[] = [
 const doctorTabs: NavItem[] = [
   {
     id: "admin-appointments",
-    label: "Appointments",
+    labelKey: "dash.shell.nav.doctorAppointments",
     icon: <FaCalendarCheck className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-records",
-    label: "Medical Records",
+    labelKey: "dash.shell.nav.doctorRecords",
     icon: <FaFolderOpen className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-prescriptions",
-    label: "Prescriptions",
+    labelKey: "dash.shell.nav.doctorPrescriptions",
     icon: <FaFilePrescription className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-treatment-plans",
-    label: "Treatment Plans",
+    labelKey: "dash.shell.nav.doctorTreatmentPlans",
     icon: <FaCalendarDays className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-treatment-alerts",
-    label: "Treatment Alerts",
+    labelKey: "dash.shell.nav.doctorTreatmentAlerts",
     icon: <FaTriangleExclamation className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-messaging",
-    label: "Patients & Messages",
+    labelKey: "dash.shell.nav.doctorMessaging",
     icon: <FaUserGear className="h-4 w-4" aria-hidden />,
   },
 ];
@@ -271,6 +274,7 @@ function NavButton({
   badge?: number;
   onClick: () => void;
 }) {
+  const { t } = useLocale();
   return (
     <button
       type="button"
@@ -282,7 +286,7 @@ function NavButton({
       }
     >
       <span className="w-4 shrink-0">{item.icon}</span>
-      <span className="min-w-0 flex-1 truncate">{item.label}</span>
+      <span className="min-w-0 flex-1 truncate">{t(item.labelKey)}</span>
       {badge ? (
         <span className="shrink-0 rounded-full bg-gold-400 px-2 py-0.5 text-[10px] font-bold text-forest-950">
           {badge > 9 ? "9+" : badge}
@@ -314,6 +318,7 @@ function PageHeader({
 
 /** Small link used in the sidebar/drawer footers to return to the public site. */
 function BackToSiteLink({ compact = false }: { compact?: boolean }) {
+  const { t } = useLocale();
   return (
     <Link
       href="/"
@@ -324,7 +329,7 @@ function BackToSiteLink({ compact = false }: { compact?: boolean }) {
       }
     >
       <FaHouse className="h-4 w-4 shrink-0" aria-hidden />
-      Back to main site
+      {t("dash.shell.backToSite")}
     </Link>
   );
 }
@@ -341,6 +346,7 @@ function BrandLogo({ dark = true }: { dark?: boolean }) {
 
 export function DashboardScreen() {
   const { user, logout } = useAuth();
+  const { t } = useLocale();
   const data = useDashboardData();
   const [tab, setTab] = useState<TabId>(() =>
     user?.role === "doctor" ? "admin-appointments" : "overview"
@@ -351,49 +357,58 @@ export function DashboardScreen() {
   const isDoctor = user?.role === "doctor";
   const isStaff = isAdmin || isDoctor;
 
-  const settingsTab = patientTabs.filter((t) => t.id === "settings");
-  const navSections: Array<{ label: string; items: NavItem[] }> = isDoctor
+  const settingsTab = patientTabs.filter((tabItem) => tabItem.id === "settings");
+  const navSections: Array<{ labelKey: TranslationKey; items: NavItem[] }> = isDoctor
     ? [
-        { label: "Clinical work", items: doctorTabs },
-        { label: "My account", items: settingsTab },
+        { labelKey: "dash.shell.section.clinicalWork", items: doctorTabs },
+        { labelKey: "dash.shell.section.myAccount", items: settingsTab },
       ]
     : isAdmin
       ? [
-          { label: "My account", items: patientTabs },
-          { label: "Clinic admin", items: adminTabs },
+          { labelKey: "dash.shell.section.myAccount", items: patientTabs },
+          { labelKey: "dash.shell.section.clinicAdmin", items: adminTabs },
         ]
-      : [{ label: "My account", items: patientTabs }];
+      : [{ labelKey: "dash.shell.section.myAccount", items: patientTabs }];
   const bottomNavItems = isDoctor ? doctorTabs : patientTabs;
 
   // One-word labels for the compressed mobile bottom nav so items never
   // truncate on small screens.
-  const shortNavLabel = (item: NavItem) =>
-    item.id === "overview"
-      ? "Home"
-      : item.id === "appointments" || item.id === "admin-appointments"
-        ? "Bookings"
-        : item.id === "orders"
-          ? "Orders"
-          : item.id === "messages" || item.id === "admin-messaging"
-            ? "Inbox"
-            : item.id === "records" || item.id === "admin-records"
-              ? "Records"
-              : item.id === "prescriptions" || item.id === "admin-prescriptions"
-                ? "Rx"
-                : item.id === "treatment" || item.id === "admin-treatment-plans"
-                  ? "Plan"
-                  : item.id === "admin-treatment-alerts"
-                    ? "Alerts"
-                    : item.id === "family"
-                      ? "Family"
-                      : item.id === "testimonials"
-                        ? "Stories"
-                        : item.id === "settings"
-                          ? "Settings"
-                          : item.label;
+  const shortNavLabel = (item: NavItem): string => {
+    const key: TranslationKey =
+      item.id === "overview"
+        ? "dash.shell.short.home"
+        : item.id === "appointments" || item.id === "admin-appointments"
+          ? "dash.shell.short.bookings"
+          : item.id === "orders"
+            ? "dash.shell.short.orders"
+            : item.id === "messages" || item.id === "admin-messaging"
+              ? "dash.shell.short.inbox"
+              : item.id === "records" || item.id === "admin-records"
+                ? "dash.shell.short.records"
+                : item.id === "prescriptions" || item.id === "admin-prescriptions"
+                  ? "dash.shell.short.rx"
+                  : item.id === "treatment" || item.id === "admin-treatment-plans"
+                    ? "dash.shell.short.plan"
+                    : item.id === "admin-treatment-alerts"
+                      ? "dash.shell.short.alerts"
+                      : item.id === "family"
+                        ? "dash.shell.short.family"
+                        : item.id === "testimonials"
+                          ? "dash.shell.short.stories"
+                          : item.id === "settings"
+                            ? "dash.shell.short.settings"
+                            : item.labelKey;
+    return t(key);
+  };
 
-  const firstName = user?.name?.trim().split(/\s+/)[0] || "there";
+  const firstName = user?.name?.trim().split(/\s+/)[0] || "";
   const greeting = getGreeting();
+  const greetingKey: TranslationKey =
+    greeting === "morning"
+      ? "dash.shell.greeting.morning"
+      : greeting === "afternoon"
+        ? "dash.shell.greeting.afternoon"
+        : "dash.shell.greeting.evening";
   const dateLabel = new Date().toLocaleDateString("en-GB", {
     weekday: "long",
     day: "numeric",
@@ -415,8 +430,8 @@ export function DashboardScreen() {
         return (
           <>
             <PageHeader
-              title="Appointments"
-              subtitle="Book, reschedule or cancel consultations with the clinic"
+              title={t("dash.shell.h.appointments.title")}
+              subtitle={t("dash.shell.h.appointments.sub")}
             />
             <div className="px-4 sm:px-0">
               <AppointmentsTab />
@@ -426,9 +441,12 @@ export function DashboardScreen() {
       case "orders":
         return (
           <>
-            <PageHeader title="My Orders" subtitle="Order history, totals and tracking links">
+            <PageHeader
+              title={t("dash.shell.h.orders.title")}
+              subtitle={t("dash.shell.h.orders.sub")}
+            >
               <Link href="/shop" className={buttonLinkClasses("gold", "md")}>
-                Browse catalog
+                {t("dash.shell.h.orders.browse")}
               </Link>
             </PageHeader>
             <div className="px-4 sm:px-0">
@@ -439,7 +457,10 @@ export function DashboardScreen() {
       case "messages":
         return (
           <>
-            <PageHeader title="Messages" subtitle="Updates and notes from the clinic" />
+            <PageHeader
+              title={t("dash.shell.h.messages.title")}
+              subtitle={t("dash.shell.h.messages.sub")}
+            />
             <div className="px-4 sm:px-0">
               <MessagesTab />
             </div>
@@ -449,8 +470,8 @@ export function DashboardScreen() {
         return (
           <>
             <PageHeader
-              title="Medical Records"
-              subtitle="Visits, diagnoses, lab results and scans - downloadable as PDF"
+              title={t("dash.shell.h.records.title")}
+              subtitle={t("dash.shell.h.records.sub")}
             />
             <div className="px-4 sm:px-0">
               <RecordsTab />
@@ -461,8 +482,8 @@ export function DashboardScreen() {
         return (
           <>
             <PageHeader
-              title="Prescriptions"
-              subtitle="Your current and past treatment plans with dosage instructions"
+              title={t("dash.shell.h.prescriptions.title")}
+              subtitle={t("dash.shell.h.prescriptions.sub")}
             />
             <div className="px-4 sm:px-0">
               <PrescriptionsTab />
@@ -473,8 +494,8 @@ export function DashboardScreen() {
         return (
           <>
             <PageHeader
-              title="Treatment Plan"
-              subtitle="Your personalized treatment timeline - when it started, when it ends and its live status"
+              title={t("dash.shell.h.treatment.title")}
+              subtitle={t("dash.shell.h.treatment.sub")}
             />
             <div className="px-4 sm:px-0">
               <TreatmentTab />
@@ -485,8 +506,8 @@ export function DashboardScreen() {
         return (
           <>
             <PageHeader
-              title="Family"
-              subtitle="Manage profiles for your children and loved ones"
+              title={t("dash.shell.h.family.title")}
+              subtitle={t("dash.shell.h.family.sub")}
             />
             <div className="px-4 sm:px-0">
               <FamilyTab />
@@ -497,8 +518,8 @@ export function DashboardScreen() {
         return (
           <>
             <PageHeader
-              title="Your Stories"
-              subtitle="Testimonies you have shared with the S19 community"
+              title={t("dash.shell.h.testimonials.title")}
+              subtitle={t("dash.shell.h.testimonials.sub")}
             />
             <div className="px-4 sm:px-0">
               <TestimonialsTab />
@@ -508,7 +529,10 @@ export function DashboardScreen() {
       case "settings":
         return (
           <>
-            <PageHeader title="Account Settings" subtitle="Profile details, photo, password and sign-out" />
+            <PageHeader
+              title={t("dash.shell.h.settings.title")}
+              subtitle={t("dash.shell.h.settings.sub")}
+            />
             <div className="px-4 sm:px-0">
               <SettingsTab />
             </div>
@@ -559,7 +583,10 @@ export function DashboardScreen() {
       case "admin-doctors":
         return isAdmin ? (
           <>
-            <PageHeader title="Doctors" subtitle="Manage practitioners and their weekly availability" />
+            <PageHeader
+              title={t("dash.shell.h.adminDoctors.title")}
+              subtitle={t("dash.shell.h.adminDoctors.sub")}
+            />
             <div className="px-4 sm:px-0">
               <DoctorsTab />
             </div>
@@ -568,7 +595,10 @@ export function DashboardScreen() {
       case "admin-appointments":
         return isStaff ? (
           <>
-            <PageHeader title="Appointments" subtitle="Confirm, complete or cancel patient bookings" />
+            <PageHeader
+              title={t("dash.shell.h.adminAppointments.title")}
+              subtitle={t("dash.shell.h.adminAppointments.sub")}
+            />
             <div className="px-4 sm:px-0">
               <AdminAppointmentsTab />
             </div>
@@ -577,7 +607,10 @@ export function DashboardScreen() {
       case "admin-records":
         return isStaff ? (
           <>
-            <PageHeader title="Medical Records" subtitle="Log visits, diagnoses, lab results and scans" />
+            <PageHeader
+              title={t("dash.shell.h.adminRecords.title")}
+              subtitle={t("dash.shell.h.adminRecords.sub")}
+            />
             <div className="px-4 sm:px-0">
               <AdminMedicalRecordsTab />
             </div>
@@ -586,7 +619,10 @@ export function DashboardScreen() {
       case "admin-prescriptions":
         return isStaff ? (
           <>
-            <PageHeader title="Prescriptions" subtitle="Issue treatment plans with dosage instructions" />
+            <PageHeader
+              title={t("dash.shell.h.adminPrescriptions.title")}
+              subtitle={t("dash.shell.h.adminPrescriptions.sub")}
+            />
             <div className="px-4 sm:px-0">
               <AdminPrescriptionsTab />
             </div>
@@ -596,8 +632,8 @@ export function DashboardScreen() {
         return isStaff ? (
           <>
             <PageHeader
-              title="Treatment Plans"
-              subtitle="Personalized treatment timelines, progress notes, reminders & installments, glucose monitoring and final reviews"
+              title={t("dash.shell.h.adminTreatmentPlans.title")}
+              subtitle={t("dash.shell.h.adminTreatmentPlans.sub")}
             />
             <div className="px-4 sm:px-0">
               <TreatmentPlansTab />
@@ -608,8 +644,8 @@ export function DashboardScreen() {
         return isStaff ? (
           <>
             <PageHeader
-              title="Treatment Alerts"
-              subtitle="Missed glucose submissions, overdue payments, missed follow-ups, treatments ending, concerning readings and new complications"
+              title={t("dash.shell.h.adminTreatmentAlerts.title")}
+              subtitle={t("dash.shell.h.adminTreatmentAlerts.sub")}
             />
             <div className="px-4 sm:px-0">
               <TreatmentAlertsTab onOpenPlans={() => openTab("admin-treatment-plans")} />
@@ -619,7 +655,10 @@ export function DashboardScreen() {
       case "admin-roles":
         return isAdmin ? (
           <>
-            <PageHeader title="Staff & Roles" subtitle="Promote verified accounts to staff, or back to patient" />
+            <PageHeader
+              title={t("dash.shell.h.adminRoles.title")}
+              subtitle={t("dash.shell.h.adminRoles.sub")}
+            />
             <div className="px-4 sm:px-0">
               <RolesTab />
             </div>
@@ -628,7 +667,10 @@ export function DashboardScreen() {
       case "admin-backups":
         return isAdmin ? (
           <>
-            <PageHeader title="Data Backups" subtitle="Daily automated and manual full-database backups, emailed to the clinic admin" />
+            <PageHeader
+              title={t("dash.shell.h.adminBackups.title")}
+              subtitle={t("dash.shell.h.adminBackups.sub")}
+            />
             <div className="px-4 sm:px-0">
               <BackupsTab />
             </div>
@@ -657,7 +699,7 @@ export function DashboardScreen() {
           />
           <div className="min-w-0">
             <p className="truncate font-display text-sm font-bold text-white">
-              {user?.name || "Welcome"}
+              {user?.name || t("dash.shell.welcome")}
             </p>
             <p className="truncate text-[11px] text-white/50" title={user?.email}>
               {user?.email}
@@ -666,18 +708,18 @@ export function DashboardScreen() {
               {isAdmin ? (
                 <span className="inline-flex items-center gap-1 rounded-full border border-gold-500/50 bg-gold-400/10 px-2 py-0.5 text-[10px] font-bold text-gold-300">
                   <FaShieldHalved className="h-2.5 w-2.5" aria-hidden />
-                  Clinic admin
+                  {t("dash.shell.badge.clinicAdmin")}
                 </span>
               ) : isDoctor ? (
                 <span className="inline-flex items-center gap-1 rounded-full border border-sky-500/50 bg-sky-500/10 px-2 py-0.5 text-[10px] font-bold text-sky-300">
                   <FaUserDoctor className="h-2.5 w-2.5" aria-hidden />
-                  Doctor
+                  {t("dash.shell.badge.staff")}
                 </span>
               ) : null}
               {user?.emailVerified ? (
                 <span className="inline-flex items-center gap-1 rounded-full border border-forest-600 bg-forest-800/80 px-2 py-0.5 text-[10px] font-bold text-forest-100">
                   <FaCheck className="h-2.5 w-2.5 text-gold-400" aria-hidden />
-                  Verified
+                  {t("dash.shell.badge.verified")}
                 </span>
               ) : null}
             </div>
@@ -686,9 +728,9 @@ export function DashboardScreen() {
 
         <nav className="min-h-0 flex-1 space-y-0.5 overflow-y-auto no-scrollbar px-3 py-3">
           {navSections.map((section) => (
-            <div key={section.label}>
+            <div key={section.labelKey}>
               <p className="px-2 pb-1 pt-1.5 text-[9px] font-bold uppercase tracking-[0.2em] text-white/30">
-                {section.label}
+                {t(section.labelKey)}
               </p>
               {section.items.map((item) => (
                 <NavButton
@@ -706,6 +748,9 @@ export function DashboardScreen() {
         </nav>
 
         <div className="space-y-1 border-t border-white/10 p-2.5">
+          <div className="flex justify-center pb-1">
+            <LanguageSwitcher />
+          </div>
           <BackToSiteLink compact />
           <button
             type="button"
@@ -713,7 +758,7 @@ export function DashboardScreen() {
             className="flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-white/55 transition-colors hover:bg-white/5 hover:text-white"
           >
             <FaArrowRightFromBracket className="h-4 w-4" aria-hidden />
-            Sign out
+            {t("dash.shell.signOut")}
           </button>
         </div>
       </aside>
@@ -725,7 +770,7 @@ export function DashboardScreen() {
           <button
             type="button"
             onClick={() => setDrawerOpen(true)}
-            aria-label="Open menu"
+            aria-label={t("aria.openMenu")}
             className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-xl border border-line-strong bg-white text-ink shadow-card"
           >
             <FaBars className="h-4 w-4" aria-hidden />
@@ -736,7 +781,7 @@ export function DashboardScreen() {
           <button
             type="button"
             onClick={() => openTab("messages")}
-            aria-label="Messages"
+            aria-label={t("dash.shell.ariaMessages")}
             className="relative flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-xl border border-line-strong bg-white text-ink shadow-card"
           >
             <FaEnvelope className="h-4 w-4" aria-hidden />
@@ -752,15 +797,17 @@ export function DashboardScreen() {
         <header className="hidden items-center justify-between gap-4 px-8 pb-6 pt-8 lg:flex">
           <div>
             <p className="font-display text-[22px] font-bold leading-tight text-ink">
-              {greeting}, {firstName}
+              {t(greetingKey)}
+              {firstName ? `, ${firstName}` : ""}
             </p>
             <p className="mt-1 text-xs text-muted">{dateLabel}</p>
           </div>
           <div className="flex items-center gap-3">
+            <LanguageSwitcher />
             <button
               type="button"
               onClick={() => openTab("messages")}
-              aria-label="Messages"
+              aria-label={t("dash.shell.ariaMessages")}
               className="relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border border-line-strong bg-white text-ink shadow-card transition-colors hover:bg-forest-50"
             >
               <FaEnvelope className="h-4 w-4" aria-hidden />
@@ -773,7 +820,7 @@ export function DashboardScreen() {
             <button
               type="button"
               onClick={() => openTab("settings")}
-              aria-label="Account settings"
+              aria-label={t("dash.shell.ariaSettings")}
               className="cursor-pointer rounded-xl transition-transform hover:scale-105"
             >
               <UserAvatar
@@ -796,7 +843,7 @@ export function DashboardScreen() {
 
       {/* Mobile bottom nav */}
       <nav
-        aria-label="Account menu"
+        aria-label={t("nav.account")}
         className="fixed inset-x-0 bottom-0 z-50 border-t border-forest-100 bg-white/95 pb-[max(0.4rem,env(safe-area-inset-bottom))] pt-1.5 backdrop-blur lg:hidden"
       >
         <div className="no-scrollbar mx-auto flex max-w-md items-stretch gap-1 overflow-x-auto px-2">
@@ -863,7 +910,7 @@ export function DashboardScreen() {
                 <button
                   type="button"
                   onClick={() => setDrawerOpen(false)}
-                  aria-label="Close menu"
+                  aria-label={t("aria.closeMenu")}
                   className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-white/15 text-white/70 transition-colors hover:bg-white/10"
                 >
                   <FaXmark className="h-4 w-4" aria-hidden />
@@ -878,7 +925,7 @@ export function DashboardScreen() {
                 />
                 <div className="min-w-0">
                   <p className="truncate font-display text-sm font-bold text-white">
-                    {user?.name || "Welcome"}
+                    {user?.name || t("dash.shell.welcome")}
                   </p>
                   <p className="truncate text-[11px] text-white/50">{user?.email}</p>
                 </div>
@@ -886,9 +933,9 @@ export function DashboardScreen() {
 
               <nav className="flex-1 space-y-1 px-3 py-4">
                 {navSections.map((section) => (
-                  <div key={section.label}>
+                  <div key={section.labelKey}>
                     <p className="px-2 pb-1.5 pt-2 text-[9px] font-bold uppercase tracking-[0.2em] text-white/30">
-                      {section.label}
+                      {t(section.labelKey)}
                     </p>
                     {section.items.map((item) => (
                       <NavButton
@@ -908,6 +955,9 @@ export function DashboardScreen() {
               </nav>
 
               <div className="space-y-1 border-t border-white/10 p-3">
+                <div className="flex justify-center pb-1">
+                  <LanguageSwitcher />
+                </div>
                 <BackToSiteLink compact />
                 <button
                   type="button"
@@ -915,7 +965,7 @@ export function DashboardScreen() {
                   className="flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-white/55 transition-colors hover:bg-white/5 hover:text-white"
                 >
                   <FaArrowRightFromBracket className="h-4 w-4" aria-hidden />
-                  Sign out
+                  {t("dash.shell.signOut")}
                 </button>
               </div>
             </motion.div>

@@ -1,6 +1,8 @@
 "use client";
 
 import { parseDateOnly } from "@/lib/dates";
+import { useLocale } from "@/components/i18n/locale-provider";
+import type { TranslationKey } from "@/lib/i18n";
 
 export function formatDate(iso: string | Date): string {
   const d = typeof iso === "string" ? parseDateOnly(iso) : iso;
@@ -24,14 +26,25 @@ const orderStatusClasses: Record<string, string> = {
   Cancelled: "border-red-300 bg-red-50 text-red-700",
 };
 
+const orderStatusKeys: Record<string, TranslationKey> = {
+  Pending: "dash.badges.order.pending",
+  Processing: "dash.badges.order.processing",
+  "Ready for Pickup": "dash.badges.order.readyPickup",
+  "Out for Delivery": "dash.badges.order.outDelivery",
+  Delivered: "dash.badges.order.delivered",
+  Cancelled: "dash.badges.order.cancelled",
+};
+
 export function OrderStatusBadge({ status }: { status: string }) {
+  const { t } = useLocale();
+  const key = orderStatusKeys[status];
   return (
     <span
       className={`inline-flex items-center rounded-full border px-2.5 py-[3px] text-[10px] font-semibold uppercase tracking-wide ${
         orderStatusClasses[status] || "border-line-strong bg-cream text-muted"
       }`}
     >
-      {status}
+      {key ? t(key) : status}
     </span>
   );
 }
@@ -42,20 +55,22 @@ const testimonialStatusClasses: Record<string, string> = {
   rejected: "border-red-300 bg-red-50 text-red-700",
 };
 
-const testimonialStatusLabels: Record<string, string> = {
-  pending: "Pending review",
-  approved: "Approved & live",
-  rejected: "Not approved",
+const testimonialStatusKeys: Record<string, TranslationKey> = {
+  pending: "dash.badges.testimonial.pending",
+  approved: "dash.badges.testimonial.approved",
+  rejected: "dash.badges.testimonial.rejected",
 };
 
 export function TestimonialStatusBadge({ status }: { status: string }) {
+  const { t } = useLocale();
+  const key = testimonialStatusKeys[status];
   return (
     <span
       className={`inline-flex items-center rounded-full border px-2.5 py-[3px] text-[10px] font-semibold uppercase tracking-wide ${
         testimonialStatusClasses[status] || "border-line-strong bg-cream text-muted"
       }`}
     >
-      {testimonialStatusLabels[status] || status}
+      {key ? t(key) : status}
     </span>
   );
 }
@@ -67,31 +82,33 @@ const appointmentStatusClasses: Record<string, string> = {
   cancelled: "border-red-300 bg-red-50 text-red-700",
 };
 
-const appointmentStatusLabels: Record<string, string> = {
-  pending: "Awaiting confirmation",
-  confirmed: "Confirmed",
-  completed: "Completed",
-  cancelled: "Cancelled",
+const appointmentStatusKeys: Record<string, TranslationKey> = {
+  pending: "dash.badges.appointment.pending",
+  confirmed: "dash.badges.appointment.confirmed",
+  completed: "dash.badges.appointment.completed",
+  cancelled: "dash.badges.appointment.cancelled",
 };
 
 export function AppointmentStatusBadge({ status }: { status: string }) {
+  const { t } = useLocale();
+  const key = appointmentStatusKeys[status];
   return (
     <span
       className={`inline-flex items-center rounded-full border px-2.5 py-[3px] text-[10px] font-semibold uppercase tracking-wide ${
         appointmentStatusClasses[status] || "border-line-strong bg-cream text-muted"
       }`}
     >
-      {appointmentStatusLabels[status] || status}
+      {key ? t(key) : status}
     </span>
   );
 }
 
-export const RecordTypeLabel: Record<string, string> = {
-  visit: "Visit",
-  diagnosis: "Diagnosis",
-  lab: "Lab result",
-  scan: "Scan / Imaging",
-  note: "Clinical note",
+export const RecordTypeKeys: Record<string, TranslationKey> = {
+  visit: "dash.badges.recordType.visit",
+  diagnosis: "dash.badges.recordType.diagnosis",
+  lab: "dash.badges.recordType.lab",
+  scan: "dash.badges.recordType.scan",
+  note: "dash.badges.recordType.note",
 };
 
 export const RecordTypeClass: Record<string, string> = {
@@ -103,6 +120,7 @@ export const RecordTypeClass: Record<string, string> = {
 };
 
 export function PrescriptionStatusBadge({ status }: { status: string }) {
+  const { t } = useLocale();
   const active = status === "active";
   return (
     <span
@@ -112,7 +130,7 @@ export function PrescriptionStatusBadge({ status }: { status: string }) {
           : "inline-flex items-center rounded-full border border-zinc-300 bg-zinc-50 px-2.5 py-[3px] text-[10px] font-semibold uppercase tracking-wide text-zinc-600"
       }
     >
-      {active ? "Active" : "Past"}
+      {active ? t("dash.badges.prescription.active") : t("dash.badges.prescription.past")}
     </span>
   );
 }
@@ -124,11 +142,11 @@ const treatmentPhaseClasses: Record<string, string> = {
   completed: "border-indigo-300 bg-indigo-50 text-indigo-800",
 };
 
-const treatmentPhaseLabels: Record<string, string> = {
-  active: "Active Treatment",
-  expired: "Treatment Period Ended",
-  scheduled: "Scheduled",
-  completed: "Completed",
+const treatmentPhaseKeys: Record<string, TranslationKey> = {
+  active: "dash.badges.treatment.active",
+  expired: "dash.badges.treatment.expired",
+  scheduled: "dash.badges.treatment.scheduled",
+  completed: "dash.badges.treatment.completed",
 };
 
 /**
@@ -137,6 +155,8 @@ const treatmentPhaseLabels: Record<string, string> = {
  * (clinician closed the plan) / SCHEDULED.
  */
 export function TreatmentPhaseBadge({ phase }: { phase: string }) {
+  const { t } = useLocale();
+  const key = treatmentPhaseKeys[phase];
   return (
     <span
       className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-[3px] text-[10px] font-semibold uppercase tracking-wide ${
@@ -149,7 +169,7 @@ export function TreatmentPhaseBadge({ phase }: { phase: string }) {
       {phase === "expired" ? (
         <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" aria-hidden />
       ) : null}
-      {treatmentPhaseLabels[phase] || phase}
+      {key ? t(key) : phase}
     </span>
   );
 }
