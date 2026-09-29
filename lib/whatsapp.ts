@@ -19,7 +19,7 @@ import { normalizePhone } from "@/lib/auth";
  * Environment variables (all optional - sending is a no-op until they are set):
  *   WHATSAPP_ACCESS_TOKEN    permanent System User token for the WABA
  *   WHATSAPP_PHONE_NUMBER_ID id of the sending number
- *   WHATSAPP_GRAPH_VERSION   defaults to v21.0
+ *   WHATSAPP_GRAPH_VERSION   defaults to v23.0
  *   WHATSAPP_NAMESPACE       template name prefix, defaults to "s19"
  *
  * Templates must exist in both `en` and `fr` for bilingual delivery; a missing
@@ -28,7 +28,7 @@ import { normalizePhone } from "@/lib/auth";
 
 const ACCESS_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
 const PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
-const GRAPH_VERSION = process.env.WHATSAPP_GRAPH_VERSION || "v21.0";
+const GRAPH_VERSION = process.env.WHATSAPP_GRAPH_VERSION || "v23.0";
 const NAMESPACE = (process.env.WHATSAPP_NAMESPACE || "s19").replace(/[^a-z0-9_]/gi, "");
 
 export type WhatsAppLanguage = "en" | "fr";

@@ -31,6 +31,114 @@ Two practical notes:
   conversations per rolling 24 hours. Completing business verification raises
   that and improves your quality rating, which is what buys you more headroom.
 
+## 1a. Screen-by-screen setup
+
+### Step 0 — Decide on the number, first
+
+This is the one decision that causes the most pain later, so settle it up front.
+
+- **Best: a brand-new number that has never been on WhatsApp.** A SIM with its own
+  number, able to receive an SMS or a voice call. Cleanest path, no migration.
+- **Or: migrate your existing WhatsApp Business App number.** Possible, but the
+  number must be **deleted from the WhatsApp Business App first**. Until you do
+  that, Meta refuses to register it and you get a vague error.
+- **Not possible: a number that is someone's personal WhatsApp.** Personal
+  accounts cannot be moved.
+- The number must receive a **6-digit verification code by SMS or automated voice
+  call** during setup. Landlines and some prepaid SIMs fail this step.
+
+Also decide the **display name** patients will see. Meta reviews it. Use the
+clinic's real name — do not put "WhatsApp", "Meta", "Official" or "Verified" in
+it, or it will be rejected.
+
+### Step 1 — Register as a Meta developer
+
+Go to <https://developers.facebook.com/async/registration/> and register. You
+need a Facebook login. Choose the **Business** account type. Free.
+
+### Step 2 — Create the app
+
+1. <https://developers.facebook.com/apps> → **Create App**.
+2. Name it (e.g. `S19 Herbal Clinic`) and give your email.
+3. Use case: **Connect with customers through WhatsApp** → Next.
+4. Select your business portfolio, or create one (name it after the clinic, add
+   the clinic website and contact email).
+5. **Create app**. You land on *Customize use case → Connect on WhatsApp →
+   Quickstart*.
+
+### Step 3 — Create the WABA and add the number
+
+1. Click **Start using the API**. This opens **API Setup**.
+2. Connect a WhatsApp Business Account (WABA) — select an existing one or click
+   **Create a WhatsApp Business account**. The WABA is the container holding your
+   numbers, templates and message history.
+3. Add your phone number and verify it with the code Meta sends.
+4. **Copy down and keep safe** — you need these later:
+   - **WhatsApp Business Account ID (WABA ID)**
+   - **Phone number ID**
+   - **Test number ID** (only if you use Meta's shared test number)
+5. Click **Generate access token** for a **temporary** token and send yourself a
+   test message to confirm the plumbing works. That token dies in 24 hours — do
+   not put it in the app.
+
+### Step 4 — Set two-step verification
+
+In the same app, enable two-step verification and create a **6-digit PIN**. You
+need it to re-register the number in Step 5.
+
+### Step 5 — Register the number (only if it will not show "Connected")
+
+Some numbers sit at **Pending** and refuse to send until explicitly registered.
+If that happens:
+
+```
+POST https://graph.facebook.com/v23.0/<PHONE_NUMBER_ID>/register
+Authorization: Bearer <ACCESS_TOKEN>
+Content-Type: application/json
+
+{ "messaging_product": "whatsapp", "pin": "<YOUR-6-DIGIT-PIN>" }
+```
+
+A `POST` to the same URL with an empty body deregisters it, if you need to redo it.
+
+### Step 6 — Create the permanent token (the important one)
+
+1. <https://business.facebook.com/latest/settings> → **System users** in the sidebar.
+2. **Add +** → create a system user (e.g. `s19-notifications`). Give it the
+   **Admin** system-user role if offered.
+3. **Assign Assets**:
+   - your app → toggle **Full control**
+   - your WhatsApp account → toggle **Full control**
+   - **Assign assets**
+4. **Generate token**, adding these permissions:
+   - `business_management`
+   - `whatsapp_business_messaging`
+   - `whatsapp_business_management`
+5. **Copy the token immediately — Meta shows it exactly once.** That string is
+   `WHATSAPP_ACCESS_TOKEN`.
+
+### Step 7 — Business verification
+
+Business Settings → **Security** → **Business verification** → *Get started*.
+Expect: legal business name, business address, phone, website, and a registration
+document (in Cameroon, an RCCM / registre du commerce extract or a certificat de
+contributable). Clear scans or PDFs.
+
+You can skip this to begin with (capped at 250 business-initiated conversations
+per 24h) but it raises limits and quality rating, and Meta increasingly expects it.
+
+### Step 8 — Add a payment method
+
+Meta moved to **per-message billing**, so a payment method is required before
+sending to real numbers. Business Settings → **Payments**.
+
+### Step 9 — Create the templates
+
+See §3 below. Create each of the ten in **both** `en` and `fr`, category
+**Utility**, and wait for `APPROVED`.
+
+---
+
 ## 2. Environment variables
 
 Add to `.env.local` (and to the deployment platform's environment):
@@ -38,7 +146,7 @@ Add to `.env.local` (and to the deployment platform's environment):
 ```
 WHATSAPP_ACCESS_TOKEN=EAAG...            # permanent System User token
 WHATSAPP_PHONE_NUMBER_ID=123456789012345  # sending number's ID
-WHATSAPP_GRAPH_VERSION=v21.0              # optional, this is the default
+WHATSAPP_GRAPH_VERSION=v23.0              # optional, this is the default
 WHATSAPP_NAMESPACE=s19                    # optional, template name prefix
 ```
 
@@ -147,3 +255,18 @@ content in step with clinic policy.
   built; failures currently only appear in server logs.
 - Confirm the wording of each template with the clinic's policy on what may be
   disclosed over WhatsApp, since a locked chat screen is less private than email.
+
+## 9. Credentials checklist
+
+Everything to collect in one place. Only the first two are required to send.
+
+| # | Credential | Where | Required |
+| --- | --- | --- | --- |
+| 1 | `WHATSAPP_ACCESS_TOKEN` | Business Settings → System users → Generate token | Yes |
+| 2 | `WHATSAPP_PHONE_NUMBER_ID` | Developers → your app → API Setup | Yes |
+| 3 | WhatsApp Business Account ID | Developers → your app → API Setup | For reference |
+| 4 | Business Portfolio ID | Business Settings → Business Portfolio | For reference |
+| 5 | App ID / App Secret | Developers → App settings → Basic | For reference |
+| 6 | 6-digit two-step PIN | Developers → your app → WhatsApp → Configuration | Only to re-register |
+| 7 | Business verification status | Business Settings → Security | Recommended |
+| 8 | Ten approved template names | WhatsApp Manager → Message templates | Yes, to deliver |
