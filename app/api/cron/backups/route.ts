@@ -30,11 +30,28 @@ import { runDailyLogDigest } from "@/lib/app-log-digest";
  * reported in the response for monitoring.
  */
 export async function GET(request: Request) {
-  // Protect against public invocation: when CRON_SECRET is set it must be
-  // supplied as `Authorization: Bearer <secret>`. Vercel Cron can be configured
-  // to send this header. Locally (non-production) the check is relaxed.
-  const secret = process.env.CRON_SECRET;
-  if (secret && process.env.NODE_ENV !== "development") {
+  // Protect against public invocation: `CRON_SECRET` must be supplied as
+  // `Authorization: Bearer <secret>`. Vercel Cron sends that header
+  // automatically when the variable exists in the project environment, so no
+  // other configuration is needed.
+  //
+  // This deliberately fails *closed*. An earlier version skipped the check
+  // whenever CRON_SECRET was unset, which meant a project missing the variable
+  // exposed an unauthenticated endpoint that runs backups and sends mail to
+  // anyone who asks. A missing secret is a configuration fault, so it is
+  // reported as one instead of silently running wide open. Locally the check is
+  // relaxed so `curl localhost` still works during development.
+  if (process.env.NODE_ENV !== "development") {
+    const secret = process.env.CRON_SECRET;
+    if (!secret) {
+      return NextResponse.json(
+        {
+          error:
+            "CRON_SECRET is not configured. Set it in the deployment environment; Vercel Cron sends it as a bearer token automatically.",
+        },
+        { status: 503 }
+      );
+    }
     const header = request.headers.get("authorization") ?? "";
     if (header !== `Bearer ${secret}`) {
       return NextResponse.json({ error: "Unauthorized." }, { status: 401 });

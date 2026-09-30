@@ -24,6 +24,12 @@ export interface ILogDigest {
 
 const LogDigestSchema = new Schema<ILogDigest>(
   {
+    // Declared explicitly. Mongoose's default `_id` is an ObjectId, which makes
+    // `findById("daily")` throw a CastError - and this is the one place a
+    // failure is invisible, because a summary that never sends reports nothing.
+    // The collection holds a single document, so a readable string key is the
+    // right shape.
+    _id: { type: String, required: true },
     lastSentAt: { type: Date },
     windowStart: { type: Date },
     windowEnd: { type: Date },

@@ -203,6 +203,31 @@ still alive, which is exactly the failure mode a log cannot report on itself.
 Idempotent for 20 hours, so a repeated cron invocation will not double-send. The
 status is visible in the admin panel, and **Email digest now** forces a resend.
 
+### Required: `CRON_SECRET` must be set in the deployment environment
+
+`/api/cron/backups` refuses to run unless `CRON_SECRET` is set and the request
+carries `Authorization: Bearer <secret>`. It **fails closed** on purpose.
+
+This was a real production fault, found by the feature's own reporting on first
+run: `CRON_SECRET` was not configured, and the guard used to skip its check
+whenever the variable was missing. That left an unauthenticated public endpoint
+which runs the backup and sends mail to anyone who asked. A missing secret is a
+configuration fault, so the route now returns `503` and names the problem
+instead of running wide open.
+
+To fix: set `CRON_SECRET` in Vercel → Settings → Environment Variables (any
+random string, e.g. `openssl rand -hex 32`). Vercel Cron attaches it as a
+bearer token automatically, so nothing else needs changing. **Until this is
+set, neither the backup nor the digest will run.**
+
+Verify with:
+
+```bash
+curl -i https://www.s19herbalclinic.com/api/cron/backups
+# 503 + "CRON_SECRET is not configured"  -> still needs setting
+# 401 + "Unauthorized"                   -> set, and the guard is working
+```
+
 ---
 
 ## 7. Retention and cost
@@ -257,13 +282,31 @@ Checked against a real production build, not just type-checking:
   `occurrences: 25`.
 - TTL index present on `applogs` with `expireAfterSeconds` derived from
   `LOG_RETENTION_DAYS`.
-- `GET /api/admin/logs` returns 401 for an unauthenticated request.
+- `GET /api/admin/logs` returns 403 for an unauthenticated request.
 - `onRequestError` recorded a genuine unhandled error, with the route and the
   digest, proving the automatic path is not dead code.
+- Cron auth, all three cases: missing secret → `503`, wrong secret → `401`,
+  correct secret → runs, and the digest reports `"status": "sent"`.
+
+### Two faults this verification caught
+
+Both were found by running the code rather than reading it, and both would
+otherwise have shipped silently:
+
+1. **The digest had never worked.** `LogDigest.findById("daily")` threw
+   `Cast to ObjectId failed`, because the schema inherited Mongoose's ObjectId
+   `_id` while the code keys the singleton by a string. This failed in the worst
+   possible way: a summary that never sends reports nothing. The same cast
+   error would also have made `GET /api/admin/logs` return `500`, so the admin
+   tab was broken too.
+2. **The cron endpoint was public**, because `CRON_SECRET` was unset and the
+   guard failed open. Confirmed by a real unauthenticated request returning
+   `200` and running the backup.
 
 ## 11. Still to do
 
-- Nothing to configure. Once deployed, the log fills in on its own.
+- **Set `CRON_SECRET` in Vercel** — required, see section 6. Until then neither
+  the backup nor the digest runs.
 - If a specific error keeps recurring and its `context` is not detailed enough,
   add an explicit `logAppError` call at that site rather than widening the
   console capture.
