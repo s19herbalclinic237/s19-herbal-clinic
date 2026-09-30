@@ -18,7 +18,8 @@
     "fix:blog-covers": "tsx scripts/fix-blog-cover-paths.ts",
     "audit:blog-covers": "tsx scripts/audit-blog-covers.ts",
     "preview:plan": "tsx scripts/preview-plan-schedule.ts",
-    "backup": "tsx scripts/backup.ts"
+    "backup": "tsx scripts/backup.ts",
+    "verify:alerts": "tsx scripts/verify-alerts.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1140.0",
