@@ -11,6 +11,8 @@ import { User } from "@/lib/models/User";
 import { notifyPatient } from "@/lib/notify";
 import { sendTreatmentPlanEmail } from "@/lib/email";
 import { notifyPatientWhatsApp, whatsappDay, whatsappFirstName } from "@/lib/whatsapp";
+import { applyPlanSchedule, toScheduleReport } from "@/lib/plan-lifecycle";
+import { parseRuleOverrides } from "@/lib/treatment-rules";
 
 function fmtDate(d: Date): string {
   return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
@@ -118,6 +120,22 @@ export async function POST(request: Request) {
       monitoring,
     });
 
+    // Derive the dated schedule the plan implies: reviews, labs, and - when the
+    // clinic has told us a total - instalments. This is what turns "a plan
+    // exists" into "the patient has something to do and staff have something to
+    // chase". It is safe to re-run and never touches a clinician's own rows.
+    const schedule = await applyPlanSchedule({
+      plan: {
+        _id: String(plan._id),
+        user,
+        forMember,
+        startDate,
+        endDate,
+      },
+      overrides: parseRuleOverrides(raw),
+      reason: "plan_issued",
+    });
+
     const patientName = (patient as { name?: string }).name || "there";
     const patientEmail = (patient as { email?: string }).email || "";
     const startLabel = fmtDate(startDate);
@@ -165,6 +183,10 @@ export async function POST(request: Request) {
           days: treatmentPlanDays(plan),
           months: treatmentMonthInfo(plan).totalMonths,
         },
+        // Returned so the admin panel can show what was scheduled and, just as
+        // importantly, which rules produced nothing. A plan with no payment
+        // reminders should say why on screen rather than only in the server log.
+        schedule: toScheduleReport(schedule),
       },
       { status: 201 }
     );

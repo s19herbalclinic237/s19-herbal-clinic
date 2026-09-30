@@ -7,11 +7,16 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test tests/**/*.test.ts",
+    "test:watch": "node --import tsx --test --watch tests/**/*.test.ts",
     "seed": "tsx scripts/seed.ts",
     "seed:testimonials": "tsx scripts/seed-testimonials.ts",
     "seed:blog": "tsx scripts/seed-blog.ts",
     "seed:health": "tsx scripts/seed-health.ts",
     "create-admin": "tsx scripts/create-admin.ts",
+    "fix:blog-covers": "tsx scripts/fix-blog-cover-paths.ts",
+    "preview:plan": "tsx scripts/preview-plan-schedule.ts",
     "backup": "tsx scripts/backup.ts"
   },
   "dependencies": {

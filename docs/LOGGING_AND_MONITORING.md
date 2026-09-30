@@ -203,7 +203,7 @@ still alive, which is exactly the failure mode a log cannot report on itself.
 Idempotent for 20 hours, so a repeated cron invocation will not double-send. The
 status is visible in the admin panel, and **Email digest now** forces a resend.
 
-### Required: `CRON_SECRET` must be set in the deployment environment
+### `CRON_SECRET` — set and verified 30 September 2026
 
 `/api/cron/backups` refuses to run unless `CRON_SECRET` is set and the request
 carries `Authorization: Bearer <secret>`. It **fails closed** on purpose.
@@ -215,18 +215,22 @@ which runs the backup and sends mail to anyone who asked. A missing secret is a
 configuration fault, so the route now returns `503` and names the problem
 instead of running wide open.
 
-To fix: set `CRON_SECRET` in Vercel → Settings → Environment Variables (any
-random string, e.g. `openssl rand -hex 32`). Vercel Cron attaches it as a
-bearer token automatically, so nothing else needs changing. **Until this is
-set, neither the backup nor the digest will run.**
-
-Verify with:
+**Status: resolved.** The variable is set in Vercel, a redeploy picked it up, and
+the endpoint was probed to confirm rather than assumed:
 
 ```bash
 curl -i https://www.s19herbalclinic.com/api/cron/backups
 # 503 + "CRON_SECRET is not configured"  -> still needs setting
 # 401 + "Unauthorized"                   -> set, and the guard is working
 ```
+
+Production currently returns **401**, so the nightly backup and digest are live.
+
+If a future deployment ever regresses to `503`, set it again in Vercel → Settings
+→ Environment Variables (any random string, e.g. `openssl rand -hex 32`) and
+**redeploy** — environment variables are baked in at build time, so adding one to
+a running deployment changes nothing on its own. Vercel Cron attaches it as a
+bearer token automatically.
 
 ---
 
@@ -301,12 +305,11 @@ otherwise have shipped silently:
    tab was broken too.
 2. **The cron endpoint was public**, because `CRON_SECRET` was unset and the
    guard failed open. Confirmed by a real unauthenticated request returning
-   `200` and running the backup.
+   `200` and running the backup. **Both halves are now fixed** — the guard fails
+   closed, and the variable is set and verified in production.
 
 ## 11. Still to do
 
-- **Set `CRON_SECRET` in Vercel** — required, see section 6. Until then neither
-  the backup nor the digest runs.
 - If a specific error keeps recurring and its `context` is not detailed enough,
   add an explicit `logAppError` call at that site rather than widening the
   console capture.

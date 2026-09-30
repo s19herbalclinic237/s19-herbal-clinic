@@ -68,6 +68,8 @@ type ReminderView = {
   kind: string;
   title: string;
   dueDate: string;
+  /** When the thing happens, when it differs from the reminder date. */
+  eventDate?: string;
   amountFcfa?: number;
   notes?: string;
   status: "pending" | "done";
@@ -632,6 +634,11 @@ function TasksSection({
                   </span>
                   <span className="block text-[11px] text-muted">
                     {due ? t("dash.treatment.dueToday") : past ? t("dash.treatment.overdue", { date: formatDayDate(r.dueDate) }) : t("dash.treatment.due", { date: formatDayDate(r.dueDate) })}
+                    {/* A derived reminder is raised ahead of the appointment or test
+                        it refers to, so the patient is told both dates. Showing only
+                        the reminder date makes a review due a week early look like a
+                        mistake. */}
+                    {r.eventDate && r.eventDate !== r.dueDate ? t("dash.treatment.onDate", { date: formatDayDate(r.eventDate) }) : ""}
                     {r.notes ? ` · ${r.notes}` : ""}
                   </span>
                 </span>

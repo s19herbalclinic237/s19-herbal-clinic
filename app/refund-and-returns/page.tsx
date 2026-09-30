@@ -94,7 +94,7 @@ export default async function RefundReturnsPage() {
         title={t("refund.metaTitle")}
         lead={t("refund.hero.lead")}
         compact
-        image={S19_ASSETS.photos.cupboardProducts}
+        image={S19_ASSETS.photos.cupboardProducts} alt={t("refund.hero.alt")}
       />
       <Container className="max-w-3xl py-10 md:py-14">
         <p className="text-sm text-muted">

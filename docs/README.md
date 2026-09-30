@@ -18,7 +18,9 @@ This directory is the operational and technical source of truth for the S19 Herb
 | [Roles and permissions](ROLES_AND_PERMISSIONS.md) | Target least-privilege role matrix and migration/authorization requirements. |
 | [Legal compliance gap register](LEGAL_COMPLIANCE_GAP_REGISTER.md) | Cameroon-first legal requirements, evidence, unresolved business facts, and counsel-review questions. |
 | [Backup and recovery](BACKUP_AND_RECOVERY.md) | Encrypted backup, restore, retention, monitoring, and disaster-recovery runbook. |
-| [WhatsApp notifications](WHATSAPP_SETUP.md) | Meta Cloud API setup runbook: credentials, env vars, the ten message templates, patient consent, and what is not covered. |
+| [WhatsApp notifications](WHATSAPP_SETUP.md) | Meta Cloud API setup runbook: credentials, env vars, the ten message templates, patient consent, and what is not covered. **Sending.** |
+| [Treatment plan schedule](TREATMENT_PLAN_SCHEDULE.md) | Module M3: what issuing a treatment plan derives, the clinic-supplied cadences, and the gate that keeps it inert until they are confirmed. |
+| [Image SEO](IMAGE_SEO.md) | Module M17: the image audit, the descriptive renames, the single-source asset registry, and what is deliberately left undone. |
 | [Error log and monitoring](LOGGING_AND_MONITORING.md) | Durable error log, what is redacted before storage, retention, the daily digest email, and the admin panel. |
 
 ## How to keep this documentation accurate
@@ -44,4 +46,7 @@ Both commands completed successfully at the time of the initial documentation ba
 
 | Date | What changed in this phase |
 | --- | --- |
+| 2026-09-30 | Added the append-only patient history and the clinic timezone: `lib/clinic-time.ts` pins all clinic-date maths to `Africa/Douala`, fixing "today" being an hour wrong on Vercel, and `lib/events.ts` + `lib/event-log.ts` + `lib/models/PatientEvent.ts` record what happened to a patient as data rather than inferring it from rows. Added a zero-dependency `node:test` suite (`npm.cmd run test`, `npm.cmd run typecheck`). |
+| 2026-09-30 | **Treatment plan lifecycle.** `lib/plan-lifecycle.ts` derives the dated schedule a plan implies - reviews, labs, and instalments when the clinic has stated a total - so issuing a plan produces something to do and something to chase. Gated behind `TREATMENT_SCHEDULE_ENABLED`, and the cadences in `lib/treatment-rules.ts` are placeholders until the clinic confirms them. |
+| 2026-09-30 | **Cron authentication.** `/api/cron/backups` was publicly callable, so anyone could trigger a full database export by email. Added `lib/cron-auth.ts` with a timing-safe bearer check that fails closed: an unset `CRON_SECRET` returns 503 in production rather than serving the backup unauthenticated. 20 tests. Deployed and verified - the endpoint now returns 401. |
 | 2026-09-25 | Implemented the `doctor` role (clinicalGuard/adminGuard split, doctor persona, `/api/admin/roles`); implemented backups (daily emailed EJSON snapshot + optional age/S3 archive pipeline, manual/CLI/cron triggers, `BackupRun` audit, `/api/admin/backups`, `/api/cron/backups` with `CRON_SECRET`); added a first-party rate limiter on 17 routes and global security headers; added exact join date to the dashboard overview; rewrote `/privacy`, `/terms`, `/cookies` to be truthful and Cameroon-first; created `ROLES_AND_PERMISSIONS.md`, `BACKUP_AND_RECOVERY.md`, and `LEGAL_COMPLIANCE_GAP_REGISTER.md`; updated the other documents in this directory to match. |

@@ -8,6 +8,14 @@ import {
   treatmentMonthInfo,
 } from "@/lib/models/TreatmentPlan";
 import { notifyPatient } from "@/lib/notify";
+import {
+  applyPlanSchedule,
+  subjectOf,
+  toScheduleReport,
+  withdrawPlanSchedule,
+  type ScheduleReport,
+} from "@/lib/plan-lifecycle";
+import { parseRuleOverrides } from "@/lib/treatment-rules";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -143,6 +151,37 @@ export async function PATCH(request: Request, { params }: Params) {
 
     const reopened = String(raw.status) === "active" && existing.status === "completed";
     const closed = String(raw.status) === "completed" && existing.status !== "completed";
+
+    // Re-derive the schedule whenever the period moves, and withdraw it when the
+    // plan closes. A plan whose dates changed but whose reminders did not would
+    // quietly chase the patient for the wrong dates, and a closed plan that keeps
+    // prompting for reviews is the kind of thing that gets a number blocked.
+    let schedule: ScheduleReport | null = null;
+    const datesMoved =
+      (startRaw !== null && startRaw.getTime() !== new Date(existing.startDate).getTime()) ||
+      (endRaw !== null && endRaw.getTime() !== new Date(existing.endDate).getTime());
+
+    if (closed) {
+      const outcome = await withdrawPlanSchedule(subjectOf(plan));
+      schedule = {
+        applied: true,
+        summary: `${outcome.withdrawn} reminder(s) withdrawn on close`,
+        created: 0,
+        updated: 0,
+        cancelled: outcome.withdrawn,
+        unchanged: 0,
+        skipped: [],
+        next: [],
+      };
+    } else if (reopened || datesMoved || raw.rules !== undefined || raw.scheduleRules !== undefined) {
+      const result = await applyPlanSchedule({
+        plan: subjectOf(plan),
+        overrides: parseRuleOverrides(raw),
+        reason: "plan_changed",
+      });
+      schedule = toScheduleReport(result);
+    }
+
     if (closed) {
       const review = plan.completionReview as { outcome?: string } | undefined;
       await notifyPatient({
@@ -173,6 +212,9 @@ export async function PATCH(request: Request, { params }: Params) {
         daysLeft: treatmentMonthInfo(plan).daysLeft,
         elapsed: treatmentMonthInfo(plan).elapsed,
       },
+      // `null` when nothing that affects the schedule changed, so the admin panel
+      // can leave the existing schedule display alone instead of clearing it.
+      schedule,
     });
   } catch (error) {
     console.error("[admin treatment-plans] update failed:", error);

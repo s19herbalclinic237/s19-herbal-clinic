@@ -1,3 +1,13 @@
+import { CLINIC_PHOTOS, clinicPhotoSrc } from "@/lib/image-registry";
+
+/**
+ * Blog cover images are referenced through the image registry rather than as
+ * literal paths. The originals were hardcoded copies of the image-generation
+ * prompt filenames, which meant renaming a photo silently broke every post that
+ * used it. Deriving the path from the registry makes that impossible.
+ */
+const cover = (key: keyof typeof CLINIC_PHOTOS) => clinicPhotoSrc(CLINIC_PHOTOS[key]);
+
 export interface BlogSeedPost {
   title: string;
   slug: string;
@@ -20,7 +30,7 @@ export const blogPosts: BlogSeedPost[] = [
     slug: "type-2-diabetes-root-cause-care",
     excerpt:
       "830 million adults live with diabetes worldwide and most cases are type 2. Beyond managing blood sugar, real progress depends on understanding and addressing its modifiable root causes.",
-    cover: "/s19-assets/s19-expert%20with%20lab%20dress%20in%20lab%20doing%20some%20transfer%20of%20a%20chemical%20using%20a%20pipet%20but%20this%20time%20she%20is%20looking%20at%20the%20reading%20on%20the%20pipet.jpg",
+    cover: cover("pipetteReading"),
     author: "S19 Wellness Team",
     status: "published",
     featured: true,
@@ -212,7 +222,7 @@ Online consultation is free. We can answer your questions and ship our products 
     slug: "natural-doesnt-mean-safe-herbs",
     excerpt:
       "Herbs contain biologically active compounds. 'Natural' is not a synonym for 'safe at any dose' - and the documented herb-drug interactions are why responsible herbalism starts with assessment.",
-    cover: "/s19-assets/a%20different%20s19%20staff%20still%20in%20lab%20doing%20some%20transfer%20of%20chemical%20all%20dresses%20in%20proper%20lab%20outfit%20with%20gloves.jpg",
+    cover: cover("labTransfer"),
     author: "S19 Wellness Team",
     status: "published",
     featured: false,
@@ -305,7 +315,7 @@ Online consultation is free. We can answer your questions and ship our products 
     slug: "food-as-medicine-who-targets",
     excerpt:
       "Unhealthy diet is one of the leading global risks to health. WHO's five dietary targets - salt, sugars, fats, fruit and vegetables - are simple enough to apply at any kitchen table.",
-    cover: "/s19-assets/s19-staff%20holding%20basket%20of%20natural%20vegetables%20and%20fruits%20explaining%20something%20to%20a%20circle%20of%20people.jpg",
+    cover: cover("nutritionBasketOutreach"),
     author: "S19 Wellness Team",
     status: "published",
     featured: false,
@@ -390,7 +400,7 @@ Online consultation is free. We can answer your questions and ship our products 
     slug: "enlarged-prostate-every-man-over-50",
     excerpt:
       "Frequent urination, waking at night, a weak stream - most men over 50 will eventually experience an enlarged prostate (BPH). Understanding it early makes all the difference.",
-    cover: "/s19-assets/male%20s19%20staff%20on%20the%20office%20table%20in%20s16%20uniform%20giving%20some%20analysis%20advice%20to%20two%20clients%20who%20listen%20and%20follow%20up%20closely.jpg",
+    cover: cover("consultationAdvice"),
     author: "S19 Wellness Team",
     status: "published",
     featured: false,

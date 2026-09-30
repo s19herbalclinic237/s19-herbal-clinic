@@ -48,6 +48,7 @@ export default function TrackOrderPage() {
         lead={t("track.hero.lead")}
         compact
         image={S19_ASSETS.photos.shopCounter}
+        alt={t("track.hero.alt")}
       />
       <div className="border-t border-line bg-mist">
         <div className="mx-auto w-full max-w-xl px-4 py-10 sm:px-6 lg:px-8">

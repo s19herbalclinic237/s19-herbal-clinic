@@ -1,4 +1,4 @@
-export const COOKIE_NAME = "s19_locale";
+﻿export const COOKIE_NAME = "s19_locale";
 
 export type Locale = "en" | "fr";
 
@@ -53,16 +53,16 @@ const dict = {
   "home.hero.kicker": { en: "S19 Herbal Clinic", fr: "Clinique de phytothérapie S19" },
   "home.hero.titleA": { en: "Welcome to S19 Herbal Clinic", fr: "Bienvenue à la Clinique de phytothérapie S19" },
   "home.hero.titleB": {
-    en: "Where Natural Wellness Meets Personalized Care",
-    fr: "Là où le bien-être naturel rencontre des soins personnalisés",
+    en: "Science-Based Herbalism. Root-Cause Healthcare. Education. Investigation. Personalization. Monitoring.",
+    fr: "Phytothérapie fondée sur la science. Soins de la cause racine. Éducation. Investigation. Personnalisation. Suivi.",
   },
   "home.hero.lead": {
-    en: "We combine herbal medicine, nutrition, lifestyle support, modern therapies, and health education to go beyond simply managing symptoms—supporting your body's natural healing processes and helping you work toward better health, recovery, and lasting wellness.",
-    fr: "Nous combinons la phytothérapie, la nutrition, le soutien au mode de vie, les thérapies modernes et l'éducation à la santé pour aller au-delà de la simple gestion des symptômes — en soutenant les processus naturels de guérison de votre corps et en vous aidant à tendre vers une meilleure santé, la récupération et un bien-être durable.",
+    en: "S19 Herbal Clinic combines science-based herbal medicine, laboratory investigation, nutrition, lifestyle medicine, patient education, continuous monitoring and in-clinic non-invasive supportive therapies to provide personalized healthcare focused on identifying and addressing important contributing factors.",
+    fr: "La Clinique S19 associe une phytothérapie fondée sur la science, l'investigation de laboratoire, la nutrition, la médecine du mode de vie, l'éducation du patient, un suivi continu et des therapies de soutien non invasives en clinique, afin d'offrir des soins personnalisés axés sur l'identification et le traitement de facteurs contributifs importants.",
   },
   "home.hero.closing": {
-    en: "Healing is possible and sustainable health is worth working toward.",
-    fr: "La guérison est possible et une santé durable vaut la peine qu'on s'y engage.",
+    en: "The goal is not simply to manage disease. The goal is to build better health.",
+    fr: "L'objectif n'est pas simplement de gérer la maladie. L'objectif est de construire une meilleure santé.",
   },
   "home.hero.whatsapp": { en: "WhatsApp the Clinic", fr: "Écrire à la clinique sur WhatsApp" },
   "home.hero.claim": {
@@ -457,6 +457,59 @@ const dict = {
   "aria.decreaseQty": { en: "Decrease quantity", fr: "Diminuer la quantité" },
   "aria.increaseQty": { en: "Increase quantity", fr: "Augmenter la quantité" },
 
+"about.position.kicker": { en: "What we are about", fr: "Ce qui nous Defines" },
+  "about.position.tagline": {
+    en: "Science-Based Herbalism. Root-Cause Healthcare. Education. Investigation. Personalization. Monitoring.",
+    fr: "Phytothérapie fondée sur la science. Soins de la cause racine. Éducation. Investigation. Personnalisation. Suivi.",
+  },
+  "about.position.statement": {
+    en: "S19 Herbal Clinic combines science-based herbal medicine, laboratory investigation, nutrition, lifestyle medicine, patient education, continuous monitoring and in-clinic non-invasive supportive therapies to provide personalized healthcare focused on identifying and addressing important contributing factors.",
+    fr: "La Clinique S19 associe une phytothérapie fondée sur la science, l'investigation de laboratoire, la nutrition, la médecine du mode de vie, l'éducation du patient, un suivi continu et des therapies de soutien non invasives en clinique, afin d'offrir des soins personnalisés axés sur l'identification et le traitement de facteurs contributifs importants.",
+  },
+  "about.position.question": {
+    en: "We do not simply ask: “What medicine treats this disease?” We ask: what is happening inside this person, what factors are contributing to it, what can be changed, and how can we measure whether those changes are working?",
+    fr: "Nous ne posons pas simplement la question : « Quel médicament traite cette maladie ? » Nous posons la question : que se passe-t-il dans cette personne, quels facteurs y contribuent, qu'est-ce qui peut être modifié, et comment mesurer si ces changements sont efficaces ?",
+  },
+  "about.position.goal": {
+    en: "The goal is not simply to manage disease. The goal is to build better health.",
+    fr: "L'objectif n'est pas simplement de gérer la maladie. L'objectif est de construire une meilleure santé.",
+  },
+  "about.notAnti.title": {
+    en: "S19 is not anti-conventional medicine",
+    fr: "S19 n'est pas contre la médecine conventionnelle",
+  },
+  "about.notAnti.goal": {
+    en: "The goal is not to choose sides in medicine. It is to use the right intervention, for the right patient, at the right time.",
+    fr: "L'objectif n'est pas de choisir un camp dans la médecine. Il est d'utiliser la bonne intervention, pour le bon patient, au bon moment.",
+  },
+  "about.gallery.kicker": { en: "Inside the clinic", fr: "Dans la clinique" },
+  "about.gallery.title": { en: "The rooms where the work happens", fr: "Les pièces où le travail se fait" },
+  "about.gallery.text": {
+    en: "Care at S19 is not a prescription alone. It is a conversation, an investigation, and a plan you understand and take part in. These are the laboratory and consultation rooms where that takes place in Bafoussam.",
+    fr: "Le suivi chez S19 ne repose pas sur une seule ordonnance. C'est une conversation, une investigation et un plan que vous comprenez et auquel vous participez. Voici les laboratoires et les salles de consultation où cela se passe à Bafoussam.",
+  },
+  "terms.hero.alt": {
+    en: "An S19 Herbal Clinic laboratory technician in protective equipment working with glass beakers of herbal preparation in Bafoussam",
+    fr: "Une technicienne du laboratoire de la Clinique S19, en équipement de protection, travaillant avec des béchers de préparation à base de plantes à Bafoussam",
+  },
+  "privacy.hero.alt": {
+    en: "An S19 Herbal Clinic staff member recording a patient's health history in a medical booklet at the clinic office in Bafoussam",
+    fr: "Un membre du personnel de la Clinique S19 consignant les antécédents sanitaires d'un patient dans un carnet médical, au bureau de la clinique à Bafoussam",
+  },
+  "cookies.hero.alt": {
+    en: "Shelves of S19 Herbal Clinic herbal products, medicinal teas and supplements in the Bafoussam clinic dispensary",
+    fr: "Rayonnages de produits à base de plantes, de tisanes médicinales et de compléments de la Clinique S19 dans la dispensaire de Bafoussam",
+  },
+  "refund.hero.alt": {
+    en: "Shelves of S19 Herbal Clinic herbal products, medicinal teas and supplements in the Bafoussam clinic dispensary",
+    fr: "Rayonnages de produits à base de plantes, de tisanes médicinales et de compléments de la Clinique S19 dans la dispensaire de Bafoussam",
+  },
+  "track.hero.alt": {
+    en: "The S19 Herbal Clinic product counter in Bafoussam, with herbal remedies and health products displayed in the cupboards behind it",
+    fr: "Le comptoir produits de la Clinique S19 à Bafoussam, avec des remèdes à base de plantes et des produits de santé présentés dans les placards derrière",
+  },
+  "dash.treatment.onDate": { en: " · on {date}", fr: " · le {date}" },
+
   "about.meta.title": {
     en: "About S19 Herbal Clinic – Root-Cause Herbal Medicine in Bafoussam",
     fr: "À propos de la Clinique S19 – Médecine par les plantes à Bafoussam",
@@ -471,8 +524,8 @@ const dict = {
     fr: "Plantes botaniques fraîches utilisées à la clinique S19",
   },
   "about.hero.title": {
-    en: "Non-conventional therapies. Science-based herbalism. Root-cause healthcare. Personalization. Monitoring.",
-    fr: "Thérapies non conventionnelles. Phytothérapie fondée sur la science. Soins de la cause racine. Personnalisation. Suivi.",
+    en: "Science-Based Herbalism. Root-Cause Healthcare. Education. Investigation. Personalization. Monitoring.",
+    fr: "Phytothérapie fondée sur la science. Soins de la cause racine. Éducation. Investigation. Personnalisation. Suivi.",
   },
   "about.hero.lead": {
     en: "{brand} is a Bafoussam-based herbal and integrative wellness clinic. We combine traditional knowledge of medicinal plants with modern laboratory testing, nutrition, lifestyle medicine, health education and evidence-informed natural interventions.",
@@ -497,8 +550,8 @@ const dict = {
     fr: "Les symptômes sont importants, mais ils peuvent ne représenter que la partie visible d'un problème physiologique plus profond. Dans le diabète de type 2, réduire la glycémie est important - mais nous considérons aussi les processus métaboliques derrière l'hyperglycémie, en particulier la résistance à l'insuline, l'excès de graisse viscérale, l'inactivité physique, la nutrition, le sommeil, le stress, l'inflammation et d'autres facteurs de risque pertinents.",
   },
   "about.rootcause.p2": {
-    en: "This applies across chronic and metabolic diseases. Our approach can be summarized as: Investigate, understand, correct, support, monitor and educate.",
-    fr: "Cela s'applique à toutes les maladies chroniques et métaboliques. Notre approche peut se résumer ainsi : Enquêter, comprendre, corriger, soutenir, surveiller et éduquer.",
+    en: "This applies across chronic and metabolic diseases. At S19, care begins with understanding the individual—not simply the symptoms. Through consultation, investigation, patient education, personalized support and continuous monitoring, we work to identify and address relevant underlying and modifiable factors while tracking progress over time.",
+    fr: "Cela s'applique à toutes les maladies chroniques et métaboliques. Chez S19, la prise en charge commence par la compréhension de la personne, et pas seulement des symptômes. Par la consultation, l'investigation, l'éducation du patient, un soutien personnalisé et un suivi continu, nous cherchons à identifier et à traiter les facteurs sous-jacents et modifiables pertinents, tout en suivant les progrès dans le temps.",
   },
 
   "about.blind.title": { en: "We do not treat blindly", fr: "Nous ne traitons pas à l'aveugle" },
@@ -522,10 +575,9 @@ const dict = {
     en: "This does not mean S19 is against pharmaceutical medicine - medicines can be essential and lifesaving. But healthcare becomes incomplete when long-term treatment focuses only on medication while modifiable contributors such as nutrition, obesity, insulin resistance, inactivity, smoking, alcohol, stress and poor sleep are ignored.",
     fr: "Cela ne signifie pas que S19 est contre la médecine pharmaceutique - les médicaments peuvent être essentiels et vitaux. Mais les soins deviennent incomplets lorsque le traitement à long terme se concentre uniquement sur les médicaments tandis que des facteurs modifiables comme la nutrition, l'obésité, la résistance à l'insuline, l'inactivité, le tabac, l'alcool, le stress et le manque de sommeil sont ignorés.",
   },
-  "about.notAnti.title": { en: "S19 is not anti-medicine", fr: "S19 n'est pas contre la médecine" },
   "about.notAnti.text": {
-    en: "Different medical tools have different roles. There are circumstances where pharmaceuticals, surgery, emergency medicine, hospitalization or specialist intervention are indispensable, and natural medicine should never delay necessary emergency or specialist care.",
-    fr: "Les différents outils médicaux ont des rôles différents. Il existe des situations où les médicaments, la chirurgie, la médecine d'urgence, l'hospitalisation ou l'intervention d'un spécialiste sont indispensables, et la médecine naturelle ne doit jamais retarder les soins d'urgence ou spécialisés nécessaires.",
+    en: "Different healthcare approaches have different roles. There are circumstances in which pharmaceuticals, surgery, emergency medicine, hospitalization, or specialist care are essential. Natural and complementary approaches should never delay necessary medical, emergency, or specialist care.",
+    fr: "Les différentes approches de soins ont des rôles différents. Il existe des situations dans lesquelles les médicaments, la chirurgie, la médecine d'urgence, l'hospitalisation ou les soins spécialisés sont essentiels. Les approches naturelles et complémentaires ne doivent jamais retarder les soins médicaux, d'urgence ou spécialisés nécessaires.",
   },
   "about.metabolic.kicker": { en: "Chronic & metabolic health", fr: "Santé chronique & métabolique" },
   "about.metabolic.title": { en: "More than symptom control.", fr: "Plus qu'un simple contrôle des symptômes." },

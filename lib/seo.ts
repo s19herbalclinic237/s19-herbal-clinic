@@ -7,7 +7,16 @@
  * - Cameroon coverage: all 10 regions + major cities (see CAMEROON_REGIONS).
  * - International intent: science-based herbalism, natural treatment for
  *   diabetes / hypertension / prostate / women's health, worldwide shipping.
+ *
+ * Image SEO (filenames, intrinsic dimensions, alt text, captions) lives in
+ * `lib/image-registry.ts`, which is the single place a clinic photograph is
+ * described. The `ImageObject` / `ImageGallery` builders below read from it so
+ * structured data cannot drift away from the alt text.
  */
+
+import type { ClinicPhoto } from "@/lib/image-registry";
+import { clinicPhotoSrc, photosForPage } from "@/lib/image-registry";
+import type { Locale } from "@/lib/i18n";
 
 /** Normalized base URL (no trailing slash). Falls back to the public S19 domain. */
 export function siteUrl(raw?: string): string {
@@ -170,6 +179,52 @@ export const CLINIC_GEO = {
   latitude: 5.4737,
   longitude: 10.4177,
 };
+
+/**
+ * A single photograph as schema.org `ImageObject`.
+ *
+ * This is the other half of image SEO alongside the filename and the sitemap.
+ * It lets Google attach a name and a description to an image, which is what
+ * powers the text shown beside a result in Google Images. The text is taken
+ * from the image registry rather than restated here, so the structured data
+ * cannot disagree with the alt text.
+ */
+export function imageObjectJsonLd(entry: ClinicPhoto, locale: Locale = "en") {
+  return {
+    "@type": "ImageObject",
+    "@id": `${canonicalPath(clinicPhotoSrc(entry))}#image`,
+    contentUrl: canonicalPath(clinicPhotoSrc(entry)),
+    url: canonicalPath(clinicPhotoSrc(entry)),
+    width: entry.width,
+    height: entry.height,
+    encodingFormat: "image/jpeg",
+    caption: entry.caption[locale],
+    creditText: "S19 Herbal Clinic",
+    creator: { "@id": `${SITE_URL}/#clinic` },
+    license: `${SITE_URL}/terms`,
+    acquireLicensePage: `${SITE_URL}/terms`,
+  };
+}
+
+/**
+ * An `ImageGallery` of the clinic's photographs for a given page, ready to drop
+ * into a page's JSON-LD.
+ *
+ * Only photographs the page actually displays are included: declaring images a
+ * visitor cannot see is the fastest way to get a rich result rejected.
+ */
+export function imageGalleryJsonLd(page: string, locale: Locale = "en") {
+  const photos = photosForPage(page);
+  if (photos.length === 0) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "ImageGallery",
+    "@id": `${canonicalPath(page === "" ? "/" : page)}#gallery`,
+    name: "S19 Herbal Clinic",
+    url: canonicalPath(page === "" ? "/" : page),
+    associatedMedia: photos.map((p) => imageObjectJsonLd(p, locale)),
+  };
+}
 
 /** JSON-LD (schema.org) for local SEO: MedicalClinic + WebSite. */
 export function clinicJsonLd() {

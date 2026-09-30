@@ -125,10 +125,22 @@ export function BlogExplorer({ posts }: { posts: BlogPost[] }) {
             >
               <div className="grid md:grid-cols-2">
                 <div className="relative aspect-[16/10] overflow-hidden bg-forest-950 md:aspect-auto md:min-h-72">
+                  {/*
+                    Covers are database-supplied, so their intrinsic size is not
+                    known at build time and `next/image` cannot optimise a host
+                    outside `remotePatterns`. A plain `<img>` is the honest
+                    choice here. The container has a fixed aspect ratio, so the
+                    image cannot shift the layout, and the spotlight — which is
+                    above the fold — loads eagerly while the grid below stays
+                    lazy.
+                  */}
                   {spotlight.cover ? (
                     <img
                       src={spotlight.cover}
                       alt={spotlight.title}
+                      loading="eager"
+                      fetchPriority="high"
+                      decoding="async"
                       className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                     />
                   ) : (
@@ -172,6 +184,8 @@ export function BlogExplorer({ posts }: { posts: BlogPost[] }) {
                       <img
                         src={p.cover}
                         alt={p.title}
+                        loading="lazy"
+                        decoding="async"
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                       />
                     </div>

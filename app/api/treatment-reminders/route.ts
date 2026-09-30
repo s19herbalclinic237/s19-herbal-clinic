@@ -44,7 +44,11 @@ export async function GET(request: Request) {
 
     const filter: Record<string, unknown> = {
       plan: { $in: planIds },
-      ...(includeDone ? {} : { status: "pending" }),
+      // `cancelled` is excluded even when completed items are asked for. It means
+      // the obligation was withdrawn - a shortened plan, or a treatment that has
+      // been closed - and showing a patient a task the clinic has already decided
+      // against is worse than showing them nothing.
+      ...(includeDone ? { status: { $in: ["pending", "done"] } } : { status: "pending" }),
     };
     const reminders = await TreatmentReminder.find(filter)
       .sort({ dueDate: 1 })

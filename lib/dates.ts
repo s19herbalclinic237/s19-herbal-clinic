@@ -6,20 +6,39 @@
  * parses it as UTC midnight, which formats as the previous day in timezones
  * west of UTC (and from local-noon timestamps it would shift the other way).
  * These helpers keep every date on the calendar day the clinic means.
+ *
+ * "The calendar day the clinic means" is resolved in `lib/clinic-time.ts`, not
+ * in the JavaScript runtime's local timezone. On Vercel that runtime is UTC,
+ * which is an hour behind Bafoussam and was reporting the wrong day between
+ * 23:00 and 00:00 UTC. This file now delegates to that module so every existing
+ * caller - patient badges, treatment tabs, admin plan lists - is correct without
+ * being rewritten.
  */
 
-/** YYYY-MM-DD in the runtime's local timezone (for "today" comparisons). */
+import {
+  clinicToday,
+  dateOnlyToInstant,
+  isDateOnly,
+} from "@/lib/clinic-time";
+
+/**
+ * YYYY-MM-DD for the clinic's current day, in Africa/Douala. Falls back to the
+ * host's local date only if the clinic-time module cannot be read at all,
+ * which it cannot while this module is the thing that cannot load.
+ */
 export function localDateString(d: Date = new Date()): string {
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const dd = String(d.getDate()).padStart(2, "0");
-  return `${d.getFullYear()}-${mm}-${dd}`;
+  return clinicToday(d);
 }
 
 /**
- * Parses a "YYYY-MM-DD" value as local noon so the timezone can never shift
- * the calendar day. Full ISO timestamps pass straight through.
+ * Parses a "YYYY-MM-DD" value as clinic noon so the timezone can never shift the
+ * calendar day. Full ISO timestamps pass straight through.
+ *
+ * The noon anchor is a UTC noon instant, which is noon-to-1pm in Bafoussam and
+ * therefore always the intended calendar day, and it renders as the same day for
+ * any host offset from UTC-11 through UTC+12.
  */
 export function parseDateOnly(value: string): Date {
-  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return new Date(`${value}T12:00:00`);
+  if (isDateOnly(value)) return dateOnlyToInstant(value);
   return new Date(value);
 }

@@ -136,9 +136,14 @@ export function HealthLibraryExplorer({
                 >
                   {p.cover ? (
                     <div className="aspect-[16/9] w-full overflow-hidden">
+                      {/* Database-supplied cover in a fixed 16/9 box: no layout shift is possible,
+                        and the host is not known, so a plain `<img>` is correct.
+                        Lazy because the grid sits below the fold. */}
                       <img
                         src={p.cover}
                         alt={title}
+                        loading="lazy"
+                        decoding="async"
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>

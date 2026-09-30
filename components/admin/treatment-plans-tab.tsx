@@ -6,6 +6,9 @@ import { Field, Input, Select, Textarea } from "@/components/ui/form";
 import { formatDate, TreatmentPhaseBadge } from "@/components/account/badges";
 import { localDateString } from "@/lib/dates";
 import { TreatmentPlanDetail } from "@/components/admin/treatment-plan-detail";
+// Type-only, so it is erased at compile time and `server-only` never runs in the
+// browser. The shape crosses the API boundary, which is the whole point of it.
+import type { ScheduleReport } from "@/lib/plan-lifecycle";
 import {
   FaCalendarDays,
   FaChevronDown,
@@ -13,6 +16,7 @@ import {
   FaPencil,
   FaPlus,
   FaTrashCan,
+  FaTriangleExclamation,
   FaXmark,
 } from "react-icons/fa6";
 
@@ -340,6 +344,15 @@ function TreatmentPlanForm({
   );
   const [notes, setNotes] = useState(initial?.notes || "");
   const [saving, setSaving] = useState(false);
+  /**
+   * What the schedule engine did, or why it did nothing.
+   *
+   * Held as state rather than thrown away because silence is the failure mode this
+   * is here to prevent. The engine ships inert until the clinic confirms the
+   * intervals, and if saving a plan simply produced no reminders and no message,
+   * a clinician would have no way to tell "not switched on yet" from "broken".
+   */
+  const [schedule, setSchedule] = useState<ScheduleReport | null>(null);
   const [glucoseMonitoring, setGlucoseMonitoring] = useState(initial?.monitoring?.glucose || false);
   const [monitoring, setMonitoring] = useState({
     fastingStart: initial?.monitoring?.fastingStart || "06:00",
@@ -404,6 +417,7 @@ function TreatmentPlanForm({
       );
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Could not save the treatment plan.");
+      setSchedule(data.schedule ?? null);
       onSaved();
     } catch (err) {
       window.alert(err instanceof Error ? err.message : "Could not save the treatment plan.");
@@ -565,6 +579,8 @@ function TreatmentPlanForm({
         </div>
       </div>
 
+      {schedule && <ScheduleNotice report={schedule} />}
+
       <div className="mt-5 flex items-center justify-end gap-3">
         <Button type="submit" disabled={saving}>
           {saving ? "Saving..." : initial ? "Save changes" : "Create plan"}
@@ -574,5 +590,85 @@ function TreatmentPlanForm({
         </button>
       </div>
     </form>
+  );
+}
+
+/**
+ * What the schedule engine did, or why it did nothing.
+ *
+ * The engine ships inert until the clinic confirms the review, laboratory and
+ * notice intervals. Without this, saving a plan while it is inert looks exactly
+ * like saving one while it is broken, and the difference between "we have not
+ * turned this on yet" and "this is faulting" is the difference between a
+ * five-minute fix and an afternoon of hunting.
+ */
+function ScheduleNotice({ report }: { report: ScheduleReport }) {
+  const [dismissed, setDismissed] = useState(false);
+  if (dismissed) return null;
+
+  // Amber when the plan was saved but something did not happen; green when it
+  // did. Neither is an error state in the alert sense, so neither uses a modal.
+  const tone = report.applied
+    ? "border-forest-200 bg-forest-50 text-forest-900"
+    : "border-amber-300 bg-amber-50 text-amber-900";
+
+  return (
+    <div
+      role="status"
+      className={`mt-5 rounded-lg border px-4 py-3 ${tone}`}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <p className="flex items-center gap-2 text-sm font-bold">
+          {report.applied ? (
+            <FaCalendarDays className="h-4 w-4 shrink-0" aria-hidden />
+          ) : (
+            <FaTriangleExclamation className="h-4 w-4 shrink-0 text-amber-600" aria-hidden />
+          )}
+          {report.applied ? "Schedule generated" : "No schedule generated"}
+        </p>
+        <button
+          type="button"
+          onClick={() => setDismissed(true)}
+          aria-label="Dismiss schedule summary"
+          className="shrink-0 cursor-pointer opacity-60 hover:opacity-100"
+        >
+          <FaXmark className="h-3.5 w-3.5" aria-hidden />
+        </button>
+      </div>
+
+      <p className="mt-1.5 text-xs leading-relaxed">{report.summary}</p>
+
+      {report.applied && (report.created > 0 || report.updated > 0 || report.cancelled > 0 || report.unchanged > 0) && (
+        <p className="mt-2 text-xs font-semibold">
+          {report.created} created &middot; {report.updated} updated &middot;{" "}
+          {report.cancelled} withdrawn &middot; {report.unchanged} unchanged
+        </p>
+      )}
+
+      {report.next.length > 0 && (
+        <ul className="mt-2 space-y-1 text-xs">
+          {report.next.map((item) => (
+            <li key={`${item.kind}-${item.eventDate}`} className="flex flex-wrap items-baseline gap-x-2">
+              <span className="font-semibold">{item.title}</span>
+              <span className="opacity-70">on {item.eventDate}</span>
+              <span className="opacity-70">remind {item.dueDate}</span>
+              {item.amountFcfa !== null && (
+                <span className="font-semibold">{item.amountFcfa.toLocaleString("en-GB")} FCFA</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {report.skipped.length > 0 && (
+        <ul className="mt-2 space-y-1 text-xs opacity-90">
+          {report.skipped.map((item) => (
+            <li key={item.kind}>
+              <span className="font-semibold">{item.kind}</span> skipped &mdash; {item.reason}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }

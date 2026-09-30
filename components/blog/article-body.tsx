@@ -83,7 +83,16 @@ export function ArticleBody({ body, cover }: { body: string; cover?: string }) {
         if (image && image[2] !== cover) {
           return (
             <figure key={key} className="my-2 overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
-              <img src={image[2]} alt={image[1] || ""} className="w-full object-cover" loading="lazy" />
+              {/* Image pulled out of the post's markdown. The URL is author-supplied and its
+                size is unknown, so it stays a plain `<img>`; `loading="lazy"`
+                because it is below the fold of the article. */}
+              <img
+                src={image[2]}
+                alt={image[1] || ""}
+                className="w-full object-cover"
+                loading="lazy"
+                decoding="async"
+              />
               {image[1] ? (
                 <figcaption className="border-t border-line bg-cream/70 px-4 py-2.5 text-center text-xs text-muted">
                   {image[1]}
