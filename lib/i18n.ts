@@ -1416,6 +1416,7 @@ const dict = {
   "dash.shell.nav.adminVideos": { en: "Live Reviews", fr: "Avis vidéo" },
   "dash.shell.nav.adminRoles": { en: "Staff & Roles", fr: "Équipe et rôles" },
   "dash.shell.nav.adminBackups": { en: "Data Backups", fr: "Sauvegardes des données" },
+  "dash.shell.nav.adminLogs": { en: "Error Log", fr: "Journal d'erreurs" },
   "dash.shell.nav.doctorAppointments": { en: "Appointments", fr: "Rendez-vous" },
   "dash.shell.nav.doctorRecords": { en: "Medical Records", fr: "Dossier médical" },
   "dash.shell.nav.doctorPrescriptions": { en: "Prescriptions", fr: "Prescriptions" },
@@ -1536,6 +1537,11 @@ const dict = {
   "dash.shell.h.adminBackups.sub": {
     en: "Daily automated and manual full-database backups, emailed to the clinic admin",
     fr: "Sauvegardes complètes de la base automatiques et manuelles, envoyées par e-mail à l'administrateur",
+  },
+  "dash.shell.h.adminLogs.title": { en: "Error Log", fr: "Journal d'erreurs" },
+  "dash.shell.h.adminLogs.sub": {
+    en: "Every error the site records, kept 90 days and summarised by email each morning",
+    fr: "Toutes les erreurs enregistrées par le site, conservées 90 jours et résumées par e-mail chaque matin",
   },
 
   /* ── Dashboard status badges ────────────────────────────────────────────── */
@@ -2185,6 +2191,25 @@ const dict = {
   "dash.settings.idPreview": { en: "{side} preview", fr: "Aperçu : {side}" },
   "dash.settings.idSaved": { en: "{side} - saved", fr: "{side} - enregistré" },
   "dash.settings.chooseSide": { en: "Choose {side}", fr: "Choisir : {side}" },
+
+  /* ── System error pages ───────────────────────────────────────────────── */
+
+  "sys.error.title": { en: "Something went wrong", fr: "Une erreur est survenue" },
+  "sys.error.body": {
+    en: "The clinic website ran into a problem and could not load this page. Nothing you typed has been sent anywhere. Please try again.",
+    fr: "Le site de la clinique a rencontré un problème et n'a pas pu charger cette page. Rien de ce que vous avez saisi n'a été envoyé. Veuillez réessayer.",
+  },
+  "sys.error.retry": { en: "Try again", fr: "Réessayer" },
+  "sys.error.home": { en: "Back to home", fr: "Retour à l'accueil" },
+  "sys.error.call": {
+    en: "if this keeps happening",
+    fr: "si cela continue",
+  },
+  "sys.error.reference": { en: "Reference code", fr: "Code de référence" },
+  "sys.error.referenceHint": {
+    en: "Quote this code if you contact the clinic, so we can find the exact problem.",
+    fr: "Indiquez ce code si vous contactez la clinique, afin que nous puissions retrouver le problème exact.",
+  },
 } as const;
 
 export type TranslationKey = keyof typeof dict;

@@ -8,6 +8,7 @@ import {
   recoverExpiredBackupRuns,
 } from "@/lib/backup/queue";
 import { runBackup } from "@/lib/backup/orchestrator";
+import { runDailyLogDigest } from "@/lib/app-log-digest";
 
 /**
  * Scheduled maintenance route called by Vercel Cron (see vercel.json).
@@ -17,6 +18,13 @@ import { runBackup } from "@/lib/backup/orchestrator";
  *  2. Enqueue today's encrypted object-store archive when that pipeline is
  *     configured (S3 + KMS + age), then execute queued runs.
  *  3. Run the lightweight emailed database backup (idempotent once per day).
+ *  4. Email the daily error-log digest.
+ *
+ * Step 4 shares this schedule rather than adding a second cron entry. Both
+ * tasks are daily morning operational mail to the same recipients over the
+ * same SMTP transport, so one slot is simpler than two - and on the Hobby plan
+ * cron jobs may only run once per day anyway, with up to an hour of scheduling
+ * drift, so a separate entry would not have been more punctual.
  *
  * Every step is isolated so one failure cannot hide the others, and each is
  * reported in the response for monitoring.
@@ -37,10 +45,12 @@ export async function GET(request: Request) {
     recovered: number | null;
     archive: { configured: boolean; error?: string; ran?: number };
     email: { delivered: boolean; duplicate: boolean; skipped: boolean; error?: string };
+    logDigest: { status: string; duplicate: boolean; errorCount: number; error?: string };
   } = {
     recovered: null,
     archive: { configured: false },
     email: { delivered: false, duplicate: false, skipped: false },
+    logDigest: { status: "not-attempted", duplicate: false, errorCount: 0 },
   };
 
   // 1. Lease recovery (works even when nothing else is configured).
@@ -84,6 +94,20 @@ export async function GET(request: Request) {
     }
   } catch (error) {
     result.email.error = error instanceof Error ? error.message : String(error);
+  }
+
+  // 4. Daily error-log digest. Deliberately last and separately wrapped, so a
+  //    broken digest can never delay or fail the backup above it.
+  try {
+    const outcome = await runDailyLogDigest();
+    result.logDigest = {
+      status: outcome.status,
+      duplicate: outcome.skippedDuplicate,
+      errorCount: outcome.errorCount,
+    };
+  } catch (error) {
+    result.logDigest.status = "failed";
+    result.logDigest.error = error instanceof Error ? error.message : String(error);
   }
 
   return NextResponse.json(result);

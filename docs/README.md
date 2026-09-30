@@ -19,6 +19,7 @@ This directory is the operational and technical source of truth for the S19 Herb
 | [Legal compliance gap register](LEGAL_COMPLIANCE_GAP_REGISTER.md) | Cameroon-first legal requirements, evidence, unresolved business facts, and counsel-review questions. |
 | [Backup and recovery](BACKUP_AND_RECOVERY.md) | Encrypted backup, restore, retention, monitoring, and disaster-recovery runbook. |
 | [WhatsApp notifications](WHATSAPP_SETUP.md) | Meta Cloud API setup runbook: credentials, env vars, the ten message templates, patient consent, and what is not covered. |
+| [Error log and monitoring](LOGGING_AND_MONITORING.md) | Durable error log, what is redacted before storage, retention, the daily digest email, and the admin panel. |
 
 ## How to keep this documentation accurate
 

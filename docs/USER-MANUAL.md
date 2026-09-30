@@ -378,7 +378,7 @@ Staff accounts see a **"Clinical work"** section with **6 tabs** plus Settings. 
 
 Admins see everything under **My account** (the 10 patient tabs) **plus** the 15-tab **Clinic admin** section:
 
-Products · Staff · Appointments · Medical Records · Prescriptions · Treatment Plans · Treatment Alerts · Orders · Testimonials · Users & Messages · Blog · Subscribers · Live Reviews · Staff & Roles · Data Backups
+Products · Staff · Appointments · Medical Records · Prescriptions · Treatment Plans · Treatment Alerts · Orders · Testimonials · Users & Messages · Blog · Subscribers · Live Reviews · Staff & Roles · Data Backups · Error Log
 
 ### 7.1 Products
 
@@ -465,7 +465,18 @@ Same clinical flow as staff (§6.1) — full filter set and confirm/complete/can
 - **Run backup now** — take an immediate full-database backup and have it emailed (idempotent per day — no duplicate emails if it already ran).
 - **Run history table** — last 30 runs: trigger, docs/collections, size, email status, detail.
 
-### 7.16 Administrator's own account
+### 7.16 Error Log
+
+- **What it is.** Every error the site records, kept in the database for 90 days. The hosting platform's own console is kept for only **1 hour** on the free plan, so this is the copy you can actually come back to.
+- **Summary cards** — errors and warnings in the last 24 hours, errors in the last 7 days, and how many entries are currently stored.
+- **Daily digest email card** — when the digest last went out, whether it failed, and the most frequent error in that window. Sent with the daily backup at 05:30 UTC.
+- **Email digest now** — send the summary immediately without waiting for tomorrow.
+- **Filters** — level (errors / warnings), area (e.g. `email`, `whatsapp`, `db`, `admin/orders`), and a free-text search over messages and routes.
+- **Entry table** — newest first, with a `×N` badge when the same error repeated inside a minute. Click the arrow on a row to expand the redacted context payload.
+- **Patient impact.** When a page fails, the patient sees a friendly bilingual page with a reference code. That code appears in the matching log row, so a patient reporting "it said `a1b2c3`" can be matched to the exact error.
+- **Privacy.** Names, email addresses and phone numbers are masked before anything is written. Passwords, tokens and session cookies are never stored. The digest email carries counts and error signatures only — never patient details.
+
+### 7.17 Administrator's own account
 
 Admins also have all 10 patient tabs (Dashboard, Appointments, Orders, Messages, Records, Prescriptions, Treatment Plan, Family, Stories, Settings) so they can experience (and test) the patient side and manage their own profile.
 
@@ -544,6 +555,7 @@ All transactional mail is sent by **Zoho Mail** (from **info@s19herbalclinic.com
 | Message notifications | Clinic ↔ patient messages |
 | Testimonial approved | Admin approves a story |
 | Backup delivered | Daily or manual backup run |
+| Error digest delivered | Daily 05:30 UTC error summary |
 
 ---
 
@@ -553,6 +565,12 @@ All transactional mail is sent by **Zoho Mail** (from **info@s19herbalclinic.com
 - The database is backed up **daily at 05:30 UTC** and emailed to the clinic inbox (admin-only tab **Data Backups** to monitor or run manually).
 - Optional: an **encrypted archive** (age-encrypted bundle, object-locked on S3-compatible storage) including Cloudinary originals — activated via environment variables.
 - Manual backups are idempotent: only one email per day.
+
+**Error log & monitoring**
+- Every `console.error` / `console.warn` in the codebase, plus every unhandled server error, is recorded in the database and kept **90 days** (admin-only tab **Error Log**). This exists because the hosting platform keeps its own console for only **1 hour** on the free plan.
+- A **digest email** arrives with the daily backup summarising the previous 24 hours. It is sent every day, including when there is nothing wrong, so a missing digest is itself a signal.
+- Failed emails and WhatsApp sends appear here per recipient, which is currently the only way to see them — there is no delivery-status webhook.
+- Full details, including what is redacted before storage, are in [LOGGING_AND_MONITORING.md](LOGGING_AND_MONITORING.md).
 
 **Deployments**
 - Push to the GitHub repo → Vercel builds and deploys automatically.

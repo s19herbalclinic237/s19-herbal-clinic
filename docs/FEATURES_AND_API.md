@@ -404,6 +404,8 @@ The profile is not currently linked to a login or clinical writes.
 | `POST /api/admin/backups` | Admin | Run a full-database emailed backup now (optional reason); returns 400 when SMTP/recipient is not configured. |
 | `GET /api/cron/backups` | Vercel Cron (Bearer `CRON_SECRET` outside development) | Lease recovery, optional archive queue execution, daily emailed backup; isolated per-step JSON result. |
 | `GET /api/admin/whatsapp` | Admin | WhatsApp Cloud API setup status: whether credentials are present, how many patients opted in, and the exact template names/copy to create. Never returns secrets. |
+| `GET /api/admin/logs` | Admin | Durable error log: newest entries, 24h/7d counts, per-scope breakdown, retention, and the last daily-digest status. Accepts `level`, `source`, `scope` and `q` filters. |
+| `POST /api/admin/logs` | Admin | Sends the daily error-log digest immediately, bypassing the idempotency window. |
 
 ## 7. Data-change summary
 

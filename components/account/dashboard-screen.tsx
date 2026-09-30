@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import {
@@ -37,6 +37,7 @@ import { TreatmentPlansTab } from "@/components/admin/treatment-plans-tab";
 import { TreatmentAlertsTab } from "@/components/admin/treatment-alerts-tab";
 import { RolesTab } from "@/components/admin/roles-tab";
 import { BackupsTab } from "@/components/admin/backups-tab";
+import { LogsTab } from "@/components/admin/logs-tab";
 import { buttonLinkClasses } from "@/components/ui/button";
 import { S19_ASSETS } from "@/lib/site-assets";
 import {
@@ -50,6 +51,7 @@ import {
   FaEnvelope,
   FaFileMedical,
   FaFilePrescription,
+  FaFileCircleXmark,
   FaFolderOpen,
   FaGear,
   FaHouse,
@@ -86,7 +88,8 @@ type TabId =
   | "admin-treatment-plans"
   | "admin-treatment-alerts"
   | "admin-roles"
-  | "admin-backups";
+  | "admin-backups"
+  | "admin-logs";
 
 interface NavItem {
   id: TabId;
@@ -223,6 +226,11 @@ const adminTabs: NavItem[] = [
     labelKey: "dash.shell.nav.adminBackups",
     icon: <FaBoxArchive className="h-4 w-4" aria-hidden />,
   },
+  {
+    id: "admin-logs",
+    labelKey: "dash.shell.nav.adminLogs",
+    icon: <FaFileCircleXmark className="h-4 w-4" aria-hidden />,
+  },
 ];
 
 /**
@@ -356,6 +364,25 @@ export function DashboardScreen() {
   const isAdmin = user?.role === "admin";
   const isDoctor = user?.role === "doctor";
   const isStaff = isAdmin || isDoctor;
+
+  // Deep links such as /account?tab=admin-logs, used by the daily error-log
+  // digest. Restricted to tabs this role can actually see, so a hand-edited
+  // URL cannot open a panel the signed-in user is not entitled to.
+  //
+  // The URL is an external system, so reading it in an effect is the intended
+  // pattern. Reading it in a useState initialiser instead would render the
+  // server's default panel and then immediately swap to the requested one
+  // during hydration, which is exactly the cascading render the lint rule
+  // warns about.
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get("tab") as TabId | null;
+    if (!requested) return;
+    const allowed = new Set<TabId>(
+      [...patientTabs, ...(isDoctor ? doctorTabs : isAdmin ? adminTabs : [])].map((i) => i.id)
+    );
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (allowed.has(requested)) setTab(requested);
+  }, [isAdmin, isDoctor]);
 
   const settingsTab = patientTabs.filter((tabItem) => tabItem.id === "settings");
   const navSections: Array<{ labelKey: TranslationKey; items: NavItem[] }> = isDoctor
@@ -673,6 +700,18 @@ export function DashboardScreen() {
             />
             <div className="px-4 sm:px-0">
               <BackupsTab />
+            </div>
+          </>
+        ) : null;
+      case "admin-logs":
+        return isAdmin ? (
+          <>
+            <PageHeader
+              title={t("dash.shell.h.adminLogs.title")}
+              subtitle={t("dash.shell.h.adminLogs.sub")}
+            />
+            <div className="px-4 sm:px-0">
+              <LogsTab />
             </div>
           </>
         ) : null;
