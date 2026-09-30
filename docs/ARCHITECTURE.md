@@ -83,7 +83,7 @@ Next.js application
        └─ Backup engines ───► SMTP attachment (age-encrypted) and/or S3-compatible object store
 ```
 
-A `vercel.json` cron configuration is committed and schedules `GET /api/cron/backups` daily at 05:30 UTC. Confirm the hosting provider's cron limits and outbound network/function limits before enabling the optional object-store archive pipeline or large media transfers.
+A `vercel.json` cron configuration is committed and schedules `GET /api/cron/backups` daily at 05:30 UTC. The endpoint requires a bearer `CRON_SECRET`; see `LOGGING_AND_MONITORING.md` for the verification command. **This project is on Vercel's Hobby plan, which only accepts cron expressions that run once per day or less and will fail the deployment otherwise, and which fires within an hour of the requested time rather than to the minute.** Anything that needs a tighter interval than daily must not be added as a cron here. Confirm the hosting provider's cron limits and outbound network/function limits before enabling the optional object-store archive pipeline or large media transfers.
 
 ## 5. Rendering and client/server boundaries
 

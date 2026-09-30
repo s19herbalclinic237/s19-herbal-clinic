@@ -9,6 +9,8 @@ import { isVideoEmbedBlocked } from "@/lib/video-probe";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { serverT, getServerLocale } from "@/lib/i18n-server";
 import { canonicalMeta } from "@/lib/seo";
+import { clinicPhoto } from "@/lib/image-registry";
+import { ClinicPhotoFill } from "@/components/seo/clinic-photo-image";
 import { FaQuoteLeft, FaStar } from "react-icons/fa6";
 
 export const revalidate = 60;
@@ -44,10 +46,12 @@ export default async function PatientStoriesPage() {
     <>
       {/* HERO */}
       <section className="relative overflow-hidden bg-forest-950">
-        <img
-          src={HERO_IMG}
+        <ClinicPhotoFill
+          photo={clinicPhoto("consultationAdvice")}
           alt={t("stories.hero.alt")}
-          className="absolute inset-0 h-full w-full object-cover"
+          lcp
+          sizes="100vw"
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-forest-950/95 via-forest-950/75 to-forest-950/40" />
         <Container className="relative z-10 w-full py-24 md:py-28">

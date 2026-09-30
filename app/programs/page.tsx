@@ -12,6 +12,8 @@ import { FaWhatsapp, FaRegCircleCheck, FaArrowRight } from "react-icons/fa6";
 import Link from "next/link";
 import { getServerLocale, serverT } from "@/lib/i18n-server";
 import { canonicalMeta } from "@/lib/seo";
+import { clinicPhoto } from "@/lib/image-registry";
+import { ClinicPhotoFill } from "@/components/seo/clinic-photo-image";
 
 const HERO_IMG = S19_ASSETS.photos.consultationAdvice;
 
@@ -145,10 +147,11 @@ export default async function ProgramsPage() {
 
       {/* THERAPIES WE PERFORM */}
       <section className="relative overflow-hidden py-24 md:py-28">
-        <img
-          src={S19_ASSETS.photos.electrolysis}
+        <ClinicPhotoFill
+          photo={clinicPhoto("electrolysis")}
           alt={t("programs.therapies.alt")}
-          className="absolute inset-0 h-full w-full object-cover"
+          sizes="100vw"
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-forest-950/95 via-forest-950/80 to-forest-950/45" />
         <Container className="relative z-10">

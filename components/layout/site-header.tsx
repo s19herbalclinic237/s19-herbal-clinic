@@ -8,6 +8,7 @@ import { buttonLinkClasses } from "@/components/ui/button";
 import { useCart } from "@/lib/cart-context";
 import { CLINIC } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
+import { ClinicLogoImage } from "@/components/seo/clinic-photo-image";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/components/i18n/locale-provider";
 import { LanguageSwitcher } from "@/components/i18n/language-switcher";
@@ -89,12 +90,11 @@ export function AnnouncementBar() {
 function Logo() {
   return (
     <Link href="/" className="group flex items-center gap-2.5">
-      <img
-        src={S19_ASSETS.logos.fullLight}
+      <ClinicLogoImage
+        logo="fullLight"
         alt={`${CLINIC.brand} logo`}
         className="h-10 w-auto transition-transform group-hover:scale-[1.03] md:h-11"
-      />
-    </Link>
+      />    </Link>
   );
 }
 

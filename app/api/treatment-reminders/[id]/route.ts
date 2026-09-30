@@ -49,6 +49,14 @@ export async function PATCH(request: Request, { params }: Params) {
       return NextResponse.json({ error: "Invalid reminder status." }, { status: 400 });
     }
 
+    // A withdrawn reminder is not the patient's to revive. The list never returns
+    // one, so this is only reachable by keeping an old id - and letting it through
+    // would put a task back on a patient's dashboard that the clinic has already
+    // decided against.
+    if (reminder.status === "cancelled") {
+      return NextResponse.json({ error: "Reminder not found on your account." }, { status: 404 });
+    }
+
     const updated = await TreatmentReminder.findByIdAndUpdate(
       id,
       { $set: { status } },

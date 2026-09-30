@@ -96,7 +96,7 @@ export default async function TermsPage() {
   const t = await serverT();
   return (
     <>
-      <PageHero eyebrow={t("legal.eyebrow")} title={t("terms.metaTitle")} lead={t("terms.lead")} compact image={S19_ASSETS.photos.labBeakers} />
+      <PageHero eyebrow={t("legal.eyebrow")} title={t("terms.metaTitle")} lead={t("terms.lead")} compact image={S19_ASSETS.photos.labBeakers} alt={t("terms.hero.alt")} />
       <Container className="max-w-3xl py-10 md:py-14">
         <div className="space-y-6">
           {sections.map((s, i) => (

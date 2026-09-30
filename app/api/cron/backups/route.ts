@@ -9,6 +9,8 @@ import {
 } from "@/lib/backup/queue";
 import { runBackup } from "@/lib/backup/orchestrator";
 import { runDailyLogDigest } from "@/lib/app-log-digest";
+import { cronAuthGuidance, evaluateCronAuth } from "@/lib/cron-auth";
+import { recordAppLog } from "@/lib/app-log";
 
 /**
  * Scheduled maintenance route called by Vercel Cron (see vercel.json).
@@ -35,27 +37,41 @@ export async function GET(request: Request) {
   // automatically when the variable exists in the project environment, so no
   // other configuration is needed.
   //
-  // This deliberately fails *closed*. An earlier version skipped the check
-  // whenever CRON_SECRET was unset, which meant a project missing the variable
-  // exposed an unauthenticated endpoint that runs backups and sends mail to
-  // anyone who asks. A missing secret is a configuration fault, so it is
-  // reported as one instead of silently running wide open. Locally the check is
-  // relaxed so `curl localhost` still works during development.
-  if (process.env.NODE_ENV !== "development") {
-    const secret = process.env.CRON_SECRET;
-    if (!secret) {
-      return NextResponse.json(
-        {
-          error:
-            "CRON_SECRET is not configured. Set it in the deployment environment; Vercel Cron sends it as a bearer token automatically.",
-        },
-        { status: 503 }
-      );
-    }
-    const header = request.headers.get("authorization") ?? "";
-    if (header !== `Bearer ${secret}`) {
-      return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
-    }
+  // This fails *closed*, deliberately. An earlier version guarded with
+  // `if (secret && ...)`, which meant a project missing CRON_SECRET skipped the
+  // check entirely and exposed an unauthenticated endpoint that assembles and
+  // emails a complete database export - health records included - to whoever
+  // asked for it. A missing secret is a configuration fault, so it is reported
+  // as one rather than silently running wide open. Locally the check is relaxed
+  // so `curl localhost` still works during development.
+  //
+  // The decision itself lives in lib/cron-auth.ts so it is unit tested; a
+  // permissive default cannot quietly come back.
+  const auth = evaluateCronAuth({
+    authorization: request.headers.get("authorization"),
+    secret: process.env.CRON_SECRET,
+    nodeEnv: process.env.NODE_ENV,
+  });
+  if (!auth.ok) {
+    // Logged, not silently refused: a misconfigured deployment should show up
+    // in the daily digest rather than quietly skipping backups.
+    await recordAppLog({
+      level: "error",
+      source: "request",
+      scope: "cron",
+      message: `Backup cron refused: ${auth.reason}`,
+      context: JSON.stringify({
+        status: auth.status,
+        guidance: cronAuthGuidance(auth.reason),
+      }),
+      route: "/api/cron/backups",
+      method: "GET",
+      status: auth.status,
+    });
+    return NextResponse.json(
+      { error: auth.error, reason: auth.reason },
+      { status: auth.status }
+    );
   }
 
   const result: {

@@ -3,6 +3,8 @@ import { Container } from "@/components/ui/container";
 import { Kicker } from "@/components/ui/heading";
 import { buttonLinkClasses } from "@/components/ui/button";
 import { S19_ASSETS } from "@/lib/site-assets";
+import { clinicPhoto } from "@/lib/image-registry";
+import { ClinicPhotoFill } from "@/components/seo/clinic-photo-image";
 import { serverT } from "@/lib/i18n-server";
 import { FaLock, FaArrowRight } from "react-icons/fa6";
 
@@ -10,11 +12,15 @@ export async function ComingSoon() {
   const t = await serverT();
   return (
     <section className="relative flex min-h-[70vh] items-center overflow-hidden bg-forest-950">
-      <img
-        src={S19_ASSETS.photos.nutritionBasketOutreach}
+      {/* Decorative backdrop at 20% opacity behind a gradient, so it carries no
+          information: `alt=""` plus `aria-hidden` is the correct treatment. It
+          still goes through the image optimiser, which is the whole point —
+          a full-resolution JPEG was being shipped to decorate a panel. */}
+      <ClinicPhotoFill
+        photo={clinicPhoto("nutritionBasketOutreach")}
         alt=""
-        className="absolute inset-0 h-full w-full object-cover opacity-20"
-        aria-hidden
+        sizes="100vw"
+        className="object-cover opacity-20"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-forest-950 via-forest-950/80 to-forest-950/40" />
       <Container className="relative z-10 py-20 md:py-28">

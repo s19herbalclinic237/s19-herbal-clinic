@@ -22,7 +22,16 @@ export const philosophyDrivers = [
   "Genetic and family risk factors",
 ];
 
-export const rootCauseSteps = ["Investigate", "Understand", "Correct", "Support", "Monitor", "Educate"];
+/** Compact form of the care pathway, used in the root-cause section. */
+export const rootCauseSteps = [
+  "Consult",
+  "Investigate",
+  "Understand",
+  "Educate",
+  "Address",
+  "Support",
+  "Monitor",
+];
 
 export const assessmentAreas = [
   "Medical history",
@@ -53,6 +62,14 @@ export const herbalismConsiderations = [
 
 export const traditionalPlusModern = "Traditional Herbal Knowledge + Modern Scientific Understanding";
 
+/**
+ * The pillars of care, in order of emphasis. Herbal medicine leads because
+ * naming the practice accurately is both honest and a stronger position than
+ * leading with a category the clinic does not primarily occupy - a major
+ * mistake would be presenting S19 as a place that simply hands out herbal
+ * mixtures. Non-Conventional Therapies sits last: selected approaches used
+ * alongside herbal medicine, nutrition and lifestyle, never instead of them.
+ */
 export const healthPillars = [
   {
     title: "Herbal Medicine",
@@ -81,6 +98,10 @@ export const healthPillars = [
   {
     title: "Patient Education",
     text: "We want patients to understand their bodies and their condition instead of remaining permanently dependent on instructions they do not understand.",
+  },
+  {
+    title: "Non-Conventional Therapies",
+    text: "Selected non-conventional therapies may form part of individualized care. When appropriate, they are used alongside herbal medicine, nutrition and lifestyle interventions to support symptom management, recovery and overall well-being.",
   },
 ];
 
@@ -178,6 +199,15 @@ export const participation = [
   "Learning about their condition",
 ];
 
+/**
+ * The S19 care pathway, in the order care actually happens.
+ *
+ * Education sits *before* intervention deliberately. A patient who does not
+ * understand their own condition is not adhering - they are complying, and the
+ * two behave differently over months. "Address" rather than "Correct" because
+ * correction is one of several things we do, and naming only that step would
+ * misrepresent the model.
+ */
 export const patientJourney = [
   {
     step: "Consult",
@@ -188,35 +218,31 @@ export const patientJourney = [
     text: "Review existing medical records and recommend relevant laboratory tests, imaging or other investigations where appropriate.",
   },
   {
-    step: "Identify",
+    step: "Understand",
     text: "Identify important physiological, metabolic, nutritional, lifestyle and other contributing factors that may be influencing the patient's condition.",
   },
   {
-    step: "Personalize",
+    step: "Educate",
+    text: "Explain what is happening and why, what can be changed, what needs monitoring, and what requires conventional medical treatment - so the patient is not permanently dependent on instructions they do not understand.",
+  },
+  {
+    step: "Address",
     text: "Develop an individualized care plan combining herbal medicine, nutrition, lifestyle strategies and other appropriate supportive therapies.",
   },
   {
-    step: "Implement",
+    step: "Support",
     text: "Begin the treatment program with clear instructions, patient education and, where appropriate, in-clinic non-invasive supportive therapies.",
   },
   {
     step: "Monitor",
-    text: "Follow symptoms, treatment tolerance, adherence and objective health measurements such as laboratory results, blood glucose, blood pressure or other relevant markers.",
-  },
-  {
-    step: "Adjust",
-    text: "Modify the treatment strategy according to progress, tolerance, repeat investigations and new clinical information.",
-  },
-  {
-    step: "Maintain",
-    text: "Help the patient preserve improvements through continued education, nutrition, lifestyle practices, periodic follow-up and long-term prevention strategies.",
+    text: "Follow symptoms, treatment tolerance, adherence and objective health measurements such as laboratory results, blood glucose, blood pressure or other relevant markers - adjusting the plan as progress and new information require.",
   },
 ];
 
 /**
- * Additional services that support the S19 model beyond the eight journey
- * stages. Surfaced on the About page so these are explicit and never hidden
- * inside the journey cards.
+ * Additional services that support the S19 model beyond the care pathway.
+ * Surfaced on the About page so these are explicit and never hidden inside the
+ * journey cards.
  */
 export const careBeyond = [
   {

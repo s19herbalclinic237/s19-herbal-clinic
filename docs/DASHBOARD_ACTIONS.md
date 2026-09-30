@@ -454,7 +454,7 @@ There is no permission-specific care-relationship check (a doctor can currently 
 
 ## 4. Role-aware dashboard behavior
 
-The dashboard now derives navigation and API gates from server-issued roles: patients see the own-account portal, doctors see only clinical-work tabs (Appointments, Medical Records, Prescriptions, Treatment Plans, Treatment Alerts, Patients & Messages) plus Settings, and administrators see the patient portal plus every administrative tab (including Staff & Roles and Data Backups). Navigation hiding alone is usability, not security — every route re-enforces the role boundary server-side (`clinicalGuard`/`adminGuard`).
+The dashboard now derives navigation and API gates from server-issued roles: patients see the own-account portal, doctors see only clinical-work tabs (Appointments, Medical Records, Prescriptions, Treatment Plans, Treatment Alerts, Patients & Messages, WhatsApp) plus Settings, and administrators see the patient portal plus every administrative tab (including Staff & Roles, WhatsApp and Data Backups). Navigation hiding alone is usability, not security — every route re-enforces the role boundary server-side (`clinicalGuard`/`adminGuard`).
 
 The capability matrix below is the target end-state. The `doctor` column is partially met today (clinical tabs exist); remaining gaps are care-relationship scope, clinician attribution on writes, and audit trails.
 

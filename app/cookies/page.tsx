@@ -48,7 +48,7 @@ export default async function CookiesPage() {
   const t = await serverT();
   return (
     <>
-      <PageHero eyebrow={t("legal.eyebrow")} title={t("cookies.metaTitle")} lead={t("cookies.lead")} compact image={S19_ASSETS.photos.cupboardProducts} />
+      <PageHero eyebrow={t("legal.eyebrow")} title={t("cookies.metaTitle")} lead={t("cookies.lead")} compact image={S19_ASSETS.photos.cupboardProducts} alt={t("cookies.hero.alt")} />
       <Container className="max-w-3xl py-10 md:py-14">
         <p className="text-sm text-muted">
           {t("cookies.intro", { brand: CLINIC.brand })}

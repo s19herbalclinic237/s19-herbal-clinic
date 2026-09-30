@@ -8,6 +8,8 @@ import { NewsletterForm } from "@/components/blog/newsletter-form";
 import { getServerLocale, serverT } from "@/lib/i18n-server";
 import { localizedBlogPost } from "@/lib/site";
 import { canonicalMeta } from "@/lib/seo";
+import { findClinicPhotoBySrc, clinicPhotoSrc } from "@/lib/image-registry";
+import { ClinicPhotoImage } from "@/components/seo/clinic-photo-image";
 import { FaArrowLeft, FaClock, FaRegNewspaper, FaUserPen } from "react-icons/fa6";
 
 export const revalidate = 60;
@@ -102,6 +104,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   if (!post) notFound();
 
+  // Resolved once, so the cover can be rendered through the optimiser with its
+  // true dimensions when it is a clinic photograph from the registry.
+  const coverPhoto = findClinicPhotoBySrc(post.cover);
+
   const p = localizedBlogPost({
     id: post._id,
     title: post.title,
@@ -146,7 +152,41 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
             {post.cover ? (
               <div className="mt-8 overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
-                <img src={post.cover} alt={p.title} className="w-full object-cover" />
+                {/*
+                  Covers come from the database, so a given post's cover may be an
+                  editorial clinic photograph or an arbitrary admin-supplied URL.
+
+                  When it is one of ours it is rendered through the optimiser, with
+                  the real intrinsic size — which matters here because this is the
+                  one image on the page with no aspect-ratio container around it,
+                  so without dimensions the browser reserved no space and the
+                  article was shoved down as the cover loaded. `h-auto w-full`
+                  keeps the natural proportions, so the appearance is unchanged
+                  and only the wasted reflow goes away.
+
+                  Anything else falls back to a plain `<img>`: the dimensions are
+                  unknown, and `next/image` cannot optimise a host that is not
+                  in `remotePatterns` — which would turn an admin typo into a
+                  broken page rather than a slightly heavier image.
+                */}
+                {coverPhoto ? (
+                  <ClinicPhotoImage
+                    src={clinicPhotoSrc(coverPhoto)}
+                    alt={p.title}
+                    width={coverPhoto.width}
+                    height={coverPhoto.height}
+                    sizes="(min-width: 1024px) 768px, 100vw"
+                    className="h-auto w-full object-cover"
+                  />
+                ) : (
+                  <img
+                    src={post.cover}
+                    alt={p.title}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full object-cover"
+                  />
+                )}
               </div>
             ) : null}
 

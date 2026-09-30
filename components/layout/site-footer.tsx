@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { localizedClinic, waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
+import { ClinicLogoImage } from "@/components/seo/clinic-photo-image";
 import { getServerLocale, serverT } from "@/lib/i18n-server";
 import type { TranslationKey } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/i18n/language-switcher";
@@ -55,8 +56,8 @@ export async function SiteFooter() {
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-forest-950/55 via-forest-950/70 to-forest-950/80" />
       <Container className="relative z-10 grid gap-10 py-12 md:py-16 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
         <div>
-          <img
-            src={S19_ASSETS.logos.fullDark}
+          <ClinicLogoImage
+            logo="fullDark"
             alt={`${clinic.brand} logo`}
             className="h-11 w-auto"
           />

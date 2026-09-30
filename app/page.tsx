@@ -22,7 +22,10 @@ import { localizedClinic, waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { getServerLocale, serverT } from "@/lib/i18n-server";
 import { formatFcfa } from "@/lib/utils";
-import { canonicalMeta } from "@/lib/seo";
+import { canonicalMeta, imageGalleryJsonLd } from "@/lib/seo";
+import { resolveClinicPhoto } from "@/lib/image-registry";
+import { ClinicPhotoFill } from "@/components/seo/clinic-photo-image";
+import { JsonLd } from "@/components/seo/json-ld";
 
 export const revalidate = 60;
 import {
@@ -67,6 +70,12 @@ export default async function HomePage() {
   const clinicalPrinciples = localizedClinicalPrinciples(locale);
   const telehealthSteps = localizedTelehealthSteps(locale);
   const faqs = localizedFaqs(locale);
+  // Photographs are resolved through the registry so each one carries its true
+  // intrinsic size and its alt text in the visitor's language, rather than a
+  // hardcoded English string that only ever describes the English site.
+  const heroPhoto = resolveClinicPhoto("shopCounter", locale);
+  const recordsPhoto = resolveClinicPhoto("patientRecords", locale);
+  const locationPhoto = resolveClinicPhoto("bloodPressure", locale);
   const products = await getProducts();
   const featured = FEATURED_SLUGS
     .map((slug) => products.find((p) => p.slug === slug))
@@ -111,12 +120,21 @@ export default async function HomePage() {
 
   return (
     <>
+      {/* ImageGallery structured data for the three photographs the home page
+          displays. Derived from the image registry, so it can never claim an
+          image the page does not show. */}
+      <JsonLd data={imageGalleryJsonLd("/", locale)} />
+
       {/* HERO */}
       <section className="relative flex min-h-[86vh] items-center overflow-hidden bg-forest-950">
-        <img
-          src={S19_ASSETS.photos.shopCounter}
-          alt="The S19 Herbal Clinic reception and product counter in Bafoussam"
-          className="absolute inset-0 h-full w-full object-cover"
+        {/* The hero is the Largest Contentful Paint element: eager, high fetch
+            priority. `fill` because it is cropped to the viewport. */}
+        <ClinicPhotoFill
+          photo={heroPhoto.photo}
+          alt={heroPhoto.alt}
+          lcp
+          sizes="100vw"
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-forest-950/95 via-forest-950/75 to-forest-950/30" />
         <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-forest-950/90 via-transparent to-transparent" />
@@ -286,10 +304,11 @@ export default async function HomePage() {
 
       {/* TELEHEALTH (merged with the 3 care links) - full-bleed image band */}
       <section className="relative overflow-hidden py-24 md:py-32">
-        <img
-          src={S19_ASSETS.photos.patientRecords}
-          alt="S19 staff recording patient health records at the clinic office"
-          className="absolute inset-0 h-full w-full object-cover"
+        <ClinicPhotoFill
+          photo={recordsPhoto.photo}
+          alt={recordsPhoto.alt}
+          sizes="100vw"
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-forest-950/95 via-forest-950/80 to-forest-950/40" />
         <Container className="relative z-10">
@@ -301,7 +320,17 @@ export default async function HomePage() {
                   className="flex h-full items-center gap-4 rounded-lg border border-white/20 bg-white/10 p-5 backdrop-blur-sm transition-all hover:border-gold-400/60 hover:bg-white/15"
                 >
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-white/25 bg-white/10">
-                    <img src={c.icon} alt="" className="h-5 w-5" aria-hidden />
+                    {/* Decorative nav icon: `alt=""` plus `aria-hidden` is the
+                        correct treatment for an image that repeats the link text.
+                        Lazy because the band is below the fold. */}
+                    <img
+                      src={c.icon}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      className="h-5 w-5"
+                      aria-hidden
+                    />
                   </div>
                   <div className="min-w-0">
                     <h3 className="truncate text-sm font-bold text-white">{c.title}</h3>
@@ -497,10 +526,11 @@ export default async function HomePage() {
 
       {/* LOCATION - full-bleed image band */}
       <section className="relative overflow-hidden py-24 md:py-28">
-        <img
-          src={S19_ASSETS.photos.bloodPressure}
-          alt="S19 staff measuring a patient's blood pressure in the Bafoussam clinic"
-          className="absolute inset-0 h-full w-full object-cover"
+        <ClinicPhotoFill
+          photo={locationPhoto.photo}
+          alt={locationPhoto.alt}
+          sizes="100vw"
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-forest-950/95 via-forest-950/75 to-forest-950/35" />
         <Container className="relative z-10">

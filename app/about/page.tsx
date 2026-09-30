@@ -50,6 +50,7 @@ import {
   FaCircleCheck,
   FaQuoteLeft,
   FaLeaf,
+  FaHandHoldingHeart,
   FaMicroscope,
   FaGlobe,
   FaShieldHalved,
@@ -58,6 +59,10 @@ import {
 import Link from "next/link";
 import { getServerLocale, serverT } from "@/lib/i18n-server";
 import { canonicalMeta } from "@/lib/seo";
+import { resolveClinicPhoto } from "@/lib/image-registry";
+import { ClinicPhotoImage } from "@/components/seo/clinic-photo-image";
+import { JsonLd } from "@/components/seo/json-ld";
+import { imageGalleryJsonLd } from "@/lib/seo";
 
 const HERO_IMG = S19_ASSETS.photos.labBeakers;
 
@@ -97,14 +102,27 @@ const pillarIcons = [
   <FaShieldHalved key="stress" className="h-5 w-5" aria-hidden />,
   <FaVial key="lab" className="h-5 w-5" aria-hidden />,
   <FaGraduationCap key="edu" className="h-5 w-5" aria-hidden />,
+  // Non-Conventional Therapies: supportive care delivered alongside, never
+  // instead of, herbal medicine and nutrition.
+  <FaHandHoldingHeart key="nct" className="h-5 w-5" aria-hidden />,
 ];
 
 export default async function AboutPage() {
   const t = await serverT();
   const locale = await getServerLocale();
   const coreStrengths = localizedCoreStrengths(locale);
+  // The four photographs this page galleries. Allocated here rather than read
+  // from the registry's page index so that adding a photo to the gallery is a
+  // one-line change and the structured data below stays in step automatically.
+  const clinicGallery = (["labTransfer", "pipetteTransfer", "pipetteReading", "nutritionBasket"] as const)
+    .map((key) => resolveClinicPhoto(key, locale));
   return (
     <>
+      {/* ImageGallery: names and describes every photograph this page displays,
+          which is what supplies the text beside a result in Google Images. Built
+          from the same registry as the markup, so the two cannot disagree. */}
+      <JsonLd data={imageGalleryJsonLd("/about", locale)} />
+
       <PageHero
         eyebrow={t("about.hero.eyebrow")}
         title={t("about.hero.title")}
@@ -112,6 +130,29 @@ export default async function AboutPage() {
         image={HERO_IMG}
         alt={t("about.hero.alt")}
       />
+
+      {/* WHAT WE ARE ABOUT — the position statement, placed immediately after the
+          hero so a first-time visitor knows what S19 is within about 30 seconds,
+          before any detail. Everything below expands on this. */}
+      <Section>
+        <Reveal>
+          <div className="mx-auto max-w-4xl text-center">
+            <Kicker center>{t("about.position.kicker")}</Kicker>
+            <p className="mt-5 font-display text-2xl font-semibold leading-snug text-ink md:text-3xl">
+              {t("about.position.tagline")}
+            </p>
+            <p className="mt-7 text-[15px] leading-relaxed text-ink/85 md:text-base">
+              {t("about.position.statement")}
+            </p>
+            <p className="mt-6 border-l-2 border-gold-400 pl-5 text-left text-[15px] leading-relaxed text-muted md:text-base">
+              {t("about.position.question")}
+            </p>
+            <p className="mt-8 font-display text-xl font-semibold text-forest-800">
+              {t("about.position.goal")}
+            </p>
+          </div>
+        </Reveal>
+      </Section>
 
       {/* THE S19 PHILOSOPHY */}
       <Section>
@@ -279,7 +320,11 @@ export default async function AboutPage() {
             <Reveal key={p.title} delay={i * 0.06}>
               <div className="group h-full rounded-lg border border-line bg-cream p-7 transition-all hover:border-forest-300 hover:shadow-lift">
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-forest-200 bg-forest-50 text-forest-800 transition-transform group-hover:scale-110">
-                  {pillarIcons[i]}
+                  {/* Fallback so adding a ninth pillar cannot silently drop its
+                      icon - a plain index lookup would render an empty box. */}
+                  {pillarIcons[i] ?? (
+                    <FaCircleCheck key={`pillar-${i}`} className="h-5 w-5" aria-hidden />
+                  )}
                 </div>
                 <h3 className="mt-5 text-lg font-bold text-ink">{p.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{p.text}</p>
@@ -326,6 +371,9 @@ export default async function AboutPage() {
                 </p>
                 <p className="mt-4 rounded-md border border-gold-400/40 bg-gold-400/10 px-4 py-3 font-display text-lg font-semibold text-gold-400">
                   {rightIntervention}
+                </p>
+                <p className="mt-3 text-[15px] leading-relaxed text-forest-100/80">
+                  {t("about.notAnti.goal")}
                 </p>
               </div>
             </Reveal>
@@ -510,6 +558,42 @@ export default async function AboutPage() {
                 <h3 className="mt-2 text-base font-bold text-ink">{c.title}</h3>
                 <p className="mt-1.5 text-sm leading-relaxed text-muted">{c.text}</p>
               </div>
+            </Reveal>
+          ))}
+        </div>
+      </Section>
+
+      {/* INSIDE THE CLINIC — photo gallery.
+          Four real photographs of the laboratory and of clinic staff were on disk
+          and referenced by nothing, so they could never surface in image search.
+          They are the same images the sitemap and the ImageGallery structured
+          data declare, drawn from one registry. */}
+      <Section className="bg-mist">
+        <Reveal>
+          <div className="mx-auto max-w-2xl text-center">
+            <Kicker center>{t("about.gallery.kicker")}</Kicker>
+            <h2 className="mt-4">{t("about.gallery.title")}</h2>
+            <p className="mt-4 text-[15px] leading-relaxed text-muted">
+              {t("about.gallery.text")}
+            </p>
+          </div>
+        </Reveal>
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {clinicGallery.map((photo, i) => (
+            <Reveal key={photo.photo.slug} delay={i * 0.05}>
+              <figure className="h-full overflow-hidden rounded-xl border border-line bg-white shadow-card">
+                <ClinicPhotoImage
+                  src={photo.src}
+                  alt={photo.alt}
+                  width={photo.width}
+                  height={photo.height}
+                  sizes="(min-width: 1024px) 280px, (min-width: 640px) 45vw, 92vw"
+                  className="aspect-[3/4] w-full object-cover"
+                />
+                <figcaption className="border-t border-line px-4 py-3 text-xs leading-relaxed text-muted">
+                  {photo.photo.caption[locale]}
+                </figcaption>
+              </figure>
             </Reveal>
           ))}
         </div>

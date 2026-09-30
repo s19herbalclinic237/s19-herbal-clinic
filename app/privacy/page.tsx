@@ -95,7 +95,7 @@ export default async function PrivacyPage() {
   }));
   return (
     <>
-      <PageHero eyebrow={t("legal.eyebrow")} title={t("privacy.metaTitle")} lead={t("privacy.lead")} compact image={S19_ASSETS.photos.patientRecords} />
+      <PageHero eyebrow={t("legal.eyebrow")} title={t("privacy.metaTitle")} lead={t("privacy.lead")} compact image={S19_ASSETS.photos.patientRecords} alt={t("privacy.hero.alt")} />
       <Container className="max-w-3xl py-10 md:py-14">
         <p className="text-sm text-muted">
           {t("privacy.intro", { brand: CLINIC.brand, slogan: CLINIC.slogan })}

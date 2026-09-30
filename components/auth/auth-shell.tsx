@@ -1,4 +1,5 @@
 import { S19_ASSETS } from "@/lib/site-assets";
+import { ClinicLogoImage } from "@/components/seo/clinic-photo-image";
 
 export function AuthShell({
   eyebrow,
@@ -18,8 +19,8 @@ export function AuthShell({
       <div className="mx-auto w-full max-w-md px-4">
         <div className="overflow-hidden rounded-xl border border-line bg-white shadow-lift">
           <div className="bg-forest-950 px-6 py-6 text-center">
-            <img
-              src={S19_ASSETS.logos.fullLight}
+            <ClinicLogoImage
+              logo="fullLight"
               alt="S19 Herbal Clinic logo"
               className="mx-auto h-10 w-auto"
             />

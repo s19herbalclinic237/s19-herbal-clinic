@@ -5,6 +5,14 @@ import { TreatmentReminder } from "@/lib/models/TreatmentReminder";
 
 type Params = { params: Promise<{ id: string }> };
 
+/**
+ * The fields that constitute a claim about *when* something happens.
+ *
+ * Editing any of these hands the row back from the derivation engine by pinning
+ * it. `notes` is deliberately absent - see the comment at the pin below.
+ */
+const SCHEDULE_FIELDS = ["title", "kind", "dueDate", "eventDate", "amountFcfa"] as const;
+
 export async function PATCH(request: Request, { params }: Params) {
   const denied = await clinicalGuard();
   if (denied) return denied;
@@ -45,6 +53,18 @@ export async function PATCH(request: Request, { params }: Params) {
       }
       set.dueDate = dueDate;
     }
+    if (raw.eventDate !== undefined) {
+      // Cleared with `null` or an empty string: a manual reminder often has only
+      // one meaningful date, and forcing one on every row would be noise.
+      const eventDate = String(raw.eventDate ?? "").trim();
+      if (!eventDate) {
+        set.eventDate = undefined;
+      } else if (!/^\d{4}-\d{2}-\d{2}$/.test(eventDate)) {
+        return NextResponse.json({ error: "Enter a valid event date." }, { status: 400 });
+      } else {
+        set.eventDate = eventDate;
+      }
+    }
     if (raw.amountFcfa !== undefined) {
       set.amountFcfa = raw.amountFcfa !== "" ? Number(raw.amountFcfa) : undefined;
     }
@@ -52,10 +72,27 @@ export async function PATCH(request: Request, { params }: Params) {
     if (raw.notes !== undefined) set.notes = String(raw.notes).trim().slice(0, 1000) || undefined;
     if (raw.status !== undefined) {
       const status = String(raw.status);
-      if (status !== "pending" && status !== "done") {
+      if (status !== "pending" && status !== "done" && status !== "cancelled") {
         return NextResponse.json({ error: "Invalid reminder status." }, { status: 400 });
       }
       set.status = status;
+    }
+
+    // Taking ownership of a derived reminder.
+    //
+    // If a clinician moves a generated review from the 14th to the 20th, that
+    // decision has to outlive the next re-derivation - which happens on every
+    // plan date change. Pinning on the edit is what makes the engine back off
+    // that row permanently.
+    //
+    // A pure note edit does not pin: typing a note into a reminder is not a claim
+    // about when the thing should happen, and pinning on it would quietly freeze
+    // dates the clinician never intended to touch. `pinned: false` is therefore a
+    // deliberate hand-back, and reverts the row to whatever the rules say.
+    if (raw.pinned !== undefined) {
+      set.pinned = Boolean(raw.pinned);
+    } else if (SCHEDULE_FIELDS.some((f) => raw[f] !== undefined)) {
+      set.pinned = true;
     }
 
     const updated = await TreatmentReminder.findByIdAndUpdate(
