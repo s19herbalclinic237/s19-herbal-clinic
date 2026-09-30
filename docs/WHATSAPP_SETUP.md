@@ -9,6 +9,12 @@ nothing is sent until the environment variables below are set and the templates
 are approved in the WhatsApp Manager. Until then the calls are silent no-ops —
 the clinic behaves exactly as before.
 
+This document covers **sending**. The **receiving** half — patients replying, the
+24-hour window, opt-outs, and the staff inbox — is
+[WHATSAPP_INBOUND.md](WHATSAPP_INBOUND.md). The two need separate credentials and
+can be enabled independently, so read §2 carefully: being able to send while
+unable to receive looks like everything is working while replies are discarded.
+
 ---
 
 ## 1. What you need from Meta
@@ -150,6 +156,15 @@ WHATSAPP_GRAPH_VERSION=v23.0              # optional, this is the default
 WHATSAPP_NAMESPACE=s19                    # optional, template name prefix
 ```
 
+That is everything **sending** needs. Receiving needs two more, which are set in
+Meta under App Settings → Basic and are documented in
+[WHATSAPP_INBOUND.md §3](WHATSAPP_INBOUND.md):
+
+```
+WHATSAPP_APP_SECRET=...                   # signs inbound deliveries
+WHATSAPP_VERIFY_TOKEN=...                 # one-time subscription handshake
+```
+
 Then restart the server. Confirm with:
 
 ```
@@ -157,8 +172,11 @@ GET /api/admin/whatsapp
 ```
 
 It returns `configured: true`, the number of patients who have opted in, and the
-full template list with the exact copy to paste into Meta. Secrets are never
-returned by this endpoint.
+full template list with the exact copy to paste into Meta — including each
+template's buttons **in the order the code will use them**, which matters more
+than it looks (see WHATSAPP_INBOUND.md §7). It also reports the inbound
+readiness as a separate block, so "can send" and "can receive" are never confused.
+Secrets are never returned by this endpoint.
 
 ## 3. Create the message templates
 
@@ -198,6 +216,11 @@ Meta requires explicit, recorded opt-in, and a pre-ticked box does not count.
   the site locale, because admin-triggered sends (a prescription issued from the
   clinic dashboard) have no access to the patient's browser cookie.
 - Turning the toggle off stops all sends immediately.
+- A patient can also opt out **by replying on WhatsApp** — tapping "Stop these
+  messages" or typing `STOP`. Meta requires a working opt-out, and for a utility
+  template the reply is the only mechanism available. See
+  [WHATSAPP_INBOUND.md §8](WHATSAPP_INBOUND.md) for the matching rules and where
+  the refusal is recorded.
 
 ## 5. What gets sent
 
@@ -251,22 +274,41 @@ content in step with clinic policy.
 - Submit the ten templates for approval and wait for `APPROVED` status.
 - Complete business verification.
 - Send a test to Meta's test recipient, then to a consenting patient's own number.
-- Add a delivery-status webhook if you want to track failures per patient — not
-  built; failures currently only appear in server logs.
+- Save the callback URL and subscribe to `messages`, so replies are actually
+  received — see [WHATSAPP_INBOUND.md §3](WHATSAPP_INBOUND.md). Without this the
+  clinic can send and cannot hear the answer, which is worse than not sending.
 - Confirm the wording of each template with the clinic's policy on what may be
   disclosed over WhatsApp, since a locked chat screen is less private than email.
+- Add the opt-out line to the bottom of each template body. The clinic owns the
+  approved wording, so the code does not rewrite the copy; the line is printed by
+  `GET /api/admin/whatsapp` to paste in at creation time.
+- Set `WHATSAPP_APP_SECRET`. Until it is set the webhook **refuses every delivery**
+  on purpose, so a half-configured number fails visibly instead of silently
+  dropping replies.
+
+**Already built, not yet needed:** delivery-status receipts are captured on each
+message (`status`, `statusDetail`), so per-patient failure tracking does not
+require a new collection. Turning those into a retry outbox is M2.
 
 ## 9. Credentials checklist
 
-Everything to collect in one place. Only the first two are required to send.
+Everything to collect in one place.
 
 | # | Credential | Where | Required |
 | --- | --- | --- | --- |
-| 1 | `WHATSAPP_ACCESS_TOKEN` | Business Settings → System users → Generate token | Yes |
-| 2 | `WHATSAPP_PHONE_NUMBER_ID` | Developers → your app → API Setup | Yes |
-| 3 | WhatsApp Business Account ID | Developers → your app → API Setup | For reference |
-| 4 | Business Portfolio ID | Business Settings → Business Portfolio | For reference |
-| 5 | App ID / App Secret | Developers → App settings → Basic | For reference |
-| 6 | 6-digit two-step PIN | Developers → your app → WhatsApp → Configuration | Only to re-register |
-| 7 | Business verification status | Business Settings → Security | Recommended |
-| 8 | Ten approved template names | WhatsApp Manager → Message templates | Yes, to deliver |
+| 1 | `WHATSAPP_ACCESS_TOKEN` | Business Settings → System users → Generate token | Yes, to send |
+| 2 | `WHATSAPP_PHONE_NUMBER_ID` | Developers → your app → API Setup | Yes, to send |
+| 3 | `WHATSAPP_APP_SECRET` | Developers → App settings → Basic | Yes, to receive |
+| 4 | `WHATSAPP_VERIFY_TOKEN` | Any high-entropy string you choose, saved in Meta | Yes, to receive |
+| 5 | WhatsApp Business Account ID | Developers → your app → API Setup | For reference |
+| 6 | Business Portfolio ID | Business Settings → Business Portfolio | For reference |
+| 7 | App ID | Developers → App settings → Basic | For reference |
+| 8 | 6-digit two-step PIN | Developers → your app → WhatsApp → Configuration | Only to re-register |
+| 9 | Business verification status | Business Settings → Security | Recommended |
+| 10 | Ten approved template names | WhatsApp Manager → Message templates | Yes, to deliver |
+| 11 | Callback URL saved, `messages` subscribed | WhatsApp Manager → Configuration | Yes, to receive |
+
+Rows 1–2 and 3–4 are independent halves. The failure mode worth naming: a number
+set up for rows 1–2 but not 3–4 sends happily, throws every reply away, and
+appears healthy. `GET /api/admin/whatsapp` reports both halves separately for
+that reason.

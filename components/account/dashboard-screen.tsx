@@ -38,6 +38,7 @@ import { TreatmentAlertsTab } from "@/components/admin/treatment-alerts-tab";
 import { RolesTab } from "@/components/admin/roles-tab";
 import { BackupsTab } from "@/components/admin/backups-tab";
 import { LogsTab } from "@/components/admin/logs-tab";
+import { WhatsAppInboxTab } from "@/components/admin/whatsapp-inbox-tab";
 import { buttonLinkClasses } from "@/components/ui/button";
 import { S19_ASSETS } from "@/lib/site-assets";
 import {
@@ -87,6 +88,7 @@ type TabId =
   | "admin-prescriptions"
   | "admin-treatment-plans"
   | "admin-treatment-alerts"
+  | "admin-whatsapp"
   | "admin-roles"
   | "admin-backups"
   | "admin-logs";
@@ -202,6 +204,11 @@ const adminTabs: NavItem[] = [
     icon: <FaUserGear className="h-4 w-4" aria-hidden />,
   },
   {
+    id: "admin-whatsapp",
+    labelKey: "dash.shell.nav.adminWhatsapp",
+    icon: <FaCommentDots className="h-4 w-4" aria-hidden />,
+  },
+  {
     id: "admin-posts",
     labelKey: "dash.shell.nav.adminPosts",
     icon: <FaNewspaper className="h-4 w-4" aria-hidden />,
@@ -268,6 +275,11 @@ const doctorTabs: NavItem[] = [
     id: "admin-messaging",
     labelKey: "dash.shell.nav.doctorMessaging",
     icon: <FaUserGear className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "admin-whatsapp",
+    labelKey: "dash.shell.nav.doctorWhatsapp",
+    icon: <FaCommentDots className="h-4 w-4" aria-hidden />,
   },
 ];
 
@@ -676,6 +688,18 @@ export function DashboardScreen() {
             />
             <div className="px-4 sm:px-0">
               <TreatmentAlertsTab onOpenPlans={() => openTab("admin-treatment-plans")} />
+            </div>
+          </>
+        ) : null;
+      case "admin-whatsapp":
+        return isStaff ? (
+          <>
+            <PageHeader
+              title={t("dash.shell.h.adminWhatsapp.title")}
+              subtitle={t("dash.shell.h.adminWhatsapp.sub")}
+            />
+            <div className="px-4 sm:px-0">
+              <WhatsAppInboxTab />
             </div>
           </>
         ) : null;
