@@ -31,6 +31,19 @@ This directory is the operational and technical source of truth for the S19 Herb
 4. Never place patient information, credentials, backup keys, tokens, SMTP passwords, or Cloudinary secrets in these documents.
 5. Record operational verification dates and evidence links; do not mark a control complete based only on planned code.
 
+## Branches
+
+`main` carries only work that is independent of Meta and Fapshi credentials, so it can ship whether or not the clinic pays for the messaging half. `feat/whatsapp-fapshi` is a strict superset - it is `main` plus the inbound webhook, the outbound engine and their documentation - so deploying it deploys everything.
+
+| Branch | Contains |
+| --- | --- |
+| `main` | Brand copy, image SEO, clinic timezone, `PatientEvent` log, treatment-plan schedule derivation, cron authentication, transactional WhatsApp sending (pre-existing). |
+| `feat/whatsapp-fapshi` | All of `main`, plus the inbound webhook, outbox and outbound engine, the staff inbox, the Fapshi guides, and the `/api/cron/outbound` schedule. |
+
+Neither branch has been deployed. Nothing on either branch reaches Meta without credentials that do not exist yet.
+
+**After switching branches, delete `.next` before trusting `npm.cmd run typecheck`.** Next generates `.next/types/validator.ts` listing every route it built, and `tsc` reads that file. Building one branch and then checking out another leaves the old route list behind, producing errors like `Cannot find module '../../app/api/webhooks/whatsapp/route.js'` for routes that do not exist on the branch you are now on. These are cache artefacts, not real faults. `Remove-Item -Recurse -Force .next` clears it.
+
 ## Current baseline verification
 
 The following baseline was run on 25 September 2026:

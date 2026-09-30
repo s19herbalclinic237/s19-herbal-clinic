@@ -21,7 +21,7 @@ the audit that matters, because "convert every `<img>`" is not a correct goal on
 | 7 | **Four photographs were on disk and referenced by nothing.** (`labTransfer`, `pipetteTransfer`, `pipetteReading`, `nutritionBasket`) | Good, well-lit photographs of the clinic's laboratory that could never appear in Google Images because nothing linked to them. Pure lost opportunity. |
 | 8 | **No image sitemap.** | Google finds images through links; a photograph used only as a CSS background or on one page is slow to be discovered and associated. |
 | 9 | **No `ImageObject` structured data.** | Google has no name or description to show beside an image result. |
-| 10 | **Blog covers were hardcoded copies of the prompt filenames in `lib/data/blog-posts.ts`, and the same values were copied into MongoDB by `seed-blog.ts`.** | Caught by the new test the moment the files were renamed: renaming a photo silently broke every post that used it. The seed file is fixed and now derives paths from the registry, but **four published posts in the live database still hold the old filenames** and are 404s. Repair script written, dry-run verified, waiting on your go-ahead. |
+| 10 | **Blog covers were hardcoded copies of the prompt filenames in `lib/data/blog-posts.ts`, and the same values were copied into MongoDB by `seed-blog.ts`.** | Caught by the new test the moment the files were renamed: renaming a photo silently broke every post that used it. The seed file is fixed and now derives paths from the registry. **Verified against the live database on 30 September 2026: all 12 published posts resolve to a file that exists, and `npm.cmd run fix:blog-covers` correctly reports nothing to repair.** An earlier version of this document claimed four posts were 404ing; that was wrong, and `scripts/audit-blog-covers.ts` now checks the claim against the database instead of asserting it. |
 | 11 | **Hardcoded English alt text on the home page** (three photos) and `page-hero.tsx` defaulted `alt` to `""`. | A default of `""` meant forgetting to pass alt was invisible. |
 
 ---
@@ -177,15 +177,44 @@ Honest limits on this work:
 
 ---
 
-## 7. The one thing that needs you
+## 7. What is left
 
-### 7.1 Run the blog cover repair (live data)
+### 7.1 The blog cover repair turned out to be unnecessary
 
-Four published posts have 404 cover images because the database still holds the pre-rename
-filenames. **`npm.cmd run fix:blog-covers` is a dry run and writes nothing.** Run it, check it
-reports `Covers needing repair: 4`, then add `-- --apply`.
+`npm.cmd run fix:blog-covers` reports `Covers needing repair: 0`. Checked against the live
+database on 30 September 2026: all 12 published posts resolve to a file that exists, and no
+post body references a missing image. **There is nothing to migrate, and nothing is 404ing.**
 
-### 7.2 Google Search Console verification
+An earlier draft of this document stated that four published posts were broken and awaiting
+repair. That was wrong. `scripts/audit-blog-covers.ts` was written to settle it against the
+database rather than by assertion, and it is the thing to re-run if a photo is moved again:
+
+```powershell
+npm.cmd run audit:blog-covers
+```
+
+Read-only, connects to the live database, reports per post whether the cover and every image
+in the body exist on disk. It is the check that should have been run before this document made
+the claim.
+
+### 7.2 The remaining real gap: eight blog covers are outside the registry
+
+Twelve of the published posts are covered by `lib/image-registry.ts` and carry descriptive
+slugs. The other eight point at `public/s19-blog/` with prompt-style filenames —
+`silent-killer.png`, `herpes-mouth.jpg`, `hpv-warts.jpg`, `obesity-herb.jpg`,
+`diabetes.webp`, `hepatitis-b.png`, `why-herbal-treatments.png`. They load correctly, so
+nothing is broken, but:
+
+- they are not in the single source of truth, so a rename would break them the same silent
+  way this one did;
+- their filenames carry no keyword, which is the whole point of the rename;
+- the registry's test does not cover them, so they will not fail loudly.
+
+Bringing them in is the same mechanical change already made for the other twelve: add each
+file to `lib/image-registry.ts`, rename it to a descriptive slug, add the `clinicPhotoSrc`
+helper, and update the eight database rows. **This is not yet done.**
+
+### 7.3 Google Search Console verification
 
 Until the site is verified there is no way to measure any of this: no image queries, no
 click-through, no confirmation that the sitemap was accepted.
@@ -206,14 +235,16 @@ want canonicalised. If the apex is canonical instead, that environment variable 
 and it affects every canonical URL, Open Graph tag and hreflang alternate on the site, not just
 the sitemap.
 
-### 7.3 Decide on the product images
+### 7.4 Decide on the product images
 
 The 30 product images still have their original filenames (spaces, accents, parentheses) and are
 PNG at 200–570 KB each. They are referenced from MongoDB, so the rename needs a data migration
-like §7.1. **It is the largest remaining image-SEO win on the site** — 146 URL-encoded paths
-currently sit in the sitemap. Say the word and I will build it the same way: dry run first.
+like §7.1 — and §7.1 is the cautionary tale: check what the database actually holds before
+promising a migration is needed. **It is the largest remaining image-SEO win on the site** —
+146 URL-encoded paths currently sit in the sitemap. Say the word and I will build it the same
+way: dry run first.
 
-### 7.4 Look at it on staging
+### 7.5 Look at it on staging
 
 The `<img>` → `Image` conversions change the DOM. Please eyeball the home page, one hero page
 and one About page on staging before deploying. The photograph files themselves are unchanged
