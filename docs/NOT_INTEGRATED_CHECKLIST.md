@@ -4,8 +4,12 @@
 credential, no payment provider, and no clinic payment. If the clinic never pays for messaging,
 all of it can still ship.
 
-Every claim below was checked against the code on 30 September 2026, not inferred from the brief.
+Every claim below was checked against the code on 1 October 2026, not inferred from the brief.
 Where a capability is partially built, the specific gap is named.
+
+**Updated 1 October 2026.** Two items have been built since the first draft and are marked
+**[BUILT]**: the daily staff worklist (§3.1) and stock tracking (D6). The AI contradiction in §4 is
+now a **settled decision**, not an open question.
 
 ---
 
@@ -23,6 +27,8 @@ These are real, tested, and independent of messaging.
 | Email delivery | `lib/notify.ts` — 10 call sites already send patient email |
 | Cron authentication | `lib/cron-auth.ts` — nightly backup, authenticated, verified 401 in production |
 | Image SEO | 14 descriptive renames, single registry, sitemap images, 54 image URLs all resolving |
+| **Daily staff worklist** | `/api/admin/worklist` — one line per patient, grouped by reason, claimable, aged, with staff decisions stored as `WorklistItem`. 20 tests. |
+| **Stock ledger** | `lib/stock.ts`, `lib/stock-db.ts`, `/api/admin/inventory` — orders hold and release stock, every change is an append-only `StockMovement`, retries cannot double-count. 24 tests + 22 live checks. |
 
 **One caveat that matters more than it looks:** the schedule derivation is *entirely inert*.
 `TREATMENT_SCHEDULE_ENABLED` is unset, so it produces nothing. And of the four derivable kinds,
@@ -42,23 +48,37 @@ You cannot build the feature above until the field exists. Each is cheap to add.
 | D3 | **Payment ledger.** No record of amount paid, balance remaining, or receipt. `totalFcfa` exists only as an *input* for deriving reminder dates. | "Who hasn't paid?", overdue-payment views, payment follow-up |
 | D4 | **Monitoring beyond glucose.** Only `fasting` and `post-lunch` glucose. No blood pressure, weight, temperature, or symptom capture. | Daily patient monitoring (the brief's brief bullet), adherence scoring |
 | D5 | **Nutrition program on the plan.** No field. | Nutrition and lifestyle adherence check-ins |
-| D6 | **`Product.stock` is a hand-entered number, never decremented when an order is placed.** | Refill forecasting and inventory alerts. Building this on a manually-typed figure would produce confident nonsense. |
+| D6 | **[RESOLVED 1 Oct 2026]** `Product.stock` was a hand-entered number, never decremented when an order was placed. Now an append-only ledger records every change, orders hold and release stock, and stock can never go negative. See `docs/INVENTORY.md`. | Nothing further for tracking. **Still open:** refill *forecasting* needs D2 (days of supply) — a different problem — and reorder levels are unset clinic-wide. |
 | D7 | **The event log barely records anything.** `PatientEvent` is only written by the plan lifecycle. Appointments, consultations, lab results, prescriptions, payments and messages are **not** logged. | The patient progress timeline — the log exists but is near-empty in practice |
 
 ---
 
 ## 3. Missing features — no data dependency
 
-### 3.1 The centrepiece: daily staff worklist
+### 3.1 The centrepiece: daily staff worklist — **[BUILT 1 Oct 2026]**
 
-`/api/admin/treatment-alerts` computes the right alerts and ranks them, but it is a *feed*, not
-the thing the brief describes:
+The brief asks for this:
 
 > "12 patients require attention today — 3 missed glucose readings, 2 overdue laboratory tests…"
 
-There is no per-staff daily list, no assignment, no grouping by reason, no "who owns this". This
-is "manage by exception" and it is the single highest-value item on this page. It is also
-substantial — it needs ownership, assignment and state, not just a query.
+`/api/admin/treatment-alerts` already computed the right alerts, but it was a *feed*, not a worklist:
+no per-staff daily list, no assignment, no grouping by reason, no "who owns this".
+
+**Now built.** `/api/admin/worklist` returns one row per patient with the reason, an owner and an age.
+Staff actions (claim, release, resolve, dismiss, reopen, note) are stored in `WorklistItem`, unique
+on `alertId`.
+
+Two design decisions worth knowing:
+
+- **Alerts are recomputed live and never stored.** Only staff decisions are persisted. A nightly job
+  that writes alerts would be a source of truth competing with the live computation.
+- **A resolved item can re-open.** It stays hidden only while the alert keeps appearing without a
+  break. If the underlying condition clears and later returns, the item re-opens as unowned work,
+  decided from two stored timestamps rather than a sweeper. `seenCount` is preserved for escalation.
+
+**What is still missing:** there is no screen. The API exists and is tested, but no component consumes
+it — `components/admin/treatment-alerts-tab.tsx` still renders the old feed. Until the UI is built the
+clinic cannot see the worklist. This is the highest-value remaining item on this page.
 
 ### 3.2 Patient progress timeline
 
@@ -113,25 +133,47 @@ Nothing. No hydration, sleep, fasting, exercise or nutrition-plan prompts. Depen
 
 ---
 
-## 4. A contradiction in the brief that needs your decision
+## 4. AI: suspended, and not to be done
 
-The brief asks for two things that are directly opposed:
+**Decision, 1 October 2026: the brief's AI features are suspended. They will not be built.**
+
+The brief asks for two things that are directly opposed to the standing project instruction:
 
 > "**WhatsApp AI Assistant:** AI should handle approved routine questions…"
 > "**AI patient summaries:** Before opening a patient's full record, AI could summarize…"
 
-And the standing project instruction is **no AI model anywhere in this project**.
+Against: **no AI model anywhere in this project.**
 
-These cannot both hold. The choice:
+These cannot both hold, so the AI features are suspended. Concretely:
 
-- **No AI (current rule).** Assistant and summary features are dropped. Everything else on this
-  page still works. An FAQ with buttons covers the routine questions without a model.
-- **Allow AI, scoped.** A single provider call behind a narrow allow-list, with clinical content
-  escalated rather than answered. This reverses a decision already made and adds a recurring cost
-  and a data-processing question for patient records.
+- **No AI auto-responder.** Patients are answered by a person.
+- **No AI-generated patient summaries.** Records are read as they are stored.
+- **No model provider is integrated, and none will be.** Not for triage, not for summarising, not for
+  drafting replies. If a future module appears to need one, that module is out of scope.
+- **"Suspended" is a decision, not a deferral.** This is not queued behind credentials or clinic
+  input. It is not a thing waiting to be revisited when the budget allows.
 
-Until this is settled, no work should start on either feature. Everything else here is unaffected
-by the answer.
+### What replaces them
+
+Neither capability needs a model to be useful:
+
+- **Routine questions** → a fixed FAQ with buttons. Answers are written and approved once, cost
+  nothing to serve, and cannot invent a dosage. The button payload grammar (`s19:<action>`) is a
+  closed vocabulary, so an unknown answer is a 400, not a guess.
+- **Record summaries** → deterministic projections of the `PatientEvent` log. The timeline and
+  adherence views are projections, not generated prose.
+
+### Why this is recorded rather than just deleted
+
+Because the brief still contains those two lines. Anyone reading the brief later will see a feature
+they were promised and find nothing here. This section exists so the gap is explained rather than
+silent, and so it is clear the omission was chosen.
+
+### What it saves
+
+Recurring per-call cost, a data-processing question for patient records under Cameroon's privacy
+rules, and — for a herbal clinic messaging patients about health — the risk of a generated answer
+that nobody approved.
 
 ---
 
@@ -145,7 +187,8 @@ by the answer.
 | Monitoring cadence (which measurements, how often) | D4 |
 | Glucose thresholds | `fastingStart/End`, `postLunchStart/End` currently hold placeholders |
 | Nutrition program structure | D5 |
-| Real stock counts | D6 |
+| Real opening stock counts | D6 — the ledger is live but the current numbers are still seed placeholders |
+| Reorder level and reorder target per product | D6 — until set, the inventory view reports `untracked` rather than guessing |
 | Escalation owners and thresholds | 3.5 |
 | Go-ahead on backfilling existing treatment plans | Activation |
 
@@ -171,6 +214,13 @@ Get-ChildItem app\api -Recurse -Filter route.ts |
 
 # are the schedule rules actually enabled?
 Select-String -LiteralPath lib\treatment-rules.ts -Pattern 'refill:|payment:|lab:'
+
+# are the two built items actually built?
+Get-ChildItem app\api\admin\worklist, app\api\admin\inventory -Recurse -Filter route.ts | Select-Object -ExpandProperty FullName
+Get-ChildItem lib\models\WorklistItem.ts, lib\models\StockMovement.ts, lib\stock.ts | Select-Object -ExpandProperty Name
+
+# does the stock ledger agree with the stored count?
+npm.cmd run verify:stock
 ```
 
 `docs/AUTOMATION_ROADMAP.md` on `feat/whatsapp-fapshi` carries the module numbering (M0–M20) for
