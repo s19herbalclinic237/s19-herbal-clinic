@@ -13,6 +13,7 @@ function toState(doc: IWorklistItem): WorklistState {
   return {
     alertId: doc.alertId,
     status: doc.status,
+    patientId: doc.patientId,
     ownerId: doc.owner?.id,
     ownerName: doc.owner?.name,
     note: doc.note,

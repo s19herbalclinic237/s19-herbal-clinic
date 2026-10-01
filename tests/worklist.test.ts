@@ -38,6 +38,40 @@ function state(overrides: Partial<WorklistState> & { alertId: string }): Worklis
   };
 }
 
+test("a claimed row keeps the patient and the staff member distinct", () => {
+  // The patient comes from the clinical alert; the owner is the clinician who
+  // took it. Conflating the two once wrote a staff user id into a patient field
+  // in the audit log, so the distinction is pinned here.
+  const { rows } = buildWorklist(
+    [alert({ id: "a1", patientId: "patient-ada", patientName: "Ada" })],
+    [
+      state({
+        alertId: "a1",
+        status: "claimed",
+        patientId: "patient-ada",
+        ownerId: "staff-dr-seme",
+        ownerName: "Dr Seme",
+      }),
+    ],
+    { now: NOW }
+  );
+
+  assert.equal(rows[0].patientId, "patient-ada");
+  assert.equal(rows[0].owner?.id, "staff-dr-seme");
+  assert.notEqual(rows[0].patientId, rows[0].owner?.id);
+});
+
+test("a stored state can name the patient without naming an owner", () => {
+  const { rows } = buildWorklist(
+    [alert({ id: "a1", patientId: "patient-ada", patientName: "Ada" })],
+    [state({ alertId: "a1", patientId: "patient-ada" })],
+    { now: NOW }
+  );
+
+  assert.equal(rows[0].patientId, "patient-ada");
+  assert.equal(rows[0].owner, undefined);
+});
+
 function daysAgo(n: number): string {
   return new Date(NOW_MS - n * 86_400_000).toISOString();
 }

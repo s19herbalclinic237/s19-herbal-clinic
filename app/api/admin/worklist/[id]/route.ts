@@ -82,7 +82,15 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
       scope: "admin.worklist",
       level: "info",
       message: `worklist ${action}`,
-      context: JSON.stringify({ alertId, action, actor: actor.id, patientId: state.ownerId ?? null }),
+      context: JSON.stringify({
+        alertId,
+        action,
+        actor: actor.id,
+        // `state.patientId`, not `state.ownerId` — the latter is the clinician
+        // who acted, and logging it here recorded a staff id as a patient id.
+        patientId: state.patientId ?? null,
+        ownerId: state.ownerId ?? null,
+      }),
     });
 
     return NextResponse.json({ item: state });

@@ -20,6 +20,13 @@ export const STALE_AFTER_DAYS = 7;
 export interface WorklistState {
   alertId: string;
   status: WorklistStatus;
+  /**
+   * The patient this item is about.
+   *
+   * Distinct from `ownerId`, which is the staff member who took it. Conflating
+   * the two puts a clinician's user id into a patient field in the audit log.
+   */
+  patientId?: string;
   ownerId?: string;
   ownerName?: string;
   note?: string;
