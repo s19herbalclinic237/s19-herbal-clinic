@@ -2,8 +2,10 @@ import { NextResponse } from "next/server";
 import { isValidObjectId } from "mongoose";
 import { connectDb } from "@/lib/db";
 import { adminGuard } from "@/lib/admin-guard";
+import { getCurrentUser } from "@/lib/auth-server";
 import { Product } from "@/lib/models/Product";
 import { slugify } from "@/lib/slug";
+import { recordStockChange } from "@/lib/stock-db";
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const denied = await adminGuard();
@@ -128,12 +130,55 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
   if (body.featured !== undefined) patch.featured = Boolean(body.featured);
   if (body.active !== undefined) patch.active = Boolean(body.active);
+
+  // Stock is handled outside `$set` so the change lands in the ledger rather
+  // than silently replacing the number. Setting it here directly is what made
+  // a wrong figure untraceable.
+  let requestedStock: number | undefined;
   if (body.stock !== undefined) {
-    patch.stock = Number.isFinite(Number(body.stock)) ? Math.max(0, Math.floor(Number(body.stock))) : existing.stock;
+    const value = Number(body.stock);
+    if (!Number.isFinite(value) || value < 0) {
+      return NextResponse.json({ error: "Please provide a valid stock count." }, { status: 400 });
+    }
+    requestedStock = Math.trunc(value);
+  }
+
+  for (const key of ["reorderThreshold", "reorderTarget"] as const) {
+    if (body[key] === undefined) continue;
+    const raw = body[key];
+    // Explicit null clears the level; that is how staff say "no level for this".
+    if (raw === null || raw === "") {
+      patch[key] = null;
+      continue;
+    }
+    const value = Number(raw);
+    if (!Number.isFinite(value) || value < 0) {
+      return NextResponse.json({ error: `Please provide a valid ${key === "reorderThreshold" ? "reorder level" : "reorder target"}.` }, { status: 400 });
+    }
+    patch[key] = Math.trunc(value);
   }
 
   try {
     const product = await Product.findByIdAndUpdate(id, { $set: patch }, { new: true, runValidators: true }).lean();
+
+    if (product && requestedStock !== undefined && requestedStock !== product.stock) {
+      try {
+        const actor = await getCurrentUser();
+        await recordStockChange({
+          productId: id,
+          kind: "adjustment",
+          to: requestedStock,
+          actor: actor ? { id: actor.id, name: actor.name } : undefined,
+          note: typeof body.stockNote === "string" && body.stockNote.trim() ? body.stockNote.trim() : undefined,
+        });
+      } catch (error) {
+        console.error("[admin/products] stock ledger write failed:", error);
+      }
+      // Re-read so the response reflects the count that was actually stored.
+      const settled = await Product.findById(id).lean();
+      if (settled) return NextResponse.json({ success: true, product: settled });
+    }
+
     return NextResponse.json({ success: true, product });
   } catch (error) {
     console.error("[admin/products] update failed:", error);

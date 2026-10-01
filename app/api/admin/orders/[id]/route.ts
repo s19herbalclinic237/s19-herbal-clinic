@@ -5,6 +5,7 @@ import { adminGuard } from "@/lib/admin-guard";
 import { Order, type OrderStatus } from "@/lib/models/Order";
 import { User } from "@/lib/models/User";
 import { sendOrderStatusEmails } from "@/lib/email";
+import { releaseStockForOrder } from "@/lib/stock-db";
 import { notifyPatientWhatsApp, whatsappFirstName } from "@/lib/whatsapp";
 
 const ORDER_STATUSES = [
@@ -89,6 +90,22 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
   try {
     const order = await Order.findByIdAndUpdate(id, { $set: patch }, { new: true }).lean();
+
+    // Cancelling gives the held stock back. Keyed off the order, so a repeated
+    // cancellation is a no-op rather than a second return. Never awaited into
+    // the response: the order status change has already succeeded, and failing
+    // to adjust inventory must not undo it.
+    if (order && existing.status !== "Cancelled" && order.status === "Cancelled") {
+      try {
+        await releaseStockForOrder({
+          _id: String(order._id),
+          orderReference: order.orderReference,
+          items: order.items,
+        });
+      } catch (error) {
+        console.error("[admin/orders] stock release failed:", error);
+      }
+    }
 
     // Email the customer when the order status actually changes.
     if (order && body.status !== undefined && order.status !== existing.status) {

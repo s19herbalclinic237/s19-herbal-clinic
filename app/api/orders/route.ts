@@ -8,6 +8,7 @@ import { notifyPatientWhatsApp, whatsappFirstName } from "@/lib/whatsapp";
 import { generateOrderReference } from "@/lib/utils";
 import type { CartItem } from "@/lib/cart-context";
 import { rateLimitRequest, rateLimitResponse } from "@/lib/rate-limit";
+import { reserveStockForOrder } from "@/lib/stock-db";
 
 const validModes = ["Pickup", "Cameroon Delivery", "Worldwide Delivery"];
 const validPayments = ["MTN Mobile Money", "Orange Money", "Bank Transfer", "Pay on Pickup or Delivery"];
@@ -120,6 +121,36 @@ export async function POST(request: Request) {
 
   try {
     const order = await Order.create(orderData);
+
+    // Hold stock for this order before responding.
+    //
+    // Awaited rather than fired and forgotten: on Vercel the function can be
+    // frozen the moment the response is sent, so un-awaited work is simply lost.
+    // Losing this step would mean stock never decrements, which is the entire
+    // point of the ledger. The cost is one or two extra queries on checkout.
+    //
+    // It is still never fatal. A patient placing an order must not be shown an
+    // error because inventory had a bad day, so a failure is logged and the
+    // order stands; the inventory view reports the product as untracked rather
+    // than hiding the gap.
+    try {
+      const reserved = await reserveStockForOrder({
+        _id: String(order._id),
+        orderReference: order.orderReference,
+        items: orderData.items,
+      });
+      const short = reserved.filter((r) => r.short);
+      if (short.length > 0) {
+        console.warn(
+          "[orders] stock short for %s: %s",
+          order.orderReference,
+          short.map((r) => `${r.slug} (${r.shortfall} short)`).join(", ")
+        );
+      }
+    } catch (error) {
+      console.error("[orders] stock reserve failed:", error);
+    }
+
     sendOrderConfirmation(order.toObject() as unknown as IOrder).catch(() => {});
     // WhatsApp is fire-and-forget: a missing account, a missing opt-in or a
     // Meta outage must never turn a placed order into a failed request.

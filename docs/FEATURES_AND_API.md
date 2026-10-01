@@ -370,8 +370,11 @@ The profile is not currently linked to a login or clinical writes.
 | `DELETE /api/admin/posts/[id]` | Admin | Delete post. |
 | `GET /api/admin/products` | Admin | List products. |
 | `POST /api/admin/products` | Admin | Create product. |
-| `PATCH /api/admin/products/[id]` | Admin | Update product. |
+| `PATCH /api/admin/products/[id]` | Admin | Update product. A stock change is written to the stock ledger rather than silently replacing the number. |
 | `DELETE /api/admin/products/[id]` | Admin | Delete product. |
+| `GET /api/admin/inventory` | Admin | Stock levels and what needs reordering; add `?history=1` for recent movements, `?product=<id>` to filter, `?includeInactive=1` to include hidden products. |
+| `GET /api/admin/inventory/[id]` | Admin | One product's stock movements plus a reconciliation of the ledger against the stored count. |
+| `POST /api/admin/inventory/[id]` | Admin | Record a restock (`delta`) or a recount (`to`). Every change writes a ledger row. |
 | `POST /api/upload` | Admin | Upload product/blog/doctor media to Cloudinary. Images only (JPG/PNG/WebP/AVIF/GIF, max 5 MB); videos rejected. |
 | `GET /api/testimonials` | Signed in | List current user's submitted stories. |
 | `POST /api/testimonials` | Public or signed in | Submit story for moderation. |
