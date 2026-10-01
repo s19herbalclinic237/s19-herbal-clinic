@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCloudinary } from "@/lib/cloudinary";
-import { adminGuard } from "@/lib/admin-guard";
+import { clinicalGuard } from "@/lib/admin-guard";
+import { getCurrentUser } from "@/lib/auth-server";
 import { rateLimitRequest, rateLimitResponse } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
@@ -17,14 +18,40 @@ const ALLOWED = new Set([
   "image/gif",
 ]);
 
+/**
+ * Shared image upload for clinic staff.
+ *
+ * `clinicalGuard`, not `adminGuard`. Prescriptions were the reason this widened:
+ * a doctor could open the prescriptions tab, fill in a medication, and be
+ * refused the upload with "Admin access required" — the photo field existed, the
+ * API accepted it, and the only thing in the way was this guard. Prescription
+ * create and edit were already `clinicalGuard`, so the gap was this route alone.
+ *
+ * Widening this does not widen what a doctor can *change*: attaching an image
+ * still requires write access to the target record, so products, posts and the
+ * doctor directory remain admin-only. A doctor can now upload an image and
+ * attach it to the clinical records they can already edit.
+ *
+ * The residual exposure is orphaned uploads - a clinician could upload an image
+ * and never reference it. That is bounded by the per-user rate limit below and
+ * costs storage, not correctness.
+ */
 export async function POST(request: Request) {
-  const denied = await adminGuard();
+  const denied = await clinicalGuard();
   if (denied) return denied;
 
+  const actor = await getCurrentUser();
+
   const rateLimit = await rateLimitRequest(request, {
-    scope: "admin-cloudinary-upload",
+    // Renamed from "admin-cloudinary-upload": it is no longer admin-only, and a
+    // scope named for a narrower audience misleads whoever reads the limit next.
+    scope: "staff-cloudinary-upload",
     limit: 60,
     windowMs: 60 * 60 * 1000,
+    // Per user as well as per IP: the clinic shares one connection, so an
+    // IP-only limit would let the first clinician to upload exhaust everyone
+    // else's allowance for the hour.
+    dimensions: actor ? [`user:${actor.id}`] : [],
   });
   if (!rateLimit.allowed) return rateLimitResponse(rateLimit);
 

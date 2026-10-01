@@ -187,7 +187,7 @@ The `user` account value represents a patient; `doctor` is a clinical-staff logi
 
 ### Public/admin marketing media
 
-- Product and blog uploads use `/api/upload` and store Cloudinary URLs in MongoDB.
+- Product, blog and prescription-photo uploads use `/api/upload` and store Cloudinary URLs in MongoDB.
 - Cloudinary and Unsplash are the only configured Next Image remote hosts.
 
 ### Patient and clinical media

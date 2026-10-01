@@ -167,7 +167,9 @@ Priority routes: login, register, verify, resend, forgot/reset/change password, 
 
 #### SEC-013 — Upload validation trusts browser MIME metadata and buffers whole files
 
-ID/avatar/generic upload routes use `File.type` and read the full file into memory. Generic admin upload has no explicit size/MIME policy. MIME can be spoofed and concurrent large uploads can pressure server memory.
+ID/avatar/generic upload routes read the full file into memory and trust the browser's `File.type`. MIME can be spoofed and concurrent large uploads can pressure server memory.
+
+**Correction (1 October 2026):** this entry previously added "Generic admin upload has no explicit size/MIME policy". That was wrong — `app/api/upload/route.ts` has enforced a 5 MB `MAX_BYTES` limit (413) and an image-only MIME allowlist of JPG/PNG/WebP/AVIF/GIF (415) since before the audit. The substantive parts of the finding stand: `File.type` is client-supplied and spoofable, and the file is fully buffered rather than streamed. Magic-byte inspection and bounded streaming remain genuinely outstanding, and the endpoint is now `clinicalGuard` so doctors can upload prescription photos, which raises the value of getting the remaining items right.
 
 **Remediation:** Enforce byte limits before buffering, allowlist content for the route, inspect magic bytes/server metadata, use bounded streaming, reject archives/executables where inappropriate, and scan sensitive uploads. Generic marketing uploads still need abuse limits and image validation.
 

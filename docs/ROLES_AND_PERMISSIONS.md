@@ -45,7 +45,7 @@ Rule of thumb: **clinical operations** (anything touching patient-facing clinica
 | Video reviews | `GET/POST/DELETE /api/admin/video-reviews` |
 | Roles | `GET/PATCH /api/admin/roles` |
 | Backups | `GET/POST /api/admin/backups` |
-| Generic uploads | `POST /api/upload`, `POST /api/translate` |
+| Translation | `POST /api/translate` |
 
 ### Clinical staff (`clinicalGuard` — admin **and** doctor)
 
@@ -60,6 +60,14 @@ Rule of thumb: **clinical operations** (anything touching patient-facing clinica
 | Glucose | `GET /api/admin/glucose` |
 | Treatment alerts | `GET /api/admin/treatment-alerts` |
 | Messaging | `GET /api/admin/users` (patient list for selection), `GET/POST /api/admin/messages` |
+| Image uploads | `POST /api/upload` — so a doctor can attach prescription and medical-record photos, not just an administrator |
+
+`POST /api/upload` is `clinicalGuard` rather than `adminGuard` because a doctor could otherwise
+open the prescriptions tab, complete every field including the photo, and be refused the upload
+with "Admin access required" — the record routes were already staff-accessible. Widening the upload
+does not widen what a doctor can *change*: products, posts and the doctor directory stay
+admin-only, so an uploaded image still has to be attached to a record the doctor can already edit.
+The residual exposure is an orphaned upload, bounded by a per-user rate limit.
 
 Patients keep the existing own-account routes (`/api/appointments`, `/api/medical-records`, `/api/prescriptions`, `/api/treatment-plans`, `/api/glucose`, `/api/messages`, …), which scope every query to the session user's ID.
 
