@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { ResponsiveTable } from "@/components/ui/responsive-table";
 import {
   FaArrowRotateLeft,
   FaChevronDown,
@@ -75,6 +76,55 @@ function LevelBadge({ level }: { level: string }) {
   );
 }
 
+/**
+ * Expander for a log row's JSON context. Used by both views of
+ * ResponsiveTable: as a bare chevron in the desktop gutter, and as a labelled
+ * control at the foot of the mobile tile.
+ */
+function LogDetailToggle({
+  entry,
+  expanded,
+  labelled,
+  onToggle,
+}: {
+  entry: LogEntry;
+  expanded: boolean;
+  labelled?: boolean;
+  onToggle: (id: string) => void;
+}) {
+  const icon = expanded ? (
+    <FaChevronDown className="h-3.5 w-3.5" aria-hidden />
+  ) : (
+    <FaChevronRight className="h-3.5 w-3.5" aria-hidden />
+  );
+
+  if (labelled) {
+    return (
+      <button
+        type="button"
+        onClick={() => onToggle(entry.id)}
+        aria-expanded={expanded}
+        className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wide text-muted hover:text-ink"
+      >
+        {icon}
+        {expanded ? "Hide detail" : "Show detail"}
+      </button>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      aria-label={expanded ? "Hide detail" : "Show detail"}
+      aria-expanded={expanded}
+      onClick={() => onToggle(entry.id)}
+      className="text-muted"
+    >
+      {icon}
+    </button>
+  );
+}
+
 function Stat({ label, value, tone }: { label: string; value: string | number; tone?: string }) {
   return (
     <div className="rounded-2xl border border-line bg-white p-4 shadow-card">
@@ -101,6 +151,10 @@ export function LogsTab() {
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
     toastTimerRef.current = setTimeout(() => setToast(null), 4500);
   };
+
+  // Shared by both views of the table so a row's JSON context opens the same
+  // way whether the visitor is on a laptop or a phone.
+  const toggleDetail = (id: string) => setOpen((prev) => ({ ...prev, [id]: !prev[id] }));
 
   const load = useCallback(() => {
     const params = new URLSearchParams();
@@ -270,92 +324,139 @@ export function LogsTab() {
         </form>
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-line bg-white shadow-card">
-        <table className="w-full min-w-[820px] text-left text-sm">
-          <thead>
-            <tr className="border-b border-forest-100 text-[11px] font-bold uppercase tracking-wide text-muted">
-              <th className="w-8 px-3 py-3" />
-              <th className="px-3 py-3">When</th>
-              <th className="px-3 py-3">Level</th>
-              <th className="px-3 py-3">Area</th>
-              <th className="px-3 py-3">What happened</th>
-              <th className="px-3 py-3">Where</th>
-            </tr>
-          </thead>
-          <tbody>
-            {entries.map((e) => {
-              const expanded = !!open[e.id];
-              return (
-                <tr key={e.id} className="border-b border-forest-50 align-top last:border-0">
-                  <td className="px-3 py-3">
-                    {e.context ? (
-                      <button
-                        type="button"
-                        aria-label={expanded ? "Hide detail" : "Show detail"}
-                        aria-expanded={expanded}
-                        onClick={() => setOpen((prev) => ({ ...prev, [e.id]: !prev[e.id] }))}
-                        className="text-muted"
-                      >
-                        {expanded ? (
-                          <FaChevronDown className="h-3.5 w-3.5" aria-hidden />
-                        ) : (
-                          <FaChevronRight className="h-3.5 w-3.5" aria-hidden />
-                        )}
-                      </button>
-                    ) : null}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3 text-xs text-muted">
-                    {stamp(e.lastSeen)}
-                    {e.occurrences > 1 ? (
-                      <span className="ml-1 rounded-full bg-amber-50 px-1.5 py-0.5 text-[10px] font-bold text-amber-700">
-                        ×{e.occurrences}
-                      </span>
-                    ) : null}
-                  </td>
-                  <td className="px-3 py-3">
-                    <LevelBadge level={e.level} />
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3 font-mono text-[11px] text-ink">
-                    {e.scope}
-                  </td>
-                  <td className="px-3 py-3 text-ink">
-                    {e.message}
-                    {expanded && e.context ? (
-                      <pre className="mt-2 max-w-xl overflow-x-auto whitespace-pre-wrap break-all rounded-md border border-line bg-forest-50/60 p-2 font-mono text-[10px] leading-relaxed text-muted">
-                        {e.context}
-                      </pre>
-                    ) : null}
-                  </td>
-                  <td className="px-3 py-3 text-[11px] text-muted">
-                    {e.route ? (
-                      <span className="font-mono">
-                        {e.method ? `${e.method} ` : ""}
-                        {e.route}
-                      </span>
-                    ) : (
-                      "—"
-                    )}
-                    {e.digest ? (
-                      <span className="mt-1 block font-mono text-[10px] text-muted">
-                        ref {e.digest.slice(0, 12)}
-                      </span>
-                    ) : null}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        {!data && !error ? (
-          <p className="px-4 py-10 text-center text-sm text-muted">Loading the error log…</p>
-        ) : null}
-        {data && entries.length === 0 ? (
-          <p className="px-4 py-10 text-center text-sm text-muted">
-            {data.summary.storedRows === 0
-              ? "Nothing logged yet. The log fills in as soon as the site records a warning or error."
-              : "No entries match these filters."}
-          </p>
-        ) : null}
+      <div>
+        <ResponsiveTable
+          minWidthClassName="min-w-[820px]"
+          rows={entries}
+          rowKey={(e) => e.id}
+          columns={[
+            {
+              header: "",
+              desktopOnly: true,
+              render: (e) =>
+                e.context ? (
+                  <LogDetailToggle
+                    entry={e}
+                    expanded={!!open[e.id]}
+                    onToggle={toggleDetail}
+                  />
+                ) : null,
+              headClassName: "w-8 px-3 py-3",
+              cellClassName: "px-3 py-3 align-top",
+            },
+            {
+              header: "When",
+              render: (e) => (
+                <div className="whitespace-nowrap text-xs text-muted">
+                  {stamp(e.lastSeen)}
+                  {e.occurrences > 1 ? (
+                    <span className="ml-1 rounded-full bg-amber-50 px-1.5 py-0.5 text-[10px] font-bold text-amber-700">
+                      ×{e.occurrences}
+                    </span>
+                  ) : null}
+                </div>
+              ),
+              cellClassName: "whitespace-nowrap px-3 py-3 align-top",
+            },
+            {
+              header: "Level",
+              render: (e) => <LevelBadge level={e.level} />,
+            },
+            {
+              header: "Area",
+              label: "Area",
+              render: (e) => <span className="break-all font-mono text-[11px] text-ink">{e.scope}</span>,
+              cellClassName: "whitespace-nowrap px-3 py-3 align-top",
+            },
+            {
+              header: "What happened",
+              label: "Message",
+              render: (e) => (
+                <span className="text-ink">
+                  {e.message}
+                  {open[e.id] && e.context ? (
+                    <pre className="mt-2 max-w-xl overflow-x-auto whitespace-pre-wrap break-all rounded-md border border-line bg-forest-50/60 p-2 font-mono text-[10px] leading-relaxed text-muted">
+                      {e.context}
+                    </pre>
+                  ) : null}
+                </span>
+              ),
+            },
+            {
+              header: "Where",
+              label: "Where",
+              render: (e) => (
+                <span className="text-[11px] text-muted">
+                  {e.route ? (
+                    <span className="break-all font-mono">
+                      {e.method ? `${e.method} ` : ""}
+                      {e.route}
+                    </span>
+                  ) : (
+                    "—"
+                  )}
+                  {e.digest ? (
+                    <span className="mt-1 block font-mono text-[10px] text-muted">
+                      ref {e.digest.slice(0, 12)}
+                    </span>
+                  ) : null}
+                </span>
+              ),
+            },
+          ]}
+          renderTile={(e) => (
+            <>
+              <div className="flex flex-wrap items-center gap-2">
+                <LevelBadge level={e.level} />
+                <span className="whitespace-nowrap text-xs text-muted">{stamp(e.lastSeen)}</span>
+                {e.occurrences > 1 ? (
+                  <span className="rounded-full bg-amber-50 px-1.5 py-0.5 text-[10px] font-bold text-amber-700">
+                    ×{e.occurrences}
+                  </span>
+                ) : null}
+              </div>
+              <p className="break-all font-mono text-[10px] text-muted">{e.scope}</p>
+              <p className="text-sm text-ink">{e.message}</p>
+              <p className="break-all text-[11px] text-muted">
+                {e.route ? (
+                  <span className="font-mono">
+                    {e.method ? `${e.method} ` : ""}
+                    {e.route}
+                  </span>
+                ) : (
+                  "—"
+                )}
+                {e.digest ? ` · ref ${e.digest.slice(0, 12)}` : null}
+              </p>
+              {e.context ? (
+                <>
+                  <LogDetailToggle
+                    entry={e}
+                    expanded={!!open[e.id]}
+                    labelled
+                    onToggle={toggleDetail}
+                  />
+                  {open[e.id] ? (
+                    <pre className="overflow-x-auto whitespace-pre-wrap break-all rounded-md border border-line bg-forest-50/60 p-2 font-mono text-[10px] leading-relaxed text-muted">
+                      {e.context}
+                    </pre>
+                  ) : null}
+                </>
+              ) : null}
+            </>
+          )}
+          emptyState={
+            !data && !error ? (
+              <p className="px-4 py-10 text-center text-sm text-muted">Loading the error log…</p>
+            ) : (
+              <p className="px-4 py-10 text-center text-sm text-muted">
+                {data && data.summary.storedRows === 0
+                  ? "Nothing logged yet. The log fills in as soon as the site records a warning or error."
+                  : "No entries match these filters."}
+              </p>
+            )
+          }
+        />
       </div>
 
       {data && data.summary.storedRows > 0 ? (

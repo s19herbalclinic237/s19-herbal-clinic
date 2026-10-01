@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/form";
+import { ResponsiveTable } from "@/components/ui/responsive-table";
 import { formatDate } from "@/components/account/badges";
 import { FaArrowRotateLeft, FaUserDoctor, FaUsers, FaTrashCan, FaXmark } from "react-icons/fa6";
 
@@ -147,28 +148,32 @@ export function RolesTab() {
         <Input placeholder="Search by name or email…" value={query} onChange={(e) => setQuery(e.target.value)} aria-label="Search users" />
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-line bg-white shadow-card">
-        <table className="w-full min-w-[640px] text-left text-sm">
-          <thead>
-            <tr className="border-b border-forest-100 text-[11px] font-bold uppercase tracking-wide text-muted">
-              <th className="px-4 py-3">User</th>
-              <th className="px-4 py-3">Joined</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Role</th>
-              <th className="px-4 py-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(filtered ?? []).map((r) => (
-              <tr key={r.id} className="border-b border-forest-50 last:border-0">
-                <td className="px-4 py-3">
+      <div>
+        <ResponsiveTable
+          minWidthClassName="min-w-[640px]"
+          rows={filtered ?? []}
+          rowKey={(r) => r.id}
+          columns={[
+            {
+              header: "User",
+              render: (r) => (
+                <>
                   <p className="font-semibold text-ink">
                     {r.name} {r.role === "doctor" ? <FaUserDoctor className="inline h-3.5 w-3.5 text-forest-700" aria-label="Staff" /> : null}
                   </p>
                   <p className="text-xs text-muted">{r.email}{r.phone ? ` · ${r.phone}` : ""}</p>
-                </td>
-                <td className="px-4 py-3 text-xs text-muted">{formatDate(r.createdAt)}</td>
-                <td className="px-4 py-3">
+                </>
+              ),
+            },
+            {
+              header: "Joined",
+              label: "Joined",
+              render: (r) => <span className="text-xs text-muted">{formatDate(r.createdAt)}</span>,
+            },
+            {
+              header: "Status",
+              render: (r) => (
+                <>
                   <span
                     className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ${
                       r.isActive ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-700"
@@ -181,65 +186,145 @@ export function RolesTab() {
                       Unverified
                     </span>
                   ) : null}
-                </td>
-                <td className="px-4 py-3">
-                  <span className="font-semibold capitalize text-ink">{r.role}</span>
-                </td>
-                <td className="px-4 py-3">
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    {r.role === "doctor" ? (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => update(r, { role: "user" })}
-                        disabled={!r.emailVerified || !r.isActive}
-                      >
-                        Make patient
-                      </Button>
-                    ) : (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => update(r, { role: "doctor" })}
-                        disabled={!r.emailVerified || !r.isActive}
-                        title={!r.emailVerified ? "Verify the email first" : undefined}
-                      >
-                        Make staff
-                      </Button>
-                    )}
-                    {r.isActive ? (
-                      <Button variant="outline" size="sm" onClick={() => update(r, { isActive: false })}>
-                        Disable
-                      </Button>
-                    ) : (
-                      <Button variant="outline" size="sm" onClick={() => update(r, { isActive: true })}>
-                        Enable
-                      </Button>
-                    )}
+                </>
+              ),
+            },
+            {
+              header: "Role",
+              label: "Role",
+              render: (r) => <span className="font-semibold capitalize text-ink">{r.role}</span>,
+            },
+            {
+              header: "Actions",
+              desktopOnly: true,
+              render: (r) => (
+                <div className="flex flex-wrap items-center gap-1.5">
+                  {r.role === "doctor" ? (
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
-                      className="text-red-600 hover:bg-red-50"
-                      onClick={() => {
-                        setConfirmWord("");
-                        setDeleting(r);
-                      }}
-                      title={`Permanently delete ${r.email}`}
+                      onClick={() => update(r, { role: "user" })}
+                      disabled={!r.emailVerified || !r.isActive}
                     >
-                      <FaTrashCan className="h-3.5 w-3.5" aria-hidden />
-                      Delete
+                      Make patient
                     </Button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {filtered && filtered.length === 0 ? (
-          <p className="flex items-center justify-center gap-2 px-4 py-10 text-sm text-muted">
-            <FaUsers className="h-4 w-4" aria-hidden /> No matching accounts.
-          </p>
-        ) : null}
+                  ) : (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => update(r, { role: "doctor" })}
+                      disabled={!r.emailVerified || !r.isActive}
+                      title={!r.emailVerified ? "Verify the email first" : undefined}
+                    >
+                      Make staff
+                    </Button>
+                  )}
+                  {r.isActive ? (
+                    <Button variant="outline" size="sm" onClick={() => update(r, { isActive: false })}>
+                      Disable
+                    </Button>
+                  ) : (
+                    <Button variant="outline" size="sm" onClick={() => update(r, { isActive: true })}>
+                      Enable
+                    </Button>
+                  )}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-red-600 hover:bg-red-50"
+                    onClick={() => {
+                      setConfirmWord("");
+                      setDeleting(r);
+                    }}
+                    title={`Permanently delete ${r.email}`}
+                  >
+                    <FaTrashCan className="h-3.5 w-3.5" aria-hidden />
+                    Delete
+                  </Button>
+                </div>
+              ),
+            },
+          ]}
+          renderTile={(r) => (
+            <>
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-ink">
+                    {r.name} {r.role === "doctor" ? <FaUserDoctor className="inline h-3.5 w-3.5 text-forest-700" aria-label="Staff" /> : null}
+                  </p>
+                  <p className="break-words text-xs text-muted">{r.email}{r.phone ? ` · ${r.phone}` : ""}</p>
+                </div>
+                <span className="shrink-0 rounded-full bg-forest-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-forest-700">
+                  {r.role}
+                </span>
+              </div>
+              <div className="flex flex-wrap items-center gap-1.5">
+                <span
+                  className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                    r.isActive ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-700"
+                  }`}
+                >
+                  {r.isActive ? "Active" : "Disabled"}
+                </span>
+                {!r.emailVerified ? (
+                  <span className="inline-block rounded-full bg-gold-400/20 px-2 py-0.5 text-[10px] font-bold text-[#8a6e1a]">
+                    Unverified
+                  </span>
+                ) : null}
+                <span className="text-[10px] text-muted">Joined {formatDate(r.createdAt)}</span>
+              </div>
+              <div className="flex flex-wrap items-center gap-1.5 border-t border-forest-50 pt-2.5">
+                {r.role === "doctor" ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => update(r, { role: "user" })}
+                    disabled={!r.emailVerified || !r.isActive}
+                  >
+                    Make patient
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => update(r, { role: "doctor" })}
+                    disabled={!r.emailVerified || !r.isActive}
+                    title={!r.emailVerified ? "Verify the email first" : undefined}
+                  >
+                    Make staff
+                  </Button>
+                )}
+                {r.isActive ? (
+                  <Button variant="outline" size="sm" onClick={() => update(r, { isActive: false })}>
+                    Disable
+                  </Button>
+                ) : (
+                  <Button variant="outline" size="sm" onClick={() => update(r, { isActive: true })}>
+                    Enable
+                  </Button>
+                )}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-red-600 hover:bg-red-50"
+                  onClick={() => {
+                    setConfirmWord("");
+                    setDeleting(r);
+                  }}
+                  title={`Permanently delete ${r.email}`}
+                >
+                  <FaTrashCan className="h-3.5 w-3.5" aria-hidden />
+                  Delete
+                </Button>
+              </div>
+            </>
+          )}
+        emptyState={
+            <p className="flex items-center justify-center gap-2 px-4 py-10 text-sm text-muted">
+              <FaUsers className="h-4 w-4" aria-hidden /> No matching accounts.
+            </p>
+          }
+        />
       </div>
 
       {deleting ? (

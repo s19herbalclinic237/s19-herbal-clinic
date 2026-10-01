@@ -7,6 +7,7 @@ import {
   formatDayDate,
   PrescriptionStatusBadge,
 } from "@/components/account/badges";
+import { ResponsiveTable } from "@/components/ui/responsive-table";
 import {
   FaChevronDown,
   FaChevronUp,
@@ -82,19 +83,18 @@ function PrescriptionDetail({ p }: { p: PrescriptionView }) {
           <p className="mt-4 text-[10px] text-muted">{t("dash.prescriptions.photoHint")}</p>
         ) : null}
 
-        <table className="mt-4 w-full border-collapse text-sm">
-          <thead>
-            <tr className="border-b border-forest-200 text-left text-[10px] font-bold uppercase tracking-widest text-muted">
-              <th className="py-2 pr-3">{t("dash.prescriptions.medication")}</th>
-              <th className="py-2 pr-3">{t("dash.prescriptions.dosage")}</th>
-              <th className="py-2 pr-3">{t("dash.prescriptions.frequency")}</th>
-              <th className="py-2">{t("dash.prescriptions.duration")}</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-forest-100">
-            {p.medications.map((m, i) => (
-              <tr key={i}>
-                <td className="py-2.5 pr-3 align-top">
+        <div className="mt-4">
+          <ResponsiveTable
+            containerClassName=""
+            tableClassName="w-full border-collapse text-sm"
+            headRowClassName="border-b border-forest-200 text-left text-[10px] font-bold uppercase tracking-widest text-muted"
+            rowClassName="border-b border-forest-50 last:border-0"
+            rows={p.medications}
+            rowKey={(_m, i) => String(i)}
+            columns={[
+              {
+                header: t("dash.prescriptions.medication"),
+                render: (m) => (
                   <div className="flex items-center gap-2.5">
                     {m.photo ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -106,14 +106,30 @@ function PrescriptionDetail({ p }: { p: PrescriptionView }) {
                     ) : null}
                     <span className="font-bold text-ink">{m.name}</span>
                   </div>
-                </td>
-                <td className="py-2.5 pr-3 align-top text-muted">{m.dosage}</td>
-                <td className="py-2.5 pr-3 align-top text-muted">{m.frequency}</td>
-                <td className="py-2.5 align-top text-muted">{m.duration || "—"}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                ),
+                cellClassName: "py-2.5 pr-3 align-top",
+              },
+              {
+                header: t("dash.prescriptions.dosage"),
+                label: t("dash.prescriptions.dosage"),
+                render: (m) => <span className="text-muted">{m.dosage}</span>,
+                cellClassName: "py-2.5 pr-3 align-top",
+              },
+              {
+                header: t("dash.prescriptions.frequency"),
+                label: t("dash.prescriptions.frequency"),
+                render: (m) => <span className="text-muted">{m.frequency}</span>,
+                cellClassName: "py-2.5 pr-3 align-top",
+              },
+              {
+                header: t("dash.prescriptions.duration"),
+                label: t("dash.prescriptions.duration"),
+                render: (m) => <span className="text-muted">{m.duration || "—"}</span>,
+                cellClassName: "py-2.5 align-top",
+              },
+            ]}
+          />
+        </div>
 
         {p.medications.some((m) => m.instructions) ? (
           <div className="mt-4">

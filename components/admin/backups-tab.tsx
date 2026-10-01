@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "@/components/account/badges";
+import { ResponsiveTable } from "@/components/ui/responsive-table";
 import { FaArrowRotateLeft, FaBoxArchive, FaEnvelope, FaTriangleExclamation } from "react-icons/fa6";
 
 interface BackupRunRow {
@@ -171,52 +172,72 @@ export function BackupsTab() {
         </div>
       ) : null}
 
-      <div className="overflow-x-auto rounded-2xl border border-line bg-white shadow-card">
-        <table className="w-full min-w-[760px] text-left text-sm">
-          <thead>
-            <tr className="border-b border-forest-100 text-[11px] font-bold uppercase tracking-wide text-muted">
-              <th className="px-4 py-3">Backup</th>
-              <th className="px-4 py-3">Trigger</th>
-              <th className="px-4 py-3">Docs / Collections</th>
-              <th className="px-4 py-3">Size</th>
-              <th className="px-4 py-3">Email</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Detail</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(runs ?? []).map((r) => (
-              <tr key={r.id} className="border-b border-forest-50 last:border-0">
-                <td className="px-4 py-3">
+      <div>
+        <ResponsiveTable
+          minWidthClassName="min-w-[760px]"
+          rows={runs ?? []}
+          rowKey={(r) => r.id}
+          columns={[
+            {
+              header: "Backup",
+              render: (r) => (
+                <>
                   <p className="font-semibold text-ink">{formatDate(r.createdAt)}</p>
-                  <p className="font-mono text-[10px] text-muted">{r.logicalRunId.slice(0, 48)}</p>
-                </td>
-                <td className="px-4 py-3 text-xs capitalize text-muted">{r.trigger}</td>
-                <td className="px-4 py-3 text-xs text-muted">
-                  {r.documentCount} docs · {r.collectionCount} collections
-                </td>
-                <td className="px-4 py-3 text-xs text-muted">{sizeLabel(r.ciphertextBytes ?? r.originalBytes)}</td>
-                <td className="px-4 py-3 text-xs text-muted">{r.notificationStatus}</td>
-                <td className="px-4 py-3"><StateBadge state={r.state} /></td>
-                <td className="px-4 py-3">
-                  {r.errorCode ? (
-                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-red-700">
-                      <FaTriangleExclamation className="h-3 w-3" aria-hidden />
-                      {r.errorCode}
-                    </span>
-                  ) : (
-                    <span className="text-xs text-muted">{r.stage ?? "—"}</span>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {runs && runs.length === 0 ? (
-          <p className="px-4 py-10 text-center text-sm text-muted">
-            No backups yet. Run one now, or wait for the daily automatic backup.
-          </p>
-        ) : null}
+                  <p className="break-all font-mono text-[10px] text-muted">{r.logicalRunId.slice(0, 48)}</p>
+                </>
+              ),
+            },
+            {
+              header: "Trigger",
+              label: "Trigger",
+              render: (r) => <span className="text-xs capitalize text-muted">{r.trigger}</span>,
+            },
+            {
+              header: "Docs / Collections",
+              label: "Size",
+              render: (r) => (
+                <span className="text-xs text-muted">
+                  {r.documentCount} docs · {r.collectionCount} collections ·{" "}
+                  {sizeLabel(r.ciphertextBytes ?? r.originalBytes)}
+                </span>
+              ),
+            },
+            {
+              header: "Size",
+              desktopOnly: true,
+              render: (r) => (
+                <span className="text-xs text-muted">{sizeLabel(r.ciphertextBytes ?? r.originalBytes)}</span>
+              ),
+            },
+            {
+              header: "Email",
+              label: "Email",
+              render: (r) => <span className="text-xs text-muted">{r.notificationStatus}</span>,
+            },
+            {
+              header: "Status",
+              render: (r) => <StateBadge state={r.state} />,
+            },
+            {
+              header: "Detail",
+              label: "Detail",
+              render: (r) =>
+                r.errorCode ? (
+                  <span className="inline-flex items-center gap-1 text-xs font-semibold text-red-700">
+                    <FaTriangleExclamation className="h-3 w-3" aria-hidden />
+                    {r.errorCode}
+                  </span>
+                ) : (
+                  <span className="text-xs text-muted">{r.stage ?? "—"}</span>
+                ),
+            },
+          ]}
+        emptyState={
+            <p className="px-4 py-10 text-center text-sm text-muted">
+              No backups yet. Run one now, or wait for the daily automatic backup.
+            </p>
+          }
+        />
       </div>
     </div>
   );

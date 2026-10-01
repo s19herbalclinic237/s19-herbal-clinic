@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/form";
 import { formatDate, PrescriptionStatusBadge } from "@/components/account/badges";
+import { ResponsiveTable } from "@/components/ui/responsive-table";
 import { validateImageFile } from "@/lib/image-upload";
 import {
   FaChevronDown,
@@ -537,38 +538,51 @@ export function AdminPrescriptionsTab() {
                         className="mb-3 h-32 w-32 rounded-md border border-line bg-white object-cover"
                       />
                     ) : null}
-                    <table className="w-full border-collapse text-sm">
-                      <thead>
-                        <tr className="border-b border-forest-200 text-left text-[10px] font-bold uppercase tracking-wide text-muted">
-                          <th className="py-1.5 pr-3">Medication</th>
-                          <th className="py-1.5 pr-3">Dosage</th>
-                          <th className="py-1.5 pr-3">Frequency</th>
-                          <th className="py-1.5">Duration</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-forest-100">
-                        {p.medications.map((m, i) => (
-                          <tr key={i}>
-                            <td className="py-2 pr-3 align-top">
-                              <div className="flex items-center gap-2.5">
-                                {m.photo ? (
-                                  // eslint-disable-next-line @next/next/no-img-element
-                                  <img
-                                    src={m.photo}
-                                    alt={`Photo of ${m.name}`}
-                                    className="h-9 w-9 shrink-0 rounded-md border border-line bg-white object-cover"
-                                  />
-                                ) : null}
-                                <span className="font-bold text-ink">{m.name}</span>
-                              </div>
-                            </td>
-                            <td className="py-2 pr-3 align-top text-muted">{m.dosage}</td>
-                            <td className="py-2 pr-3 align-top text-muted">{m.frequency}</td>
-                            <td className="py-2 align-top text-muted">{m.duration || "—"}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                    <ResponsiveTable
+                      containerClassName=""
+                      tableClassName="w-full border-collapse text-sm"
+                      headRowClassName="border-b border-forest-200 text-left text-[10px] font-bold uppercase tracking-wide text-muted"
+                      rowClassName="border-b border-forest-50 last:border-0"
+                      rows={p.medications}
+                      rowKey={(_m, i) => String(i)}
+                      columns={[
+                        {
+                          header: "Medication",
+                          render: (m) => (
+                            <div className="flex items-center gap-2.5">
+                              {m.photo ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img
+                                  src={m.photo}
+                                  alt={`Photo of ${m.name}`}
+                                  className="h-9 w-9 shrink-0 rounded-md border border-line bg-white object-cover"
+                                />
+                              ) : null}
+                              <span className="font-bold text-ink">{m.name}</span>
+                            </div>
+                          ),
+                          cellClassName: "py-2 pr-3 align-top",
+                        },
+                        {
+                          header: "Dosage",
+                          label: "Dosage",
+                          render: (m) => <span className="text-muted">{m.dosage}</span>,
+                          cellClassName: "py-2 pr-3 align-top",
+                        },
+                        {
+                          header: "Frequency",
+                          label: "Frequency",
+                          render: (m) => <span className="text-muted">{m.frequency}</span>,
+                          cellClassName: "py-2 pr-3 align-top",
+                        },
+                        {
+                          header: "Duration",
+                          label: "Duration",
+                          render: (m) => <span className="text-muted">{m.duration || "—"}</span>,
+                          cellClassName: "py-2 align-top",
+                        },
+                      ]}
+                    />
                     {p.medications.some((m) => m.instructions) ? (
                       <div className="mt-3">
                         <p className="text-[10px] font-bold uppercase tracking-wide text-muted">Directions</p>
