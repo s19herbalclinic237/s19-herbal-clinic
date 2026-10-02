@@ -244,12 +244,13 @@ export default async function HomePage() {
           {pathway.map((step, i) => (
             <StaggerItem key={step.step}>
               <div className="flex h-full flex-col rounded-lg border border-line bg-white p-6 shadow-card">
-                <div className="flex items-center gap-3">
-                  <span className="font-display text-2xl font-semibold text-gold-500">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <FaRegCircleCheck className="h-4 w-4 text-forest-600" aria-hidden />
-                </div>
+                {/* Number only. A tick beside each step implied these steps are
+                    already done or verified; they are what the patient is
+                    moving through, so the numeral carries the sequence and
+                    nothing else does. */}
+                <span className="font-display text-2xl font-semibold text-gold-500">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
                 <h3 className="mt-3 text-base font-bold text-ink">{step.step}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{step.text}</p>
               </div>
