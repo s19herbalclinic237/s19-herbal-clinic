@@ -180,6 +180,42 @@ const dict = {
     en: "The testimonials shared here represent the personal experiences and views of individual S19 clients. Results may differ from person to person and should not be considered typical or guaranteed. These testimonials are provided for general informational purposes only and should not be interpreted as medical advice or as a promise that others will experience the same outcomes. Some of these experiences were shared with us through text messages, phone calls, comments, and emails. For clarity and better understanding, some have been lightly edited to improve grammar and readability or translated into English, while preserving the original meaning and experience shared by the client.",
     fr: "Les témoignages présentés ici reflètent les expériences et opinions personnelles de clients individuels de S19. Les résultats peuvent varier d'une personne à l'autre et ne doivent pas être considérés comme typiques ou garantis. Ces témoignages sont fournis à titre d'information générale uniquement et ne doivent pas être interprétés comme un avis médical ni comme une promesse que d'autres obtiendront les mêmes résultats. Certaines de ces expériences nous ont été partagées par messages texte, appels téléphoniques, commentaires et e-mails. Par souci de clarté et de compréhension, certains ont été légèrement retouchés pour améliorer la grammaire et la lisibilité, ou traduits en anglais, tout en préservant le sens et l'expérience d'origine partagés par le client.",
   },
+  /**
+   * Consent and privacy disclaimer for patient video testimonials. Kept apart
+   * from `stories.disclaimer` on purpose: that one is about what results mean,
+   * this one is about permission to publish a person at all. Both appear on
+   * every page that shows a patient video.
+   */
+  "stories.consent.title": {
+    en: "Patient Video Testimonial & Privacy Disclaimer",
+    fr: "Vidéos-témoignages de patients et confidentialité",
+  },
+  "stories.consent.p1": {
+    en: "All patient video testimonials displayed on the S19 Herbal Clinic website are shared with the patient's voluntary consent and permission.",
+    fr: "Toutes les vidéos de patients publiées sur le site de S19 Herbal Clinic le sont avec le consentement et l'accord volontaire du patient.",
+  },
+  "stories.consent.p2": {
+    en: "Participation in a video testimonial is completely optional. No patient is required or obligated to provide a testimonial, and choosing not to participate does not affect the care or services they receive from S19 Herbal Clinic.",
+    fr: "La participation à une vidéo-témoignage est entièrement facultative. Aucun patient n'est tenu de fournir un témoignage, et le choix de ne pas participer n'a aucune incidence sur les soins ou les services reçus de S19 Herbal Clinic.",
+  },
+  "stories.consent.p3": {
+    en: "We respect the privacy of patients who prefer not to share their experiences publicly. Their testimonials, images, videos, or personal information will not be published or shared without their consent.",
+    fr: "Nous respectons la vie privée des patients qui préfèrent ne pas partager publiquement leur expérience. Leurs témoignages, images, vidéos ou informations personnelles ne seront ni publiés ni partagés sans leur consentement.",
+  },
+  "stories.consent.p4": {
+    en: "S19 Herbal Clinic will never knowingly publish or distribute a patient's video testimonial without the patient's authorization.",
+    fr: "S19 Herbal Clinic ne publiera ni ne diffusera jamais, en connaissance de cause, la vidéo d'un patient sans son autorisation.",
+  },
+  "liveReviews.cta.title": {
+    en: "Would you rather read it first?",
+    fr: "Vous préférez d'abord lire ?",
+  },
+  "liveReviews.cta.text": {
+    en: "Every patient who agreed to share their experience is listed on the testimonials page, where there is room to say what the treatment was, how long it took and what changed.",
+    fr: "Tous les patients qui ont accepté de partager leur expérience figurent sur la page des témoignages, où il y a la place de dire quel était le traitement, sa durée et ce qui a changé.",
+  },
+  "liveReviews.cta.button": { en: "Testimonials", fr: "Témoignages" },
+
   "stories.count": { en: "{count} story", fr: "{count} histoire" },
   "stories.countPlural": { en: "{count} stories", fr: "{count} histoires" },
   "stories.share.kicker": { en: "Share your experience", fr: "Partagez votre expérience" },
@@ -1466,6 +1502,7 @@ const dict = {
   "dash.shell.nav.adminPosts": { en: "Blog", fr: "Blog" },
   "dash.shell.nav.adminSubscribers": { en: "Subscribers", fr: "Abonnés" },
   "dash.shell.nav.adminVideos": { en: "Live Reviews", fr: "Avis vidéo" },
+  "dash.shell.nav.adminUsers": { en: "Users", fr: "Utilisateurs" },
   "dash.shell.nav.adminRoles": { en: "Staff & Roles", fr: "Équipe et rôles" },
   "dash.shell.nav.adminBackups": { en: "Data Backups", fr: "Sauvegardes des données" },
   "dash.shell.nav.adminLogs": { en: "Error Log", fr: "Journal d'erreurs" },
@@ -1579,6 +1616,11 @@ const dict = {
   "dash.shell.h.adminTreatmentAlerts.sub": {
     en: "Missed glucose submissions, overdue payments, missed follow-ups, treatments ending, concerning readings and new complications",
     fr: "Glycémies manquées, paiements en retard, suivis manqués, traitements qui se terminent, lectures préoccupantes et nouvelles complications",
+  },
+  "dash.shell.h.adminUsers.title": { en: "Users", fr: "Utilisateurs" },
+  "dash.shell.h.adminUsers.sub": {
+    en: "Every account on the site, with the Medical Record Number each patient is filed under",
+    fr: "Tous les comptes du site, avec le numéro de dossier médical de chaque patient",
   },
   "dash.shell.h.adminRoles.title": { en: "Staff & Roles", fr: "Équipe et rôles" },
   "dash.shell.h.adminRoles.sub": {

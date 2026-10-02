@@ -29,6 +29,20 @@ The role value is surfaced to the client only through the safe `AuthUser` DTO (`
 
 Rule of thumb: **clinical operations** (anything touching patient-facing clinical data) use `clinicalGuard`; **administrative operations** (store, content, subscribers, users, roles, backups) use `adminGuard`.
 
+### Why the two user screens are guarded differently
+
+The clinic's specification is that a patient has one Medical Record Number, that **only an administrator may create, change or remove it**, and that **other authorised clinical staff may view and search by it**. That is implemented as a split rather than one endpoint with a role check inside:
+
+| Concern | Route | Guard | Reason |
+| --- | --- | --- | --- |
+| Read one patient's file | `GET /api/admin/users/[id]` | `clinicalGuard` | Looking at a patient's file when they walk in is clinical work. A doctor should not need an administrator to open a read-only view. |
+| List every account, all roles | `GET /api/admin/directory` | `adminGuard` | This list includes the clinic owner's own address and date of birth. Staff already have the patient list they need via `GET /api/admin/users`. |
+| Write the MRN | `PATCH /api/admin/mrn` | `adminGuard` | The specification says administrators only. No exceptions, no self-service, ever. |
+
+`GET /api/admin/users` was deliberately **not** widened to include administrators. It feeds **Staff & Roles**, which offers promote / disable / delete; adding the signed-in administrator to that list would let a screen offer to delete the account it is running as. The directory is a separate route for that reason.
+
+Duplicate MRNs are refused in two independent places: an explicit `findOne` in the route so the clinic gets a readable error, and a **unique sparse index** on `User.mrn` so that two administrators acting in the same instant still cannot produce two records with one number. The sparse part matters: without it, every unassigned patient would collide on a missing value.
+
 ## 3. Route-to-role matrix (implemented)
 
 ### Admin-only (`adminGuard`)
@@ -44,6 +58,8 @@ Rule of thumb: **clinical operations** (anything touching patient-facing clinica
 | Fan-out | `POST /api/admin/fanout` |
 | Video reviews | `GET/POST/DELETE /api/admin/video-reviews` |
 | Roles | `GET/PATCH /api/admin/roles` |
+| **Users directory** | `GET /api/admin/directory` — every account, all roles, searchable by name/email/phone/MRN |
+| **Medical Record Number** | `PATCH /api/admin/mrn` — assign, change or remove a patient's MRN |
 | Backups | `GET/POST /api/admin/backups` |
 | Translation | `POST /api/translate` |
 
@@ -60,6 +76,7 @@ Rule of thumb: **clinical operations** (anything touching patient-facing clinica
 | Glucose | `GET /api/admin/glucose` |
 | Treatment alerts | `GET /api/admin/treatment-alerts` |
 | Messaging | `GET /api/admin/users` (patient list for selection), `GET/POST /api/admin/messages` |
+| One patient in full (read-only) | `GET /api/admin/users/[id]` — identity, contact, emergency contact, family members, ID documents and record counts. Nothing here can be written from this endpoint. |
 | Image uploads | `POST /api/upload` — so a doctor can attach prescription and medical-record photos, not just an administrator |
 
 `POST /api/upload` is `clinicalGuard` rather than `adminGuard` because a doctor could otherwise
@@ -98,8 +115,11 @@ The dashboard **Staff & Roles** tab (`components/admin/roles-tab.tsx`) exposes t
 - Bottom mobile nav shows the clinical tabs with short labels.
 
 ### Administrator (`admin`)
-- Everything the patient can see plus **Clinic admin:** Products, Doctors, Appointments, Medical Records, Prescriptions, Treatment Plans, Treatment Alerts, Orders, Testimonials, Users & Messages, Blog, Subscribers, Live Reviews, Staff & Roles, Data Backups.
+- Everything the patient can see plus **Clinic admin:** Products, Doctors, Appointments, Medical Records, Prescriptions, Treatment Plans, Treatment Alerts, Orders, Testimonials, **Users**, Users & Messages, Blog, Subscribers, Live Reviews, Staff & Roles, Data Backups.
 - Sidebar shows a **Clinic admin** badge.
+
+### The signed-in user's MRN
+`lib/auth-server.ts` puts `mrn` on the session user, so the dashboard sidebar shows the number next to the name and email when the signed-in person has one — that is how the clinic calls a patient, name plus file number. Administrator accounts never carry an MRN, so the chip is absent for them rather than blank. It is read-only in this place; changing an MRN happens on the **Users** tab, which is administrator-only.
 
 Tab rendering in `renderTab` re-checks the role server-independent gate (`isStaff`/`isAdmin`) so a manually chosen tab ID cannot bypass the persona navigation; the API routes enforce the same boundary itself.
 

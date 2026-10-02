@@ -20,6 +20,8 @@
     "preview:plan": "tsx scripts/preview-plan-schedule.ts",
     "backup": "tsx scripts/backup.ts",
     "verify:alerts": "tsx scripts/verify-alerts.ts",
+    "verify:directory": "tsx scripts/verify-directory.ts",
+    "verify:logs": "tsx scripts/verify-logs.ts",
     "verify:stock": "tsx --tsconfig tsconfig.scripts.json scripts/verify-stock.ts"
   },
   "dependencies": {

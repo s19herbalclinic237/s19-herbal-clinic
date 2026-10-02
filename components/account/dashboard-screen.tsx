@@ -36,11 +36,13 @@ import { AdminPrescriptionsTab } from "@/components/admin/prescriptions-tab";
 import { TreatmentPlansTab } from "@/components/admin/treatment-plans-tab";
 import { TreatmentAlertsTab } from "@/components/admin/treatment-alerts-tab";
 import { RolesTab } from "@/components/admin/roles-tab";
+import { UsersTab } from "@/components/admin/users-tab";
 import { BackupsTab } from "@/components/admin/backups-tab";
 import { LogsTab } from "@/components/admin/logs-tab";
 import { buttonLinkClasses } from "@/components/ui/button";
 import { S19_ASSETS } from "@/lib/site-assets";
 import {
+  FaAddressBook,
   FaArrowRightFromBracket,
   FaBars,
   FaBoxOpen,
@@ -87,6 +89,7 @@ type TabId =
   | "admin-prescriptions"
   | "admin-treatment-plans"
   | "admin-treatment-alerts"
+  | "admin-users"
   | "admin-roles"
   | "admin-backups"
   | "admin-logs";
@@ -215,6 +218,11 @@ const adminTabs: NavItem[] = [
     id: "admin-videos",
     labelKey: "dash.shell.nav.adminVideos",
     icon: <FaVideo className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "admin-users",
+    labelKey: "dash.shell.nav.adminUsers",
+    icon: <FaAddressBook className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-roles",
@@ -679,6 +687,18 @@ export function DashboardScreen() {
             </div>
           </>
         ) : null;
+      case "admin-users":
+        return isAdmin ? (
+          <>
+            <PageHeader
+              title={t("dash.shell.h.adminUsers.title")}
+              subtitle={t("dash.shell.h.adminUsers.sub")}
+            />
+            <div className="px-4 sm:px-0">
+              <UsersTab />
+            </div>
+          </>
+        ) : null;
       case "admin-roles":
         return isAdmin ? (
           <>
@@ -759,6 +779,18 @@ export function DashboardScreen() {
                 <span className="inline-flex items-center gap-1 rounded-full border border-forest-600 bg-forest-800/80 px-2 py-0.5 text-[10px] font-bold text-forest-100">
                   <FaCheck className="h-2.5 w-2.5 text-gold-400" aria-hidden />
                   {t("dash.shell.badge.verified")}
+                </span>
+              ) : null}
+              {/* The MRN sits with the name and email because that is how the
+                  clinic calls a patient: name plus file number. Administrator
+                  accounts never carry one, so this is absent rather than blank
+                  for them. */}
+              {user?.mrn ? (
+                <span
+                  className="inline-flex items-center gap-1 rounded-full border border-gold-500/50 bg-gold-400/15 px-2 py-0.5 font-mono text-[10px] font-bold tracking-wider text-gold-200"
+                  title={t("dash.settings.mrn")}
+                >
+                  {user.mrn}
                 </span>
               ) : null}
             </div>

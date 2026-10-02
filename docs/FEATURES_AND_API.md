@@ -340,7 +340,10 @@ The profile is not currently linked to a login or clinical writes.
 | `GET /api/messages` | Signed in | List account messages and unread count. |
 | `POST /api/messages` | Signed in | Start or reply to a clinic conversation. |
 | `POST /api/messages/[id]/read` | Owner | Mark a message read. |
-| `GET /api/admin/users` | Admin or Doctor (clinical) | List patient users and order/unread aggregates. |
+| `GET /api/admin/users` | Admin or Doctor (clinical) | List patient users and order/unread aggregates. Excludes `admin` accounts on purpose: it feeds Staff & Roles, which offers delete. |
+| `GET /api/admin/directory` | Admin | Every account, all roles. Query: `q` (name / email / phone / MRN, case-insensitive, regex-escaped), `role` (`all`\|`admin`\|`doctor`\|`user`), `mrn` (`any`\|`assigned`\|`unassigned`). Returns flat rows plus `totals` (shown, missing MRN, disabled, unverified). |
+| `GET /api/admin/users/[id]` | Admin or Doctor (clinical) | One account in full: identity, contact, emergency contact, family members, ID document URLs, WhatsApp consent and language, plus counts of records / prescriptions / plans / reminders / follow-ups / readings / appointments / orders / messages / testimonials. Read-only. |
+| `PATCH /api/admin/mrn` | Admin | Assign, change or remove a patient's MRN. Body `{ userId, mrn }`. `""` removes. Rejects administrator accounts, normalises to upper case with internal spaces folded to dashes, refuses a duplicate, and writes an audit-log entry (`mrn.assigned` / `mrn.changed` / `mrn.removed`). |
 | `DELETE /api/admin/users/[id]` | Admin | Permanently delete a user account. Requires `{ "confirm": "<user email>" }` (case-insensitive). Rejects admin accounts and self; cascades sessions, tokens, cart, messages, appointments, records, prescriptions, treatment plans/reminders/follow-ups, glucose readings, testimonials; detaches orders. |
 | `GET /api/admin/messages` | Admin or Doctor (clinical) | List a selected user's conversation and mark patient replies read. |
 | `POST /api/admin/messages` | Admin or Doctor (clinical) | Start/reply to a clinic message and notify patient. |

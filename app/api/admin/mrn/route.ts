@@ -4,13 +4,7 @@ import { adminGuard } from "@/lib/admin-guard";
 import { getSessionUser } from "@/lib/auth-server";
 import { User } from "@/lib/models/User";
 import { recordAudit } from "@/lib/models/AuditLog";
-
-/** Loose clinic MRN format: letters, digits and dashes (e.g. "S1900615"). */
-const MRN_PATTERN = /^[A-Za-z0-9][A-Za-z0-9-]{1,29}$/;
-
-function normalizeMrn(raw: unknown): string {
-  return String(raw ?? "").trim().toUpperCase().replace(/\s+/g, "-");
-}
+import { validateMrn } from "@/lib/user-directory";
 
 /**
  * Assign, change or remove a patient's Medical Record Number (MRN).
@@ -35,15 +29,14 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: "Patient is required." }, { status: 400 });
   }
 
-  const nextMrn = normalizeMrn(mrn);
-  const removing = nextMrn === "";
-
-  if (!removing && !MRN_PATTERN.test(nextMrn)) {
-    return NextResponse.json(
-      { error: "Enter a valid Medical Record Number (letters, numbers and dashes only)." },
-      { status: 400 }
-    );
+  // One rule for what an MRN may look like, shared with the Users directory so
+  // the two screens can never disagree about the same number.
+  const check = validateMrn(mrn);
+  if (!check.ok) {
+    return NextResponse.json({ error: check.error }, { status: 400 });
   }
+  const nextMrn = check.value;
+  const removing = check.removing;
 
   const conn = await connectDb();
   if (!conn) {

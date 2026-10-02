@@ -376,9 +376,11 @@ Staff accounts see a **"Clinical work"** section with **6 tabs** plus Settings. 
 
 ## 7. Administrator Dashboard — Clinic Admin
 
-Admins see everything under **My account** (the 10 patient tabs) **plus** the 15-tab **Clinic admin** section:
+Admins see everything under **My account** (the 10 patient tabs) **plus** the 16-tab **Clinic admin** section:
 
-Products · Staff · Appointments · Medical Records · Prescriptions · Treatment Plans · Treatment Alerts · Orders · Testimonials · Users & Messages · Blog · Subscribers · Live Reviews · Staff & Roles · Data Backups · Error Log
+Products · Staff · Appointments · Medical Records · Prescriptions · Treatment Plans · Treatment Alerts · Orders · Testimonials · Users · Users & Messages · Blog · Subscribers · Live Reviews · Staff & Roles · Data Backups · Error Log
+
+**Two user screens, on purpose.** **Users** (§7.10) is the full directory — every account, every detail, searchable by name, email, phone or MRN. **Users & Messages** (§7.11) is the chat view. They are separate because they answer different questions, and merging them would either hide the clinic's own accounts or drag a patient's address into a messaging pane.
 
 ### 7.1 Products
 
@@ -422,7 +424,36 @@ Same clinical flow as staff (§6.1) — full filter set and confirm/complete/can
 - **Auto-translate to French** fills the French program + text via the MyMemory API (edit by hand if the machine translation needs fixing); a "French translation added" marker appears once `textFr` exists.
 - **Add manually**: name*, city*, country, program/concern*, text* (≥20 chars), email, video URL, rating, and the optional French block; status **Save as pending** or **Approve immediately**.
 
-### 7.10 Users & Messages (MRN + messaging)
+### 7.10 Users
+
+The full account directory. **Administrators only.**
+
+Unlike **Staff & Roles** (§7.15), which deliberately hides the account you are signed in as, and **Users & Messages** (§7.11), which is a chat view, this screen lists **every account on the site — patients, staff and administrators alike** — with the details the clinic needs to recognise someone who walks in.
+
+**Search and filter**
+
+- One box searches **name, email, phone or MRN** at once. An empty box shows everyone.
+- **Account type**: All / Patients / Staff / Administrators.
+- **Missing an MRN**: the list of patients who have no file number yet. This is the worklist for issuing numbers.
+
+**Medical Record Number**
+
+The MRN sits on the same line as the name, because that is how the clinic actually calls a patient — name plus file number.
+
+- The number is shown in a dark chip so it is readable at a glance; patients without one show an amber **No MRN** chip rather than a blank.
+- **Search by MRN** works from the same box as names and emails.
+- **Assign MRN / Change MRN** opens an inline field (`S1900615`). **Remove** clears it.
+- Two patients can never hold the same number — duplicates are refused with a clear error, and a unique database index is the backstop if two administrators ever act at the same instant.
+- **Every** assign, change and removal is written to the audit log with who did it and when.
+- Administrator accounts never receive an MRN, and the screen says so rather than offering an empty field.
+
+**Account details**
+
+**Details** opens one person in full: identity (name, email, phone, date of birth, gender, address), account (role, active/disabled, email verified, WhatsApp opt-in, language, last sign-in, joined date), emergency contact, counts of everything on file (records, prescriptions, plans, reminders, follow-ups, readings, appointments, orders, messages, testimonials), ID document images, and family members.
+
+Details load only when opened, so opening the list on a phone does not download every patient's file.
+
+### 7.11 Users & Messages (MRN + messaging)
 
 **Assign an MRN:**
 1. Search the user by **name, email, phone or MRN**.
@@ -433,7 +464,7 @@ Same clinical flow as staff (§6.1) — full filter set and confirm/complete/can
 
 **Message a user:** **New message** (subject + body) or reply inside the thread (**Reply** → **Send reply**). Unread clinic messages surface as gold dots.
 
-### 7.11 Blog
+### 7.12 Blog
 
 - Posts list with **Draft / Published** badges, **Featured** toggles, EN/FR content.
 - **New post**: English (**Title**, **Short excerpt**, **Article text**, Author) + French (**Titre**, **Extrait court**, **Texte de l'article**, Auteur) — all required. Slug auto-generates from the title.
@@ -441,31 +472,31 @@ Same clinical flow as staff (§6.1) — full filter set and confirm/complete/can
 - **Status**: Save as draft / **Publish immediately**; tick **Featured article** to lead the blog.
 - **Publish / Unpublish** toggles visibility; edit or delete any post.
 
-### 7.12 Subscribers
+### 7.13 Subscribers
 
 - Newsletter list with subscribed/total counts, search box, **Active** checkbox (subscribe/unsubscribe) and **Remove**.
 - **Send to all subscribers**: write **Subject** (2–120) and **Message** (2–5,000) → **Send to all subscribers**. Updates go to subscribers who have active accounts as in-app Messages; the rest are queued for later delivery. A summary line confirms how many went out.
 
-### 7.13 Live Reviews
+### 7.14 Live Reviews
 
 - Numbered cards in paste order (oldest first) with embedded player and **Visible/Hidden** pill.
 - **Paste link** (YouTube / Google Drive / Vimeo) + optional title → goes live immediately. Drive files must be shared "Anyone with the link".
 - **Hide / Show**, **Edit** (URL + title), **Delete** per review.
 
-### 7.14 Staff & Roles
+### 7.15 Staff & Roles
 
 - List of all non-admin accounts: name, email, **Active/Disabled**, **Unverified** badge, current role, doctor icon.
 - **Make staff** promotes a verified user to **doctor** (they must have verified their email first — otherwise the system asks them to verify). **Make patient** demotes back.
 - **Disable** suspends access (all sessions destroyed); **Enable** restores.
 - Admins never appear here and cannot be demoted.
 
-### 7.15 Data Backups
+### 7.16 Data Backups
 
 - **Configuration cards**: **Emailed backup** (daily, 05:30 UTC, emailed to the clinic inbox) and **Encrypted object-store archive** (Active when configured, otherwise Optional).
 - **Run backup now** — take an immediate full-database backup and have it emailed (idempotent per day — no duplicate emails if it already ran).
 - **Run history table** — last 30 runs: trigger, docs/collections, size, email status, detail.
 
-### 7.16 Error Log
+### 7.17 Error Log
 
 - **What it is.** Every error the site records, kept in the database for 90 days. The hosting platform's own console is kept for only **1 hour** on the free plan, so this is the copy you can actually come back to.
 - **Summary cards** — errors and warnings in the last 24 hours, errors in the last 7 days, and how many entries are currently stored.
@@ -476,7 +507,7 @@ Same clinical flow as staff (§6.1) — full filter set and confirm/complete/can
 - **Patient impact.** When a page fails, the patient sees a friendly bilingual page with a reference code. That code appears in the matching log row, so a patient reporting "it said `a1b2c3`" can be matched to the exact error.
 - **Privacy.** Names, email addresses and phone numbers are masked before anything is written. Passwords, tokens and session cookies are never stored. The digest email carries counts and error signatures only — never patient details.
 
-### 7.17 Administrator's own account
+### 7.18 Administrator's own account
 
 Admins also have all 10 patient tabs (Dashboard, Appointments, Orders, Messages, Records, Prescriptions, Treatment Plan, Family, Stories, Settings) so they can experience (and test) the patient side and manage their own profile.
 
@@ -495,7 +526,8 @@ A complete inventory of what **Cameroon Digital Agency** implemented to take thi
 - Order tracking by reference + email
 - Blog: listing with search + featured filter, bilingual articles
 - Patient Stories: public grid + moderated submission form
-- Live Reviews: video wall (YouTube/Drive/Vimeo proxied streaming)
+- Live Reviews: video wall (YouTube/Drive/Vimeo proxied streaming) + **Testimonials** button across to the written stories
+- **Patient Video Testimonial & Privacy Disclaimer** on both video pages (consent is voluntary, taking part is optional, anyone who prefers privacy is never published, nothing goes out without authorisation)
 - Booking/contact form → inquiry + email + WhatsApp handoff
 - Newsletter subscribe/unsubscribe
 - Legal pages: privacy, terms, cookies, refund & returns
@@ -521,7 +553,9 @@ A complete inventory of what **Cameroon Digital Agency** implemented to take thi
 - In-app messaging (patient ↔ clinic threads) with unread tracking
 
 **Admin & content**
-- Products, Doctors (with weekly availability), Blog (bilingual publish workflow), Subscribers + broadcasts, Live Reviews, Testimonials moderation + **MyMemory auto-translation**, Users directory, **MRN assignment with audit trail** (assign/change/remove)
+- Products, Doctors (with weekly availability), Blog (bilingual publish workflow), Subscribers + broadcasts, Live Reviews, Testimonials moderation + **MyMemory auto-translation**
+- **Users directory** — every account (patients, staff, administrators) with full details, searchable by name, email, phone or MRN, filterable by account type and by "missing an MRN"; on-demand per-account detail (identity, emergency contact, record counts, ID documents, family members)
+- **MRN assignment with audit trail** (assign/change/remove) — admin-only, duplicate-proof, never given to an administrator account
 - Staff & Roles management (promote verified users to doctors; disable/enable)
 - Orders management, backups console
 
