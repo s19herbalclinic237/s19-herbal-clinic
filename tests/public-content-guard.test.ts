@@ -14,12 +14,15 @@
 
 import { test, describe } from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 
 import { translate } from "@/lib/i18n";
-import { treatmentPrograms, localizedPrograms } from "@/lib/data/programs";
+import { treatmentPrograms, localizedPrograms, faqs } from "@/lib/data/programs";
 import { homePathway, programsPathway } from "@/lib/data/philosophy";
 import {
   homePrograms,
+  localizedHomePrograms,
   careComponents,
   herbalSafetyKeywords,
   personalizedCareElements,
@@ -28,6 +31,9 @@ import {
 import { testimonials as staticTestimonials } from "@/lib/data/testimonials";
 
 const LOCALES = ["en", "fr"] as const;
+
+/** Repo root, for the tests that read a page's source rather than its data. */
+const root = path.resolve(process.cwd());
 
 /** Every word the briefs forbid from appearing in program copy. */
 const BANNED_CLAIMS = [
@@ -457,10 +463,40 @@ describe("home page: the brief's list sections are complete", () => {
 
   test("every home program card points at a program that exists", () => {
     // A card linking to a stale anchor lands the visitor mid-page with no
-    // context, which is worse than not linking at all.
+    // context, which is worse than not linking at all. The one card allowed to
+    // opt out of an anchor is checked separately below.
     const slugs = new Set(treatmentPrograms.map((p) => p.slug));
     for (const card of homePrograms) {
+      if (card.href) continue;
       assert.ok(slugs.has(card.slug), `${card.slug} is not a program on the Programs page`);
+    }
+    for (const card of localizedHomePrograms("en")) {
+      if (card.href !== "/programs") {
+        const anchor = card.href.slice("/programs#".length);
+        assert.ok(slugs.has(anchor), `${card.href} is not a program on the Programs page`);
+      }
+    }
+  });
+
+  test("the merged digestive + liver card goes to the Programs index, not one program", () => {
+    // The brief names ONE card covering both, so it is not split here. But the
+    // Programs page lists them as two separate programs, so anchoring the card
+    // to either one would claim the card is about that program alone. It links
+    // to the index, where both appear in order.
+    const merged = homePrograms.find((c) => c.title === "Digestive & Liver Health");
+    assert.ok(merged, "the Digestive & Liver Health card is missing");
+    assert.equal(merged.href, "/programs");
+    // And the Programs page really does still carry both halves.
+    const slugs = new Set(treatmentPrograms.map((p) => p.slug));
+    assert.ok(slugs.has("digestive-gut-health"));
+    assert.ok(slugs.has("liver-metabolic-health"));
+  });
+
+  test("every home program card has an href in both locales", () => {
+    for (const locale of ["en", "fr"] as const) {
+      for (const card of localizedHomePrograms(locale)) {
+        assert.ok(card.href.startsWith("/programs"), `${locale}: ${card.slug} has href ${card.href}`);
+      }
     }
   });
 
@@ -492,6 +528,53 @@ describe("home page: the brief's list sections are complete", () => {
     assert.equal(accommodationAmenities.length, 4);
     assert.ok(accommodationAmenities.some((a) => /Starlink/i.test(a.text)));
     assert.ok(accommodationAmenities.some((a) => /cable/i.test(a.text)));
+  });
+});
+
+describe("the home page does not restate what its own sections already say", () => {
+  // The brief's order table ends at section 11. Three blocks sat below it and
+  // two of them repeated content the page had already printed. These tests exist
+  // so the removals hold.
+
+  test("the standalone Location block is gone; section 8 carries the details", () => {
+    const source = readFileSync(path.join(root, "app", "page.tsx"), "utf8");
+    // No home.location.* key is rendered on the home page any more.
+    assert.doesNotMatch(source, /home\.location\./);
+    assert.doesNotMatch(source, /visitLocationPage/);
+    // Section 8 is what prints the address and the hours now.
+    assert.match(source, /\{clinic\.address\}/);
+    assert.match(source, /clinic\.hours/);
+  });
+
+  test("the home page does not render a second final CTA after section 11", () => {
+    const source = readFileSync(path.join(root, "app", "page.tsx"), "utf8");
+    // `CTABand` renders "Start your consultation" + Book + WhatsApp, which is
+    // the same three jobs section 11 already does. It stays on the seven other
+    // pages that use it; only the home page drops it.
+    assert.doesNotMatch(source, /CTABand/);
+  });
+
+  test("the home page does not render the address or hours a second time", () => {
+    // The old Location block hardcoded the address and hours as string
+    // literals, duplicating CLINIC.address / CLINIC.hours which section 8
+    // already renders from the single source of truth.
+    const source = readFileSync(path.join(root, "app", "page.tsx"), "utf8");
+    assert.doesNotMatch(source, /Immeuble Cathédrale/);
+    assert.doesNotMatch(source, /Monday – Saturday: 8:00 AM – 6:00 PM/);
+  });
+
+  test("the FAQ and product strip stay, because nothing else carries them", () => {
+    // Their absence would delete real information: `faqs` is consumed only by
+    // the home page, and two of its five answers (dosage, payment methods)
+    // appear in none of the eleven sections.
+    const source = readFileSync(path.join(root, "app", "page.tsx"), "utf8");
+    assert.match(source, /home\.faq\.title/);
+    assert.match(source, /home\.catalog\.title/);
+    // And the payment/dosage answers are the reason, asserted so nobody deletes
+    // the block without noticing what goes with it.
+    const answers = faqs.map((f) => f.answer).join(" ");
+    assert.match(answers, /payment/i);
+    assert.match(answers, /teaspoon/i);
   });
 });
 

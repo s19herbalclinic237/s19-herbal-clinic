@@ -37,7 +37,6 @@ const dict = {
   "common.viewCatalog": { en: "View full catalog", fr: "Voir le catalogue complet" },
   "common.browseCatalog": { en: "Browse Catalog", fr: "Parcourir le catalogue" },
   "common.viewAllPrograms": { en: "View all programs", fr: "Voir tous les programmes" },
-  "common.visitLocationPage": { en: "Visit our location page", fr: "Consulter notre page localisation" },
   "common.contactPricing": { en: "Contact S19 for pricing", fr: "Contactez S19 pour le prix" },
   "common.orderWhatsApp": { en: "Order via WhatsApp", fr: "Commander via WhatsApp" },
   "common.view": { en: "View", fr: "Voir" },
@@ -385,11 +384,10 @@ const dict = {
     fr: "La Clinique de phytothérapie S19 fournit des services de phytothérapie, de nutrition, de mode de vie et de bien-être de soutien. Nos services ne remplacent ni les soins d'urgence ni un traitement conventionnel médicalement nécessaire. Les résultats varient d'une personne à l'autre, et aucun résultat de traitement ni guérison ne peut être garanti. Les patients prenant des médicaments prescrits ou recevant des soins spécialisés doivent discuter des thérapies complémentaires avec leurs professionnels de santé.",
   },
 
-  "home.location.kicker": { en: "Find the clinic", fr: "Trouver la clinique" },
-  "home.location.title": { en: "Care across Cameroon and the world.", fr: "Des soins partout au Cameroun et dans le monde." },
-  "home.location.clinic": { en: "Bafoussam Clinic", fr: "Clinique de Bafoussam" },
-  "home.location.hours": { en: "Opening Hours", fr: "Heures d'ouverture" },
-  "home.location.coverage": { en: "Delivery Coverage", fr: "Zone de livraison" },
+  // The home page's standalone Location block was removed: section 8 prints
+  // CLINIC.address and CLINIC.hours, and the hero trust line already names
+  // Bafoussam. These keys went with it. /location keeps its own `location.*`
+  // copy and /contact still links there.
 
   "home.faq.kicker": { en: "Common questions", fr: "Questions fréquentes" },
   "home.faq.title": { en: "Frequently asked questions.", fr: "Questions fréquemment posées." },

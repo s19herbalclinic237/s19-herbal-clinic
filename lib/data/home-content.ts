@@ -37,6 +37,14 @@ export const careComponents: { text: string; textFr: string }[] = [
  */
 export interface HomeProgramCard {
   slug: string;
+  /**
+   * Set only when the card cannot honestly point at one program. The brief
+   * merges digestive and liver into a single card, but the Programs page keeps
+   * them as two separate programs, so there is no single "appropriate program
+   * page" for it. It goes to the Programs index instead, where both are listed
+   * in order. Without this the card would have to pretend to be digestive-only.
+   */
+  href?: string;
   title: string;
   text: string;
   titleFr: string;
@@ -85,10 +93,13 @@ export const homePrograms: HomeProgramCard[] = [
       "Évaluation et soins de soutien pour la prostate, l'appareil urinaire, la santé reproductive et la santé masculine en général.",
   },
   {
-    // The brief merges digestive and liver into one home card. The Programs
-    // page keeps them separate, so this anchors to the digestive program and
-    // the liver program is one scroll away.
+    // The brief names "Digestive & Liver Health" as ONE home card, and this
+    // page follows the brief rather than splitting it into two. The Programs
+    // page keeps digestive and liver as two separate programs, so the card
+    // links to the Programs index: an anchor to one of them would misdescribe
+    // what the card covers.
     slug: "digestive-gut-health",
+    href: "/programs",
     title: "Digestive & Liver Health",
     text: "Individualized support for digestive health, nutrition, liver wellness and related metabolic factors.",
     titleFr: "Santé digestive et hépatique",
@@ -139,11 +150,12 @@ export const accommodationAmenities: { text: string; textFr: string }[] = [
 ];
 
 export function localizedHomePrograms(locale: Locale) {
-  return homePrograms.map((p) =>
-    locale === "fr"
-      ? { slug: p.slug, title: p.titleFr, text: p.textFr }
-      : { slug: p.slug, title: p.title, text: p.text }
-  );
+  return homePrograms.map((p) => ({
+    slug: p.slug,
+    href: p.href ?? `/programs#${p.slug}`,
+    title: locale === "fr" ? p.titleFr : p.title,
+    text: locale === "fr" ? p.textFr : p.text,
+  }));
 }
 
 function pick(locale: Locale, items: { text: string; textFr: string }[]) {

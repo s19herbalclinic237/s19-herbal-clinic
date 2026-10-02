@@ -43,12 +43,18 @@ the only way to stop the retired version being quietly reintroduced.
 
 ### Retained below the narrative
 
-The featured-products strip, the location section and the FAQ are **kept**, after
-section 11 and before the global `CTABand`. The brief's eleven sections are a
-clinical narrative and say nothing about these three, and each was already
-earning its place on the live page (product discovery, directions, and search
-traffic). Deleting working commercial surface area that no one asked about is
-the more destructive choice. **Say the word and they come out.**
+Test applied: **does the eleven already say it, and would the block read as a
+repeat?** Only then does it come out.
+
+| Block | Verdict | Why |
+|---|---|---|
+| **Location section** | **Removed** | Section 8 renders `clinic.address` and `clinic.hours`, which are the *same two strings* the block hardcoded ("Immeuble Cathédrale, 3rd Floor, Apartment E305, Bafoussam, Cameroon" and "Monday – Saturday: 8:00 AM – 6:00 PM"), and the hero trust line already says "In-person care in Bafoussam". Its third card restated "Worldwide product delivery". Only the city list was new, and that lives on `/location`, which `/contact` links to. |
+| **Global `CTABand`** | **Removed from the home page** | It renders "Start your consultation" + a Book button + a WhatsApp button — the same three jobs section 11 already does, twenty lines below it. Still used on `/about`, `/programs`, `/location`, `/telehealth`, `/live-reviews`, `/health-library`. |
+| **Featured products** | **Kept** | None of the eleven shows a product. Section 4 lists clinical *programs*; section 2's closing line is explicitly about not selling products as the goal. A catalogue is different content, not a restatement. |
+| **FAQ** | **Kept** | 3 of its 5 questions restate section 6 or section 8 — but "How should I take my herbal remedies?" and "What payment methods do you accept?" appear in none of the eleven, and `app/page.tsx` is the **only** consumer of `faqs`. Deleting the block deletes those answers from the entire site. Overlap noted, not fatal. |
+
+`tests/public-content-guard.test.ts` asserts each of these four outcomes, so the
+removals hold and the two retentions cannot be dropped by accident.
 
 ---
 
@@ -142,22 +148,30 @@ unchanged. A product legitimately has a name; a program does not.
 
 ---
 
-## 5. The three judgement calls to confirm
+## 5. The judgement calls
 
-**1. The "Digestive & Liver Health" home card spans two programs.**
-The brief's section 4 names six cards, and card 6 is "Digestive & Liver
-Health". The Programs page has `digestive-gut-health` and
-`liver-metabolic-health` as separate programs. The card links to
-`#digestive-gut-health`, and the liver program is one card below it. The
-alternatives are to split it into two cards (seven cards, not the brief's six)
-or to give it a combined target. A test asserts every home card links to a real
-program anchor, so whichever way you decide it cannot become a dead link.
+**1. The "Digestive & Liver Health" home card spans two programs — settled by
+the brief, with one link decision left open.**
+The brief's section 4 names six cards and card 6 is "Digestive & Liver
+Health", so the page follows it: **one card, not seven.** The Programs page
+keeps `digestive-gut-health` and `liver-metabolic-health` as two separate
+programs, so the brief's own instruction to "link each card to the appropriate
+program page" has no single answer here.
 
-**2. Two testimonials say "detox" in the patient's own words.**
-`lib/data/testimonials.ts` — Kelly and Joseph Kamdem both describe a detox
-programme. The labels now read "Liver & Metabolic Health", but the words are
-theirs. Left deliberately. If you want them changed, that is a content decision
-and a word-for-word approval, and it should be recorded here.
+Anchoring the card to `#digestive-gut-health` would claim the card is about the
+digestive program alone, which its own title and description contradict. It
+therefore carries an explicit `href: "/programs"` — the index, where both
+programs are listed in order — while the other five cards keep their
+`/programs#<slug>` anchors. `localizedHomePrograms()` resolves the href in both
+locales, and tests assert that every card href is either `/programs` or an
+anchor that exists on the Programs page.
+
+**2. Two testimonials say "detox" in the patient's own words — settled, left as
+they are.** `lib/data/testimonials.ts` — Kelly and Joseph Kamdem both describe a
+detox programme. The labels now read "Liver & Metabolic Health", but the words
+are theirs. Rewording a real patient's words would make the disclaimer printed
+directly above them untrue. Changing this needs word-for-word approval from the
+clinic and a note recorded here.
 
 **3. The four-step pathway was deleted, not deprecated.**
 Removing the `home.steps.*` keys means a later editor gets a type error rather
@@ -171,7 +185,7 @@ written again on purpose.
 Not "the build passed" — the rendered HTML was read back from a production build.
 
 - `npm.cmd run typecheck` — clean.
-- `npm.cmd test` — **339 pass, 0 fail**, including the new
+- `npm.cmd test` — **345 pass, 0 fail**, including the new
   `tests/public-content-guard.test.ts`.
 - `npm.cmd run lint` — **0 errors**, 19 warnings, all pre-existing.
 - `npm.cmd run build` — compiled.
@@ -180,6 +194,12 @@ Not "the build passed" — the rendered HTML was read back from a production bui
 - Rendered DOM, English and French, Programs page: all seven sections in order,
   all ten program anchors present, old slugs absent.
 - Rendered DOM, all four page/locale combinations: clean of every banned term.
+- Rendered DOM after removing the duplicated blocks: "Find the clinic",
+  "Delivery Coverage" and "Start your consultation" return **zero** matches on
+  the home page in both locales; the address string now appears exactly once in
+  the page body (section 8) plus the footer and the JSON-LD, instead of twice;
+  `href="/programs#digestive-gut-health"` survives only as the *footer* link,
+  with the merged card itself carrying `href="/programs"`.
 - Mobile: no `min-w-[…px]`, no `<table>`, no grid that splits before `sm`. The
   only `whitespace-nowrap` elements are desktop-only nav items behind
   `hidden … xl:flex`.

@@ -5,7 +5,6 @@ import { Kicker } from "@/components/ui/heading";
 import { buttonLinkClasses } from "@/components/ui/button";
 import { ProductCard } from "@/components/ui/product-card";
 import { BookingForm } from "@/components/sections/booking-form";
-import { CTABand } from "@/components/sections/cta-band";
 import { BlurIn, Reveal, ScaleIn, StaggerGroup, StaggerItem } from "@/components/ui/motion";
 import { VideoCarousel } from "@/components/home/video-carousel";
 import { getProducts } from "@/lib/catalog";
@@ -123,7 +122,6 @@ export default async function HomePage() {
   // hardcoded English string that only ever describes the English site.
   const heroPhoto = resolveClinicPhoto("shopCounter", locale);
   const careAccessPhoto = resolveClinicPhoto("patientRecords", locale);
-  const locationPhoto = resolveClinicPhoto("bloodPressure", locale);
   const products = await getProducts();
   const featured = FEATURED_SLUGS
     .map((slug) => products.find((p) => p.slug === slug))
@@ -281,7 +279,7 @@ export default async function HomePage() {
           {homePrograms.map((p) => (
             <StaggerItem key={p.slug}>
               <Link
-                href={`/programs#${p.slug}`}
+                href={p.href}
                 className="group flex h-full flex-col rounded-lg border border-line bg-white p-6 shadow-card transition-all hover:border-forest-300 hover:shadow-lift"
               >
                 <h3 className="text-base font-bold text-ink transition-colors group-hover:text-forest-800">
@@ -664,11 +662,21 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      {/* ---------- Retained: featured products, location, FAQ ---------- */}
-      {/* The brief lists an 11-section clinical narrative. These three were
-          already earning their place on the live page (product discovery,
-          directions, and search traffic) and the brief says not to redesign the
-          site, so they are kept below the narrative rather than deleted. */}
+      {/* ---------- Retained below section 11: featured products and FAQ ----------
+          The brief's order table ends at 11. These two are kept because the
+          eleven sections do not already cover them:
+            - products: none of the 11 shows a product. Section 2's closing
+              line is explicitly about NOT selling products as the goal, and
+              section 4 lists clinical programs, not catalogue items.
+            - FAQ: 3 of its 5 questions restate sections 6 and 8, but
+              "how should I take my remedies" and "what payment methods do you
+              accept" appear nowhere in the eleven, and this file is the only
+              consumer of `faqs`, so deleting the block deletes those answers
+              from the whole site.
+          The standalone Location block that used to sit here is gone: section 8
+          prints `clinic.address` and `clinic.hours` verbatim, and the hero
+          trust line already says "In-person care in Bafoussam". The extra
+          detail it carried stays on /location, which /contact links to. */}
       <Section className="bg-white">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <Reveal>
@@ -689,64 +697,6 @@ export default async function HomePage() {
         </div>
         <p className="mt-6 text-sm text-muted">{t("home.catalog.note")}</p>
       </Section>
-
-      <section className="relative overflow-hidden py-24 md:py-28">
-        <ClinicPhotoFill
-          photo={locationPhoto.photo}
-          alt={locationPhoto.alt}
-          sizes="100vw"
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-forest-950/95 via-forest-950/75 to-forest-950/35" />
-        <Container className="relative z-10">
-          <Reveal>
-            <Kicker dark>{t("home.location.kicker")}</Kicker>
-            <h2 className="mt-4 max-w-xl text-balance text-white">{t("home.location.title")}</h2>
-          </Reveal>
-          <div className="mt-12 grid gap-4 md:grid-cols-3">
-            {[
-              {
-                icon: <FaMapLocationDot className="h-5 w-5 text-gold-400" aria-hidden />,
-                title: t("home.location.clinic"),
-                lines: ["Immeuble Cathédrale, 3rd Floor", "Apartment E305, Bafoussam"],
-              },
-              {
-                icon: <FaClock className="h-5 w-5 text-gold-400" aria-hidden />,
-                title: t("home.location.hours"),
-                lines: ["Monday – Saturday: 8:00 AM – 6:00 PM", "Tele-Health follow-ups: scheduled"],
-              },
-              {
-                icon: <FaGlobe className="h-5 w-5 text-gold-400" aria-hidden />,
-                title: t("home.location.coverage"),
-                lines: [
-                  "Cameroon: Nationwide — Douala, Yaoundé, Bamenda, Buea and more",
-                  "International: worldwide express",
-                ],
-              },
-            ].map((c, i) => (
-              <ScaleIn key={c.title} delay={i * 0.08}>
-                <div className="h-full rounded-lg border border-white/20 bg-white/10 p-7 backdrop-blur-sm">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-white/25 bg-white/10">
-                    {c.icon}
-                  </div>
-                  <h3 className="mt-4 text-lg font-bold text-white">{c.title}</h3>
-                  {c.lines.map((l) => (
-                    <p key={l} className="mt-1 text-sm leading-relaxed text-forest-100/85">
-                      {l}
-                    </p>
-                  ))}
-                </div>
-              </ScaleIn>
-            ))}
-          </div>
-          <Reveal delay={0.15}>
-            <Link href="/location" className={buttonLinkClasses("secondary", "lg", "mt-10")}>
-              {t("common.visitLocationPage")}
-              <FaArrowRight className="h-3.5 w-3.5" aria-hidden />
-            </Link>
-          </Reveal>
-        </Container>
-      </section>
 
       <Section>
         <div className="grid gap-10 lg:grid-cols-[1fr_1.6fr]">
@@ -771,8 +721,6 @@ export default async function HomePage() {
           </div>
         </div>
       </Section>
-
-      <CTABand />
     </>
   );
 }
