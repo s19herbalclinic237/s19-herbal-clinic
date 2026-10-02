@@ -181,8 +181,12 @@ export const testimonials: Testimonial[] = [
     name: "Kelly",
     city: "Maryland",
     country: "USA",
-    program: "S19 Liver & Metabolic Cleansing - Detox",
-    programFr: "Détox S19 foie et métabolisme",
+    // The program label is our metadata, so it follows the programs-page
+    // rename. The testimonial body below is Kelly's own wording and is left
+    // exactly as given: rewriting a patient's words to match new positioning
+    // would make the disclaimer on the testimonial section untrue.
+    program: "Liver & Metabolic Health",
+    programFr: "Santé hépatique et métabolique",
     text: "That Detox is honestly the best thing I've given myself in 2026, hands down! I've been doing the detox routine and I can see the results directly. It really is the secret not just to healing, but to prevention.",
     textFr:
       "Cette détox est honnêtement la meilleure chose que je me suis offerte en 2026, sans hésiter ! Je fais la routine de détox et je vois les résultats directement. C'est vraiment le secret non seulement pour guérir, mais aussi pour prévenir.",
@@ -225,8 +229,8 @@ export const testimonials: Testimonial[] = [
     name: "Joseph Kamdem",
     city: "Bafoussam",
     country: "Cameroun",
-    program: "Liver & Metabolic Cleansing - Detox",
-    programFr: "Détox foie et métabolisme",
+    program: "Liver & Metabolic Health",
+    programFr: "Santé hépatique et métabolique",
     text: "Thank you for the detox Doc! Just before I detoxed, I was having difficulties sleeping which resulted in stress during the day. But last night I slept like a baby, and I feel my strength renewed!",
     textFr:
       "Merci pour la détox Doc ! Juste avant la détox, j'avais des difficultés à dormir ce qui entraînait du stress pendant la journée. Mais hier nuit, j'ai dormi comme un bébé et je sens ma force revenue !",
@@ -236,8 +240,8 @@ export const testimonials: Testimonial[] = [
     name: "Ebong Sone",
     city: "Bamenda",
     country: "Cameroun",
-    program: "Clinical Detoxification & Metabolic Health",
-    programFr: "Détoxification clinique et santé métabolique",
+    program: "Liver & Metabolic Health",
+    programFr: "Santé hépatique et métabolique",
     text: "Good morning Dr. I'm done with the detox program and those stones are coming out. I can really feel the results and the improvement in my body system.",
     textFr:
       "Bonjour Docteur. J'ai terminé le programme de détox et ces pierres sortent. Je ressens vraiment les résultats et l'amélioration de mon organisme.",

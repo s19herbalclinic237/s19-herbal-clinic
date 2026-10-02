@@ -41,10 +41,24 @@ export interface TreatmentProgram {
   short: string;
   detail: string;
   conditions: string[];
+  /**
+   * Boundary-of-care note shown on the program card. Used where stopping or
+   * replacing conventional treatment would be dangerous - insulin-dependent
+   * diabetes, antihypertensive medication, oncology. Optional because most
+   * programs have nothing specific to warn about.
+   */
+  note?: string;
+  /**
+   * Which label the card puts in front of `note`. "Important" is the default;
+   * "safety" is reserved for the case where the risk is the patient's own
+   * medication, where a weaker word would be a weaker warning.
+   */
+  noteKind?: "important" | "safety";
   titleFr?: string;
   shortFr?: string;
   detailFr?: string;
   conditionsFr?: string[];
+  noteFr?: string;
 }
 
 export const CLINIC = {

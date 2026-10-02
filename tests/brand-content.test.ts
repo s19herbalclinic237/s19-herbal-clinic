@@ -67,22 +67,45 @@ describe("herbalism leads the positioning", () => {
     assert.equal(translate("en", "about.hero.title"), philosophyTagline);
   });
 
-  test("the home hero carries the same positioning line as the tagline", () => {
-    // The two pages must not drift: the home hero is the 30-second statement,
-    // and the About page opens with the same claim.
-    assert.equal(translate("en", "home.hero.titleB"), philosophyTagline);
+  test("the home hero still names science-based herbalism", () => {
+    // Changed by docs/S19_Homepage_Adjustments_Developer_Brief.md §2.1, which
+    // replaced the hero with a new main headline and a separate supporting
+    // headline. The decision it must not lose is the one above: herbalism is
+    // named, and it is named before anything that sounds like a cure.
+    const title = translate("en", "home.hero.titleA");
+    assert.match(title, /Science-Based Herbalism/);
+    // The supporting line must not reintroduce the old promise wording.
+    assert.doesNotMatch(title, /\b(cure|guarantee|guaranteed|permanent)\b/i);
+    assert.match(translate("en", "home.hero.titleB"), /Personalized Care/);
   });
 
   test("the opening statement appears on the home page and the About page", () => {
     // A visitor should be able to answer "what is this clinic?" within about 30
     // seconds of landing, from either entry point.
     assert.equal(translate("en", "about.position.statement"), centralMessage);
-    assert.equal(translate("en", "home.hero.lead"), centralMessage);
+    // The home page now carries the brief's own two-paragraph intro instead of
+    // reusing centralMessage verbatim. Both must still cover the same ground.
+    const hero = translate("en", "home.hero.lead") + " " + translate("en", "home.hero.lead2");
+    for (const topic of [
+      "evidence-informed herbal medicine",
+      "individualized assessment",
+      "nutrition",
+      "lifestyle support",
+      "health education",
+      "monitoring",
+      "laboratory findings",
+    ]) {
+      assert.ok(hero.toLowerCase().includes(topic), `home hero no longer mentions ${topic}`);
+    }
   });
 
   test("the goal line is stated on both pages", () => {
     assert.equal(translate("en", "about.position.goal"), closingStatement);
-    assert.equal(translate("en", "home.hero.closing"), closingStatement);
+    // On the home page the equivalent idea moved into section 2 of the brief:
+    // the goal is understanding and participation, not just a product.
+    const whole = translate("en", "home.whole.closing");
+    assert.match(whole, /understand your health/i);
+    assert.match(whole, /participate actively/i);
   });
 });
 
@@ -213,10 +236,26 @@ describe("bilingual integrity", () => {
     }
   });
 
-  test("the tagline is translated as well as restated", () => {
-    const fr = translate("fr", "home.hero.titleB");
+  test("the home hero is translated as well as restated", () => {
+    const fr = translate("fr", "home.hero.titleA");
     assert.match(fr, /Phytothérapie fondée sur la science/);
-    assert.match(fr, /Soins de la cause racine/);
+    assert.match(translate("fr", "home.hero.titleB"), /soins personnalisés/i);
+  });
+
+  test("the clinic's relationship with conventional care is visible on the home page", () => {
+    // Brief §6 requires this in the page body, not only in the Terms. If it is
+    // ever moved to a legal page again, this test says so.
+    for (const [locale, pattern] of [
+      ["en", /not anti-conventional/i],
+      ["fr", /pas contre le traitement conventionnel/i],
+    ] as const) {
+      assert.match(translate(locale, "home.conventional.title"), pattern);
+    }
+    assert.match(translate("en", "home.conventional.safety"), /never stop or reduce/i);
+    assert.match(
+      translate("en", "home.conventional.p3"),
+      /complement - not delay or replace -/i
+    );
   });
 });
 

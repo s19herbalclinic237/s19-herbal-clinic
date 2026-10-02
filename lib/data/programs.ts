@@ -1,156 +1,226 @@
 import type { TreatmentProgram } from "@/lib/site";
 import type { Locale } from "@/lib/i18n";
 
+/**
+ * The ten clinical programs.
+ *
+ * Source of truth: docs/S19_Programs_Page_Developer_Implementation_Brief.md.
+ * Three things in that brief constrain this file and are enforced by
+ * tests/programs-content.test.ts:
+ *
+ * 1. No named product. Programs are not defined by a pack or a tea; product
+ *    selection belongs inside the individualized care plan. So no "S19
+ *    Diabetes Pack" or "S19 Prostate Tea" appears below.
+ * 2. No exact investigations. "Relevant laboratory tests" yes; "HbA1c and
+ *    fasting insulin" no. The panels and the interpretation framework are
+ *    proprietary.
+ * 3. No physiology claims beyond what can be supported. "Micro-circulation
+ *    enhancement", "arterial elasticity", "clinical detoxification",
+ *    "toxin elimination" and "immune fortification" are gone, replaced with
+ *    supportive-care language.
+ *
+ * Three titles were renamed by the same brief. The slugs changed with them,
+ * so `site-footer.tsx` links to `#integrative-cancer-support`.
+ */
 export const treatmentPrograms: TreatmentProgram[] = [
   {
     slug: "diabetes-metabolic",
     title: "Diabetes & Metabolic Health",
     short:
-      "Individual assessment, specialized nutrition, lifestyle protocols, and herbal support targeting blood-sugar balance and metabolic stability.",
+      "Individualized support for people living with Type 2 diabetes, pre-diabetes and metabolic health concerns, with emphasis on nutrition, lifestyle, appropriate herbal support, education and ongoing monitoring.",
     detail:
-      "Our diabetes program begins with a full review of your blood-sugar history, diet, and lifestyle. You receive a structured protocol combining the S19 Diabetes Pack, tailored nutrition, and regular follow-up to support steady glucose regulation.",
-    conditions: ["Type 2 diabetes", "Pre-diabetes", "Metabolic syndrome", "Fatigue related to blood sugar"],
+      "We begin by reviewing your health history, blood-sugar history, current treatment, medications, nutrition and lifestyle. Relevant medical investigations may be requested where appropriate before your individualized care plan is developed.",
+    conditions: ["Type 2 diabetes", "Pre-diabetes", "Metabolic health concerns", "Blood-sugar management support"],
+    // Required safety statement: people with Type 1 must not read this program
+    // as an alternative to insulin.
+    note: "Type 1 diabetes requires insulin. S19 supportive care does not replace insulin therapy.",
     titleFr: "Diabète et santé métabolique",
     shortFr:
-      "Évaluation individuelle, nutrition spécialisée, protocoles de style de vie et soutien à base de plantes pour l'équilibre glycémique et la stabilité métabolique.",
+      "Soutien individualisé pour les personnes vivant avec un diabète de type 2, un prédiabète ou des préoccupations de santé métabolique, en mettant l'accent sur la nutrition, le mode de vie, un soutien herbal approprié, l'éducation et un suivi continu.",
     detailFr:
-      "Notre programme diabète commence par une revue complète de vos antécédents glycémiques, de votre alimentation et de votre mode de vie. Vous recevez un protocole structuré combinant le Pack Diabète S19, une nutrition adaptée et un suivi régulier pour soutenir une régulation stable du glucose.",
-    conditionsFr: ["Diabète de type 2", "Pré-diabète", "Syndrome métabolique", "Fatigue liée à la glycémie"],
+      "Nous commençons par revoir votre historique de santé, votre historique glycémique, votre traitement actuel, vos médicaments, votre nutrition et votre mode de vie. Des examens médicaux pertinents peuvent être demandés, le cas échéant, avant que votre plan de soins individualisé ne soit élaboré.",
+    conditionsFr: ["Diabète de type 2", "Prédiabète", "Préoccupations métaboliques", "Soutien à la gestion de la glycémie"],
+    noteFr: "Le diabète de type 1 nécessite de l'insuline. Les soins de soutien S19 ne remplacent pas l'insulinothérapie.",
   },
   {
     slug: "hypertension-cardiovascular",
-    title: "Hypertension & Cardiovascular",
+    title: "Hypertension & Cardiovascular Wellness",
     short:
-      "Targeted herbal therapeutics focused on blood pressure modulation, micro-circulation enhancement, arterial elasticity, and metabolic risk reduction.",
+      "Individualized support for blood-pressure and cardiovascular wellness, with attention to nutrition, lifestyle, metabolic risk factors, appropriate herbal support and regular monitoring.",
     detail:
-      "A supervision-based program pairing the S19 Hypertension Pack with regular blood-pressure tracking, dietary adjustment, and lifestyle coaching to support healthy arterial function.",
-    conditions: ["High blood pressure", "Cholesterol concerns", "Circulatory conditions"],
-    titleFr: "Hypertension et santé cardiovasculaire",
+      "Care begins with an individualized review of your blood-pressure history, medications, medical information, lifestyle and relevant contributing factors. Additional investigations may be requested where appropriate before recommendations are made.",
+    conditions: ["High blood pressure", "Cardiovascular wellness", "Circulatory health", "Metabolic risk-factor support"],
+    note: "Patients should not independently stop or reduce prescribed blood-pressure medication.",
+    noteKind: "safety",
+    titleFr: "Hypertension et bien-être cardiovasculaire",
     shortFr:
-      "Thérapeutiques à base de plantes ciblées sur la modulation de la pression artérielle, l'amélioration de la micro-circulation, l'élasticité artérielle et la réduction du risque métabolique.",
+      "Soutien individualisé pour la tension artérielle et le bien-être cardiovasculaire, en accordant de l'attention à la nutrition, au mode de vie, aux facteurs de risque métaboliques, à un soutien herbal approprié et à un suivi régulier.",
     detailFr:
-      "Un programme supervisé associant le Pack Hypertension S19 au suivi régulier de la tension, à l'ajustement alimentaire et au coaching de style de vie pour soutenir une fonction artérielle saine.",
-    conditionsFr: ["Tension artérielle élevée", "Problèmes de cholestérol", "Troubles circulatoires"],
+      "Les soins commencent par une revue individualisée de votre historique tensionnel, de vos médicaments, de vos informations médicales, de votre mode de vie et des facteurs contributifs pertinents. Des examens complémentaires peuvent être demandés, le cas échéant, avant que des recommandations soient formulées.",
+    conditionsFr: ["Hypertension artérielle", "Bien-être cardiovasculaire", "Santé circulatoire", "Soutien aux facteurs de risque métaboliques"],
+    noteFr: "Les patients ne doivent pas arrêter ni réduire d'eux-mêmes un traitement antihypertenseur prescrit.",
   },
   {
     slug: "prostate-mens-health",
     title: "Prostate & Men's Health",
-    short:
-      "Natural support for prostate enlargement (BPH), urinary tract symptoms, vitality, reproductive health, and overall male wellness.",
+    short: "Personalized support for prostate, urinary, reproductive and general men's health concerns.",
     detail:
-      "Focused support for male wellness including prostate comfort, healthy urinary flow, and vitality, built around the S19 Prostate Tea and individualized evaluation.",
-    conditions: ["Enlarged prostate (BPH)", "Frequent urination", "Urinary discomfort", "Vitality and reproductive health"],
+      "We review symptoms, health history, medications and available medical information before developing an individualized support plan. Relevant laboratory tests, imaging or other investigations may be requested where appropriate.",
+    conditions: ["Prostate wellness", "Urinary symptoms", "Male reproductive wellness", "General men's health"],
     titleFr: "Prostate et santé masculine",
-    shortFr:
-      "Soutien naturel pour l'hypertrophie de la prostate (HBP), les symptômes urinaires, la vitalité, la santé reproductive et le bien-être masculin en général.",
+    shortFr: "Soutien personnalisé pour les préoccupations prostatiques, urinaires, reproductives et plus généralement de santé masculine.",
     detailFr:
-      "Un soutien ciblé pour le bien-être masculin - confort de la prostate, flux urinaire sain et vitalité - autour du Thé Prostatique S19 et d'une évaluation individualisée.",
-    conditionsFr: ["Hypertrophie de la prostate (HBP)", "Urinations fréquentes", "Inconfort urinaire", "Vitalité et santé reproductive"],
+      "Nous revoyons les symptômes, l'historique de santé, les médicaments et les informations médicales disponibles avant d'élaborer un plan de soutien individualisé. Les analyses de laboratoire, l'imagerie ou d'autres examens pertinents peuvent être demandés, le cas échéant.",
+    conditionsFr: ["Bien-être prostatique", "Symptômes urinaires", "Bien-être reproductif masculin", "Santé masculine générale"],
   },
   {
     slug: "womens-health-hormones",
     title: "Women's Health & Hormones",
-    short:
-      "Comprehensive care for menstrual irregularity, uterine health, pelvic inflammatory concerns, cysts/fibroids support, and hormonal equilibrium.",
+    short: "Individualized support for menstrual, reproductive, hormonal and metabolic health concerns in women.",
     detail:
-      "A gentle, individualized approach to hormonal balance and reproductive wellness, combining botanical support with nutrition and lifestyle alignment.",
-    conditions: ["Irregular cycles", "Fibroids / cysts support", "Pelvic discomfort", "Hormonal imbalance"],
+      "Care begins with a detailed review of symptoms, menstrual and reproductive history, previous treatment, medications and available medical records. Relevant investigations may be requested where appropriate to guide individualized care.",
+    conditions: ["Menstrual irregularities", "Fibroid/cyst support", "Pelvic health concerns", "Hormonal and metabolic wellness"],
     titleFr: "Santé féminine et hormones",
-    shortFr:
-      "Soins complets pour les irrégularités menstruelles, la santé utérine, les inflammations pelviennes, le soutien des kystes/fibromes et l'équilibre hormonal.",
+    shortFr: "Soutien individualisé pour les préoccupations menstruelles, reproductives, hormonales et métaboliques chez la femme.",
     detailFr:
-      "Une approche douce et individualisée de l'équilibre hormonal et du bien-être reproductif, combinant soutien botanique, nutrition et alignement du mode de vie.",
-    conditionsFr: ["Cycles irréguliers", "Soutien fibromes / kystes", "Inconfort pelvien", "Déséquilibre hormonal"],
+      "Les soins commencent par une revue détaillée des symptômes, de l'historique menstruel et reproductif, des traitements antérieurs, des médicaments et des dossiers médicaux disponibles. Les examens pertinents peuvent être demandés, le cas échéant, afin d'orienter des soins individualisés.",
+    conditionsFr: ["Irrégularités menstruelles", "Soutien fibromes / kystes", "Préoccupations pelviennes", "Bien-être hormonal et métabolique"],
   },
   {
     slug: "digestive-gut-health",
     title: "Digestive & Gut Health",
     short:
-      "Support for gastritis, severe constipation, hemorrhoids, acid reflux, and microbiome restoration through specialized botanical teas and cleansers.",
+      "Individualized support for digestive symptoms and gastrointestinal wellness through appropriate herbal care, nutrition and lifestyle guidance.",
     detail:
-      "A gut-focused protocol combining the S19 Gastritis Pack, digestive teas, and dietary guidance to restore comfortable digestion and a balanced microbiome.",
-    conditions: ["Gastritis", "Acid reflux", "Constipation", "Hemorrhoids", "Poor digestion"],
+      "We review symptoms, diet, medications, previous treatment and relevant medical history. Further medical investigations may be requested where appropriate before an individualized support plan is developed.",
+    conditions: ["Gastritis support", "Reflux-related concerns", "Constipation", "Digestive discomfort", "General digestive wellness"],
     titleFr: "Santé digestive et intestinale",
     shortFr:
-      "Soutien pour la gastrite, la constipation sévère, les hémorroïdes, le reflux acide et la restauration du microbiote grâce à des tisanes et des nettoyants botaniques spécialisés.",
+      "Soutien individualisé pour les symptômes digestifs et le bien-être gastro-intestinal par une phytothérapie appropriée, une nutrition adaptée et des conseils de mode de vie.",
     detailFr:
-      "Un protocole axé sur l'intestin combinant le Pack Gastrite S19, des tisanes digestives et des conseils nutritionnels pour restaurer une digestion confortable et un microbiote équilibré.",
-    conditionsFr: ["Gastrite", "Reflux acide", "Constipation", "Hémorroïdes", "Mauvaise digestion"],
+      "Nous revoyons les symptômes, l'alimentation, les médicaments, les traitements antérieurs et l'historique médical pertinent. Des examens médicaux complémentaires peuvent être demandés, le cas échéant, avant qu'un plan de soutien individualisé ne soit élaboré.",
+    conditionsFr: ["Soutien gastrite", "Préoccupations de reflux", "Constipation", "Inconfort digestif", "Bien-être digestif général"],
   },
   {
-    slug: "liver-metabolic-cleanse",
-    title: "Liver & Metabolic Cleansing",
+    // Renamed from `liver-metabolic-cleanse` by the brief: "cleansing" implied a
+    // detox the clinic does not offer.
+    slug: "liver-metabolic-health",
+    title: "Liver & Metabolic Health",
     short:
-      "Clinical detoxification protocols to support hepatic enzyme balance, fatty liver management, kidney filtration, and toxin elimination.",
+      "Personalized support for liver and metabolic wellness with attention to nutrition, lifestyle, medications, appropriate herbal support and relevant medical monitoring.",
     detail:
-      "A structured cleanse supporting your liver and kidneys, with controlled protocols, hydration guidance, and follow-up labs where appropriate.",
-    conditions: ["Fatty liver", "Sluggish liver", "Detox support", "Metabolic reset"],
-    titleFr: "Nettoyage hépatique et métabolique",
+      "Your medical history, current treatment and available findings are reviewed before recommendations are made. Relevant laboratory tests, imaging or other investigations may be requested where appropriate.",
+    conditions: ["Fatty-liver support", "Liver wellness", "Metabolic health", "Nutrition and lifestyle support"],
+    titleFr: "Santé hépatique et métabolique",
     shortFr:
-      "Protocoles de détoxification clinique pour soutenir l'équilibre des enzymes hépatiques, la gestion du foie gras, la filtration rénale et l'élimination des toxines.",
+      "Soutien personnalisé pour le bien-être hépatique et métabolique, en accordant de l'attention à la nutrition, au mode de vie, aux médicaments, à un soutien herbal approprié et au suivi médical pertinent.",
     detailFr:
-      "Une cure structurée soutenant votre foie et vos reins, avec des protocoles encadrés, des conseils d'hydratation et des bilans de suivi lorsque cela est approprié.",
-    conditionsFr: ["Foie gras", "Foie paresseux", "Soutien détox", "Réinitialisation métabolique"],
+      "Votre historique médical, votre traitement actuel et les constatations disponibles sont revus avant que des recommandations soient formulées. Les analyses de laboratoire, l'imagerie ou d'autres examens pertinents peuvent être demandés, le cas échéant.",
+    conditionsFr: ["Soutien foie gras", "Bien-être hépatique", "Santé métabolique", "Soutien nutrition et mode de vie"],
   },
   {
-    slug: "integrative-cancer-care",
-    title: "Integrative Cancer Care",
+    // Renamed from `integrative-cancer-care`. "Support" is the honest word: the
+    // clinic supports people through oncology treatment, it does not treat
+    // cancer.
+    slug: "integrative-cancer-support",
+    title: "Integrative Cancer Support",
     short:
-      "Supportive herbal care for patients alongside conventional oncology, focusing on immune fortification, vitality, and reducing treatment strain.",
+      "Individualized supportive care for people living with cancer, designed to work alongside appropriate conventional oncology care.",
     detail:
-      "Compassionate supportive care designed to complement conventional oncology, focusing on immune fortification, appetite, energy, and well-being during treatment.",
-    conditions: ["Supportive care during oncology treatment", "Immune fortification", "Energy and appetite support"],
-    titleFr: "Soins intégratifs du cancer",
+      "We review the patient's confirmed diagnosis, available medical records, current or previous treatment, medications, nutrition and overall health status. Additional medical investigations may be requested where appropriate. Support is individualized around the patient's needs and conventional treatment plan.",
+    conditions: [
+      "Nutrition and lifestyle support",
+      "General wellbeing",
+      "Appetite and energy support",
+      "Supportive care alongside oncology",
+    ],
+    note: "S19 cancer support does not replace medically necessary oncology care, surgery, chemotherapy, radiotherapy or other specialist treatment when indicated.",
+    titleFr: "Soutien intégratif du cancer",
     shortFr:
-      "Soins à base de plantes de soutien pour les patients suivant une oncologie conventionnelle, axés sur le renforcement immunitaire, la vitalité et la réduction de la fatigue du traitement.",
+      "Soins de soutien individualisés pour les personnes vivant avec un cancer, conçus pour fonctionner en parallèle d'une prise en charge conventionnelle adaptée.",
     detailFr:
-      "Des soins de soutien compatissants conçus pour compléter l'oncologie conventionnelle - renforcement immunitaire, appétit, énergie et bien-être pendant le traitement.",
-    conditionsFr: ["Soins de soutien pendant l'oncologie", "Renforcement immunitaire", "Soutien de l'énergie et de l'appétit"],
+      "Nous revoyons le diagnostic confirmé du patient, les dossiers médicaux disponibles, le traitement actuel ou antérieur, les médicaments, la nutrition et l'état de santé général. Des examens médicaux complémentaires peuvent être demandés, le cas échéant. Le soutien est individualisé en fonction des besoins du patient et de son plan de traitement conventionnel.",
+    conditionsFr: [
+      "Soutien nutritionnel et de mode de vie",
+      "Bien-être général",
+      "Soutien de l'appétit et de l'énergie",
+      "Soins de soutien en cancérologie",
+    ],
+    noteFr: "Le soutien S19 contre le cancer ne remplace pas les soins d'oncologie médicalement nécessaires, la chirurgie, la chimiothérapie, la radiothérapie ou tout autre traitement spécialisé lorsqu'ils sont indiqués.",
   },
   {
     slug: "health-assessment",
     title: "Health Assessment & Review",
     short:
-      "In-depth examination of your medical history, previous prescription therapies, diagnostic scans, and physical health concerns.",
+      "A comprehensive starting point for patients who need their health history, symptoms, previous treatment and available medical information reviewed before deciding on the most appropriate S19 program.",
     detail:
-      "The starting point for every patient: a thorough review of your medical history, previous treatments, lab results, and physical health concerns to design a root-cause herbal strategy.",
-    conditions: ["New consultations", "Full health review", "Second opinion on herbal strategy"],
+      "We review your health concerns, medical history, medications, previous treatment and available records. Where necessary, further laboratory tests, imaging or other investigations may be requested before recommendations are made.",
+    conditions: [
+      "New consultations",
+      "Comprehensive health review",
+      "Review before personalized herbal support",
+      "Unsure which program fits",
+    ],
     titleFr: "Évaluation et bilan de santé",
     shortFr:
-      "Examen approfondi de vos antécédents médicaux, de vos traitements prescrits antérieurs, de vos examens diagnostiques et de vos préoccupations physiques.",
+      "Un point de départ complet pour les patients qui souhaitent que leur historique de santé, leurs symptômes, leurs traitements antérieurs et les informations médicales disponibles soient revus avant de choisir le programme S19 le plus approprié.",
     detailFr:
-      "Le point de départ de chaque patient : une revue complète de vos antécédents médicaux, de vos traitements antérieurs, de vos résultats de laboratoire et de vos préoccupations de santé afin de concevoir une stratégie à base de plantes axée sur la cause racine.",
-    conditionsFr: ["Nouvelles consultations", "Bilan de santé complet", "Deuxième avis sur la stratégie végétale"],
+      "Nous revoyons vos préoccupations de santé, votre historique médical, vos médicaments, vos traitements antérieurs et les dossiers disponibles. Si nécessaire, des analyses supplémentaires, une imagerie ou d'autres examens peuvent être demandés avant que des recommandations soient formulées.",
+    conditionsFr: [
+      "Nouvelles consultations",
+      "Revue complète de la santé",
+      "Revue avant un soutien herbal personnalisé",
+      "Incertain du programme adapté",
+    ],
   },
   {
-    slug: "nutrition-lifestyle-coaching",
-    title: "Nutrition & Lifestyle Coaching",
+    slug: "nutrition-lifestyle-support",
+    title: "Nutrition & Lifestyle Support",
     short:
-      "Personalized dietary regimes tailored to your exact metabolic condition in close collaboration with natural health specialists.",
+      "Personalized nutrition and lifestyle guidance designed to support the patient's wider care plan and long-term health goals.",
     detail:
-      "Long-term healing requires aligning your diet and daily habits with botanical therapeutics. Our coaches build a practical food and lifestyle plan around your condition.",
-    conditions: ["Dietary planning", "Weight management", "Lifestyle alignment", "Preventive wellness"],
-    titleFr: "Coaching nutrition et mode de vie",
+      "Recommendations are individualized according to the patient's health condition, nutritional needs, lifestyle, treatment plan and practical circumstances, with ongoing education and follow-up where appropriate.",
+    conditions: [
+      "Dietary planning",
+      "Weight-management support",
+      "Lifestyle modification",
+      "Preventive wellness",
+      "Treatment-plan adherence",
+    ],
+    titleFr: "Soutien nutrition et mode de vie",
     shortFr:
-      "Des régimes alimentaires personnalisés adaptés à votre condition métabolique exacte, en étroite collaboration avec des spécialistes en santé naturelle.",
+      "Conseils nutritionnels et de mode de vie personnalisés, conçus pour soutenir le plan de soins global du patient et ses objectifs de santé à long terme.",
     detailFr:
-      "La guérison à long terme exige d'aligner votre alimentation et vos habitudes quotidiennes sur la thérapeutique botanique. Nos coachs construisent un plan alimentaire et de style de vie pratique autour de votre état.",
-    conditionsFr: ["Planification alimentaire", "Gestion du poids", "Alignement du mode de vie", "Bien-être préventif"],
+      "Les recommandations sont individualisées selon l'état de santé du patient, ses besoins nutritionnels, son mode de vie, son plan de traitement et ses circonstances pratiques, avec une éducation continue et un suivi le cas échéant.",
+    conditionsFr: [
+      "Planification alimentaire",
+      "Soutien à la gestion du poids",
+      "Modification du mode de vie",
+      "Bien-être préventif",
+      "Observance du plan de traitement",
+    ],
   },
   {
-    slug: "other-health-complications",
-    title: "Other Health Complications",
+    // Renamed from `other-health-complications`. "Complications" reads as a
+    // clinical severity claim on a page where we have not assessed anyone.
+    slug: "other-health-concerns",
+    title: "Other Health Concerns",
     short:
-      "A condition not listed above? Tell us about it and we will review your case personally to find the right herbal support.",
+      "If your condition is not listed above, you can still book an assessment. Each case is reviewed individually before S19 determines whether and how we may appropriately support you.",
     detail:
-      "If your health concern is not covered by the programs above, book a consultation and bring your full medical history. We evaluate every situation case by case and design a root-cause herbal strategy for you.",
-    conditions: ["Unlisted conditions", "Second opinion", "Personalized review"],
-    titleFr: "Autres complications de santé",
+      "Bring or submit your relevant medical history and available records. Further investigations may be requested where appropriate. If your needs fall outside the scope of S19 care, referral to an appropriate conventional healthcare professional may be recommended.",
+    conditions: ["Unlisted health concerns", "Individual case review", "General consultation", "Referral where appropriate"],
+    titleFr: "Autres préoccupations de santé",
     shortFr:
-      "Une affection non listée ci-dessus ? Parlez-nous-en et nous examinerons votre cas personnellement pour trouver le soutien adapté.",
+      "Si votre affection ne figure pas dans la liste ci-dessus, vous pouvez tout de même demander une évaluation. Chaque cas est revu individuellement avant que S19 ne détermine si et comment nous pouvons vous apporter un soutien approprié.",
     detailFr:
-      "Si votre problème de santé n'est pas couvert par les programmes ci-dessus, réservez une consultation et apportez votre historique médical complet. Nous évaluons chaque situation au cas par cas et concevons une stratégie à base de plantes axée sur la cause racine.",
-    conditionsFr: ["Affections non listées", "Deuxième avis", "Examen personnalisé"],
+      "Apportez ou transmettez votre historique médical pertinent et les dossiers disponibles. Des examens complémentaires peuvent être demandés, le cas échéant. Si vos besoins sortent du champ des soins S19, une orientation vers un professionnel de santé conventionnel approprié peut être recommandée.",
+    conditionsFr: [
+      "Préoccupations non listées",
+      "Revue individuelle du cas",
+      "Consultation générale",
+      "Orientation si nécessaire",
+    ],
   },
 ];
 
@@ -208,43 +278,22 @@ export const coreStrengths: StrengthItem[] = [
     title: "Tele-Health",
     text: "Online evaluation, phone consults, and remote treatment follow-up.",
     titleFr: "Télé-santé",
-    textFr: "Évaluation en ligne, consultations téléphoniques et suivi de traitement à distance.",
+    textFr:
+      "Évaluation en ligne, consultations téléphoniques et suivi de traitement à distance.",
   },
   {
     title: "Standardized",
     text: "Pure, standardized herbal teas, extracts, and detox packs.",
     titleFr: "Standardisé",
-    textFr: "Tisanes, extraits et packs de détox à base de plantes purs et standardisés.",
+    textFr:
+      "Tisanes, extraits et packs de détox à base de plantes purs et standardisés.",
   },
   {
     title: "Worldwide",
     text: "Reliable shipping across Cameroon and international destinations.",
     titleFr: "Mondial",
-    textFr: "Livraison fiable au Cameroun et dans le monde entier.",
-  },
-];
-
-export interface ClinicalPrinciple {
-  title: string;
-  text: string;
-  titleFr?: string;
-  textFr?: string;
-}
-
-export const clinicalPrinciples: ClinicalPrinciple[] = [
-  {
-    title: "Thorough Lab & Medical History Review",
-    text: "We integrate conventional medical findings, previous treatments, and laboratory workups into your herbal strategy.",
-    titleFr: "Examen approfondi du laboratoire et des antécédents médicaux",
     textFr:
-      "Nous intégrons les constats médicaux conventionnels, les traitements antérieurs et les bilans de laboratoire dans votre stratégie à base de plantes.",
-  },
-  {
-    title: "Collaborative Lifestyle & Nutritional Coaching",
-    text: "Long-term healing requires aligning your diet and daily habits with botanical therapeutics.",
-    titleFr: "Coaching collaboratif en nutrition et style de vie",
-    textFr:
-      "La guérison à long terme exige d'aligner votre alimentation et vos habitudes quotidiennes sur la thérapeutique botanique.",
+      "Livraison fiable au Cameroun et dans le monde entier.",
   },
 ];
 
@@ -301,14 +350,19 @@ export const faqs: FaqItem[] = [
 export const deliveryZones = ["Cameroon Nationwide", "Douala", "Yaounde", "Bamenda", "Buea", "Worldwide"];
 
 export function localizedPrograms(locale: Locale): TreatmentProgram[] {
-  if (locale !== "fr") return treatmentPrograms;
-  return treatmentPrograms.map((p) => ({
-    slug: p.slug,
-    title: p.titleFr ?? p.title,
-    short: p.shortFr ?? p.short,
-    detail: p.detailFr ?? p.detail,
-    conditions: p.conditionsFr ?? p.conditions,
-  }));
+  return treatmentPrograms.map((p) =>
+    locale === "fr"
+      ? {
+          slug: p.slug,
+          title: p.titleFr ?? p.title,
+          short: p.shortFr ?? p.short,
+          detail: p.detailFr ?? p.detail,
+          conditions: p.conditionsFr ?? p.conditions,
+          note: p.noteFr ?? p.note,
+          noteKind: p.noteKind,
+        }
+      : { ...p }
+  );
 }
 
 export function localizedTelehealthSteps(locale: Locale) {
@@ -321,13 +375,6 @@ export function localizedTelehealthSteps(locale: Locale) {
 
 export function localizedCoreStrengths(locale: Locale) {
   return coreStrengths.map((s) => ({
-    title: locale === "fr" ? s.titleFr ?? s.title : s.title,
-    text: locale === "fr" ? s.textFr ?? s.text : s.text,
-  }));
-}
-
-export function localizedClinicalPrinciples(locale: Locale) {
-  return clinicalPrinciples.map((s) => ({
     title: locale === "fr" ? s.titleFr ?? s.title : s.title,
     text: locale === "fr" ? s.textFr ?? s.text : s.text,
   }));

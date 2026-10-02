@@ -51,63 +51,170 @@ const dict = {
   "common.optional": { en: "optional", fr: "facultatif" },
 
   "home.hero.kicker": { en: "S19 Herbal Clinic", fr: "Clinique de phytothérapie S19" },
-  "home.hero.titleA": { en: "Welcome to S19 Herbal Clinic", fr: "Bienvenue à la Clinique de phytothérapie S19" },
+  // Hero copy is set by docs/S19_Homepage_Adjustments_Developer_Brief.md §2.1.
+  // The headline names the practice ("Science-Based Herbalism") rather than
+  // promising an outcome, which is the positioning the About page also uses.
+  "home.hero.titleA": {
+    en: "Natural Healing. Personalized Care. Science-Based Herbalism.",
+    fr: "Guérison naturelle. Soins personnalisés. Phytothérapie fondée sur la science.",
+  },
   "home.hero.titleB": {
-    en: "Science-Based Herbalism. Root-Cause Healthcare. Education. Investigation. Personalization. Monitoring.",
-    fr: "Phytothérapie fondée sur la science. Soins de la cause racine. Éducation. Investigation. Personnalisation. Suivi.",
+    en: "Where Natural Wellness Meets Personalized Care.",
+    fr: "Où le bien-être naturel rencontre les soins personnalisés.",
   },
   "home.hero.lead": {
-    en: "S19 Herbal Clinic combines science-based herbal medicine, laboratory investigation, nutrition, lifestyle medicine, patient education, continuous monitoring and in-clinic non-invasive supportive therapies to provide personalized healthcare focused on identifying and addressing important contributing factors.",
-    fr: "La Clinique S19 associe une phytothérapie fondée sur la science, l'investigation de laboratoire, la nutrition, la médecine du mode de vie, l'éducation du patient, un suivi continu et des therapies de soutien non invasives en clinique, afin d'offrir des soins personnalisés axés sur l'identification et le traitement de facteurs contributifs importants.",
+    en: "At S19 Herbal Clinic, we combine evidence-informed herbal medicine with individualized assessment, nutrition, lifestyle support, health education and continuous monitoring.",
+    fr: "À la Clinique de phytothérapie S19, nous associons une phytothérapie fondée sur les données probantes à une évaluation individualisée, un soutien nutritionnel, un accompagnement du mode de vie, une éducation à la santé et un suivi continu.",
   },
-  "home.hero.closing": {
-    en: "The goal is not simply to manage disease. The goal is to build better health.",
-    fr: "L'objectif n'est pas simplement de gérer la maladie. L'objectif est de construire une meilleure santé.",
+  "home.hero.lead2": {
+    en: "We don't believe in treating blindly. Before developing a personalized care plan, we seek to understand your medical history, current medications, laboratory findings, lifestyle, nutrition and the wider factors that may be contributing to your health condition.",
+    fr: "Nous ne croyons pas traiter à l'aveugle. Avant d'élaborer un plan de soins personnalisé, nous cherchons à comprendre votre antécédent médical, vos médicaments actuels, vos résultats de laboratoire, votre mode de vie, votre nutrition et les facteurs plus larges qui peuvent contribuer à votre état de santé.",
   },
+  "home.hero.trust": {
+    en: "In-person care in Bafoussam · Tele-Health consultations available · Worldwide product delivery",
+    fr: "Soins en personne à Bafoussam · Consultations en Télé-santé disponibles · Livraison de produits dans le monde entier",
+  },
+  // Brief §2.1 gives these two labels verbatim, so they get their own keys
+  // rather than borrowing a generic CTA string that could drift.
+  "home.hero.ctaBook": { en: "Book a Consultation", fr: "Réserver une consultation" },
+  "home.hero.ctaPrograms": { en: "Explore Our Programs", fr: "Découvrir nos programmes" },
   "home.hero.whatsapp": { en: "WhatsApp the Clinic", fr: "Écrire à la clinique sur WhatsApp" },
   "home.hero.claim": {
     en: "Specialized Support for Diabetes and Cancer Care.",
     fr: "Soutien spécialisé pour le diabète et les soins du cancer.",
   },
 
-  "home.focus.kicker": { en: "What we offer", fr: "Ce que nous proposons" },
-  "home.focus.title": { en: "Three ways to care.", fr: "Trois façons de prendre soin de vous." },
-  "home.focus.lead": {
-    en: "One clinic, a worldwide reach — come and see us, talk to us from home, or order from our catalog.",
-    fr: "Une clinique, une portée mondiale - soins en clinique, Télé-consultation à distance et un catalogue de plantes médicinales standardisées livré à votre porte.",
+  // SECTION 2 - More Than Symptom Management.
+  "home.whole.kicker": { en: "The S19 approach", fr: "L'approche S19" },
+  "home.whole.title": { en: "More Than Symptom Management", fr: "Plus que la gestion des symptômes" },
+  "home.whole.subtitle": { en: "We Look at the Whole Person", fr: "Nous considérons la personne dans sa globalité" },
+  "home.whole.lead": {
+    en: "Symptoms matter - but they don't always tell the whole story. Our approach looks beyond the immediate complaint to better understand the metabolic, nutritional, lifestyle, environmental and other modifiable factors that may be affecting your health.",
+    fr: "Les symptômes comptent, mais ils ne racontent pas toujours toute l'histoire. Notre approche va au-delà de la plainte immédiate pour mieux comprendre les facteurs métaboliques, nutritionnels, liés au mode de vie, environnementaux et autres facteurs modifiables qui peuvent affecter votre santé.",
   },
-  "home.focus.clinical.title": { en: "In-Clinic Care", fr: "Soins en clinique" },
-  "home.focus.clinical.desc": {
-    en: "Come and see us in Bafoussam. We review your health history and lab results before any remedy.",
-    fr: "Consultations en clinique et plans de traitement à base de plantes individualisés, examinés en fonction de vos antécédents médicaux et de vos résultats de laboratoire.",
+  "home.whole.depends": { en: "Depending on the individual situation, care may include:", fr: "Selon la situation individuelle, les soins peuvent inclure :" },
+  "home.whole.closing": {
+    en: "Our goal is not simply to give you products. It is to help you understand your health and participate actively in your care.",
+    fr: "Notre objectif n'est pas simplement de vous donner des produits. Il est de vous aider à comprendre votre santé et à participer activement à vos soins.",
   },
-  "home.focus.clinical.label": { en: "Clinical Programs", fr: "Programmes cliniques" },
-  "home.focus.tele.title": { en: "Talk to Us From Home", fr: "Parlez-nous depuis chez vous" },
-  "home.focus.tele.desc": {
-    en: "Phone or WhatsApp consultation from anywhere in the world. Send us your lab results for review.",
-    fr: "Consultations à distance structurées, examen des résultats de laboratoire et suivis programmés - partout dans le monde par téléphone et WhatsApp.",
-  },
-  "home.focus.tele.label": { en: "Book online consultation", fr: "Réserver une consultation en ligne" },
-  "home.focus.catalog.title": { en: "Herbal Catalog", fr: "Catalogue de plantes médicinales" },
-  "home.focus.catalog.desc": {
-    en: "Herbal teas, extracts, and detox packs. Pick up in Bafoussam or get worldwide delivery.",
-    fr: "Tisanes, extraits et packs de détox à base de plantes standardisés. Disponibles au retrait à Bafoussam et en livraison mondiale.",
-  },
-  "home.focus.catalog.label": { en: "Browse Catalog", fr: "Parcourir le catalogue" },
+  "home.whole.cta": { en: "Learn About the S19 Approach", fr: "En savoir plus sur l'approche S19" },
 
-  "home.programs.kicker": { en: "Clinical care focus", fr: "Focus soins cliniques" },
-  "home.programs.title": { en: "Integrative Treatment Programs.", fr: "Programmes de traitement intégratifs." },
-  "home.programs.lead": {
-    en: "Every plan is built for you after your first consultation. We confirm the price per patient after your evaluation.",
-    fr: "Chaque plan est personnalisé après votre consultation initiale. Le prix est confirmé par patient après votre évaluation.",
+  // SECTION 3 - S19 Patient Pathway.
+  "home.pathway.kicker": { en: "How care works", fr: "Comment les soins fonctionnent" },
+  "home.pathway.title": { en: "The S19 Patient Pathway", fr: "Le parcours patient S19" },
+  "home.pathway.lead": {
+    en: "This is the process your consultation follows, from the first conversation to ongoing monitoring.",
+    fr: "Voici le processus que suit votre consultation, de la première conversation au suivi continu.",
+  },
+  "home.pathway.cta": { en: "Start Your S19 Journey", fr: "Commencez votre parcours S19" },
+
+  // SECTION 4 - Areas We Support.
+  "home.areas.kicker": { en: "Areas we support", fr: "Domaines que nous couvrons" },
+  "home.areas.title": {
+    en: "Personalized Care for Complex and Chronic Health Needs",
+    fr: "Des soins personnalisés pour les besoins de santé complexes et chroniques",
+  },
+  "home.areas.lead": {
+    en: "Each program begins with an assessment and is built around the individual, not a fixed bundle.",
+    fr: "Chaque programme commence par une évaluation et se construit autour de l'individu, non autour d'un ensemble fixe.",
+  },
+  "home.areas.cta": { en: "Explore All Programs", fr: "Découvrir tous les programmes" },
+
+  // SECTION 5 - Science-Based Herbalism.
+  "home.science.kicker": { en: "Science-based herbalism", fr: "Phytothérapie fondée sur la science" },
+  "home.science.title": { en: "Science-Based Herbalism", fr: "Phytothérapie fondée sur la science" },
+  "home.science.subtitle": { en: "Natural Does Not Automatically Mean Safe", fr: "Naturel ne veut pas dire automatiquement sans danger" },
+  "home.science.lead": {
+    en: "Herbs contain biologically active compounds. They can produce physiological effects, interact with medications and may not be appropriate for every person. Responsible herbal care therefore requires more than simply choosing a plant for a symptom.",
+    fr: "Les plantes contiennent des composés biologiquement actifs. Elles peuvent produire des effets physiologiques, interagir avec des médicaments et ne pas convenir à tout le monde. Une phytothérapie responsable exige donc bien plus que le simple choix d'une plante pour un symptôme.",
+  },
+  "home.science.closing": {
+    en: "We combine traditional knowledge with modern scientific understanding and available evidence to make herbal care more responsible and individualized.",
+    fr: "Nous combinons les connaissances traditionnelles avec la compréhension scientifique moderne et les données disponibles afin de rendre les soins à base de plantes plus responsables et plus personnalisés.",
+  },
+  "home.science.cta": {
+    en: "Learn How We Practice Herbal Medicine",
+    fr: "Découvrez notre pratique de la phytothérapie",
   },
 
-  "home.why.kicker": { en: "Why S19", fr: "Pourquoi S19" },
-  "home.why.title": { en: "Built on review, reason, and follow-through.", fr: "Bâti sur l'examen, la raison et le suivi." },
-  "home.why.lead": {
-    en: "{brand} is a herbal clinic in Bafoussam. We start with you — your health history, your lab tests, and your daily life — before we give any remedy.",
-    fr: "La {brand} est une clinique de bien-être à base de plantes et de médecine intégrative située à Bafoussam. Notre philosophie clinique commence par l'individu - ses antécédents, ses analyses, sa réalité quotidienne - avant toute prescription.",
+  // SECTION 6 - Not Anti-Conventional.
+  "home.conventional.kicker": { en: "Our position", fr: "Notre position" },
+  "home.conventional.title": {
+    en: "S19 Is Not Anti-Conventional Treatment",
+    fr: "S19 n'est pas contre le traitement conventionnel",
   },
+  "home.conventional.p1": {
+    en: "S19 Herbal Clinic recognizes the essential role of conventional healthcare. Pharmaceutical drugs, surgery, emergency medicine, hospitalization and specialist care can be necessary and lifesaving.",
+    fr: "La Clinique de phytothérapie S19 reconnaît le rôle essentiel des soins conventionnels. Les médicaments, la chirurgie, la médecine d'urgence, l'hospitalisation et les soins spécialisés peuvent être nécessaires et salvateurs.",
+  },
+  "home.conventional.p2": {
+    en: "Our approach is not about choosing \"natural versus conventional.\" It is about understanding the individual and using appropriate strategies responsibly.",
+    fr: "Notre approche ne consiste pas à choisir entre « naturel » et « conventionnel ». Il s'agit de comprendre l'individu et d'utiliser des stratégies appropriées de manière responsable.",
+  },
+  "home.conventional.p3": {
+    en: "Where conventional treatment is necessary, herbal and lifestyle support should complement - not delay or replace - appropriate medical care.",
+    fr: "Lorsqu'un traitement conventionnel est nécessaire, le soutien herbal et de mode de vie doit compléter - et non retarder ni remplacer - les soins médicaux appropriés.",
+  },
+  "home.conventional.safety": {
+    en: "Patients should never stop or reduce prescribed medication without appropriate clinical supervision.",
+    fr: "Les patients ne doivent jamais arrêter ni réduire un médicament prescrit sans supervision clinique appropriée.",
+  },
+
+  // SECTION 7 - Personalized Care.
+  "home.personal.kicker": { en: "Personalized care", fr: "Soins personnalisés" },
+  "home.personal.title": {
+    en: "Personalized Care - Not One-Size-Fits-All Treatment",
+    fr: "Des soins personnalisés - pas un traitement unique pour tous",
+  },
+  "home.personal.lead": {
+    en: "Two people can have the same diagnosis and still have very different medical histories, medications, nutritional patterns, risk factors and treatment needs.",
+    fr: "Deux personnes peuvent partager le même diagnostic et avoir des antécédents médicaux, des médicaments, des habitudes alimentaires, des facteurs de risque et des besoins de traitement très différents.",
+  },
+  "home.personal.closing": {
+    en: "Your plan is developed according to your individual circumstances and may change as your health status and objective findings change.",
+    fr: "Votre plan est élaboré selon votre situation individuelle et peut évoluer à mesure que votre état de santé et vos constatations objectives changent.",
+  },
+
+  // SECTION 8 - In-Person + Tele-Health.
+  "home.careWherever.kicker": { en: "In person or remote", fr: "En personne ou à distance" },
+  "home.careWherever.title": { en: "Care Wherever You Are", fr: "Des soins où que vous soyez" },
+  "home.careWherever.lead": {
+    en: "Patients can consult at our Bafoussam clinic or remotely through Tele-Health. Relevant laboratory results and medical information can be shared for review, individualized recommendations can be provided, and follow-up can continue remotely where appropriate.",
+    fr: "Les patients peuvent consulter à notre clinique de Bafoussam ou à distance via la Télé-santé. Les résultats de laboratoire pertinents et les informations médicales peuvent être partagés pour examen, des recommandations individualisées peuvent être fournies, et le suivi peut se poursuivre à distance le cas échéant.",
+  },
+  "home.careWherever.tele": { en: "Book Tele-Health", fr: "Réserver une Télé-consultation" },
+  "home.careWherever.inPerson": { en: "Book an In-Person Consultation", fr: "Réserver une consultation en personne" },
+
+  // SECTION 9 - Patient Accommodation.
+  "home.accommodation.kicker": { en: "Travelling for care", fr: "Se déplacer pour se faire soigner" },
+  "home.accommodation.title": { en: "Travelling to S19?", fr: "Vous vous déplacez vers S19 ?" },
+  "home.accommodation.subtitle": { en: "On-Site Patient Accommodation", fr: "Hébergement des patients sur place" },
+  "home.accommodation.lead": {
+    en: "For patients travelling from outside Bafoussam who require several days of assessment, treatment or follow-up, simple and affordable accommodation is available within the clinic premises.",
+    fr: "Pour les patients venant de l'extérieur de Bafoussam qui nécessitent plusieurs jours d'évaluation, de traitement ou de suivi, un hébergement simple et abordable est disponible dans les locaux de la clinique.",
+  },
+  "home.accommodation.cta": { en: "Learn About Accommodation", fr: "En savoir plus sur l'hébergement" },
+
+  // SECTION 10 - Patient Experiences.
+  "home.experiences.kicker": { en: "Patient experiences", fr: "Expériences de patients" },
+  "home.experiences.title": { en: "Real Patient Experiences", fr: "De vraies expériences de patients" },
+  "home.experiences.subtitle": { en: "Their Experience. Their Story.", fr: "Leur expérience. Leur histoire." },
+  "home.experiences.lead": {
+    en: "Read experiences voluntarily shared by people who have consulted S19 or used our programs.",
+    fr: "Lisez des expériences partagées volontairement par des personnes qui ont consulté S19 ou utilisé nos programmes.",
+  },
+  // Required verbatim by the brief and by the existing /patient-stories page.
+  // Kept adjacent to the testimonials, not on the Terms page.
+  "home.experiences.disclaimer": {
+    en: "Testimonials describe individual experiences only. They do not establish that a treatment caused the reported outcome, are not evidence that another patient will experience the same result, and should not be interpreted as a guarantee, medical advice or substitute for appropriate medical evaluation.",
+    fr: "Les témoignages décrivent des expériences individuelles uniquement. Ils n'établissent pas qu'un traitement a causé le résultat rapporté, ne constituent pas une preuve qu'un autre patient obtiendra le même résultat, et ne doivent pas être interprétés comme une garantie, un avis médical ou un substitut à une évaluation médicale appropriée.",
+  },
+  "home.experiences.cta": { en: "View Patient Stories", fr: "Voir les témoignages" },
+
+  // Section 3's pathway cards, section 5's keyword chips, section 7's element
+  // cards and section 9's amenity list all live in lib/data/home-content.ts.
+  // They are content the clinic edits, not UI chrome, and their French sits
+  // beside the English there so a translator sees both.
 
   "home.catalog.kicker": { en: "Standardized formulas", fr: "Formules standardisées" },
   "home.catalog.title": { en: "S19 Herbal Catalog", fr: "Catalogue de plantes S19" },
@@ -119,33 +226,6 @@ const dict = {
     en: "Also in the clinic: Malaria & Typhoid Tea, Activated Charcoal, Oral Powder, Castor Oil, and Weight-loss Tea.",
     fr: "Également disponibles en clinique : Tisane Malaria & Typhoïde, Charbon actif, Poudre buccale, Huile de ricin et Tisane minceur.",
   },
-
-  "home.tele.kicker": { en: "Talk to us from home", fr: "Parlez-nous depuis chez vous" },
-  "home.tele.title": {
-    en: "Care from home, anywhere in the world.",
-    fr: "Consultations et suivis à distance, partout.",
-  },
-  "home.tele.lead": {
-    en: "Cannot make it to Bafoussam? Talk to us about your health from anywhere in the world via phone or WhatsApp. Send us your lab test results for review, discuss your health concerns with us, and receive regular follow-up.",
-    fr: "Impossible de venir à Bafoussam ? Nous organisons des consultations en ligne structurées - symptômes, antécédents médicaux et rapports de laboratoire - puis nous envoyons votre protocole et restons à vos côtés grâce à des suivis programmés.",
-  },
-  "home.tele.cta": { en: "Book online consultation", fr: "Réserver une consultation en ligne" },
-
-  "home.steps.kicker": { en: "Getting care", fr: "Accéder aux soins" },
-  "home.steps.title": { en: "Four steps, start to follow-up.", fr: "Quatre étapes, du début au suivi." },
-  "home.steps.1.title": { en: "Book", fr: "Réserver" },
-  "home.steps.1.text": { en: "Book a consultation — in clinic or from home.", fr: "Réservez une consultation - en clinique ou à distance." },
-  "home.steps.2.title": { en: "Protocol", fr: "Protocole" },
-  "home.steps.2.text": { en: "We build a personalized treatment plan for you.", fr: "Nous construisons un plan de traitement personnalisé pour vous." },
-  "home.steps.3.title": { en: "Dispatch", fr: "Expédition" },
-  "home.steps.3.text": { en: "Your pack is sent to your door.", fr: "Votre pack est livré à votre porte." },
-  "home.steps.4.title": { en: "Follow-up", fr: "Suivi" },
-  "home.steps.4.text": { en: "We check on your progress and adjust.", fr: "Des points de contrôle programmés sur vos progrès." },
-
-  "home.testimonials.kicker": { en: "Patient stories", fr: "Témoignages de patients" },
-  "home.testimonials.title": { en: "Care that people talk about.", fr: "Des soins dont les gens parlent." },
-  "home.testimonials.cta": { en: "Share your experience with S19", fr: "Partagez votre expérience avec S19" },
-  "home.testimonials.watchVideos": { en: "Watch video reviews", fr: "Voir les avis vidéo" },
 
   "home.videos.kicker": { en: "Patient Stories on Video", fr: "Témoignages de patients en vidéo" },
   "home.videos.title": { en: "Hear it from our patients, on video.", fr: "Écoutez nos patients, en vidéo." },
@@ -282,6 +362,29 @@ const dict = {
     fr: "Voir les détails de l'hébergement",
   },
 
+  // SECTION 11 - Final CTA + health information notice.
+  "home.final.kicker": { en: "Start properly", fr: "Commencez correctement" },
+  "home.final.title": { en: "Your Health Deserves More Than Guesswork", fr: "Votre santé mérite mieux que des approximations" },
+  "home.final.lead": {
+    en: "Whether you are living with a chronic condition, seeking complementary support during conventional treatment, or simply trying to better understand your health, your journey should begin with proper assessment.",
+    fr: "Que vous viviez avec une maladie chronique, que vous recherchiez un soutien complémentaire pendant un traitement conventionnel, ou que vous cherchiez simplement à mieux comprendre votre santé, votre parcours devrait commencer par une évaluation appropriée.",
+  },
+  // The brief's large closing statement. Screen-reader-wise this is body copy
+  // in the gold display face, not a second heading.
+  "home.final.statement": {
+    en: "Don't Treat Blindly. Investigate. Understand. Educate. Support. Monitor.",
+    fr: "Ne pas traiter à l'aveugle. Examiner. Comprendre. Éduquer. Soutenir. Suivre.",
+  },
+  "home.final.book": { en: "Book Your Consultation", fr: "Réservez votre consultation" },
+  "home.final.whatsapp": { en: "Talk to S19 on WhatsApp", fr: "Parlez à S19 sur WhatsApp" },
+  // Footer health notice. Required to be visible and clear on the home page;
+  // this is the notice, not a link to the Terms page.
+  "home.final.noticeTitle": { en: "Health information notice", fr: "Avis d'information de santé" },
+  "home.final.notice": {
+    en: "S19 Herbal Clinic provides herbal, nutrition, lifestyle and supportive wellness services. Our services do not replace emergency care or medically necessary conventional treatment. Individual outcomes vary, and no treatment outcome or cure can be guaranteed. Patients taking prescription medicines or receiving specialist care should discuss complementary therapies with their healthcare professionals.",
+    fr: "La Clinique de phytothérapie S19 fournit des services de phytothérapie, de nutrition, de mode de vie et de bien-être de soutien. Nos services ne remplacent ni les soins d'urgence ni un traitement conventionnel médicalement nécessaire. Les résultats varient d'une personne à l'autre, et aucun résultat de traitement ni guérison ne peut être garanti. Les patients prenant des médicaments prescrits ou recevant des soins spécialisés doivent discuter des thérapies complémentaires avec leurs professionnels de santé.",
+  },
+
   "home.location.kicker": { en: "Find the clinic", fr: "Trouver la clinique" },
   "home.location.title": { en: "Care across Cameroon and the world.", fr: "Des soins partout au Cameroun et dans le monde." },
   "home.location.clinic": { en: "Bafoussam Clinic", fr: "Clinique de Bafoussam" },
@@ -331,7 +434,7 @@ const dict = {
   "footer.prostate": { en: "Prostate & Men's Health", fr: "Prostate et santé masculine" },
   "footer.womens": { en: "Women's Reproductive Wellness", fr: "Bien-être reproductif féminin" },
   "footer.gastritis": { en: "Gastritis & Digestive Disorders", fr: "Gastrite et troubles digestifs" },
-  "footer.cancer": { en: "Integrative Cancer Care", fr: "Soins intégratifs du cancer" },
+  "footer.cancer": { en: "Integrative Cancer Support", fr: "Soutien intégratif du cancer" },
   "footer.liveReviews": { en: "Live Reviews", fr: "Avis vidéo" },
 
   "refer.kicker": { en: "Kindness that heals", fr: "Une bonté qui guérit" },
@@ -401,8 +504,12 @@ const dict = {
   "concern.prostate": { en: "Prostate / Men's Health", fr: "Prostate / Santé masculine" },
   "concern.women": { en: "Women's Health / Hormones", fr: "Santé féminine / Hormones" },
   "concern.gastritis": { en: "Gastritis / Digestion / Hemorrhoids", fr: "Gastrite / Digestion / Hémorroïdes" },
-  "concern.liver": { en: "Liver / Kidney Detox", fr: "Détox foie / reins" },
-  "concern.cancer": { en: "Integrative Cancer Care", fr: "Soins intégratifs du cancer" },
+  // Label only. The stored value is this key, and past bookings are keyed on
+  // it, so the key stays "liver" and "cancer" while the visible text follows
+  // the programs page renames. "Detox" and "Care" both went against the
+  // programs brief: one promised an effect, the other implied treating cancer.
+  "concern.liver": { en: "Liver / Kidney Health", fr: "Santé du foie / des reins" },
+  "concern.cancer": { en: "Integrative Cancer Support", fr: "Soutien intégratif du cancer" },
   "concern.general": { en: "General Health Consultation", fr: "Consultation de santé générale" },
   "concern.other": { en: "Other / Not listed", fr: "Autre / Non listé" },
   "booking.concernOtherPlaceholder": {
@@ -679,10 +786,23 @@ const dict = {
     fr: "Programmes de traitement personnalisés à base de plantes à Bafoussam, Cameroun : diabète, hypertension, prostate et santé masculine, santé féminine et hormones, paludisme et typhoïde et santé digestive.",
   },
   "programs.hero.eyebrow": { en: "Clinical Care Focus", fr: "Focus des soins cliniques" },
-  "programs.hero.title": { en: "Integrative Treatment Programs", fr: "Programmes de traitement intégratifs" },
-  "programs.hero.lead": {
-    en: "Every S19 treatment plan is personalized based on your health history, test results, symptoms, medications, and individual needs. Treatment duration and cost are confirmed after consultation and evaluation.",
-    fr: "Chaque plan de traitement S19 est personnalisé en fonction de vos antécédents de santé, de vos résultats de laboratoire, de vos symptômes, de vos médicaments et de vos besoins individuels. La durée du traitement et son coût sont confirmés après la consultation et l'évaluation.",
+  "programs.hero.title": { en: "Personalized Integrative Health Programs", fr: "Programmes de santé intégratifs personnalisés" },
+  // Brief §2. Four statements in order, all supplied by the clinic.
+  "programs.hero.p1": {
+    en: "Every S19 care plan begins with an individualized assessment. We consider your health history, symptoms, current and previous treatments, medications, available medical records and individual needs before developing your plan.",
+    fr: "Chaque plan de soins S19 commence par une évaluation individualisée. Nous considérons votre historique de santé, vos symptômes, vos traitements actuels et antérieurs, vos médicaments, les dossiers médicaux disponibles et vos besoins individuels avant d'élaborer votre plan.",
+  },
+  "programs.hero.p2": {
+    en: "Where appropriate, relevant laboratory tests, imaging or other medical investigations may be requested to help us better understand your condition and guide care.",
+    fr: "Le cas échéant, les analyses de laboratoire, l'imagerie ou d'autres examens médicaux pertinents peuvent être demandés afin de nous aider à mieux comprendre votre affection et à orienter les soins.",
+  },
+  "programs.hero.p3": {
+    en: "Treatment duration, recommendations and cost are determined after consultation and evaluation.",
+    fr: "La durée du traitement, les recommandations et le coût sont déterminés après la consultation et l'évaluation.",
+  },
+  "programs.hero.tagline": {
+    en: "Do Not Treat Blindly. Investigate. Understand. Personalize. Monitor.",
+    fr: "Ne pas traiter à l'aveugle. Examiner. Comprendre. Personnaliser. Suivre.",
   },
   "programs.hero.alt": {
     en: "Healthy green leaves representing herbal treatment programs",
@@ -698,20 +818,61 @@ const dict = {
   "programs.supports": { en: "Supports", fr: "Soutient" },
   "programs.inquire": { en: "Inquire via WhatsApp", fr: "S'informer via WhatsApp" },
   "programs.bookCta": { en: "Book a consultation", fr: "Réserver une consultation" },
-  "programs.notSure.title": { en: "Not sure where to start?", fr: "Vous ne savez pas par où commencer ?" },
-  "programs.notSure.text": {
-    en: "Book a general consultation and we will recommend the right program for you. {brand} · {phone}",
-    fr: "Réservez une consultation générale et nous vous recommanderons le programme qui vous convient. {brand} · {phone}",
+  // Brief §7. "Important" / "Safety" prefix is part of the label, so a reader
+  // scanning the card sees the boundary before they read the detail.
+  "programs.noteImportant": { en: "Important:", fr: "Important :" },
+  "programs.noteSafety": { en: "Safety:", fr: "Sécurité :" },
+
+  // Brief §3 - How S19 Programs Work.
+  "programs.pathway.kicker": { en: "How our programs work", fr: "Comment fonctionnent nos programmes" },
+  "programs.pathway.title": { en: "How S19 Programs Work", fr: "Comment fonctionnent les programmes S19" },
+  "programs.pathway.lead": {
+    en: "Your program is developed around you. Depending on your situation, care may involve review of medical information, additional investigations where necessary, individualized herbal support, nutrition and lifestyle guidance, health education, monitoring and follow-up.",
+    fr: "Votre programme est élaboré autour de vous. Selon votre situation, les soins peuvent inclure la revue de vos informations médicales, des examens complémentaires si nécessaire, un soutien herbal individualisé, des conseils nutritionnels et de mode de vie, une éducation à la santé, un suivi et des contrôles.",
   },
+
+  // Brief §5. Deliberately names no test, panel or sequence: those are
+  // proprietary and must not be published.
+  "programs.investigation.kicker": { en: "Investigations", fr: "Examens" },
+  "programs.investigation.title": { en: "We Do Not Treat Blindly", fr: "Nous ne traitons pas à l'aveugle" },
+  "programs.investigation.text": {
+    en: "At S19, we do not treat blindly. Depending on your health condition and individual situation, relevant laboratory tests, imaging or other medical investigations may be requested before or during your program. These investigations help us better understand your health, monitor progress and guide appropriate adjustments to your care plan.",
+    fr: "Chez S19, nous ne traitons pas à l'aveugle. Selon votre état de santé et votre situation individuelle, les analyses de laboratoire, l'imagerie ou d'autres examens médicaux pertinents peuvent être demandés avant ou pendant votre programme. Ces examens nous aident à mieux comprendre votre santé, à suivre les progrès et à orienter les ajustements appropriés de votre plan de soins.",
+  },
+
+  // Brief §6 - programs are clinical pathways, not retail bundles.
+  "programs.notRetail.kicker": { en: "How we work", fr: "Notre façon de travailler" },
+  "programs.notRetail.title": {
+    en: "Personalized Programs, Not One-Size-Fits-All Products",
+    fr: "Des programmes personnalisés, pas des produits universels",
+  },
+  "programs.notRetail.text": {
+    en: "An S19 clinical program begins with consultation and assessment. Depending on the patient's needs, the plan may include individualized herbal support, nutrition and lifestyle guidance, health education, relevant investigations, monitoring and follow-up. Products or formulations are selected according to the individual care plan and are not necessarily the same for every patient with the same diagnosis.",
+    fr: "Un programme clinique S19 commence par une consultation et une évaluation. Selon les besoins du patient, le plan peut inclure un soutien herbal individualisé, des conseils nutritionnels et de mode de vie, une éducation à la santé, des examens pertinents, un suivi et des contrôles. Les produits ou formulations sont sélectionnés selon le plan de soins individuel et ne sont pas nécessairement les mêmes pour chaque patient présentant le même diagnostic.",
+  },
+
+  "programs.notSure.title": { en: "Not Sure Where to Start?", fr: "Vous ne savez pas par où commencer ?" },
+  "programs.notSure.text": {
+    en: "You do not need to choose your own treatment program. Book a consultation and tell us about your health concerns. We will review your situation and guide you toward the most appropriate next step. {brand} · {phone}",
+    fr: "Vous n'avez pas besoin de choisir votre propre programme de traitement. Réservez une consultation et parlez-nous de vos préoccupations de santé. Nous examinerons votre situation et vous guiderons vers l'étape la plus appropriée. {brand} · {phone}",
+  },
+  "programs.notSure.closing": {
+    en: "Do Not Treat Blindly. Start With Proper Assessment.",
+    fr: "Ne pas traiter à l'aveugle. Commencer par une évaluation appropriée.",
+  },
+  "programs.notSure.whatsapp": { en: "Talk to S19 on WhatsApp", fr: "Parlez à S19 sur WhatsApp" },
+
   "programs.therapies.kicker": { en: "Supportive therapies", fr: "Thérapies de soutien" },
   "programs.therapies.alt": {
     en: "S19 therapist performing an in-clinic wellness therapy",
     fr: "Thérapeute S19 réalisant une thérapie de bien-être en clinique",
   },
-  "programs.therapies.title": { en: "Therapies We Perform", fr: "Les thérapies que nous pratiquons" },
+  "programs.therapies.title": { en: "Supportive In-Clinic Therapies", fr: "Thérapies de soutien en clinique" },
+  // Brief §7. "Complement - not replace -" is mandatory here: this is the one
+  // place a reader might infer the therapies stand on their own.
   "programs.therapies.text": {
-    en: "Beyond herbal medicine, S19 offers supportive and alternative therapies inspired by traditional healing practices and complemented by modern scientific wellness approaches, including in-clinic non-invasive therapies, with the aim of supporting overall health and care outcomes.",
-    fr: "Au-delà de la phytothérapie, S19 propose des thérapies de soutien et alternatives inspirées des pratiques de guérison traditionnelles et complétées par des approches scientifiques modernes de bien-être, notamment des thérapies non invasives en clinique, dans le but de soutenir la santé globale et les résultats des soins.",
+    en: "Beyond herbal medicine, S19 may incorporate selected in-clinic supportive therapies as part of an individualized care plan. These therapies are used to complement - not replace - appropriate medical assessment, nutrition, lifestyle support and medically necessary conventional treatment.",
+    fr: "Au-delà de la phytothérapie, S19 peut intégrer des thérapies de soutien en clinique sélectionnées dans le cadre d'un plan de soins individualisé. Ces thérapies servent à compléter - et non à remplacer - l'évaluation médicale appropriée, la nutrition, le soutien de mode de vie et le traitement conventionnel médicalement nécessaire.",
   },
   "programs.therapies.sessions": { en: "How sessions support your program", fr: "Comment les séances soutiennent votre programme" },
   "programs.therapies.item1": {

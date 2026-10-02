@@ -1,3 +1,5 @@
+import type { Locale } from "@/lib/i18n";
+
 export const philosophyQuote =
   "Do not treat blindly. Understand the person, investigate the problem, identify its underlying drivers, and build a comprehensive strategy around them.";
 
@@ -291,3 +293,137 @@ export const philosophyTagline =
 
 export const closingStatement =
   "The goal is not simply to manage disease. The goal is to build better health.";
+
+/* -------------------------------------------------------------------------- */
+/* Public-facing presentations of the care pathway                            */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * One statement of the clinical process, several presentations of it.
+ *
+ * `patientJourney` (above) is the seven-step canonical form used on the About
+ * page, where the full detail fits. The two arrays below are the shorter
+ * public forms demanded by the developer briefs:
+ *
+ * - `homePathway` collapses Address and Support into one card, because a
+ *   six-card grid is what stacks cleanly on a phone.
+ * - `programsPathway` replaces the Educate step with Personalize, because the
+ *   Programs page is being read by someone deciding what to book rather than
+ *   someone learning the method.
+ *
+ * They are kept here rather than in a page module so the process is described
+ * from one place and cannot drift between the two pages.
+ */
+export interface PathwayStep {
+  step: string;
+  text: string;
+  stepFr?: string;
+  textFr?: string;
+}
+
+/** Home page: CONSULT -> INVESTIGATE -> UNDERSTAND -> EDUCATE -> ADDRESS & SUPPORT -> MONITOR. */
+export const homePathway: PathwayStep[] = [
+  {
+    step: "Consult",
+    text: "Detailed consultation covering concerns, symptoms, medical history, previous treatments and current medications.",
+    stepFr: "Consulter",
+    textFr:
+      "Consultation détaillée couvrant vos préoccupations, symptômes, antécédents médicaux, traitements antérieurs et médicaments actuels.",
+  },
+  {
+    step: "Investigate",
+    text: "Review existing laboratory tests, scans and medical records and, where appropriate, request further investigations.",
+    stepFr: "Examiner",
+    textFr:
+      "Examen des analyses de laboratoire, imageries et dossiers médicaux existants et, le cas échéant, demande d'examens complémentaires.",
+  },
+  {
+    step: "Understand",
+    text: "Bring the findings together to better understand the condition and contributing factors.",
+    stepFr: "Comprendre",
+    textFr:
+      "Rassembler les éléments pour mieux comprendre l'affection et les facteurs qui y contribuent.",
+  },
+  {
+    step: "Educate",
+    text: "Explain what has been identified, why it matters and how the patient can participate in care.",
+    stepFr: "Éduquer",
+    textFr:
+      "Expliquer ce qui a été identifié, pourquoi c'est important et comment le patient peut participer à ses soins.",
+  },
+  {
+    step: "Address & Support",
+    text: "Develop an individualized plan that may combine herbal medicine, nutrition, lifestyle interventions and appropriate supportive therapies.",
+    stepFr: "Agir & Soutenir",
+    textFr:
+      "Élaborer un plan individualisé pouvant combiner phytothérapie, nutrition, interventions de mode de vie et thérapies de soutien appropriées.",
+  },
+  {
+    step: "Monitor",
+    text: "Follow progress, review relevant measurements/laboratory findings and adjust the plan when appropriate.",
+    stepFr: "Suivre",
+    textFr:
+      "Suivre l'évolution, examiner les mesures et analyses pertinentes et ajuster le plan lorsque c'est approprié.",
+  },
+];
+
+/** Programs page: CONSULT -> INVESTIGATE -> UNDERSTAND -> PERSONALIZE -> SUPPORT -> MONITOR. */
+export const programsPathway: PathwayStep[] = [
+  {
+    step: "Consult",
+    text: "Review your concerns, symptoms, health history, medications and available medical records.",
+    stepFr: "Consulter",
+    textFr:
+      "Examiner vos préoccupations, symptômes, historique de santé, médicaments et dossiers médicaux disponibles.",
+  },
+  {
+    step: "Investigate",
+    text: "Review existing findings and, where appropriate, request further laboratory tests, imaging or other medical investigations.",
+    stepFr: "Examiner",
+    textFr:
+      "Examiner les éléments existants et, le cas échéant, demander des analyses, une imagerie ou d'autres examens médicaux complémentaires.",
+  },
+  {
+    step: "Understand",
+    text: "Bring the information together to understand your condition and the factors that may be contributing to it.",
+    stepFr: "Comprendre",
+    textFr:
+      "Rassembler les informations pour comprendre votre affection et les facteurs qui peuvent y contribuer.",
+  },
+  {
+    step: "Personalize",
+    text: "Develop an individualized care plan suited to your health status, circumstances and objectives.",
+    stepFr: "Personnaliser",
+    textFr:
+      "Élaborer un plan de soins individualisé adapté à votre état de santé, à votre situation et à vos objectifs.",
+  },
+  {
+    step: "Support",
+    text: "Begin your program with clear instructions, health education and, where appropriate, supportive in-clinic therapies.",
+    stepFr: "Soutenir",
+    textFr:
+      "Commencer votre programme avec des consignes claires, une éducation à la santé et, le cas échéant, des thérapies de soutien en clinique.",
+  },
+  {
+    step: "Monitor",
+    text: "Follow progress against your symptoms, measurements and relevant findings, and adjust the plan when appropriate.",
+    stepFr: "Suivre",
+    textFr:
+      "Suivre l'évolution au regard de vos symptômes, mesures et éléments pertinents, et ajuster le plan lorsque c'est approprié.",
+  },
+];
+
+function localizePathway(locale: Locale, steps: PathwayStep[]) {
+  return steps.map((s) => ({
+    step: locale === "fr" ? s.stepFr ?? s.step : s.step,
+    text: locale === "fr" ? s.textFr ?? s.text : s.text,
+  }));
+}
+
+export function localizedHomePathway(locale: Locale) {
+  return localizePathway(locale, homePathway);
+}
+
+export function localizedProgramsPathway(locale: Locale) {
+  return localizePathway(locale, programsPathway);
+}

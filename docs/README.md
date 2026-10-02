@@ -23,6 +23,7 @@ This directory is the operational and technical source of truth for the S19 Herb
 | [Stock and inventory](INVENTORY.md) | How product stock is held, released and recounted, why every change is an append-only ledger row, and what is deliberately left for the clinic to set. |
 | [Image SEO](IMAGE_SEO.md) | Module M17: the image audit, the descriptive renames, the single-source asset registry, and what is deliberately left undone. |
 | [Error log and monitoring](LOGGING_AND_MONITORING.md) | Durable error log, what is redacted before storage, retention, the daily digest email, and the admin panel. |
+| [Public page briefs](PUBLIC_PAGE_BRIEFS.md) | The homepage and Programs page rebuilds: what each brief section maps to, the renames and every place they had to be followed through, the confidentiality rule, and the three judgement calls to confirm. |
 
 ## How to keep this documentation accurate
 
