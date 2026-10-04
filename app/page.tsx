@@ -91,17 +91,19 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Herbal Clinic in Bafoussam, Cameroon – Science-Based Natural Medicine",
     description:
-      "S19 Herbal Clinic: science-based herbal medicine in Bafoussam, Cameroon. Individualized natural programs for diabetes, hypertension, prostate health, and women's health. Telehealth consultations and worldwide DHL shipping.",
+      "S19 Herbal Clinic: science-based herbal medicine in Bafoussam, Cameroon. Individualized natural programs for diabetes, hypertension, prostate health, and women's health. Telehealth consultations, delivery across Cameroon and shipping to supported international destinations.",
     alternates: { canonical: canonicalMeta("/").alternates?.canonical },
     openGraph: {
       ...canonicalMeta("/").openGraph,
       title: "S19 Herbal Clinic – Natural Healing, Lasting Wellness",
-      description: "Science-based herbal medicine clinic in Bafoussam, Cameroon. Telehealth + worldwide DHL shipping.",
+      description:
+        "Science-based herbal medicine clinic in Bafoussam, Cameroon. Telehealth consultations, delivery across Cameroon and shipping to supported international destinations.",
     },
     twitter: {
       card: "summary_large_image",
       title: "S19 Herbal Clinic – Natural Healing, Lasting Wellness",
-      description: "Science-based herbal medicine clinic in Bafoussam, Cameroon. Telehealth + worldwide DHL shipping.",
+      description:
+        "Science-based herbal medicine clinic in Bafoussam, Cameroon. Telehealth consultations, delivery across Cameroon and shipping to supported international destinations.",
     },
   };
 }

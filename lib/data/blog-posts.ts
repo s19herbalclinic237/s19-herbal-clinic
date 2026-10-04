@@ -77,7 +77,7 @@ Cet article est éducatif et ne remplace pas une consultation médicale. Discute
 - Email : info@s19herbalclinic.com
 - Telegram : [Cliquez ici](https://t.me/+jA0LRD7v5dJmOTNk)
 
-La consultation en ligne est gratuite. Nous pouvons répondre à vos questions et expédier nos produits vers tout pays avec un service DHL.`,
+La consultation en ligne est gratuite. Nous pouvons répondre à vos questions et expédier nos produits vers des destinations prises en charge.`,
     body: `When a man in his 40s is told his fasting blood sugar has crossed into the diabetic range, his first question is usually the same one most people ask: "Which medicine do I take?" It is a fair question. But at S19 Herbal Clinic, our first question is different. Not just "what do we give for the symptom?" but "why is this happening, and what can we change?" That is root-cause care, and it is the heart of this article.
 
 HOW BIG IS THE DIABETES PROBLEM?
@@ -116,7 +116,7 @@ This article is educational and is not a substitute for a medical consultation. 
 - Email: info@s19herbalclinic.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
-Online consultation is free. We can answer your questions and ship our products to any country with a DHL service.`,
+Online consultation is free. We can answer your questions and ship our products to supported destinations.`,
   },
   {
     title: "The Silent Killer You Can Measure: High Blood Pressure Facts Every Adult Should Know",
@@ -173,7 +173,7 @@ Cet article est éducatif et ne remplace pas une consultation médicale, en part
 - Email : info@s19herbalclinic.com
 - Telegram : [Cliquez ici](https://t.me/+jA0LRD7v5dJmOTNk)
 
-La consultation en ligne est gratuite. Nous pouvons répondre à vos questions et expédier nos produits vers tout pays avec un service DHL.`,
+La consultation en ligne est gratuite. Nous pouvons répondre à vos questions et expédier nos produits vers des destinations prises en charge.`,
     body: `The first sign is often nothing at all. No pain, no warning. That is why high blood pressure is called a silent killer - and why the World Health Organization (WHO) calls it one of the most important modifiable risk factors for premature death worldwide. Each year it contributes to millions of strokes, heart attacks and kidney failures. Yet it is also one of the most measurable conditions in medicine, and for many people, one of the most beatable.
 
 THE NUMBERS (WHO, 2025)
@@ -215,7 +215,7 @@ This article is educational and not a substitute for a medical consultation, esp
 - Email: info@s19herbalclinic.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
-Online consultation is free. We can answer your questions and ship our products to any country with a DHL service.`,
+Online consultation is free. We can answer your questions and ship our products to supported destinations.`,
   },
   {
     title: "Natural Does Not Mean Safe: The Science Behind Responsible Herbal Medicine",
@@ -269,7 +269,7 @@ Cet article est éducatif et ne remplace pas une consultation. Si vous prenez de
 - Email : info@s19herbalclinic.com
 - Telegram : [Cliquez ici](https://t.me/+jA0LRD7v5dJmOTNk)
 
-La consultation en ligne est gratuite. Nous pouvons répondre à vos questions et expédier nos produits vers tout pays avec un service DHL.`,
+La consultation en ligne est gratuite. Nous pouvons répondre à vos questions et expédier nos produits vers des destinations prises en charge.`,
     body: `"One man's food is another man's poison" - the old proverb captures something modern pharmacology proves every day. Herbs contain biologically active chemical compounds, just like the molecules in pharmaceutical drugs. That is precisely why responsible herbalism takes "natural" claims seriously - and why "natural" must never be treated as a synonym for "safe at any dose, in any person."
 
 THE EVIDENCE ON NATURAL INGREDIENTS
@@ -308,7 +308,7 @@ This article is educational and not a substitute for a consultation. If you take
 - Email: info@s19herbalclinic.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
-Online consultation is free. We can answer your questions and ship our products to any country with a DHL service.`,
+Online consultation is free. We can answer your questions and ship our products to supported destinations.`,
   },
   {
     title: "Food as Medicine: Applying the WHO's Dietary Targets to Everyday Meals",
@@ -358,7 +358,7 @@ Cet article est éducatif et ne remplace pas des conseils diététiques personna
 - Email : info@s19herbalclinic.com
 - Telegram : [Cliquez ici](https://t.me/+jA0LRD7v5dJmOTNk)
 
-La consultation en ligne est gratuite. Nous pouvons répondre à vos questions et expédier nos produits vers tout pays avec un service DHL.`,
+La consultation en ligne est gratuite. Nous pouvons répondre à vos questions et expédier nos produits vers des destinations prises en charge.`,
     body: `Food is arguably the most powerful environmental influence on human metabolism. For chronic diseases like diabetes, hypertension, fatty liver and heart disease, what we eat every day matters as much as any single prescription. The World Health Organization (WHO) calls unhealthy diet and physical inactivity "leading global risks to health" - and its dietary targets give us a simple, honest checklist anyone can use.
 
 THE FIVE WHO TARGETS (AT A GLANCE)
@@ -393,7 +393,7 @@ This article is educational and not a substitute for personalised dietary advice
 - Email: info@s19herbalclinic.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
-Online consultation is free. We can answer your questions and ship our products to any country with a DHL service.`,
+Online consultation is free. We can answer your questions and ship our products to supported destinations.`,
   },
   {
     title: "The Enlarged Prostate Problem Every Man Over 50 Should Understand",
@@ -444,7 +444,7 @@ Cet article est éducatif et ne remplace pas une évaluation médicale. Tout sym
 - Email : info@s19herbalclinic.com
 - Telegram : [Cliquez ici](https://t.me/+jA0LRD7v5dJmOTNk)
 
-La consultation en ligne est gratuite. Nous pouvons répondre à vos questions et expédier nos produits vers tout pays avec un service DHL.`,
+La consultation en ligne est gratuite. Nous pouvons répondre à vos questions et expédier nos produits vers des destinations prises en charge.`,
     body: `His sleep keeps getting interrupted. He urinates more often, especially at night. The stream has become weaker, and it always feels like his bladder is not quite empty. If you are a man over 50, this is one of the most common health stories in the world. It is usually benign prostatic hyperplasia (BPH) - an enlarged, non-cancerous prostate - and although it is rarely life-threatening, left unmanaged it can steadily damage sleep, comfort and confidence.
 
 HOW COMMON IS IT?
@@ -480,7 +480,7 @@ This article is educational and not a substitute for a medical evaluation. Any n
 - Email: info@s19herbalclinic.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
-Online consultation is free. We can answer your questions and ship our products to any country with a DHL service.`,
+Online consultation is free. We can answer your questions and ship our products to supported destinations.`,
   },
   {
     title: "Is Hepatitis B Curable?",
@@ -524,7 +524,7 @@ Pour une consultation gratuite ou un achat :
 - Email : info@s19herbalclinic.com
 - Telegram : [Cliquez ici](https://t.me/+jA0LRD7v5dJmOTNk)
 
-La consultation en ligne est gratuite. Nos produits peuvent être expédiés vers tout pays qui dispose d'un service d'expédition DHL. Le paquet de guérison du VHB est un petit paquet qui pèse généralement moins de 2 kg.
+La consultation en ligne est gratuite. Nos produits peuvent être expédiés vers des destinations prises en charge. Le paquet de guérison du VHB est un petit paquet qui pèse généralement moins de 2 kg.
 
 Nos services s'étendent au traitement et à la guérison d'infections et de maladies non mentionnées sur notre blog, comme la syphilis, la chlamydia, la gonorrhée, le staphylocoque, la vaginose bactérienne, le mycoplasma genitalium et la PID.`,
     body: `# Hepatitis B Infection Cure
@@ -555,7 +555,7 @@ For free consultation or purchase:
 - Email: info@s19herbalclinic.com
 - Telegram: [Click here](https://t.me/+jA0LRD7v5dJmOTNk)
 
-Online consultation is free. Our products can be shipped to any country that has a DHL shipping service available. The HBV cure package is a small package that typically weighs less than 2kg.
+Online consultation is free. Our products can be shipped to supported destinations. The HBV cure package is a small package that typically weighs less than 2kg.
 
 Our services extend to treating and curing infections and diseases that are not mentioned on our blog, like syphilis, chlamydia, gonorrhea, staphylococcus, bacteria vaginosis, mycoplasma genitalium and PID.`,
   },
@@ -996,7 +996,7 @@ Notre remède à base de plantes est un **plan de traitement de 30 à 90 jours**
 
 **NB :** Il n'y a pas besoin de chirurgie, de chimiothérapie, de cautérisation, ni de médicaments chimiques en pharmacie pour renforcer le système immunitaire - nous offrons une alternative saine à base de plantes.
 
-Nos produits peuvent être expédiés vers tout pays qui dispose d'un service d'expédition DHL. Le paquet HPV est un petit paquet qui pèse généralement moins de 2 kg.
+Nos produits peuvent être expédiés vers des destinations prises en charge. Le paquet HPV est un petit paquet qui pèse généralement moins de 2 kg.
 
 ## Pour plus d'informations
 
@@ -1039,7 +1039,7 @@ Our herbal cure is a **30 to 90-day treatment plan** consisting of 100% special 
 
 **NB:** There is no need for surgery, chemotherapy, cauterization, nor any chemical medications from the pharmacy for immune-system boosting - we provide a healthy herbal alternative.
 
-Our products can be shipped to any country that has a DHL shipping service available. The HPV package is a small package that typically weighs less than 2kg.
+Our products can be shipped to supported destinations. The HPV package is a small package that typically weighs less than 2kg.
 
 ## For More Info
 
@@ -1104,7 +1104,7 @@ Notre **pack de plantes Miracle Diabetes**, associé à un plan alimentaire de 3
 
 Le plan de traitement peut être adapté à chaque individu en fonction de son état de santé ou d'autres conditions de santé, comme l'hypertension, l'arthrite, le surpoids ou l'obésité. Avec de la détermination, de l'autodiscipline, de la constance et de la foi, la guérison est garantie.
 
-Nous expédions nos produits vers tout pays où un service d'expédition DHL est disponible.
+Nous expédions nos produits vers des destinations prises en charge.
 
 ## Pour plus d'informations
 
@@ -1156,7 +1156,7 @@ Our **Miracle Diabetes herbal package**, paired with a 3-month to 6-month dietin
 
 The treatment plan can be tailored to each individual based on their health facts or other health conditions, such as hypertension, arthritis, overweight or obesity. With determination, self-discipline, consistency and faith, healing is guaranteed.
 
-We ship our products to any country with the presence of a DHL shipping service.
+We ship our products to supported destinations.
 
 ## For More Info
 
@@ -1216,7 +1216,7 @@ Dans des circonstances rares, l'herpès (HSV-1 et HSV-2) peut être transmis de 
 
 Notre remède à base de plantes est un **plan de traitement de 45 à 60 jours** composé d'extraits spéciaux 100% issus de plantes rares aux pouvoirs guérisseurs, qui guérit l'herpès oral et génital (HSV-1 et HSV-2).
 
-Nos produits peuvent être expédiés vers tout pays qui dispose d'un service d'expédition DHL. Le paquet standard de guérison de l'herpès est un petit paquet qui pèse généralement entre 2 kg et 3,5 kg.
+Nos produits peuvent être expédiés vers des destinations prises en charge. Le paquet standard de guérison de l'herpès est un petit paquet qui pèse généralement entre 2 kg et 3,5 kg.
 
 ## Contactez-nous
 
@@ -1265,7 +1265,7 @@ In rare circumstances, herpes (HSV-1 and HSV-2) can be transmitted from mother t
 
 Our herbal cure is a **45 to 60-day treatment plan** consisting of 100% special extracts from rare plants with healing powers, which cures both oral and genital herpes (HSV-1 and HSV-2).
 
-Our products can be shipped to any country that has a DHL shipping service available. The herpes cure standard package is a small package that typically weighs between 2kg and 3.5kg.
+Our products can be shipped to supported destinations. The herpes cure standard package is a small package that typically weighs between 2kg and 3.5kg.
 
 ## Contact Us
 

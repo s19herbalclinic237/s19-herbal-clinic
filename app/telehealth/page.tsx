@@ -7,7 +7,18 @@ import { Reveal } from "@/components/ui/motion";
 import { localizedTelehealthSteps } from "@/lib/data/programs";
 import { CLINIC, waLink } from "@/lib/site";
 import { S19_ASSETS } from "@/lib/site-assets";
-import { FaWhatsapp, FaShieldHalved, FaFlask, FaClock, FaPaperPlane, FaRegCircleCheck, FaUserDoctor, FaVideo } from "react-icons/fa6";
+import {
+  FaWhatsapp,
+  FaShieldHalved,
+  FaFlask,
+  FaClock,
+  FaPaperPlane,
+  FaRegCircleCheck,
+  FaUserDoctor,
+  FaVideo,
+  FaGlobe,
+  FaMapLocationDot,
+} from "react-icons/fa6";
 import { getServerLocale, serverT } from "@/lib/i18n-server";
 import { formatEur, formatFcfa, formatUsd } from "@/lib/utils";
 import { canonicalMeta } from "@/lib/seo";
@@ -23,8 +34,11 @@ export async function generateMetadata(): Promise<Metadata> {
       "herbal telehealth consultation",
       "online herbal doctor consultation",
       "virtual naturopathic consultation Cameroon",
-      "herbal medicine worldwide delivery",
-      "DHL herbal medicine shipping",
+      // Two of these used to promise worldwide delivery by a named courier. Both
+      // are gone: the delivery guide forbids guaranteeing every country and
+      // forbids naming a courier company.
+      "herbal medicine delivery Cameroon",
+      "international herbal shipping",
       "online consultation Bafoussam",
       "téléconsultation phytothérapie Cameroun",
       "consultation en ligne médecin traditionnel",
@@ -90,6 +104,9 @@ export default async function TelehealthPage() {
               <p className="text-sm text-muted">
                 ≈ {formatUsd(10000)} · {formatEur(10000)}
               </p>
+              {/* The brief requires the foreign figures to be visibly approximate,
+                  not just prefixed with a symbol. */}
+              <p className="mt-1 text-xs text-muted">{t("tele.price.approx")}</p>
             </div>
           </div>
         </Reveal>
@@ -201,6 +218,51 @@ export default async function TelehealthPage() {
           </a>
         </Container>
       </Section>
+
+      {/* ---------- Product delivery (Cameroon/International Delivery guide, §04) ----------
+
+          This adds the guide's separated domestic/international copy. Step 02 of the
+          process above already says a prescribed package "is safely shipped to your
+          city or country", and that line stays: the brief and the guide both
+          explicitly require keeping the message that Tele-Health patients receive
+          their products after assessment and prescription. This block qualifies it
+          with the actual coverage rather than contradicting it, which is why it
+          reads as detail rather than as a competing promise. */}
+      <Section>
+          <Reveal>
+            <div className="mx-auto max-w-4xl overflow-hidden rounded-lg border border-line bg-white shadow-card">
+              <div className="border-b border-line bg-mist px-7 py-5">
+                <Kicker>{t("tele.delivery.kicker")}</Kicker>
+                <h2 className="mt-3">{t("tele.delivery.title")}</h2>
+              </div>
+              <div className="grid md:grid-cols-2">
+                {/* Domestic first and equal weight: the guide says explicitly not to
+                    make international delivery more prominent than Cameroon delivery. */}
+                <div className="border-b border-line p-7 md:border-b-0 md:border-r">
+                  <p className="flex items-center gap-2 text-sm font-bold text-forest-800">
+                    <FaMapLocationDot className="h-4 w-4 text-forest-600" aria-hidden />
+                    {t("tele.delivery.cameroonLabel")}
+                  </p>
+                  <p className="mt-3 text-sm leading-relaxed text-muted">
+                    {t("tele.delivery.cameroon")}
+                  </p>
+                </div>
+                <div className="p-7">
+                  <p className="flex items-center gap-2 text-sm font-bold text-forest-800">
+                    <FaGlobe className="h-4 w-4 text-forest-600" aria-hidden />
+                    {t("tele.delivery.internationalLabel")}
+                  </p>
+                  <p className="mt-3 text-sm leading-relaxed text-muted">
+                    {t("tele.delivery.international")}
+                  </p>
+                </div>
+              </div>
+              <p className="border-t border-line bg-cream px-7 py-5 text-sm leading-relaxed text-ink/85">
+                {t("tele.delivery.close")}
+              </p>
+            </div>
+          </Reveal>
+        </Section>
 
       {/* Which option */}
       <Section>

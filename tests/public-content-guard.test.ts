@@ -17,9 +17,9 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 
-import { translate } from "@/lib/i18n";
+import { translate, type TranslationKey } from "@/lib/i18n";
 import { treatmentPrograms, localizedPrograms, faqs } from "@/lib/data/programs";
-import { homePathway, programsPathway } from "@/lib/data/philosophy";
+import { homePathway, programsPathway, careBeyond } from "@/lib/data/philosophy";
 import {
   homePrograms,
   localizedHomePrograms,
@@ -30,6 +30,9 @@ import {
 } from "@/lib/data/home-content";
 import { testimonials as staticTestimonials } from "@/lib/data/testimonials";
 import { faqSections, faqEntries, FAQ_MID_CTA_AFTER } from "@/lib/data/faq";
+import { deliveryZones, telehealthSteps, coreStrengths } from "@/lib/data/programs";
+import { blogPosts } from "@/lib/data/blog-posts";
+import { clinicJsonLd, SEO_KEYWORDS } from "@/lib/seo";
 
 const LOCALES = ["en", "fr"] as const;
 
@@ -401,9 +404,18 @@ describe("home page: required sections and boundaries", () => {
 
   test("the trust line names all three access routes", () => {
     const trust = translate("en", "home.hero.trust");
-    for (const route of ["Bafoussam", "Tele-Health", "Worldwide"]) {
+    // Delivery used to be asserted as the literal word "Worldwide". The delivery
+    // guide forbids promising every country, so the third route is now delivery
+    // coverage - Cameroon first, then supported international destinations - and
+    // the assertion follows the copy rather than the old word.
+    for (const route of ["Bafoussam", "Tele-Health", "Delivery across Cameroon"]) {
       assert.ok(trust.includes(route), `the trust line must name ${route}`);
     }
+    assert.match(trust, /supported international destinations/i);
+    assert.doesNotMatch(trust, /worldwide/i, "the trust line must not promise worldwide delivery");
+    // The clinic and the remote service keep their place: the guide changed the
+    // delivery claim, not the access routes around it.
+    assert.equal(trust.split("·").length, 3, "the trust line still has three clauses");
   });
 
   test("the care-access section offers both in-person and remote", () => {
@@ -862,5 +874,631 @@ describe("FAQ page: the approved 22-question structure holds", () => {
         assert.ok(l.labelFr.trim().length > 0, `Q${q.n} link ${l.href} has no French label`);
       }
     }
+  });
+});
+
+/* ------------------------------------------------------------------ *
+ * Cameroon & International Delivery guide
+ *
+ * The delivery guide is mostly a list of things the site must stop saying.
+ * "Worldwide delivery", "express courier", "DHL" and named courier companies
+ * all read as guarantees, so each is pinned here against the copy the pages
+ * actually render. The city list and country examples are pinned too: the
+ * guide's promise is coverage, and coverage that quietly loses a city or a
+ * country is still a coverage claim the clinic did not make.
+ * ------------------------------------------------------------------ */
+
+describe("Cameroon & international delivery guide", () => {
+  /** Every delivery claim the site makes in customer-facing copy. */
+  const DELIVERY_KEYS = [
+    "home.hero.trust",
+    "home.catalog.lead",
+    "shop.meta.description",
+    "shop.hero.lead",
+    "shop.delivery.kicker",
+    "shop.delivery.title",
+    "shop.delivery.cameroonLabel",
+    "shop.delivery.cameroon",
+    "shop.delivery.internationalLabel",
+    "shop.delivery.international",
+    "shop.delivery.close",
+    "tele.meta.description",
+    "tele.adv12",
+    "tele.delivery.kicker",
+    "tele.delivery.title",
+    "tele.delivery.cameroonLabel",
+    "tele.delivery.cameroon",
+    "tele.delivery.internationalLabel",
+    "tele.delivery.international",
+    "tele.delivery.close",
+    "location.meta.description",
+    "location.info.logisticsLine2",
+    "location.deliver.infoText",
+    "location.cta.text",
+    "contact.noTravel.eyebrow",
+    "contact.noTravel.title",
+    "contact.noTravel.text",
+    "contact.noTravel.cameroonLabel",
+    "contact.noTravel.cameroon",
+    "contact.noTravel.internationalLabel",
+    "contact.noTravel.international",
+    "contact.noTravel.close",
+    "footer.delivery",
+    "checkout.mode3.title",
+    "checkout.mode3.desc",
+  ] as const satisfies readonly TranslationKey[];
+
+  /** Every delivery claim that lives in a data module rather than in i18n. */
+  function dataDeliveryClaims(): Array<{ where: string; text: string }> {
+    return [
+      ...coreStrengths.map((s) => ({ where: `coreStrengths/${s.title}`, text: s.text })),
+      ...coreStrengths.map((s) => ({ where: `coreStrengths/${s.title}`, text: s.textFr ?? "" })),
+      ...faqs.map((f) => ({ where: `faqs/${f.question}`, text: f.answer })),
+      ...faqs.map((f) => ({ where: `faqs/${f.question}`, text: f.answerFr ?? "" })),
+      ...telehealthSteps.map((s) => ({ where: `telehealthSteps/${s.step}`, text: s.text })),
+      ...telehealthSteps.map((s) => ({ where: `telehealthSteps/${s.step}`, text: s.textFr ?? "" })),
+      ...careBeyond.map((s) => ({ where: `careBeyond/${s.title}`, text: s.text })),
+    ];
+  }
+
+  /**
+ * Every way this site has promised delivery beyond the coverage it offers.
+ * The word "worldwide" is only one of them: the French home-page catalog line
+ * said "en livraison mondiale" and the English one said "anywhere in the
+ * world", and both survived several passes precisely because they never used
+ * the word a grep was looking for. Any phrasing that promises *every* country
+ * belongs here.
+ */
+const EVERY_COUNTRY =
+  /worldwide|mondial|monde entier|anywhere in the world|livraison mondiale|any country|tout pays|every country|tous les pays|partout dans le monde/i;
+
+  test("no delivery claim promises every country", () => {
+    // Scoped to delivery copy on purpose. "Worldwide" is still correct for
+    // Tele-Health access - a patient in another country can reach the clinic
+    // remotely from anywhere - so tele.meta.title, tele.hero.lead, footer.bottom
+    // and the contact-page callout keep it. What must never survive is a promise
+    // that products reach everywhere.
+    for (const key of DELIVERY_KEYS) {
+      for (const locale of LOCALES) {
+        assert.doesNotMatch(
+          translate(locale, key),
+          EVERY_COUNTRY,
+          `${key} [${locale}] must not promise delivery to every country`,
+        );
+      }
+    }
+    for (const { where, text } of dataDeliveryClaims()) {
+      assert.doesNotMatch(text, EVERY_COUNTRY, `${where} must not promise delivery to every country`);
+    }
+    for (const zone of deliveryZones) {
+      assert.doesNotMatch(zone, EVERY_COUNTRY, `delivery zone "${zone}" must not promise every country`);
+    }
+  });
+
+  test("the Tele-Health consultation reach is still worldwide", () => {
+    // The complement of the test above. Tele-Health genuinely is available from
+    // anywhere, so these claims stay; a future pass must not delete them while
+    // removing the delivery promises.
+    assert.match(translate("en", "tele.hero.title"), /anywhere in the world/i);
+    assert.match(translate("en", "tele.meta.title"), /Worldwide/);
+    assert.match(translate("en", "footer.bottom"), /Worldwide Tele-Health/);
+  });
+
+  test("no delivery claim names a courier company", () => {
+    // The guide says not to invent courier companies, fees or times. DHL was the
+    // concrete instance of that on the Tele-Health page and in its meta keywords.
+    //
+    // Case-sensitive on purpose. Carrier names are conventionally uppercase, and
+    // a case-blind pattern for "UPS" matches ordinary medical prose such as
+    // "regular check-ups" - which is what made the first version of this test
+    // fail on a sentence that had nothing to do with couriers.
+    const CARRIERS = /\b(DHL|FedEx|UPS|Aramex|EMS|DPD|GDEx)\b/;
+    for (const key of DELIVERY_KEYS) {
+      for (const locale of LOCALES) {
+        assert.doesNotMatch(translate(locale, key), CARRIERS, `${key} [${locale}] must not name a courier`);
+      }
+    }
+    const telePage = readFileSync(path.join(root, "app/telehealth/page.tsx"), "utf8");
+    assert.doesNotMatch(telePage, CARRIERS, "the Tele-Health page must not name a courier");
+    // The blog articles rendered the same promise, and so did the home catalog
+    // lead. Both are asserted on the rendered document rather than on the source,
+    // because a source read would also catch the comments that explain the fix.
+    for (const post of blogPosts) {
+      for (const body of [post.body, post.bodyFr ?? ""]) {
+        assert.doesNotMatch(body, CARRIERS, `the "${post.slug}" article must not name a courier`);
+      }
+    }
+  });
+
+  test("the approved Cameroon city list is complete wherever it appears", () => {
+    // The guide lists eight named cities plus "other cities across Cameroon".
+    // Accented French spellings are part of the list, not a variant of it.
+    const CAMEROON: Array<[TranslationKey, RegExp[]]> = [
+      ["shop.delivery.cameroon", [/Bafoussam/, /Bamenda/, /Buea|Buéa/, /Limbe|Limbé/, /Bertoua/, /Kumba/, /Douala/, /Yaoundé|Yaounde/]],
+      ["tele.delivery.cameroon", [/Bafoussam/, /Bamenda/, /Buea|Buéa/, /Limbe|Limbé/, /Bertoua/, /Kumba/, /Douala/, /Yaoundé|Yaounde/]],
+      ["contact.noTravel.cameroon", [/Bafoussam/, /Bamenda/, /Buea|Buéa/, /Limbe|Limbé/, /Bertoua/, /Kumba/, /Douala/, /Yaoundé|Yaounde/]],
+    ];
+    for (const [key, patterns] of CAMEROON) {
+      for (const locale of LOCALES) {
+        for (const pattern of patterns) {
+          assert.match(translate(locale, key), pattern, `${key} [${locale}] is missing a Cameroon city`);
+        }
+      }
+    }
+  });
+
+  test("the approved international examples are complete wherever they appear", () => {
+    // Long-form keys spell every country out with its abbreviation.
+    const LONG_FORM: Array<[TranslationKey, RegExp[]]> = [
+      ["shop.delivery.international", [/United States|USA|États-Unis/i, /Canada/i, /United Kingdom|R-U|Royaume-Uni/i, /United Arab Emirates|Émirats|ÉAU/i]],
+      ["tele.delivery.international", [/United States|USA|États-Unis/i, /Canada/i, /United Kingdom|R-U|Royaume-Uni/i, /United Arab Emirates|Émirats|ÉAU/i]],
+      ["shop.delivery.close", []],
+      ["tele.delivery.close", []],
+    ];
+    for (const [key, patterns] of LONG_FORM) {
+      for (const locale of LOCALES) {
+        for (const pattern of patterns) {
+          assert.match(translate(locale, key), pattern, `${key} [${locale}] is missing a country example`);
+        }
+      }
+    }
+    // The contact block uses the short form the contact guide approved.
+    for (const locale of LOCALES) {
+      assert.match(translate(locale, "contact.noTravel.international"), /USA|États-Unis/i);
+      assert.match(translate(locale, "contact.noTravel.international"), /Canada/i);
+    }
+  });
+
+  test("Cameroon is never subordinated to international delivery", () => {
+    // The guide's DO NOT CHANGE: international must not be the more prominent
+    // claim. In a two-column block that means Cameroon is the first column, and
+    // in a one-line heading Cameroon comes first too.
+    for (const key of ["shop.delivery.title", "tele.delivery.title"] as const) {
+      for (const locale of LOCALES) {
+        const text = translate(locale, key);
+        const cameroon = text.search(/Cameroon|Cameroun/i);
+        const international = text.search(/international/i);
+        assert.ok(cameroon >= 0, `${key} [${locale}] must name Cameroon`);
+        assert.ok(international >= 0, `${key} [${locale}] must name international shipping`);
+        assert.ok(
+          cameroon < international,
+          `${key} [${locale}] puts international before Cameroon: "${text}"`,
+        );
+      }
+    }
+    // The footer compact line puts Cameroon first for the same reason.
+    assert.match(translate("en", "footer.delivery"), /^Nationwide Delivery Across Cameroon/);
+    assert.match(translate("fr", "footer.delivery"), /^Livraison nationale au Cameroun/);
+
+    // And each block renders Cameroon before international in the markup.
+    for (const page of ["app/shop/page.tsx", "app/telehealth/page.tsx", "app/contact/page.tsx"]) {
+      const source = readFileSync(path.join(root, page), "utf8");
+      const cameroonAt = source.indexOf("cameroonLabel");
+      const internationalAt = source.indexOf("internationalLabel");
+      assert.ok(cameroonAt > 0 && internationalAt > cameroonAt, `${page} must render Cameroon before international`);
+    }
+  });
+
+  test("no delivery block states a price, customs fee or delivery time", () => {
+    // The guide forbids inventing charges and times. Every one of these blocks
+    // points the customer at S19 to confirm instead, which is the only way the
+    // figures may be introduced.
+    for (const key of [
+      "shop.delivery.cameroon",
+      "shop.delivery.international",
+      "shop.delivery.close",
+      "tele.delivery.cameroon",
+      "tele.delivery.international",
+      "tele.delivery.close",
+      "contact.noTravel.cameroon",
+      "contact.noTravel.international",
+      "contact.noTravel.close",
+    ] as const) {
+      for (const locale of LOCALES) {
+        const text = translate(locale, key);
+        assert.doesNotMatch(text, /FCFA|XAF|CFA|franc/i, `${key} [${locale}] must not state a price`);
+        assert.doesNotMatch(text, /[$€£]\s?\d|\d\s?[$€£]/, `${key} [${locale}] must not state a price`);
+        assert.doesNotMatch(text, /customs|douane/i, `${key} [${locale}] must not state a customs fee`);
+        assert.doesNotMatch(
+          text,
+          /\b\d+\s*(business\s+)?(day|days|week|weeks|jour|jours|semaine|semaines)\b/i,
+          `${key} [${locale}] must not state a delivery time`,
+        );
+      }
+    }
+  });
+
+  test("every delivery block tells the reader to confirm with S19", () => {
+    for (const key of ["shop.delivery.close", "tele.delivery.close", "contact.noTravel.close"] as const) {
+      for (const locale of LOCALES) {
+        const text = translate(locale, key);
+        assert.match(text, /S19/, `${key} [${locale}] must route the reader to S19`);
+        assert.match(
+          text,
+          locale === "fr" ? /confirm/i : /confirm/i,
+          `${key} [${locale}] must ask the reader to confirm availability and charges`,
+        );
+      }
+    }
+  });
+
+  test("the shipping coverage chips no longer read as every country", () => {
+    // Rendered as the coverage list on /location. The old final chip was
+    // "Worldwide"; "Supported Destinations" says the same thing honestly.
+    assert.equal(deliveryZones.at(-1), "Supported Destinations");
+    assert.ok(
+      deliveryZones.filter((z) => /Cameroon/i.test(z)).length > 0,
+      "the chips must still show Cameroon coverage",
+    );
+  });
+
+  test("Tele-Health keeps the message that products follow assessment", () => {
+    // The delivery guide adds coverage detail but explicitly forbids removing the
+    // existing promise that a Tele-Health patient receives their prescribed
+    // products. Step 02 is where that promise lives.
+    const dispatch = telehealthSteps.find((s) => /herbal dispatch/i.test(s.title));
+    assert.ok(dispatch, "the Tailored Herbal Dispatch step must survive");
+    assert.match(dispatch!.text, /prescribed herbal package/i);
+    assert.match(dispatch!.textFr!, /pack de plantes prescrit/i);
+    assert.match(dispatch!.text, /shipped/i);
+  });
+
+  test("the Tele-Health delivery block is rendered on the page", () => {
+    const source = readFileSync(path.join(root, "app/telehealth/page.tsx"), "utf8");
+    for (const key of [
+      "tele.delivery.kicker",
+      "tele.delivery.title",
+      "tele.delivery.cameroon",
+      "tele.delivery.international",
+      "tele.delivery.close",
+    ]) {
+      assert.ok(source.includes(key), `the Tele-Health page must render ${key}`);
+    }
+  });
+
+  test("the shop delivery block is rendered on the page", () => {
+    const source = readFileSync(path.join(root, "app/shop/page.tsx"), "utf8");
+    for (const key of [
+      "shop.delivery.title",
+      "shop.delivery.cameroon",
+      "shop.delivery.international",
+      "shop.delivery.close",
+    ]) {
+      assert.ok(source.includes(key), `the shop page must render ${key}`);
+    }
+  });
+
+  test("the structured data does not promise every country or name a courier", () => {
+    // This is the one delivery claim that outranks the visible copy: the
+    // Organization schema is emitted on every page and is read by crawlers. It
+    // carried "Worldwide (international DHL shipping)" in its areaServed list and
+    // "worldwide DHL shipping" in its description, both of which the guide
+    // forbids, and neither of which a reader of the page would ever see.
+    const graph = clinicJsonLd()["@graph"];
+    const clinic = graph.find((n) => n["@type"] === "MedicalClinic");
+    assert.ok(clinic, "the clinic node must exist");
+    assert.doesNotMatch(
+      clinic!.description as string,
+      /worldwide|DHL/i,
+      "the Organization description must not promise worldwide delivery by courier",
+    );
+    assert.doesNotMatch(
+      JSON.stringify(clinic!.areaServed),
+      /worldwide|DHL/i,
+      "areaServed must not promise every country or name a courier",
+    );
+    assert.match(
+      JSON.stringify(clinic!.areaServed),
+      /Supported International Destinations/,
+      "areaServed must still declare the international coverage S19 offers",
+    );
+
+    // The clinic's physical coverage stays Cameroon-only in the local entries.
+    const served = clinic!.areaServed as string[];
+    assert.ok(served.includes("Cameroon"), "areaServed must keep Cameroon");
+    assert.ok(served.includes("Bafoussam"), "areaServed must keep Bafoussam");
+  });
+
+  test("no search keyword promises worldwide shipping", () => {
+    // A keyword is a promise made to a crawler. This one was the single widest
+    // delivery claim on the site and appeared on every page's meta keywords.
+    for (const kw of SEO_KEYWORDS) {
+      assert.doesNotMatch(kw, /worldwide/i, `the keyword "${kw}" must not promise worldwide shipping`);
+    }
+    assert.ok(
+      SEO_KEYWORDS.some((k) => /supported|international/i.test(k)),
+      "the international delivery keyword must still be there, only honest",
+    );
+  });
+
+  test("no page's root metadata promises worldwide courier shipping", () => {
+    // The root description is inherited by pages that set no description of their
+    // own, and it carried "worldwide DHL shipping".
+    const layout = readFileSync(path.join(root, "app/layout.tsx"), "utf8");
+    assert.doesNotMatch(layout, /worldwide DHL shipping/i, "the root description must not name a courier");
+    const home = readFileSync(path.join(root, "app/page.tsx"), "utf8");
+    assert.doesNotMatch(home, /worldwide DHL shipping/i, "the home metadata must not name a courier");
+  });
+
+  test("no blog article promises delivery to any country", () => {
+    // Eight published articles ended with a contact block offering to "ship our
+    // products to any country with a DHL service". The blog has no retouch guide,
+    // but the delivery guide's rule is about the claim, not the page, and these
+    // were rendered copy on /blog and /blog/[slug].
+    for (const post of blogPosts) {
+      const bodies: Array<[string, string]> = [
+        ["body", post.body],
+        ["bodyFr", post.bodyFr ?? ""],
+      ];
+      for (const [which, body] of bodies) {
+        assert.doesNotMatch(
+          body,
+          /any country|tout pays/i,
+          `"${post.slug}" ${which} must not promise delivery to any country`,
+        );
+        assert.doesNotMatch(body, /\bDHL\b/i, `"${post.slug}" ${which} must not name a courier`);
+      }
+      // The surrounding sentences survive: only the delivery claim was edited.
+      // A post that still offers a delivery sentence must offer the supported
+      // ones, and the free-consultation sentence must be untouched.
+      for (const [which, body] of bodies) {
+        if (/ship our products/i.test(body)) {
+          assert.match(body, /ship our products to supported destinations/i, `"${post.slug}" ${which}`);
+        }
+        if (/expédions nos produits|expédier nos produits/i.test(body)) {
+          assert.match(body, /prises en charge/i, `"${post.slug}" ${which}`);
+        }
+        if (/Online consultation is free/i.test(body)) {
+          assert.match(body, /Online consultation is free/i, `"${post.slug}" ${which}`);
+        }
+        if (/La consultation en ligne est gratuite/i.test(body)) {
+          assert.match(body, /La consultation en ligne est gratuite/i, `"${post.slug}" ${which}`);
+        }
+      }
+    }
+  });
+});
+
+/* ------------------------------------------------------------------ *
+ * Contact, Booking & Patient Accommodation guide
+ * ------------------------------------------------------------------ */
+
+describe("contact, booking & accommodation guide", () => {
+  test("no contact or location line claims an emergency service", () => {
+    // The guide's DO NOT CHANGE for item 02: no "emergency line", no implied
+    // 24/7 medical cover. This replaced a real line that said both.
+    for (const key of ["contact.phoneSub", "contact.hoursSub", "location.info.hoursLine3"] as const) {
+      for (const locale of LOCALES) {
+        const text = translate(locale, key);
+        assert.doesNotMatch(text, /emergency|urgence/i, `${key} [${locale}] must not say emergency`);
+        assert.doesNotMatch(text, /24\/7|24h\/24|24-7/, `${key} [${locale}] must not imply 24/7 cover`);
+      }
+    }
+  });
+
+  test("the phone line states what it is for", () => {
+    assert.equal(translate("en", "contact.phoneSub"), "For appointments, enquiries & Tele-Health support");
+    // EN spells it "Tele-Health" and FR spells it "Télé-santé"; a single
+    // locale-blind pattern would fail one of them by construction.
+    assert.match(translate("en", "contact.phoneSub"), /Tele-Health/i);
+    assert.match(translate("fr", "contact.phoneSub"), /Télé-santé/i);
+  });
+
+  test("accommodation states its inclusions in one sentence", () => {
+    for (const locale of LOCALES) {
+      const includes = translate(locale, "contact.accommodation.includes");
+      assert.match(includes, /Starlink/i, `accommodation.includes [${locale}] must name the internet`);
+      assert.match(includes, /TV|télévision/i, `accommodation.includes [${locale}] must name cable TV`);
+    }
+  });
+
+  test("accommodation does not guarantee a room or publish a price", () => {
+    for (const locale of LOCALES) {
+      const note = translate(locale, "contact.accommodation.note");
+      assert.match(note, /before travelling|avant le voyage/i, `accommodation.note [${locale}] must set the timing`);
+      assert.doesNotMatch(note, /FCFA|CFA|franc/i, `accommodation.note [${locale}] must not publish a room price`);
+      const all = [
+        translate(locale, "contact.accommodation.text"),
+        translate(locale, "contact.accommodation.bookingNote"),
+        note,
+      ].join(" ");
+      assert.doesNotMatch(
+        all,
+        /\b(guaranteed|reserved for you|always available)\b/i,
+        `accommodation copy [${locale}] must not guarantee a room`,
+      );
+    }
+  });
+
+  test("the booking form asks for city/country and never a full address", () => {
+    for (const locale of LOCALES) {
+      assert.match(translate(locale, "booking.city"), /City \/ Country|Ville \/ Pays/i);
+      assert.ok(translate(locale, "booking.cityPlaceholder").trim().length > 0, "the city field needs a placeholder");
+    }
+    // The guide forbids a residential address on the consultation form. The
+    // checkout still collects one, because a courier needs it - so this is
+    // asserted on the booking form's own copy, not sitewide. The single
+    // autoComplete="address-level2" token is allowed: it is the HTML
+    // autocomplete level for a city, not a street-address field.
+    const form = readFileSync(path.join(root, "components/sections/booking-form.tsx"), "utf8");
+    assert.ok(form.includes("booking.city"), "the booking form must render the city field");
+    assert.doesNotMatch(form, /booking\.address/, "the consultation form must not reuse the checkout address field");
+    assert.doesNotMatch(form, /\bstreet\b/i, "the consultation form must not ask for a street");
+
+    // Field order is specified: phone, then city/country, then email.
+    const phoneAt = form.indexOf("booking.phone");
+    const cityAt = form.indexOf("booking.city\"");
+    const emailAt = form.indexOf("booking.email");
+    assert.ok(phoneAt > 0 && cityAt > phoneAt && emailAt > cityAt, "city/country must sit between phone and email");
+  });
+
+  test("the submitted enquiry carries city/country to the clinic", () => {
+    // A field that is collected but dropped on the server is not a field. It has
+    // to reach the stored enquiry and the notification email, because that is
+    // what routes the consultation and informs delivery.
+    const route = readFileSync(path.join(root, "app/api/contact/route.ts"), "utf8");
+    assert.match(route, /city: data\.city\?\.trim\(\)/, "the API must persist city/country");
+    const model = readFileSync(path.join(root, "lib/models/Inquiry.ts"), "utf8");
+    assert.match(model, /city\?: string/, "the Inquiry model must store city/country");
+    const email = readFileSync(path.join(root, "lib/email.ts"), "utf8");
+    assert.match(email, /City \/ Country/, "the notification email must show city/country");
+  });
+
+  test("submitting does not imply instant access to the doctor", () => {
+    // The guide's item 05 replaces the submit label precisely because
+    // "Submit & Connect to Dr on WhatsApp" promises a handover. The success
+    // button made the same promise one click later, so both are checked.
+    assert.equal(translate("en", "booking.submit"), "Submit & Continue on WhatsApp");
+    for (const key of ["booking.submit", "booking.connectDr"] as const) {
+      for (const locale of LOCALES) {
+        assert.doesNotMatch(
+          translate(locale, key),
+          /\bDr\b|\bDr\.|docteur|médecin/i,
+          `${key} [${locale}] must not promise direct doctor access`,
+        );
+        assert.match(
+          translate(locale, key),
+          /WhatsApp/i,
+          `${key} [${locale}] must still say where the conversation continues`,
+        );
+      }
+    }
+  });
+
+  test("the privacy reassurance is retained", () => {
+    assert.match(translate("en", "booking.private"), /kept strictly private and confidential/i);
+    assert.match(translate("fr", "booking.private"), /privées et confidentielles/i);
+  });
+
+  test("the cannot-travel block is rendered on the contact page", () => {
+    const source = readFileSync(path.join(root, "app/contact/page.tsx"), "utf8");
+    for (const key of [
+      "contact.noTravel.eyebrow",
+      "contact.noTravel.title",
+      "contact.noTravel.text",
+      "contact.noTravel.cameroon",
+      "contact.noTravel.international",
+      "contact.noTravel.close",
+    ]) {
+      assert.ok(source.includes(key), `the contact page must render ${key}`);
+    }
+    // Placed after Accommodation and before the footer.
+    const accommodationAt = source.indexOf("contact.accommodation.tagline");
+    const noTravelAt = source.indexOf("contact.noTravel.eyebrow");
+    assert.ok(accommodationAt > 0 && noTravelAt > accommodationAt, "the block must follow Accommodation");
+  });
+
+  test("the hero and the clinic details are untouched", () => {
+    // Item 01 and item 03 are explicit KEEP instructions. These assert the
+    // address, email and opening hours still read as they did, so a future pass
+    // cannot quietly rewrite them.
+    assert.equal(translate("en", "contact.hoursValue"), "Monday – Saturday: 8:00 AM – 6:00 PM");
+    assert.ok(translate("en", "contact.addressValue").includes("Bafoussam") === false, "street line has no town in it");
+    assert.equal(translate("en", "contact.addressSub"), "Bafoussam, Cameroon");
+  });
+});
+
+/* ------------------------------------------------------------------ *
+ * Tele-Health developer adjustment brief
+ * ------------------------------------------------------------------ */
+
+describe("Tele-Health adjustment brief", () => {
+  test("the remote assessment covers medications and records", () => {
+    const assessment = telehealthSteps.find((s) => s.step === "01");
+    assert.ok(assessment, "step 01 must survive");
+    assert.match(assessment!.text, /medications/i, "the assessment must ask for current medications");
+    assert.match(assessment!.text, /other relevant medical records/i, "the assessment must ask for medical records");
+    assert.match(assessment!.text, /laboratory results/i);
+    assert.match(assessment!.text, /WhatsApp or phone call/i);
+    assert.match(assessment!.textFr!, /médicaments/i);
+    assert.match(assessment!.textFr!, /dossier médical pertinent/i);
+  });
+
+  test("the document review is framed as health, not only herbs", () => {
+    for (const locale of LOCALES) {
+      const text = translate(locale, "tele.modality2.text");
+      assert.match(
+        text,
+        /detailed health and treatment-plan review|examen détaillé de votre état de santé et de votre plan de traitement/i,
+        `tele.modality2.text [${locale}] must use the approved review phrasing`,
+      );
+      assert.doesNotMatch(
+        text,
+        /herbal strategy review|stratégie à base de plantes/i,
+        `tele.modality2.text [${locale}] must drop the herbal-only framing`,
+      );
+    }
+  });
+
+  test("Tele-Health no longer claims to equal a full in-clinic visit", () => {
+    // The one "change only where necessary" item. The old line promised everything
+    // an in-clinic visit delivers, which cannot be true remotely.
+    for (const locale of LOCALES) {
+      assert.doesNotMatch(
+        translate(locale, "tele.modalities.text"),
+        /Everything you would get|Tout ce que vous obtiendriez/i,
+        "Tele-Health must not claim to reproduce an in-clinic visit",
+      );
+    }
+    assert.equal(
+      translate("en", "tele.modalities.text"),
+      "Comprehensive S19 consultation and follow-up, wherever you are.",
+    );
+  });
+
+  test("the consultation fee is FCFA and the foreign figures are marked approximate", () => {
+    for (const locale of LOCALES) {
+      assert.match(
+        translate(locale, "tele.price.approx"),
+        /approximate|approximatif/i,
+        "the brief requires the USD/EUR figures to be visibly approximate",
+      );
+      assert.match(
+        translate(locale, "tele.price.approx"),
+        /may vary|peuvent varier/i,
+        "the approximate note must say rates move",
+      );
+    }
+    const source = readFileSync(path.join(root, "app/telehealth/page.tsx"), "utf8");
+    assert.ok(source.includes("tele.price.approx"), "the fee block must render the approximate note");
+    // The official price stays in FCFA; the other currencies are derived from it.
+    assert.match(source, /formatFcfa\(10000\)/, "10,000 FCFA must remain the authoritative figure");
+  });
+
+  test("the fee is calculated rather than hard-coded", () => {
+    // The brief prefers dynamic equivalents over frozen numbers. A hard-coded
+    // US$17.20 would go stale the day the rate moved.
+    const utils = readFileSync(path.join(root, "lib/utils.ts"), "utf8");
+    assert.match(utils, /fcfaPerUsd/, "the USD equivalent must come from a rate constant");
+    assert.match(utils, /fcfaPerEur/, "the EUR equivalent must come from a rate constant");
+    const tele = readFileSync(path.join(root, "app/telehealth/page.tsx"), "utf8");
+    assert.doesNotMatch(tele, /US\$\s?17|17\.20/, "the Tele-Health page must not hard-code a USD figure");
+    assert.doesNotMatch(tele, /€\s?15\.24/, "the Tele-Health page must not hard-code a EUR figure");
+  });
+
+  test("the Tele-Health safety note is retained", () => {
+    for (const locale of LOCALES) {
+      assert.match(
+        translate(locale, "tele.options.note"),
+        /not an emergency service|pas un service d'urgence/i,
+        "the brief requires the not-an-emergency-service limitation to stay",
+      );
+    }
+  });
+
+  test("the preserved sections are all still present", () => {
+    // §1 of the brief is a list of things to keep. If one of these keys stops
+    // being rendered the page has quietly lost something the clinic asked for.
+    const source = readFileSync(path.join(root, "app/telehealth/page.tsx"), "utf8");
+    for (const key of [
+      "tele.advantages.title",
+      "tele.price.title",
+      "tele.price.text",
+      "tele.steps.title",
+    ]) {
+      assert.ok(source.includes(key), `the Tele-Health page must still render ${key}`);
+    }
+    assert.equal(translate("en", "tele.advantages.title"), "Advantages of an Online Consultation");
+    assert.equal(translate("en", "tele.price.text"), "The same standard consultation fee applies for both online and in-person consultations.");
   });
 });

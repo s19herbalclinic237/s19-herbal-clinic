@@ -276,7 +276,7 @@ export const careBeyond = [
   },
   {
     title: "Travelling & international patients",
-    text: "Telehealth, product delivery worldwide and accommodation support for patients travelling to Bafoussam.",
+    text: "Telehealth, product delivery across Cameroon and to supported international destinations, and accommodation support for patients travelling to Bafoussam.",
   },
   {
     title: "Prevention",

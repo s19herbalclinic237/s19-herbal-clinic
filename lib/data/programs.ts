@@ -236,10 +236,13 @@ export const telehealthSteps: TelehealthStep[] = [
   {
     step: "01",
     title: "Remote Health Assessment",
-    text: "Review of your symptoms, medical history, and lab reports via WhatsApp or phone call.",
+    // The brief's first minor adjustment, aimed at this step by its title. The
+    // old line asked for symptoms, history and lab reports but not the current
+    // medication list, which is what the herb-interaction check actually needs.
+    text: "Review of your symptoms, medical history, medications, available laboratory results and other relevant medical records via WhatsApp or phone call.",
     titleFr: "Évaluation de santé à distance",
     textFr:
-      "Examen de vos symptômes, antécédents médicaux et rapports de laboratoire via WhatsApp ou appel téléphonique.",
+      "Examen de vos symptômes, de vos antécédents médicaux, de vos médicaments, des résultats de laboratoire disponibles et de tout autre dossier médical pertinent, via WhatsApp ou appel téléphonique.",
   },
   {
     step: "02",
@@ -289,11 +292,11 @@ export const coreStrengths: StrengthItem[] = [
       "Tisanes, extraits et packs de détox à base de plantes purs et standardisés.",
   },
   {
-    title: "Worldwide",
-    text: "Reliable shipping across Cameroon and international destinations.",
-    titleFr: "Mondial",
+    title: "International",
+    text: "Reliable shipping across Cameroon and to supported international destinations.",
+    titleFr: "International",
     textFr:
-      "Livraison fiable au Cameroun et dans le monde entier.",
+      "Livraison fiable dans tout le Cameroun et vers les destinations internationales prises en charge.",
   },
 ];
 
@@ -316,10 +319,10 @@ export const faqs: FaqItem[] = [
   {
     question: "Can you deliver my herbal pack outside Cameroon?",
     answer:
-      "Yes. We ship prescribed herbal packs nationwide in Cameroon (Douala, Yaounde, Bamenda, Buea and more) and worldwide via express courier. Delivery fees depend on your destination.",
+      "Yes. We deliver prescribed herbal packs across Cameroon, including Douala, Yaounde, Bamenda, Buea and more, and we ship to supported international destinations. Contact S19 to confirm availability and delivery charges for your location.",
     questionFr: "Pouvez-vous livrer mon pack d'herbes hors du Cameroun ?",
     answerFr:
-      "Oui. Nous expédions les packs prescrits dans tout le Cameroun (Douala, Yaoundé, Bamenda, Buéa et plus) et dans le monde entier par coursier express. Les frais de livraison dépendent de votre destination.",
+      "Oui. Nous livrons les packs prescrits dans tout le Cameroun, notamment à Douala, Yaoundé, Bamenda, Buéa et ailleurs, et nous expédions vers des destinations internationales prises en charge. Contactez S19 pour confirmer la disponibilité et les frais de livraison pour votre localisation.",
   },
   {
     question: "How should I take my herbal remedies?",
@@ -347,7 +350,21 @@ export const faqs: FaqItem[] = [
   },
 ];
 
-export const deliveryZones = ["Cameroon Nationwide", "Douala", "Yaounde", "Bamenda", "Buea", "Worldwide"];
+/**
+ * Rendered as the shipping-coverage chips on /location.
+ *
+ * The last entry was "Worldwide", which the delivery guide forbids: it promises
+ * every country. "Supported Destinations" says the same thing without the promise.
+ * The Cameroon entries are kept as-is so the chips never read as international-first.
+ */
+export const deliveryZones = [
+  "Cameroon Nationwide",
+  "Douala",
+  "Yaounde",
+  "Bamenda",
+  "Buea",
+  "Supported Destinations",
+];
 
 export function localizedPrograms(locale: Locale): TreatmentProgram[] {
   return treatmentPrograms.map((p) =>

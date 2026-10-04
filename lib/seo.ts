@@ -6,7 +6,9 @@
  *   traditionnel Bafoussam", "phytothérapie Cameroun" (FR equivalents).
  * - Cameroon coverage: all 10 regions + major cities (see CAMEROON_REGIONS).
  * - International intent: science-based herbalism, natural treatment for
- *   diabetes / hypertension / prostate / women's health, worldwide shipping.
+ *   diabetes / hypertension / prostate / women's health, shipping to supported
+ *   international destinations. Deliberately not "worldwide": the delivery guide
+ *   forbids promising every country, and a keyword is a promise to a crawler.
  *
  * Image SEO (filenames, intrinsic dimensions, alt text, captions) lives in
  * `lib/image-registry.ts`, which is the single place a clinic photograph is
@@ -95,7 +97,8 @@ export const SEO_KEYWORDS_EN = [
   "herbal tea Bafoussam",
   "phytotherapy clinic Cameroon",
   "African herbal remedies",
-  "herbal medicine worldwide shipping",
+  "herbal medicine delivery Cameroon",
+  "international herbal shipping",
 ];
 
 /** Secondary search keywords (French). */
@@ -237,7 +240,12 @@ export function clinicJsonLd() {
       ...CAMEROON_CITIES,
       "Cameroon",
       "Africa",
-      "Worldwide (international DHL shipping)",
+      // Was "Worldwide (international DHL shipping)". This is the clinic's own
+      // machine-readable coverage list, read by search engines on every page, so
+      // a promise of every country here outranks anything the visible copy says.
+      // The delivery guide forbids exactly that, so the entry now names what S19
+      // actually ships to and no courier is named.
+      "Supported International Destinations",
     ])
   );
   return {
@@ -249,7 +257,7 @@ export function clinicJsonLd() {
         name: "S19 Herbal Clinic",
         alternateName: ["S19 Clinique de Phytothérapie", "S19 Clinic", "S19 King of Cure"],
         description:
-          "Science-based herbal medicine clinic in Bafoussam, Cameroon offering individualized treatment programs for diabetes, hypertension, prostate and men's health, women's health and hormones, with telehealth consultations and worldwide DHL shipping.",
+          "Science-based herbal medicine clinic in Bafoussam, Cameroon offering individualized treatment programs for diabetes, hypertension, prostate and men's health, women's health and hormones, with telehealth consultations, delivery across Cameroon and shipping to supported international destinations.",
         url: base,
         logo: `${base}/icon1.png`,
         image: [`${base}/open-graph-thumbnail.png`],

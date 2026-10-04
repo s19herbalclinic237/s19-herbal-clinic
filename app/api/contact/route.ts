@@ -23,6 +23,8 @@ export async function POST(request: Request) {
     type?: string;
     fullName?: string;
     phone?: string;
+    /** Free-text city/country. Optional, and deliberately not a full address. */
+    city?: string;
     email?: string;
     mode?: string;
     concern?: string;
@@ -46,6 +48,7 @@ export async function POST(request: Request) {
         type,
         fullName: data.fullName.trim(),
         phone: data.phone.trim(),
+        city: data.city?.trim() || undefined,
         email: data.email?.trim().toLowerCase() || undefined,
         mode: data.mode?.trim(),
         concern: data.concern?.trim(),
@@ -60,6 +63,7 @@ export async function POST(request: Request) {
   sendBookingNotification({
     fullName: data.fullName.trim(),
     phone: data.phone.trim(),
+    city: data.city?.trim(),
     email: data.email?.trim(),
     mode: data.mode,
     concern: data.concern,

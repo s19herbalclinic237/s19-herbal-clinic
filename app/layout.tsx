@@ -31,7 +31,8 @@ export const metadata: Metadata = {
     default: `${CLINIC.brand} | ${CLINIC.tagline}`,
     template: `%s | ${CLINIC.brand}`,
   },
-  description: `${CLINIC.tagline}. ${CLINIC.mission} Located in Bafoussam, West Region, Cameroon — with telehealth consultations and worldwide DHL shipping.`,
+  description:
+      `${CLINIC.tagline}. ${CLINIC.mission} Located in Bafoussam, West Region, Cameroon - with telehealth consultations, delivery across Cameroon and shipping to supported international destinations.`,
   keywords: SEO_KEYWORDS,
   applicationName: CLINIC.brand,
   authors: [{ name: CLINIC.brand, url: SITE_URL }],

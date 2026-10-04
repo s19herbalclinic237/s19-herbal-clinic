@@ -17,6 +17,7 @@ import {
   FaBed,
   FaWifi,
   FaTv,
+  FaGlobe,
 } from "react-icons/fa6";
 
 const HERO_IMG = S19_ASSETS.photos.cupboardProducts;
@@ -182,6 +183,11 @@ export default async function ContactPage() {
                       </li>
                     ))}
                   </ul>
+                  {/* Item 07 requires this as one sentence naming both inclusions;
+                      the two perk cards above only imply them. */}
+                  <p className="mt-6 border-t border-white/15 pt-5 text-sm leading-relaxed text-forest-100">
+                    {t("contact.accommodation.includes")}
+                  </p>
                   <a
                     href={waLink(
                       "Hello S19 Herbal Clinic, I am travelling from outside Bafoussam and would like to book a room with my appointment."
@@ -212,6 +218,65 @@ export default async function ContactPage() {
           </Reveal>
         </Section>
       </div>
+
+      {/* ---------- Item 08 of the Contact & Accommodation guide ----------
+          A new block for patients who cannot travel to Bafoussam, placed after
+          the Accommodation section and before the footer, as the guide requires.
+          It complements the accommodation section rather than replacing it: one is
+          for people who will come to the clinic, this is for people who cannot.
+
+          Domestic and international delivery are separate rows rather than one
+          sentence, because the delivery guide requires them to be visually distinct
+          and requires that international not be made more prominent than Cameroon. */}
+      <Section className="!pt-0">
+        <Reveal>
+          <div className="overflow-hidden rounded-lg border border-line bg-white shadow-card">
+            <div className="border-b border-line bg-mist px-7 py-6 md:px-9">
+              <Kicker>{t("contact.noTravel.eyebrow")}</Kicker>
+              <h2 className="mt-3">{t("contact.noTravel.title")}</h2>
+              <p className="mt-3 max-w-3xl text-[15px] leading-relaxed text-muted">
+                {t("contact.noTravel.text")}
+              </p>
+            </div>
+            <div className="grid md:grid-cols-2">
+              <div className="border-b border-line p-7 md:border-b-0 md:border-r md:p-8">
+                <p className="flex items-center gap-2 text-sm font-bold text-forest-800">
+                  <FaMapLocationDot className="h-4 w-4 text-forest-600" aria-hidden />
+                  {t("contact.noTravel.cameroonLabel")}
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-muted">
+                  {t("contact.noTravel.cameroon")}
+                </p>
+              </div>
+              <div className="p-7 md:p-8">
+                <p className="flex items-center gap-2 text-sm font-bold text-forest-800">
+                  <FaGlobe className="h-4 w-4 text-forest-600" aria-hidden />
+                  {t("contact.noTravel.internationalLabel")}
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-muted">
+                  {t("contact.noTravel.international")}
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center justify-between gap-4 border-t border-line bg-cream px-7 py-6 md:px-9">
+              <p className="max-w-2xl text-sm leading-relaxed text-ink/85">
+                {t("contact.noTravel.close")}
+              </p>
+              <a
+                href={waLink(
+                  "Hello S19 Herbal Clinic, I cannot travel to Bafoussam. I would like to ask about Tele-Health consultation and product delivery."
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={buttonLinkClasses("primary", "md")}
+              >
+                <FaWhatsapp className="h-4 w-4" aria-hidden />
+                {t("common.whatsappDr")}
+              </a>
+            </div>
+          </div>
+        </Reveal>
+      </Section>
     </>
   );
 }

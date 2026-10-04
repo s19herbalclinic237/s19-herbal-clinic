@@ -431,6 +431,8 @@ export async function sendPasswordResetEmail(to: string, name: string, link: str
 export async function sendBookingNotification(data: {
   fullName: string;
   phone: string;
+  /** City/country the patient is writing from. Free text, never a full address. */
+  city?: string;
   email?: string;
   mode?: string;
   concern?: string;
@@ -442,6 +444,7 @@ export async function sendBookingNotification(data: {
     { label: "Name", value: esc(data.fullName) },
     { label: "Phone", value: esc(data.phone) },
   ];
+  if (data.city) requestRows.push({ label: "City / Country", value: esc(data.city) });
   if (data.mode) requestRows.push({ label: "Mode", value: esc(data.mode) });
   if (data.concern) requestRows.push({ label: "Concern", value: esc(data.concern) });
 

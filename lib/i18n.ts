@@ -80,9 +80,15 @@ const dict = {
     en: "We don't believe in treating blindly. Before developing a personalized care plan, we seek to understand your medical history, current medications, laboratory findings, lifestyle, nutrition and the wider factors that may be contributing to your health condition.",
     fr: "Nous ne croyons pas traiter à l'aveugle. Avant d'élaborer un plan de soins personnalisé, nous cherchons à comprendre votre antécédent médical, vos médicaments actuels, vos résultats de laboratoire, votre mode de vie, votre nutrition et les facteurs plus larges qui peuvent contribuer à votre état de santé.",
   },
+  // Item 01 of the Cameroon/International Delivery guide. The third item was
+  // "Worldwide product delivery", which the guide forbids. Only that item is
+  // rewritten: the other two name the clinic and the Tele-Health service, and
+  // the guide says nothing about them, so they stay. "Supported international
+  // destinations" carries the guide's "supported destinations" rule, and
+  // Cameroon is named before international shipping.
   "home.hero.trust": {
-    en: "In-person care in Bafoussam · Tele-Health consultations available · Worldwide product delivery",
-    fr: "Soins en personne à Bafoussam · Consultations en Télé-santé disponibles · Livraison de produits dans le monde entier",
+    en: "In-person care in Bafoussam · Tele-Health consultations available · Delivery across Cameroon and to supported international destinations",
+    fr: "Soins en personne à Bafoussam · Consultations en Télé-santé disponibles · Livraison dans tout le Cameroun et vers des destinations internationales prises en charge",
   },
   // Brief §2.1 gives these two labels verbatim, so they get their own keys
   // rather than borrowing a generic CTA string that could drift.
@@ -229,8 +235,12 @@ const dict = {
   "home.catalog.kicker": { en: "Standardized formulas", fr: "Formules standardisées" },
   "home.catalog.title": { en: "S19 Herbal Catalog", fr: "Catalogue de plantes S19" },
   "home.catalog.lead": {
-    en: "Carefully made herbal products. Pick up your order in Bafoussam or get it delivered anywhere in the world.",
-    fr: "Des solutions botaniques soigneusement formulées, disponibles au retrait à Bafoussam et en livraison mondiale.",
+    // Was "Pick up your order in Bafoussam or get it delivered anywhere in the
+    // world" / "en livraison mondiale" - the widest delivery promise on the site,
+    // and the French one outlived several passes because it never used the word
+    // "worldwide". Both now name the coverage S19 actually offers.
+    en: "Carefully made herbal products. Pick up your order in Bafoussam, get it delivered across Cameroon, or have it shipped to supported international destinations.",
+    fr: "Des solutions botaniques soigneusement formulées. Disponibles au retrait à Bafoussam, à la livraison dans tout le Cameroun et à l'expédition vers des destinations internationales prises en charge.",
   },
   "home.catalog.note": {
     en: "Also in the clinic: Malaria & Typhoid Tea, Activated Charcoal, Oral Powder, Castor Oil, and Weight-loss Tea.",
@@ -503,10 +513,23 @@ const dict = {
     en: "Thank you, {name}. Our team will contact you shortly at {phone}. For an immediate response, connect with the clinic directly on WhatsApp.",
     fr: "Merci, {name}. Notre équipe vous contactera très vite au {phone}. Pour une réponse immédiate, contactez directement la clinique sur WhatsApp.",
   },
-  "booking.connectDr": { en: "Connect with Dr on WhatsApp", fr: "Joindre le Dr sur WhatsApp" },
+  // The success screen's WhatsApp button. Renamed from "Connect with Dr on
+  // WhatsApp" alongside the submit button: the contact guide says a submission
+  // must not imply the patient is immediately connected to the doctor, and this
+  // label made that same promise one click later. It now continues the
+  // conversation rather than claiming a handover.
+  "booking.connectDr": { en: "Continue on WhatsApp", fr: "Continuer sur WhatsApp" },
   "booking.fullName": { en: "Full Name", fr: "Nom complet" },
   "booking.namePlaceholder": { en: "Your name", fr: "Votre nom" },
   "booking.phone": { en: "Phone / WhatsApp Number", fr: "Téléphone / Numéro WhatsApp" },
+  // Item 04 of the Contact & Accommodation guide. Added after the phone field and
+  // before email. The guide's DO NOT CHANGE forbids asking for a full residential
+  // address here, so this is a single free-text "city / country" and nothing more.
+  "booking.city": { en: "City / Country", fr: "Ville / Pays" },
+  "booking.cityPlaceholder": {
+    en: "Where are you contacting us from?",
+    fr: "D'où vous contactez-nous ?",
+  },
   "booking.email": { en: "Email (optional)", fr: "Email (facultatif)" },
   "booking.mode": { en: "Consultation Mode", fr: "Mode de consultation" },
   "booking.modeTele": { en: "Telehealth (Online / WhatsApp / Call)", fr: "Télé-santé (En ligne / WhatsApp / Appel)" },
@@ -519,7 +542,13 @@ const dict = {
     en: "A short summary helps us prepare for your consultation.",
     fr: "Un bref résumé nous aide à préparer votre consultation.",
   },
-  "booking.submit": { en: "Submit & Connect to Dr on WhatsApp", fr: "Envoyer et joindre le Dr sur WhatsApp" },
+  // Item 05 of the Contact & Accommodation guide. The old label, "Submit & Connect
+  // to Dr on WhatsApp", is exactly what the guide's DO NOT CHANGE forbids: it
+  // implies the submission puts the patient in direct contact with the doctor.
+  "booking.submit": {
+    en: "Submit & Continue on WhatsApp",
+    fr: "Envoyer et continuer sur WhatsApp",
+  },
   "booking.sending": { en: "Sending...", fr: "Envoi..." },
   "booking.private": { en: "Your health details are kept strictly private and confidential.", fr: "Vos informations de santé restent strictement privées et confidentielles." },
   "booking.error": { en: "Something went wrong. Please try again or use WhatsApp.", fr: "Une erreur est survenue. Veuillez réessayer ou utiliser WhatsApp." },
@@ -577,17 +606,44 @@ const dict = {
   "shop.hero.eyebrow": { en: "Standardized Formulas", fr: "Formules standardisées" },
   "shop.hero.title": { en: "S19 Herbal Product Catalog", fr: "Catalogue de produits S19" },
   "shop.meta.title": { en: "Herbal Product Catalog", fr: "Catalogue de produits" },
+  // The delivery guide owns this string now. It previously ended "Pickup in
+  // Bafoussam and worldwide delivery", which guide 1 flagged and left alone because
+  // it had no authority over meta copy; the delivery guide does, so it is fixed here.
   "shop.meta.description": {
-    en: "Browse the S19 Herbal Clinic standardized product catalog - treatment packs, herbal teas, extracts and oils, and wellness essentials. Pickup in Bafoussam and worldwide delivery.",
-    fr: "Parcourez le catalogue de produits standardisés de la clinique S19 - packs de traitement, tisanes, extraits et huiles, et essentiels de bien-être. Retrait à Bafoussam et livraison mondiale.",
+    en: "Browse the S19 Herbal Clinic standardized product catalog - treatment packs, herbal teas, extracts and oils, and wellness essentials. Pickup in Bafoussam, delivery across Cameroon and shipping to supported international destinations.",
+    fr: "Parcourez le catalogue de produits standardisés de la clinique S19 - packs de traitement, tisanes, extraits et huiles, et essentiels de bien-être. Retrait à Bafoussam, livraison dans tout le Cameroun et expédition vers des destinations internationales prises en charge.",
   },
   // Item 10 of the footer/navigation guide. The old line ended "and worldwide
-  // delivery", which the guide forbids. shop.meta.description below still carries
-  // the older wording - meta copy is out of scope for this guide and is raised
-  // with S19 separately.
+  // delivery", which the guide forbids.
   "shop.hero.lead": {
     en: "Carefully formulated botanical solutions. Available for pickup in Bafoussam, delivery across Cameroon, and shipping to supported international destinations.",
     fr: "Des solutions botaniques soigneusement formulées. Disponibles au retrait à Bafoussam, à la livraison dans tout le Cameroun et à l'expédition vers des destinations internationales prises en charge.",
+  },
+  // Item 03 of the Cameroon/International Delivery guide: the delivery block that
+  // sits directly below the product collection. Cameroon and international are kept
+  // apart, and no price, customs fee, courier or delivery date is stated anywhere
+  // in it — the closing line tells the customer to confirm those with S19.
+  "shop.delivery.kicker": { en: "Delivery", fr: "Livraison" },
+  "shop.delivery.title": {
+    en: "Delivery Across Cameroon & Internationally",
+    fr: "Livraison au Cameroun et à l'international",
+  },
+  "shop.delivery.cameroonLabel": { en: "Within Cameroon", fr: "Au Cameroun" },
+  "shop.delivery.cameroon": {
+    en: "Order your S19 products and have them delivered to Bafoussam, Bamenda, Buea, Limbe, Bertoua, Kumba, Douala, Yaoundé and other cities across Cameroon.",
+    fr: "Commandez vos produits S19 et faites-vous livrer à Bafoussam, Bamenda, Buéa, Limbé, Bertoua, Kumba, Douala, Yaoundé et dans d'autres villes du Cameroun.",
+  },
+  "shop.delivery.internationalLabel": {
+    en: "International Delivery",
+    fr: "Livraison internationale",
+  },
+  "shop.delivery.international": {
+    en: "S19 also ships to supported international destinations, including the United States (USA), Canada, United Kingdom (UK), United Arab Emirates (UAE), selected countries across Africa and other supported international destinations.",
+    fr: "S19 expédie également vers des destinations internationales prises en charge, notamment les États-Unis (USA), le Canada, le Royaume-Uni (R-U), les Émirats arabes unis (ÉAU), certains pays d'Afrique et d'autres destinations internationales prises en charge.",
+  },
+  "shop.delivery.close": {
+    en: "Contact S19 on WhatsApp to confirm shipping availability, delivery options and applicable charges for your destination.",
+    fr: "Contactez S19 sur WhatsApp pour confirmer la disponibilité de l'expédition, les options de livraison et les frais applicables à votre destination.",
   },
   "shop.search.placeholder": { en: "Search the catalog...", fr: "Rechercher dans le catalogue..." },
   "shop.sort.featured": { en: "Featured", fr: "En vedette" },
@@ -939,12 +995,13 @@ const dict = {
   },
   "contact.chatWhatsApp": { en: "Talk to S19 on WhatsApp", fr: "Parlez à S19 sur WhatsApp" },
   "contact.phoneLabel": { en: "Phone & WhatsApp", fr: "Téléphone & WhatsApp" },
-  // Was "Tele-Health emergency line 24/7". S19 is not an emergency service and
-  // does not answer 24/7, which the footer/navigation guide forbids twice
-  // (§11 and §17). Replaced with what the line actually does.
+  // Item 02 of the Contact & Accommodation guide, which supplies the exact line.
+  // This replaced "Tele-Health emergency line 24/7" in guide 1, but with our own
+  // wording rather than the guide's, so it is corrected here to the approved copy.
+  // The guide's DO NOT CHANGE still applies: no "emergency line", no implied 24/7.
   "contact.phoneSub": {
-    en: "Tele-Health and WhatsApp enquiries, answered during clinic hours",
-    fr: "Demandes de Télé-santé et WhatsApp, traitées pendant les heures d'ouverture",
+    en: "For appointments, enquiries & Tele-Health support",
+    fr: "Pour rendez-vous, demandes et soutien de Télé-santé",
   },
   "contact.emailLabel": { en: "Email", fr: "E-mail" },
   "contact.emailSub": { en: "We reply within 24 hours", fr: "Nous répondons sous 24 heures" },
@@ -961,8 +1018,16 @@ const dict = {
     fr: "Vous venez de l'extérieur de Bafoussam ?",
   },
   "contact.accommodation.text": {
-    en: "Travelling from another town or region? S19 Herbal Clinic offers simple, comfortable and affordable accommodation within the clinic premises for patients who may need to stay during their visit, treatment, or follow-up.",
+    en: "Travelling from another town or region? S19 Herbal Clinic offers simple, comfortable and affordable accommodation within the clinic premises for patients who may need to stay during their visit, treatment or follow-up.",
     fr: "Vous voyagez depuis une autre ville ou région ? La Clinique S19 propose un hébergement simple, confortable et abordable au sein même de la clinique, pour les patients qui doivent rester pendant leur visite, leur traitement ou leur suivi.",
+  },
+  // Item 07 of the Contact & Accommodation guide. The guide requires this as a
+  // single sentence stating both inclusions. It was previously only implied by the
+  // two perk cards, which name the inclusions separately and never say that the
+  // accommodation includes them.
+  "contact.accommodation.includes": {
+    en: "Accommodation includes free Starlink internet and cable TV.",
+    fr: "L'hébergement comprend un internet Starlink gratuit et la télévision câblée.",
   },
   "contact.accommodation.perkRoom.title": {
     en: "Comfortable rooms on site",
@@ -988,13 +1053,14 @@ const dict = {
     en: "Relax and unwind with cable TV in your room.",
     fr: "Détendez-vous avec la TV câblée dans votre chambre.",
   },
-  // Item 12 of the footer/navigation guide. The old note told patients to ask when
-  // booking but never said rooms are limited, which read as a guarantee. The guide
-  // requires "subject to availability" and forbids publishing a room price, so the
-  // booking instruction is kept as its own line rather than merged.
+  // Item 07 of the Contact & Accommodation guide, which supplies the exact
+  // sentence. Guide 1 item 12 first replaced an "ask when you book" line that read
+  // as a room guarantee; the approved wording here says the same thing about
+  // availability and adds that charges must be confirmed before travelling. The
+  // guide forbids publishing an accommodation price, so no figure appears.
   "contact.accommodation.note": {
-    en: "Travelling to Bafoussam? Ask S19 about patient accommodation within the clinic premises, subject to availability.",
-    fr: "Vous vous rendez à Bafoussam ? Demandez à S19 un hébergement pour patients au sein de la clinique, selon les disponibilités.",
+    en: "Room availability and accommodation charges should be confirmed before travelling.",
+    fr: "La disponibilité des chambres et les frais d'hébergement doivent être confirmés avant le voyage.",
   },
   "contact.accommodation.bookingNote": {
     en: "Just let us know when booking your appointment if you will need a room.",
@@ -1009,10 +1075,49 @@ const dict = {
     fr: "Réservez avant de voyager. Venez préparé. Restez connecté. Restez commodément proche de vos soins.",
   },
 
+  // Item 08 of the Contact & Accommodation guide: a new block after Accommodation
+  // and before the footer, for patients who cannot travel to Bafoussam. It
+  // complements the accommodation section; it does not replace it.
+  //
+  // The delivery wording here is the contact guide's own approved variant. It is
+  // shorter than the Cameroon/International Delivery guide's version and names the
+  // countries in short form ("USA, Canada, UK, UAE"). Both are S19-approved and
+  // both say "supported destinations"; neither promises every country. The two
+  // guides have not been reconciled into one string, because that would mean
+  // choosing between two approved variants without being asked to.
+  "contact.noTravel.eyebrow": {
+    en: "Can't travel to Bafoussam?",
+    fr: "Vous ne pouvez pas vous rendre à Bafoussam ?",
+  },
+  "contact.noTravel.title": {
+    en: "Tele-Health & Product Delivery",
+    fr: "Télé-santé & livraison de produits",
+  },
+  "contact.noTravel.text": {
+    en: "You don't always need to travel to Bafoussam. S19 offers Tele-Health consultations and can arrange delivery of S19 products following your consultation and care recommendations.",
+    fr: "Vous n'avez pas toujours besoin de vous rendre à Bafoussam. S19 propose des consultations de Télé-santé et peut organiser la livraison de produits S19 à la suite de votre consultation et des recommandations de vos soins.",
+  },
+  "contact.noTravel.cameroonLabel": { en: "Within Cameroon:", fr: "Au Cameroun :" },
+  "contact.noTravel.cameroon": {
+    en: "Delivery is available to Bafoussam, Bamenda, Buea, Limbe, Bertoua, Kumba, Douala, Yaoundé and other cities across Cameroon.",
+    fr: "La livraison est disponible à Bafoussam, Bamenda, Buéa, Limbé, Bertoua, Kumba, Douala, Yaoundé et dans d'autres villes du Cameroun.",
+  },
+  "contact.noTravel.internationalLabel": { en: "International:", fr: "À l'international :" },
+  "contact.noTravel.international": {
+    en: "S19 also ships to supported destinations including the USA, Canada, UK, UAE, selected African countries and other international destinations.",
+    fr: "S19 expédie également vers des destinations prises en charge, notamment les USA, le Canada, le Royaume-Uni, les Émirats arabes unis, certains pays africains et d'autres destinations internationales.",
+  },
+  "contact.noTravel.close": {
+    en: "Contact S19 on WhatsApp to confirm consultation, delivery availability and applicable shipping charges for your location.",
+    fr: "Contactez S19 sur WhatsApp pour confirmer la consultation, la disponibilité de la livraison et les frais d'expédition applicables à votre localisation.",
+  },
+
   "location.meta.title": { en: "Bafoussam Clinic & Delivery", fr: "Clinique de Bafoussam & Livraison" },
+  // "Nationwide and worldwide delivery available" was one of the surviving
+  // "worldwide" claims guide 1 deferred. The delivery guide owns it.
   "location.meta.description": {
-    en: "Visit the S19 Herbal Clinic at {address}. Nationwide and worldwide delivery available.",
-    fr: "Visitez la clinique S19 à l'adresse {address}. Livraison nationale et internationale disponible.",
+    en: "Visit the S19 Herbal Clinic at {address}. Delivery across Cameroon and to supported international destinations.",
+    fr: "Visitez la clinique S19 à l'adresse {address}. Livraison dans tout le Cameroun et vers des destinations internationales prises en charge.",
   },
   "location.hero.eyebrow": { en: "Visit Our Physical Facility", fr: "Visitez nos installations physiques" },
   "location.hero.title": { en: "S19 Herbal Clinic, Bafoussam.", fr: "Clinique de phytothérapie S19, Bafoussam." },
@@ -1034,25 +1139,30 @@ const dict = {
     en: "Fast dispatch of prescribed herbal packs anywhere in Cameroon",
     fr: "Expédition rapide de packs de plantes prescrits partout au Cameroun",
   },
+  // Was "Worldwide delivery via express courier - fees based on destination".
+  // "Supported destinations" replaces "worldwide", and the courier is no longer
+  // named in the headline line. No fee, customs charge or delivery time is stated.
   "location.info.logisticsLine2": {
-    en: "Worldwide delivery via express courier - fees based on destination",
-    fr: "Livraison mondiale par coursier express - frais selon la destination",
+    en: "Shipping to supported international destinations - fees based on destination",
+    fr: "Expédition vers des destinations internationales prises en charge - frais selon la destination",
   },
   "location.info.logisticsLine3": { en: "Local clinic pickup available", fr: "Retrait local à la clinique disponible" },
   "location.mapTitle": { en: "S19 Herbal Clinic on Google Maps", fr: "Clinique S19 sur Google Maps" },
   "location.deliver.kicker": { en: "We deliver to", fr: "Nous livrons à" },
   "location.deliver.title": { en: "Shipping coverage", fr: "Zone de livraison" },
   "location.deliver.infoTitle": { en: "Delivery information", fr: "Informations de livraison" },
+  // Was "...within Cameroon and worldwide." One of the surviving "worldwide" claims
+  // from guide 1, now owned by the delivery guide.
   "location.deliver.infoText": {
-    en: "S19 can arrange delivery of herbal products within Cameroon and worldwide. Delivery fees are based on destination and transport/courier charges. Pickup can also be arranged where applicable.",
-    fr: "S19 peut organiser la livraison de produits à base de plantes au Cameroun et dans le monde entier. Les frais de livraison dépendent de la destination et des frais de transport/coursier. Le retrait peut également être organisé le cas échéant.",
+    en: "S19 can arrange delivery of herbal products across Cameroon and to supported international destinations. Delivery fees are based on destination and transport/courier charges. Pickup can also be arranged where applicable.",
+    fr: "S19 peut organiser la livraison de produits à base de plantes dans tout le Cameroun et vers des destinations internationales prises en charge. Les frais de livraison dépendent de la destination et des frais de transport/coursier. Le retrait peut également être organisé le cas échéant.",
   },
   "location.directions": { en: "Directions via WhatsApp", fr: "Itinéraire via WhatsApp" },
   "location.bookVisit": { en: "Book a visit", fr: "Réserver une visite" },
   "location.cta.title": { en: "Visit us in Bafoussam or consult remotely", fr: "Rendez-nous visite à Bafoussam ou consultez à distance" },
   "location.cta.text": {
-    en: "In-clinic consultations, Tele-health, and worldwide herbal dispatch - however far you are.",
-    fr: "Consultations en clinique, Télé-santé, et expédition de plantes dans le monde entier - où que vous soyez.",
+    en: "In-clinic consultations, Tele-health, and herbal dispatch across Cameroon and to supported international destinations.",
+    fr: "Consultations en clinique, Télé-santé, et expédition de plantes dans tout le Cameroun et vers des destinations internationales prises en charge.",
   },
 
   "track.hero.eyebrow": { en: "Order Tracking", fr: "Suivi de commande" },
@@ -1111,9 +1221,12 @@ const dict = {
     en: "Herbal Telehealth Consultations Worldwide",
     fr: "Téléconsultations en phytothérapie dans le monde",
   },
+  // Was "...and worldwide DHL shipping of your herbal program." The delivery guide
+  // forbids promising every country and forbids naming a courier company, so this
+  // now says "supported destinations" and names no carrier.
   "tele.meta.description": {
-    en: "Virtual herbal medicine consultations with S19 Herbal Clinic in Bafoussam, Cameroon. Online assessment, personalized natural protocols and worldwide DHL shipping of your herbal program.",
-    fr: "Consultations virtuelles de médecine naturelle avec la Clinique S19 à Bafoussam, Cameroun. Évaluation en ligne, protocoles naturels personnalisés et expédition DHL de votre programme à base de plantes dans le monde entier.",
+    en: "Virtual herbal medicine consultations with S19 Herbal Clinic in Bafoussam, Cameroon. Online assessment, personalized natural protocols and shipping of your herbal program to Cameroon and supported international destinations.",
+    fr: "Consultations virtuelles de médecine naturelle avec la Clinique S19 à Bafoussam, Cameroun. Évaluation en ligne, protocoles naturels personnalisés et expédition de votre programme à base de plantes au Cameroun et vers des destinations internationales prises en charge.",
   },
   "tele.hero.eyebrow": { en: "Care From Home", fr: "Soins médicaux virtuels disponibles" },
   "tele.hero.title": {
@@ -1129,6 +1242,14 @@ const dict = {
   "tele.price.text": {
     en: "The same standard consultation fee applies for both online and in-person consultations.",
     fr: "Les mêmes frais de consultation standard s'appliquent aux consultations en ligne et en personne.",
+  },
+  // The brief keeps 10,000 FCFA as the authoritative price and requires the foreign
+  // figures to be marked approximate. The values themselves come from EXCHANGE in
+  // lib/utils.ts, so they follow the rate rather than going stale; this line is the
+  // disclaimer the brief asks for.
+  "tele.price.approx": {
+    en: "Approximate equivalent - exchange rates may vary.",
+    fr: "Équivalent approximatif - les taux de change peuvent varier.",
   },
   "tele.advantages.kicker": { en: "Why go virtual", fr: "Pourquoi consulter en ligne" },
   "tele.advantages.title": {
@@ -1183,9 +1304,13 @@ const dict = {
     en: "Ability to discuss whether additional laboratory tests, scans or medical evaluation may be necessary before starting or adjusting a program",
     fr: "Possibilité de discuter de la nécessité de tests de laboratoire, scanners ou évaluations médicales supplémentaires avant de commencer ou d'ajuster un programme",
   },
+  // Was "Products can be shipped to countries where DHL delivery service is
+  // available". Two problems the delivery guide forbids: it named a courier
+  // company, and it tied coverage to that courier's network rather than to S19's
+  // supported destinations. The full detail is in the Product Delivery section.
   "tele.adv12": {
-    en: "Products can be shipped to countries where DHL delivery service is available",
-    fr: "Expédition des produits vers les pays où le service de livraison DHL est disponible",
+    en: "Products can be delivered across Cameroon and shipped to supported international destinations",
+    fr: "Les produits peuvent être livrés dans tout le Cameroun et expédiés vers des destinations internationales prises en charge",
   },
   "tele.fee.title": { en: "Standard Consultation Fee", fr: "Frais de consultation standard" },
   "tele.options.kicker": { en: "Pick the right fit", fr: "Choisissez la bonne formule" },
@@ -1220,9 +1345,12 @@ const dict = {
   },
   "tele.modalities.kicker": { en: "What you can expect", fr: "Ce à quoi vous pouvez vous attendre" },
   "tele.modalities.title": { en: "A complete remote consultation.", fr: "Une consultation à distance complète." },
+  // The brief's one "change only where necessary" item. The old line claimed Tele-Health
+  // reproduces a whole in-clinic visit, which cannot be true: no remote consultation
+  // can perform the physical examination that `tele.options.inPerson.text` offers.
   "tele.modalities.text": {
-    en: "Everything you would get from an in-clinic visit, delivered wherever you are.",
-    fr: "Tout ce que vous obtiendriez lors d'une visite en clinique, livré où que vous soyez.",
+    en: "Comprehensive S19 consultation and follow-up, wherever you are.",
+    fr: "Consultation et suivi complets S19, où que vous soyez.",
   },
   "tele.modality1.title": { en: "Online Consultation", fr: "Consultation en ligne" },
   "tele.modality1.text": {
@@ -1230,9 +1358,12 @@ const dict = {
     fr: "Un appel structuré ou une session WhatsApp couvrant vos symptômes, vos antécédents médicaux et vos résultats de laboratoire.",
   },
   "tele.modality2.title": { en: "Lab & Document Review", fr: "Analyse de laboratoire & de documents" },
+  // The brief replaces only the phrase "detailed herbal strategy review" here, so
+  // the rest of the sentence is untouched. Herbal support stays the point of the
+  // programme; the records are read to understand the whole case.
   "tele.modality2.text": {
-    en: "Send us your lab reports and previous treatment records for a detailed herbal strategy review.",
-    fr: "Envoyez-nous vos rapports de laboratoire et vos dossiers de traitement antérieurs pour une analyse détaillée de la stratégie à base de plantes.",
+    en: "Send us your lab reports and previous treatment records for a detailed health and treatment-plan review.",
+    fr: "Envoyez-nous vos rapports de laboratoire et vos dossiers de traitement antérieurs pour un examen détaillé de votre état de santé et de votre plan de traitement.",
   },
   "tele.modality3.title": { en: "Scheduled Follow-Ups", fr: "Suivis planifiés" },
   "tele.modality3.text": {
@@ -1245,6 +1376,28 @@ const dict = {
     fr: "Vos données de santé restent strictement privées et ne sont partagées qu'avec le personnel clinique autorisé.",
   },
   "tele.bookVirtual": { en: "Book Virtual Consult Now", fr: "Réserver une consultation virtuelle" },
+  // Product delivery, Cameroon/International Delivery guide §04. Cameroon and
+  // international are separated as the guide requires, and neither states a price,
+  // a courier, a customs fee or a delivery time.
+  "tele.delivery.kicker": { en: "Product delivery", fr: "Livraison de produits" },
+  "tele.delivery.title": {
+    en: "Delivery Across Cameroon & Internationally",
+    fr: "Livraison au Cameroun et à l'international",
+  },
+  "tele.delivery.cameroonLabel": { en: "Within Cameroon", fr: "Au Cameroun" },
+  "tele.delivery.cameroon": {
+    en: "S19 products can be delivered to patients in Bafoussam, Bamenda, Buea, Limbe, Bertoua, Kumba, Douala, Yaoundé and other cities across Cameroon.",
+    fr: "Les produits S19 peuvent être livrés aux patients à Bafoussam, Bamenda, Buéa, Limbé, Bertoua, Kumba, Douala, Yaoundé et dans d'autres villes du Cameroun.",
+  },
+  "tele.delivery.internationalLabel": { en: "International", fr: "International" },
+  "tele.delivery.international": {
+    en: "S19 also ships to supported international destinations, including the United States (USA), Canada, United Kingdom (UK), United Arab Emirates (UAE), selected countries across Africa and other supported international destinations. Contact S19 to confirm shipping availability and applicable charges for your location.",
+    fr: "S19 expédie également vers des destinations internationales prises en charge, notamment les États-Unis (USA), le Canada, le Royaume-Uni (R-U), les Émirats arabes unis (ÉAU), certains pays en Afrique et d'autres destinations internationales prises en charge. Contactez S19 pour confirmer la disponibilité de l'expédition et les frais applicables à votre localisation.",
+  },
+  "tele.delivery.close": {
+    en: "Contact S19 on WhatsApp to confirm shipping availability, delivery options and applicable charges for your destination.",
+    fr: "Contactez S19 sur WhatsApp pour confirmer la disponibilité de l'expédition, les options de livraison et les frais applicables à votre destination.",
+  },
   "tele.cta.title": { en: "Consult S19 specialists from anywhere", fr: "Consultez les spécialistes S19 de n'importe où" },
   "tele.cta.text": {
     en: "Connect directly with S19 Herbal Clinic specialists right now, from Cameroon or anywhere in the world.",
@@ -1331,10 +1484,19 @@ const dict = {
     en: "Courier delivery to Douala, Yaounde, Bamenda, Buea and more.",
     fr: "Livraison par coursier vers Douala, Yaoundé, Bamenda, Buéa et plus encore.",
   },
-  "checkout.mode3.title": { en: "Worldwide", fr: "Dans le monde entier" },
+  // The delivery guide forbids promising delivery to every country worldwide, and
+  // this option was labelled exactly that. The stored enum value stays
+  // "Worldwide Delivery" because it is persisted on existing orders in
+  // lib/models/Order.ts; only the customer-facing label changes. "Express courier"
+  // is replaced with the guide's "supported destinations" phrasing, and no
+  // shipping price, customs fee or delivery time is stated.
+  "checkout.mode3.title": {
+    en: "International (Supported Destinations)",
+    fr: "International (destinations prises en charge)",
+  },
   "checkout.mode3.desc": {
-    en: "Express courier internationally. Fee confirmed by our team after ordering.",
-    fr: "Coursier express à l'international. Frais confirmés par notre équipe après la commande.",
+    en: "Shipping to supported destinations outside Cameroon. Fee confirmed by our team after ordering.",
+    fr: "Expédition vers les destinations prises en charge hors Cameroun. Frais confirmés par notre équipe après la commande.",
   },
   "checkout.fee": { en: " Fee: {fee}", fr: " Frais : {fee}" },
   "checkout.city": { en: "City / Country", fr: "Ville / Pays" },

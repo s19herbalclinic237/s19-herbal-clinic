@@ -28,6 +28,7 @@ export function BookingForm() {
   const [form, setForm] = useState({
     fullName: "",
     phone: "",
+    city: "",
     email: "",
     mode: "Telehealth (Online / WhatsApp / Call)",
     concern: "",
@@ -107,6 +108,19 @@ export function BookingForm() {
         </Field>
         <Field label={t("booking.phone")} required>
           <Input required type="tel" value={form.phone} onChange={set("phone")} placeholder="+237 ..." autoComplete="tel" />
+        </Field>
+        {/* Item 04 of the Contact & Accommodation guide: city/country sits after
+            the phone number and before email. It is a single free-text field
+            rather than two selects — the guide asks for "CITY / COUNTRY" as one
+            label, and a French or Cameroonian visitor should be able to type
+            their own town without it missing from a hard-coded list. */}
+        <Field label={t("booking.city")} className="sm:col-span-2">
+          <Input
+            value={form.city}
+            onChange={set("city")}
+            placeholder={t("booking.cityPlaceholder")}
+            autoComplete="address-level2"
+          />
         </Field>
       </div>
       <Field label={t("booking.email")}>
