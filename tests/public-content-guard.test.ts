@@ -33,6 +33,8 @@ import { faqSections, faqEntries, FAQ_MID_CTA_AFTER } from "@/lib/data/faq";
 import { deliveryZones, telehealthSteps, coreStrengths } from "@/lib/data/programs";
 import { blogPosts } from "@/lib/data/blog-posts";
 import { clinicJsonLd, SEO_KEYWORDS } from "@/lib/seo";
+import { seedProducts, productCategories } from "@/lib/data/products";
+import { CLINIC } from "@/lib/site";
 
 const LOCALES = ["en", "fr"] as const;
 
@@ -53,6 +55,17 @@ const BANNED_CLAIMS = [
   /guaranteed? (heal|reversal|result|outcome)/i,
   /permanent cure/i,
 ];
+
+/**
+ * Every way this site has promised delivery beyond the coverage it offers.
+ * The word "worldwide" is only one of them: the French home-page catalog line
+ * said "en livraison mondiale" and the English one said "anywhere in the
+ * world", and both survived several passes precisely because they never used
+ * the word a grep was looking for. Any phrasing that promises *every* country
+ * belongs here.
+ */
+const EVERY_COUNTRY =
+  /worldwide|mondial|monde entier|anywhere in the world|livraison mondiale|any country|tout pays|every country|tous les pays|partout dans le monde/i;
 
 /**
  * Named S19 formulations must not appear in program copy. The clinic sells
@@ -941,16 +954,6 @@ describe("Cameroon & international delivery guide", () => {
     ];
   }
 
-  /**
- * Every way this site has promised delivery beyond the coverage it offers.
- * The word "worldwide" is only one of them: the French home-page catalog line
- * said "en livraison mondiale" and the English one said "anywhere in the
- * world", and both survived several passes precisely because they never used
- * the word a grep was looking for. Any phrasing that promises *every* country
- * belongs here.
- */
-const EVERY_COUNTRY =
-  /worldwide|mondial|monde entier|anywhere in the world|livraison mondiale|any country|tout pays|every country|tous les pays|partout dans le monde/i;
 
   test("no delivery claim promises every country", () => {
     // Scoped to delivery copy on purpose. "Worldwide" is still correct for
@@ -1500,5 +1503,441 @@ describe("Tele-Health adjustment brief", () => {
     }
     assert.equal(translate("en", "tele.advantages.title"), "Advantages of an Online Consultation");
     assert.equal(translate("en", "tele.price.text"), "The same standard consultation fee applies for both online and in-person consultations.");
+  });
+});
+
+/* ==========================================================================
+   docs/S19_New_Retouches/S19_Shop_Herbal_Catalog_Copy_Paste_Developer_Guide.md
+
+   This guide is mostly a *refusal* guide. Twenty-two products already carry
+   copy the clinic is happy with, and the ten that were rewritten said things
+   like "naturally burns fat", "also treats acne" and "eliminates parasites at
+   egg, larval and adult stages". Nothing in the data model prevents that from
+   being written again, so the approved paragraphs are pinned here verbatim and
+   the twelve KEEP descriptions are pinned so a later pass cannot quietly
+   rewrite them either.
+   ========================================================================== */
+
+/** §3-§12. The exact approved paragraph for each rewritten product. */
+const SHOP_APPROVED_COPY: Record<string, string> = {
+  "s19-flat-tummy-weight-loss-tea":
+    "A herbal tea formulated to support healthy weight-management goals, digestion, regular bowel movement and normal metabolic function when used alongside appropriate nutrition and lifestyle measures.",
+  "s19-vision-herbal-eye-drops":
+    "A herbal eye-care preparation formulated to support eye comfort and general vision wellness. People with glaucoma, cataracts, persistent eye irritation, eye pain or changes in vision should remain under appropriate eye-care evaluation.",
+  "s19-malaria-typhoid-combo":
+    "A herbal support combination intended for complementary wellness support during recovery from malaria or typhoid fever. Proper diagnosis and appropriate medical care remain important, especially for persistent, severe or worsening symptoms.",
+  "s19-liver-support":
+    "A herbal formula designed to support liver health, normal digestive function and general metabolic wellness. It may be used as complementary support for people managing liver-related health concerns under appropriate clinical evaluation.",
+  "s19-black-seed-oil":
+    "Cold-pressed black seed oil for general metabolic, respiratory, skin and cardiovascular wellness. May complement healthy nutrition and lifestyle measures.",
+  "s19-natural-bathing-soap":
+    "For smoother, brighter-looking skin. Helps cleanse the skin and supports everyday care for acne-prone, irritated or blemish-prone skin.",
+  "s19-feminine-fertility-booster":
+    "A herbal formula designed to support women's reproductive wellness and general fertility-focused care as part of an individualized health approach.",
+  "s19-parasite-cleanse-combo":
+    "A herbal cleanse formulated to support digestive wellness and traditional parasite-cleansing programs. Persistent or suspected parasitic infection should be appropriately evaluated.",
+  "s19-man-pikin":
+    "A men's wellness formula designed to support sexual health, erectile function and male reproductive wellness, including sperm health.",
+  "s19-neuro-protect":
+    "A herbal wellness formula designed to support relaxation, sleep quality, mental clarity and general brain and nervous-system wellness during periods of stress or mental fatigue.",
+};
+
+/**
+ * The specific claims the guide ordered removed, per product. Keyed the same way
+ * as SHOP_APPROVED_COPY and matched against the English copy only, because these
+ * are the sentences that were there before.
+ */
+const SHOP_REMOVED_CLAIMS: Record<string, RegExp[]> = {
+  "s19-flat-tummy-weight-loss-tea": [/burns fat/i, /reduce belly fat/i, /detoxification/i],
+  "s19-vision-herbal-eye-drops": [/support for glaucoma, cataracts/i, /conjunctivitis/i],
+  "s19-malaria-typhoid-combo": [/powerful/i, /boosting the immune system/i, /recovery from malaria and typhoid/i],
+  "s19-liver-support": [/hepatitis b/i, /fatty-?liver/i, /detoxification/i],
+  "s19-black-seed-oil": [/asthma/i, /sinusitis/i, /cholesterol/i, /blood-sugar/i],
+  "s19-natural-bathing-soap": [/also treats/i, /helping to treat/i, /fungal infections/i],
+  "s19-feminine-fertility-booster": [/improve fertility/i],
+  "s19-parasite-cleanse-combo": [/elimination of parasites/i, /egg, larv(al|ae), and adult/i],
+  "s19-man-pikin": [/weak erections/i, /premature ejaculation/i, /sperm count/i],
+  "s19-neuro-protect": [/relief from headaches/i, /boost memory/i, /insomnia/i],
+};
+
+/**
+ * §12's twelve products marked KEEP. Pinned by full description: §20 says "do not
+ * rewrite products marked KEEP", and a substring check would let a rewrite slip
+ * through by keeping its first clause.
+ */
+const SHOP_KEEP_COPY: Record<string, string> = {
+  "s19-oral-miracle":
+    "A natural oral-care powder for daily brushing. It cleanses the mouth, freshens breath, whitens teeth, supports healthy gums, and helps prevent cavities - a gentle alternative to abrasive commercial toothpastes.",
+  "s19-herbal-wine-reserve":
+    "A 100% natural herbal digestive tonic to enjoy before or after meals for comfortable digestion. Also supports natural body cleansing, kidney and liver health, memory, healthy blood-sugar control, and hair growth.",
+  "s19-experience-hoodie-men":
+    "Show your support for S19 with the official 'Experience S19' hoodie for men. The bold Experience S19 print with the machine-style graphic makes it a standout piece. Available in six colors - Black, White, Red, Sky Blue, Purple and Pink - so you can choose your favourite. Made for everyday comfort and built to last.",
+  "s19-sozo":
+    "SOZO is our most powerful herbal wellness package, formulated to support whole-body cleansing, immune health, vitality, and general wellbeing. It is designed to support the body's natural detoxification processes, promote healthy metabolism, and help strengthen the body's resilience against illness. SOZO may also provide supportive antioxidant and immune benefits for people seeking to improve their overall health. It may also be used as part of a wellness routine or as supportive care alongside appropriate medical treatment for people living with chronic health concerns including certain types of Cancers.",
+  "s19-sea-salt":
+    "Natural sea salt for cooking, drinking water, and salt baths. It adds flavour to meals, provides natural minerals, supports hydration and relaxation, and is traditionally used for cleansing and removing negative energy.",
+  "s19-activated-charcoal":
+    "A natural adsorbent used to bind certain toxins in the digestive tract. Supports detox care, digestion, and immune wellness; helps with gas, bloating, constipation, diarrhoea, and bad breath linked to intestinal waste; and may support healthy cholesterol and triglyceride levels. Also used as supportive care in diabetes and cancer wellness programmes, and in hospital settings for certain poisonings and drug overdoses. Take away from medicines, vitamins, and meals.",
+  "s19-prostate-tea":
+    "Supports prostate and kidney health, including men's wellness needs related to prostate enlargement (BPH) and prostatitis. A pleasant standardized tea for daily use.",
+  "s19-natural-soap":
+    "Plant-based laundry soap for clothes, plates, and everyday home cleaning. A gentle alternative to harsh commercial detergents, helping reduce skin exposure to strong chemical residues.",
+  "s19-shea-butter":
+    "Natural moisturiser for dry skin and hair. Makes skin soft, calms itching and redness, supports eczema, psoriasis, and sunburn care, and keeps hair smooth and shiny. Also helps protect the skin from early signs of ageing.",
+  "s19-hemorrhoid-tea":
+    "Supports haemorrhoids (piles), indigestion, constipation, and regular bowel function. A standardised botanical tea for gentle, daily digestive support.",
+  "s19-diabetes-support-package":
+    "Personalized herbal, nutrition, and lifestyle support for blood-sugar management. Each package is built around your individual assessment, lab results, and treatment goals. Contact S19 for more information and personalized pricing.",
+  "s19-experience-hoodie-women":
+    "Show your support for S19 with the official 'Experience S19' hoodie for women. The bold Experience S19 print with the machine-style graphic makes it a standout piece. Available in six colors - Black, White, Red, Sky Blue, Purple and Pink - so you can choose your favourite. Designed for a comfortable everyday fit that lasts.",
+};
+
+function shopProduct(slug: string) {
+  const p = seedProducts.find((x) => x.slug === slug);
+  assert.ok(p, `${slug} must exist in the catalog`);
+  return p!;
+}
+
+describe("Shop / Herbal Catalog guide", () => {
+  test("§21 the 22-product catalog and six categories are preserved", () => {
+    // §20: do not redesign the Shop, and do not remove products.
+    assert.equal(seedProducts.length, 22, "the guide reviewed a 22-product catalog");
+    assert.equal(productCategories.length, 6);
+    assert.equal(
+      new Set(seedProducts.map((p) => p.slug)).size,
+      22,
+      "every product must have a distinct slug",
+    );
+    // The guide names every rewritten and every KEEP product; 10 + 12 = 22, so
+    // the two lists together must account for the whole catalog.
+    assert.equal(
+      Object.keys(SHOP_APPROVED_COPY).length + Object.keys(SHOP_KEEP_COPY).length,
+      22,
+    );
+    for (const slug of [...Object.keys(SHOP_APPROVED_COPY), ...Object.keys(SHOP_KEEP_COPY)]) {
+      assert.ok(
+        seedProducts.some((p) => p.slug === slug),
+        `${slug} is named by the guide but is not in the catalog`,
+      );
+    }
+  });
+
+  test("§2 and §3-§12 each rewritten product carries the approved paragraph exactly", () => {
+    for (const [slug, approved] of Object.entries(SHOP_APPROVED_COPY)) {
+      const p = shopProduct(slug);
+      assert.equal(p.description, approved, `${slug} description must be the approved copy`);
+    }
+  });
+
+  test("§3-§12 the card summary is drawn from the approved copy, not invented", () => {
+    // The guide supplies one paragraph per product. shortDescription is what a
+    // card shows, so it must be the approved paragraph verbatim (single-sentence
+    // products) or its opening sentence - never separate wording.
+    for (const [slug, approved] of Object.entries(SHOP_APPROVED_COPY)) {
+      const p = shopProduct(slug);
+      const firstSentence = approved.split(/(?<=\.)\s/)[0];
+      assert.ok(
+        p.shortDescription === approved || p.shortDescription === firstSentence,
+        `${slug} shortDescription must be the approved copy or its first sentence`,
+      );
+      assert.ok(
+        approved.startsWith(p.shortDescription),
+        `${slug} shortDescription must open the approved description`,
+      );
+    }
+  });
+
+  test("§3-§12 the absolute claims the guide ordered removed are gone", () => {
+    for (const [slug, patterns] of Object.entries(SHOP_REMOVED_CLAIMS)) {
+      const p = shopProduct(slug);
+      assertNone(p.description, patterns, `${slug} description`);
+      assertNone(p.shortDescription, patterns, `${slug} shortDescription`);
+    }
+  });
+
+  test("§20 none of the six forbidden words appears in a rewritten description", () => {
+    // cure, reverse, eliminate, guaranteed, proven, permanent.
+    const forbidden = [
+      /\bcures?\b/i,
+      /\bcured\b/i,
+      /\bcuring\b/i,
+      /\breverses?\b/i,
+      /\breversing\b/i,
+      /\beliminates?\b/i,
+      /\beliminating\b/i,
+      /\bguaranteed?\b/i,
+      /\bproven\b/i,
+      /\bpermanent(ly)?\b/i,
+    ];
+    for (const slug of Object.keys(SHOP_APPROVED_COPY)) {
+      const p = shopProduct(slug);
+      assertNone(p.description, forbidden, `${slug} description`);
+      assertNone(p.shortDescription, forbidden, `${slug} shortDescription`);
+    }
+  });
+
+  test("§5, §6, §7, §10 the limitations the guide added are actually present", () => {
+    // Each of these products carries a caution in its approved paragraph. If the
+    // caution is dropped the copy reverts to implying the product treats the
+    // condition, which is what the guide is fixing.
+    const cautions: Array<[string, RegExp]> = [
+      ["s19-vision-herbal-eye-drops", /glaucoma, cataracts[\s\S]*eye-care evaluation/i],
+      ["s19-malaria-typhoid-combo", /Proper diagnosis and appropriate medical care remain important/i],
+      ["s19-liver-support", /complementary support[\s\S]*clinical evaluation/i],
+      ["s19-parasite-cleanse-combo", /should be appropriately evaluated/i],
+    ];
+    for (const [slug, re] of cautions) {
+      assert.match(shopProduct(slug).description, re, `${slug} must keep its approved caution`);
+    }
+  });
+
+  test("§13 the Diabetes Support Package keeps its personalized-support framing", () => {
+    const p = shopProduct("s19-diabetes-support-package");
+    assert.match(
+      p.shortDescription,
+      /^Personalized herbal, nutrition, and lifestyle support for blood-sugar management\./,
+      "§13 approves exactly this framing",
+    );
+    assert.doesNotMatch(
+      p.description,
+      /reverses?|cures?|eliminates?/i,
+      "§20 forbids promising to reverse, cure or eliminate diabetes",
+    );
+  });
+
+  test("§12 the twelve products marked KEEP are byte-for-byte unchanged", () => {
+    for (const [slug, kept] of Object.entries(SHOP_KEEP_COPY)) {
+      assert.equal(shopProduct(slug).description, kept, `${slug} is marked KEEP by the guide`);
+    }
+  });
+
+  test("§21 every bilingual product field has both locales", () => {
+    for (const slug of Object.keys(SHOP_APPROVED_COPY)) {
+      const p = shopProduct(slug);
+      for (const field of ["shortDescription", "description"] as const) {
+        assert.ok(p[`${field}Fr`], `${slug} ${field}Fr must exist`);
+        assert.notEqual(p[`${field}Fr`], p[field], `${slug} ${field}Fr must be translated, not copied`);
+      }
+    }
+  });
+
+  test("§1 the catalog header carries the approved lead and no worldwide promise", () => {
+    assert.equal(
+      translate("en", "shop.hero.lead"),
+      "Carefully formulated botanical solutions. Available for pickup in Bafoussam, delivery across Cameroon, and shipping to supported international destinations.",
+    );
+    // §1 DO NOT CHANGE: the heading and the "Standardized Formulas" label stay.
+    assert.equal(translate("en", "shop.hero.title"), "S19 Herbal Product Catalog");
+    assert.equal(translate("en", "shop.hero.eyebrow"), "Standardized Formulas");
+    for (const locale of LOCALES) {
+      assert.doesNotMatch(
+        translate(locale, "shop.hero.lead"),
+        EVERY_COUNTRY,
+        "the catalog header must not promise shipping to every country",
+      );
+    }
+  });
+
+  test("§15 the delivery block names Cameroon cities and defers charges to S19", () => {
+    const cameroon = translate("en", "shop.delivery.cameroon");
+    for (const city of ["Bafoussam", "Bamenda", "Buea", "Limbe", "Bertoua", "Kumba", "Douala", "Yaoundé"]) {
+      assert.ok(cameroon.includes(city), `the Cameroon line must name ${city}`);
+    }
+    const international = translate("en", "shop.delivery.international");
+    for (const country of ["United States", "Canada", "United Kingdom", "United Arab Emirates"]) {
+      assert.ok(international.includes(country), `the international line must name ${country}`);
+    }
+    // §20: do not invent shipping charges, customs fees or arrival times.
+    for (const key of [
+      "shop.delivery.cameroon",
+      "shop.delivery.international",
+      "shop.delivery.close",
+    ] as const) {
+      for (const locale of LOCALES) {
+        assert.doesNotMatch(
+          translate(locale, key),
+          /customs|douane|taux|taxes|arrives? (in|within)|livr[ée] (en| sous) \d|\$\d|US\$|€\d|\d+ ?(days?|jours?)/i,
+          `${key} [${locale}] must not state a charge, courier or arrival time`,
+        );
+      }
+    }
+    assert.match(
+      translate("en", "shop.delivery.close"),
+      /confirm shipping availability, delivery options and applicable charges/,
+      "§15 closes the block by sending the customer to S19 for charges",
+    );
+  });
+
+  test("§14 the ordering workflow is kept and the confirmation sentence added", () => {
+    // DO NOT CHANGE: the existing screenshot workflow and both contact routes.
+    assert.equal(
+      translate("en", "shop.alternativeOrder.text"),
+      "If you prefer, you can screenshot the product(s) you want and send the images to us on WhatsApp or by email at info@s19herbalclinic.com.",
+      "§14 keeps the screenshot workflow exactly as it was",
+    );
+    assert.match(
+      translate("en", "shop.alternativeOrder.details"),
+      /full name, phone number, delivery location, and the quantity/,
+      "§14 keeps the details checklist",
+    );
+    for (const locale of LOCALES) {
+      const added = translate(locale, "shop.alternativeOrder.international");
+      assert.match(
+        added,
+        /For international orders|Pour les commandes internationales/,
+        `shop.alternativeOrder.international [${locale}] must open the way §14 specifies`,
+      );
+      assert.match(
+        added,
+        /shipping is available to your destination|expédition est disponible vers votre destination/,
+        "the sentence must point international buyers at S19 for availability",
+      );
+    }
+    const source = readFileSync(path.join(root, "components/sections/alternative-order.tsx"), "utf8");
+    assert.ok(
+      source.includes("shop.alternativeOrder.international"),
+      "the ordering section must render the added sentence",
+    );
+  });
+
+  test("§19 one compact safety note is visible, in both languages", () => {
+    for (const locale of LOCALES) {
+      const title = translate(locale, "shop.safety.title");
+      assert.match(title, /Important Health Information|Information importante sur la santé/);
+      const body = translate(locale, "shop.safety.text");
+      assert.match(
+        body,
+        /individualized health and wellness care|prise en charge individualisée/i,
+        `shop.safety.text [${locale}] must keep the opening sentence`,
+      );
+      assert.match(
+        body,
+        /laboratory testing, medical diagnosis or conventional treatment|analyses de laboratoire, un diagnostic médical ou un traitement conventionnel/,
+        `shop.safety.text [${locale}] must keep the conditions-needing-medical-care sentence`,
+      );
+      assert.match(
+        body,
+        /Do not delay urgent or medically necessary care|Ne retardez pas une prise en charge urgente/,
+        `shop.safety.text [${locale}] must keep the do-not-delay sentence`,
+      );
+    }
+    const source = readFileSync(path.join(root, "app/shop/page.tsx"), "utf8");
+    assert.ok(source.includes("shop.safety.title"), "the shop page must render the safety note");
+    assert.equal(
+      source.split("shop.safety.title").length - 1,
+      1,
+      "§19 asks for the note once, not per product",
+    );
+    // The card must not grow it, or the note stops being compact and page-level.
+    assert.doesNotMatch(
+      readFileSync(path.join(root, "components/ui/product-card.tsx"), "utf8"),
+      /shop\.safety/,
+      "the safety note belongs on the page, not on every card",
+    );
+  });
+
+  test("§16 the referral keeps its warm tone without the 'more than' framing", () => {
+    for (const locale of LOCALES) {
+      assert.doesNotMatch(
+        translate(locale, "refer.lead2"),
+        /need more than|ont besoin de plus qu/,
+        "§16 removes the implication that long-term conditions need something 'more than' symptom control",
+      );
+      assert.match(
+        translate(locale, "refer.lead2"),
+        /Alongside appropriate medical care|En complément des soins médicaux appropriés/,
+        "§16 puts appropriate medical care alongside S19's support",
+      );
+    }
+    // The sentences the guide did not ask to change must survive verbatim.
+    assert.equal(
+      translate("en", "refer.lead1"),
+      "Do you know someone living with diabetes, high blood pressure, prostate or heart complications, cancer, or another long-term health condition?",
+    );
+    assert.equal(
+      translate("en", "refer.lead4"),
+      "A simple referral could make a real difference in someone's life.",
+    );
+    assert.match(
+      translate("en", "refer.lead3"),
+      /access additional care, education, support and a healthier path forward/,
+      "§16 replaces 'care, hope' with 'additional care, education, support'",
+    );
+    assert.doesNotMatch(translate("en", "refer.lead3"), /guarantee/i);
+  });
+
+  test("§17 and §18 the footer wording is the standardized one", () => {
+    assert.equal(translate("en", "footer.cancer"), "Integrative Cancer Support");
+    assert.equal(
+      CLINIC.mission,
+      "To provide evidence-informed herbal and integrative wellness support through individualized assessment, nutrition, lifestyle guidance, health education and continuous monitoring.",
+      "§18 approves this mission sentence",
+    );
+    // §18 DO NOT CHANGE: do not call all S19 solutions categorically safe or
+    // effective. Safety and response depend on the person and the context, which
+    // is what the new sentence says instead.
+    for (const locale of LOCALES) {
+      assert.doesNotMatch(
+        CLINIC.mission,
+        /\bsafe\b|\befficace\b/i,
+        `CLINIC.mission [${locale}] must not describe every solution as safe or effective`,
+      );
+    }
+  });
+
+  test("§20 the shop page does not invent charges or promise every country", () => {
+    for (const key of [
+      "shop.hero.lead",
+      "shop.meta.description",
+      "shop.delivery.cameroon",
+      "shop.delivery.international",
+      "shop.delivery.close",
+      "shop.alternativeOrder.text",
+      "shop.alternativeOrder.details",
+      "shop.alternativeOrder.international",
+      "shop.safety.text",
+    ] as const) {
+      for (const locale of LOCALES) {
+        assert.doesNotMatch(
+          translate(locale, key),
+          EVERY_COUNTRY,
+          `${key} [${locale}] must not promise delivery to every country`,
+        );
+      }
+    }
+  });
+
+  test("§20 no product description exposes formulation or dosage internals", () => {
+    // §20: no ingredient ratios, formulation methods, proprietary combinations or
+    // invented dosage instructions. The usage fields are existing clinic copy and
+    // are left alone, so only the rewritten descriptions are checked here.
+    for (const slug of Object.keys(SHOP_APPROVED_COPY)) {
+      const p = shopProduct(slug);
+      assertNone(
+        p.description,
+        [/\b\d+\s?(mg|ml|g|grams?|milligrams?)\b/i, /proprietary/i, /\bformula(?:tion)? (?:method|ratio)/i],
+        `${slug} description`,
+      );
+    }
+  });
+
+  test("the seed and the live catalog stay in step through the backfill script", () => {
+    // /shop reads MongoDB first, so the ten rewrites reach customers only via
+    // scripts/backfill-product-copy.ts. If that script is renamed or dropped from
+    // package.json the seed edits become silently ineffective.
+    const pkg = JSON.parse(readFileSync(path.join(root, "package.json"), "utf8"));
+    assert.equal(pkg.scripts["backfill:product-copy"], "tsx scripts/backfill-product-copy.ts");
+    const script = readFileSync(path.join(root, "scripts/backfill-product-copy.ts"), "utf8");
+    for (const slug of Object.keys(SHOP_APPROVED_COPY)) {
+      assert.ok(script.includes(slug), `the backfill must cover ${slug}`);
+    }
+    // It must not use the destructive path. seed.ts does Product.deleteMany + insertMany.
+    // Comments are stripped first: the script explains at length why it avoids those
+    // calls, and that explanation must not read as a violation.
+    const scriptCode = script.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+    assert.doesNotMatch(scriptCode, /\.deleteMany|\.insertMany/, "the backfill must never wipe the collection");
+    // Dry run by default, writes behind a flag.
+    assert.match(script, /--apply/, "writes must require an explicit flag");
+    assert.match(script, /DRY RUN \(no writes\)/, "the script must announce its mode");
   });
 });

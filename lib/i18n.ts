@@ -477,13 +477,18 @@ const dict = {
     en: "Do you know someone living with diabetes, high blood pressure, prostate or heart complications, cancer, or another long-term health condition?",
     fr: "Connaissez-vous quelqu'un qui vit avec le diabète, l'hypertension artérielle, des complications de la prostate ou du cœur, le cancer ou une autre maladie de longue durée ?",
   },
+  // Item 16 of the Shop / Herbal Catalog guide asks for one small adjustment so the
+  // referral does not read as if long-term conditions generally need something
+  // "more than" symptom control. The guide's sentence keeps the referral and the warm
+  // tone and puts appropriate medical care alongside S19's support instead of
+  // against it.
   "refer.lead2": {
-    en: "Please refer them to S19 Herbal Clinic. Many people need more than temporary symptom control — they need proper evaluation, health education, lifestyle guidance, and supportive care that addresses the wider factors affecting their health to improve their quality of life.",
-    fr: "Veuillez les orienter vers la Clinique de phytothérapie S19. Beaucoup de personnes ont besoin de plus qu'un simple contrôle temporaire des symptômes — elles ont besoin d'une évaluation appropriée, d'une éducation à la santé, de conseils de mode de vie et de soins de soutien qui abordent les facteurs plus larges affectant leur santé afin d'améliorer leur qualité de vie.",
+    en: "Please refer them to S19 Herbal Clinic. Alongside appropriate medical care, many people can benefit from proper evaluation, health education, lifestyle guidance and supportive care that considers the wider factors affecting their health and quality of life.",
+    fr: "Veuillez les orienter vers la Clinique de phytothérapie S19. En complément des soins médicaux appropriés, de nombreuses personnes peuvent bénéficier d'une évaluation appropriée, d'une éducation à la santé, de conseils de mode de vie et de soins de soutien qui prennent en compte les facteurs plus larges affectant leur santé et leur qualité de vie.",
   },
   "refer.lead3": {
-    en: "By referring a loved one, you are not only supporting S19; you may be helping someone access care, hope, and a healthier path forward. You are also contributing to a healthier community and doing a meaningful act of kindness before God.",
-    fr: "En parrainant un proche, vous ne soutenez pas seulement S19 : vous pouvez aider quelqu'un à accéder à des soins, à l'espoir et à une voie plus saine. Vous contribuez également à une communauté plus saine et vous accomplissez un acte de bonté significatif devant Dieu.",
+    en: "By referring a loved one, you are not only supporting S19; you may be helping someone access additional care, education, support and a healthier path forward. You are also contributing to a healthier community and doing a meaningful act of kindness before God.",
+    fr: "En parrainant un proche, vous ne soutenez pas seulement S19 : vous pouvez aider quelqu'un à accéder à des soins supplémentaires, à l'éducation, au soutien et à une voie plus saine. Vous contribuez également à une communauté plus saine et vous accomplissez un acte de bonté significatif devant Dieu.",
   },
   "refer.lead4": {
     en: "A simple referral could make a real difference in someone's life.",
@@ -619,10 +624,12 @@ const dict = {
     en: "Carefully formulated botanical solutions. Available for pickup in Bafoussam, delivery across Cameroon, and shipping to supported international destinations.",
     fr: "Des solutions botaniques soigneusement formulées. Disponibles au retrait à Bafoussam, à la livraison dans tout le Cameroun et à l'expédition vers des destinations internationales prises en charge.",
   },
-  // Item 03 of the Cameroon/International Delivery guide: the delivery block that
-  // sits directly below the product collection. Cameroon and international are kept
-  // apart, and no price, customs fee, courier or delivery date is stated anywhere
-  // in it — the closing line tells the customer to confirm those with S19.
+  // Item 15 of the Shop / Herbal Catalog guide. The delivery guide (item 03)
+  // created this block for the shop page with its own wording; the shop guide is
+  // the more specific authority for this page, so its exact sentences now stand.
+  // They say the same thing — supported destinations, no worldwide promise, no
+  // courier, no price, no customs fee and no delivery date — so nothing that was
+  // already compliant is lost.
   "shop.delivery.kicker": { en: "Delivery", fr: "Livraison" },
   "shop.delivery.title": {
     en: "Delivery Across Cameroon & Internationally",
@@ -630,16 +637,16 @@ const dict = {
   },
   "shop.delivery.cameroonLabel": { en: "Within Cameroon", fr: "Au Cameroun" },
   "shop.delivery.cameroon": {
-    en: "Order your S19 products and have them delivered to Bafoussam, Bamenda, Buea, Limbe, Bertoua, Kumba, Douala, Yaoundé and other cities across Cameroon.",
-    fr: "Commandez vos produits S19 et faites-vous livrer à Bafoussam, Bamenda, Buéa, Limbé, Bertoua, Kumba, Douala, Yaoundé et dans d'autres villes du Cameroun.",
+    en: "S19 products can be delivered to Bafoussam, Bamenda, Buea, Limbe, Bertoua, Kumba, Douala, Yaoundé and other cities across Cameroon.",
+    fr: "Les produits S19 peuvent être livrés à Bafoussam, Bamenda, Buéa, Limbé, Bertoua, Kumba, Douala, Yaoundé et dans d'autres villes du Cameroun.",
   },
   "shop.delivery.internationalLabel": {
-    en: "International Delivery",
-    fr: "Livraison internationale",
+    en: "International",
+    fr: "International",
   },
   "shop.delivery.international": {
-    en: "S19 also ships to supported international destinations, including the United States (USA), Canada, United Kingdom (UK), United Arab Emirates (UAE), selected countries across Africa and other supported international destinations.",
-    fr: "S19 expédie également vers des destinations internationales prises en charge, notamment les États-Unis (USA), le Canada, le Royaume-Uni (R-U), les Émirats arabes unis (ÉAU), certains pays d'Afrique et d'autres destinations internationales prises en charge.",
+    en: "S19 also ships to supported destinations, including the United States (USA), Canada, United Kingdom (UK), United Arab Emirates (UAE), selected countries across Africa and other supported international destinations.",
+    fr: "S19 expédie également vers des destinations prises en charge, notamment les États-Unis (USA), le Canada, le Royaume-Uni (R-U), les Émirats arabes unis (ÉAU), certains pays d'Afrique et d'autres destinations internationales prises en charge.",
   },
   "shop.delivery.close": {
     en: "Contact S19 on WhatsApp to confirm shipping availability, delivery options and applicable charges for your destination.",
@@ -671,9 +678,32 @@ const dict = {
     en: "Please include your full name, phone number, delivery location, and the quantity you need. Our team will reply to confirm availability, price, payment, and delivery.",
     fr: "Veuillez indiquer votre nom complet, votre numéro de téléphone, votre lieu de livraison et la quantité souhaitée. Notre équipe répondra pour confirmer la disponibilité, le prix, le paiement et la livraison.",
   },
+  // Item 14 of the Shop / Herbal Catalog guide: the existing screenshot workflow
+  // is kept exactly as it was, and this closing sentence is added. It is the third
+  // of the guide's three approved paragraphs and is what stops the screenshot route
+  // reading as a promise that anything ships anywhere. Its DO NOT CHANGE forbids a
+  // fixed international price, so the sentence points at S19 instead.
+  "shop.alternativeOrder.international": {
+    en: "For international orders, please contact S19 to confirm whether shipping is available to your destination and the applicable shipping charges.",
+    fr: "Pour les commandes internationales, veuillez contacter S19 pour confirmer si l'expédition est disponible vers votre destination et quels sont les frais d'expédition applicables.",
+  },
   "shop.alternativeOrder.whatsapp": { en: "Send a screenshot on WhatsApp", fr: "Envoyer une capture d'écran sur WhatsApp" },
   "shop.alternativeOrder.email": { en: "Email: info@s19herbalclinic.com", fr: "Email : info@s19herbalclinic.com" },
   "shop.contactPricing": { en: "Contact S19 for pricing", fr: "Contactez S19 pour le prix" },
+
+  // Item 19 of the Shop / Herbal Catalog guide: one compact safety note, added once
+  // near the bottom of the catalog rather than under every product card. It is the
+  // page-level counterpart to the per-product limitations the guide writes into the
+  // ten rewritten descriptions — a card summarises a product, this is the standing
+  // caveat a shopper reads before choosing anything.
+  "shop.safety.title": {
+    en: "Important Health Information",
+    fr: "Information importante sur la santé",
+  },
+  "shop.safety.text": {
+    en: "S19 herbal products are intended to support individualized health and wellness care. Product suitability may vary according to your health condition, medications, pregnancy or breastfeeding status, allergies and other individual factors. Some health conditions require laboratory testing, medical diagnosis or conventional treatment. Do not delay urgent or medically necessary care because of an herbal product. If you are taking prescribed medication or receiving specialist treatment, discuss complementary herbal use with an appropriately qualified healthcare professional.",
+    fr: "Les produits à base de plantes de S19 sont destinés à soutenir une prise en charge individualisée de la santé et du bien-être. L'adéquation du produit peut varier selon votre état de santé, vos médicaments, votre statut de grossesse ou d'allaitement, vos allergies et d'autres facteurs individuels. Certaines affections nécessitent des analyses de laboratoire, un diagnostic médical ou un traitement conventionnel. Ne retardez pas une prise en charge urgente ou médicalement nécessaire en raison d'un produit à base de plantes. Si vous prenez un traitement prescrit ou suivez un traitement spécialisé, parlez de l'usage complémentaire de plantes à un professionnel de santé qualifié.",
+  },
 
   "addToCart.quantity": { en: "Quantity", fr: "Quantité" },
   "addToCart.label": { en: "Add to Cart", fr: "Ajouter au panier" },

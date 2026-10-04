@@ -22,7 +22,8 @@
     "verify:alerts": "tsx scripts/verify-alerts.ts",
     "verify:directory": "tsx scripts/verify-directory.ts",
     "verify:logs": "tsx scripts/verify-logs.ts",
-    "verify:stock": "tsx --tsconfig tsconfig.scripts.json scripts/verify-stock.ts"
+    "verify:stock": "tsx --tsconfig tsconfig.scripts.json scripts/verify-stock.ts",
+    "backfill:product-copy": "tsx scripts/backfill-product-copy.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1140.0",

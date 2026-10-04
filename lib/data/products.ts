@@ -1,5 +1,20 @@
 import type { SiteCategory, SiteProduct } from "@/lib/site";
 
+// This file is the seed source and the fallback for the catalog. The live catalog
+// is read from MongoDB first (see lib/catalog.ts), so a change here does not reach
+// customers until the database is updated - scripts/backfill-product-copy.ts does
+// that, and only for the description fields.
+//
+// The ten descriptions rewritten under the Shop / Herbal Catalog guide supply one
+// approved paragraph per product, which becomes `description`. `shortDescription`
+// is what a product card shows, so for those ten it is set to the first sentence of
+// the same approved paragraph: no wording is invented, the card keeps the
+// one-line-summary role it has across the other twelve products, and every
+// limitation the guide adds (eye-care evaluation, medical diagnosis, clinical
+// evaluation, parasitic evaluation) survives in the full description on the product
+// page. The guide's cautions are stated once at page level in the "Important
+// Health Information" block on /shop.
+
 export const productCategories: SiteCategory[] = [
   {
     id: "cat-treatment",
@@ -129,14 +144,18 @@ export const seedProducts: SiteProduct[] = [
     unitFr: "Gouttes oculaires",
     badge: "Herbal",
     badgeFr: "Plantes",
+    // Item 04 of the Shop / Herbal Catalog guide. The old copy read as though the
+    // drops supported glaucoma, cataracts and conjunctivitis, which the guide's DO
+    // NOT CHANGE forbids outright. The approved second sentence is the caution, and
+    // it lives in the full description on the product page.
     shortDescription:
-      "A natural herbal eye drop for vision support, including support for glaucoma, cataracts, conjunctivitis, and tired or irritated eyes.",
+      "A herbal eye-care preparation formulated to support eye comfort and general vision wellness.",
     shortDescriptionFr:
-      "Une goutte oculaire naturelle à base de plantes pour le soutien de la vision, notamment en cas de glaucome, de cataracte, de conjonctivite et d'yeux fatigués ou irrités.",
+      "Une préparation à base de plantes pour le soin des yeux, formulée pour soutenir le confort oculaire et le bien-être visuel général.",
     description:
-      "A natural herbal eye drop for vision support, including support for glaucoma, cataracts, conjunctivitis, and tired or irritated eyes. Fits into a daily eye-care routine under guidance.",
+      "A herbal eye-care preparation formulated to support eye comfort and general vision wellness. People with glaucoma, cataracts, persistent eye irritation, eye pain or changes in vision should remain under appropriate eye-care evaluation.",
     descriptionFr:
-      "Une goutte oculaire naturelle à base de plantes pour le soutien de la vision, notamment en cas de glaucome, de cataracte, de conjonctivite et d'yeux fatigués ou irrités. S'intègre à une routine quotidienne de soins des yeux sous supervision.",
+      "Une préparation à base de plantes pour le soin des yeux, formulée pour soutenir le confort oculaire et le bien-être visuel général. Les personnes atteintes de glaucome, de cataracte, d'irritation oculaire persistante, de douleur oculaire ou présentant des changements de vision doivent rester sous une évaluation ophtalmologique appropriée.",
     usage: "Use as recommended during your consultation. Avoid contact with the dropper tip.",
     usageFr:
       "Utilisez selon les recommandations de votre consultation. Évitez tout contact de l'embout avec les yeux.",
@@ -183,14 +202,17 @@ export const seedProducts: SiteProduct[] = [
     price: 10000,
     badge: "Combo",
     badgeFr: "Combo",
+    // Item 05 of the Shop / Herbal Catalog guide: the name is kept, and the copy now
+    // says plainly that it is complementary. "Recovery from malaria" implied the
+    // product was part of treating the illness; "during recovery" does not.
     shortDescription:
-      "A powerful herbal combination formulated to support recovery from malaria and typhoid fever while boosting the immune system.",
+      "A herbal support combination intended for complementary wellness support during recovery from malaria or typhoid fever.",
     shortDescriptionFr:
-      "Une combinaison de plantes puissante formulée pour soutenir la guérison du paludisme et de la fièvre typhoïde tout en renforçant le système immunitaire.",
+      "Une combinaison de plantes destinée à un soutien de bien-être complémentaire pendant la convalescence après un paludisme ou une fièvre typhoïde.",
     description:
-      "A powerful herbal combination formulated to support recovery from malaria and typhoid fever while boosting the immune system. Traditionally used during fever and convalescence to help restore strength.",
+      "A herbal support combination intended for complementary wellness support during recovery from malaria or typhoid fever. Proper diagnosis and appropriate medical care remain important, especially for persistent, severe or worsening symptoms.",
     descriptionFr:
-      "Une combinaison de plantes puissante formulée pour soutenir la guérison du paludisme et de la fièvre typhoïde tout en renforçant le système immunitaire. Traditionnellement utilisée pendant la fièvre et la convalescence pour aider à restaurer les forces.",
+      "Une combinaison de plantes destinée à un soutien de bien-être complémentaire pendant la convalescence après un paludisme ou une fièvre typhoïde. Un diagnostic approprié et des soins médicaux adéquats restent importants, en particulier en cas de symptômes persistants, sévères ou qui s'aggravent.",
     usage: "Follow the dosing schedule provided with your pack. Take with warm water, away from strong meals.",
     usageFr:
       "Suivez le programme de dosage fourni avec votre pack. À prendre avec de l'eau tiède, à distance des repas copieux.",
@@ -209,14 +231,17 @@ export const seedProducts: SiteProduct[] = [
     price: 5000,
     badge: "Detox",
     badgeFr: "Détox",
+    // Item 06 of the Shop / Herbal Catalog guide: the product identity, name and
+    // "Détox Foie" in the name are retained, but the old copy opened by naming
+    // hepatitis B and C and fatty liver, which the guide's DO NOT CHANGE forbids.
     shortDescription:
-      "Supports hepatitis B and C care, strengthens liver function, healthy digestion, and fatty-liver management.",
+      "A herbal formula designed to support liver health, normal digestive function and general metabolic wellness.",
     shortDescriptionFr:
-      "Soutient la prise en charge de l'hépatite B et C, renforce la fonction hépatique, la digestion saine et la prise en charge du foie gras.",
+      "Une formule à base de plantes conçue pour soutenir la santé du foie, une fonction digestive normale et le bien-être métabolique général.",
     description:
-      "Supports hepatitis B and C care, helps strengthen liver function, and supports the body's natural detoxification processes. Promotes healthy digestion and supports fatty-liver management and liver wellness.",
+      "A herbal formula designed to support liver health, normal digestive function and general metabolic wellness. It may be used as complementary support for people managing liver-related health concerns under appropriate clinical evaluation.",
     descriptionFr:
-      "Soutient la prise en charge de l'hépatite B et C, aide à renforcer la fonction hépatique et soutient les processus naturels de détoxification du corps. Favorise une digestion saine et soutient la prise en charge du foie gras et le bien-être du foie.",
+      "Une formule à base de plantes conçue pour soutenir la santé du foie, une fonction digestive normale et le bien-être métabolique général. Elle peut être utilisée comme soutien complémentaire pour les personnes qui gèrent des problèmes de santé liés au foie, sous une évaluation clinique appropriée.",
     usage: "Take as directed in your treatment plan. Drink plenty of water throughout the day.",
     usageFr:
       "À prendre selon les instructions de votre plan de traitement. Buvez beaucoup d'eau tout au long de la journée.",
@@ -287,14 +312,18 @@ export const seedProducts: SiteProduct[] = [
     price: 0,
     badge: "Combo",
     badgeFr: "Combo",
+    // Item 10 of the Shop / Herbal Catalog guide: the egg/larval/adult claim is exactly
+    // the kind of evidence-free efficacy statement the guide's DO NOT CHANGE rules
+    // out. "Contact S19 for more information and pricing" is not repeated because the
+    // price row already carries it.
     shortDescription:
-      "A complete herbal cleanse designed to support the elimination of parasites at egg, larval, and adult stages.",
+      "A herbal cleanse formulated to support digestive wellness and traditional parasite-cleansing programs.",
     shortDescriptionFr:
-      "Un nettoyage à base de plantes complet conçu pour soutenir l'élimination des parasites aux stades œuf, larvaire et adulte.",
+      "Un nettoyage à base de plantes formulé pour soutenir le bien-être digestif et les programmes traditionnels de déparasitage.",
     description:
-      "A complete herbal cleanse designed to support the elimination of parasites at egg, larval, and adult stages. Best run as a supervised program. Contact S19 for more information and pricing.",
+      "A herbal cleanse formulated to support digestive wellness and traditional parasite-cleansing programs. Persistent or suspected parasitic infection should be appropriately evaluated.",
     descriptionFr:
-      "Un nettoyage à base de plantes complet conçu pour soutenir l'élimination des parasites aux stades œuf, larvaire et adulte. Mieux réalisé dans le cadre d'un programme supervisé. Contactez S19 pour plus d'informations et une tarification.",
+      "Un nettoyage à base de plantes formulé pour soutenir le bien-être digestif et les programmes traditionnels de déparasitage. Une infection parasitaire persistante ou suspectée doit être correctement évaluée.",
     usage: "Follow the step-by-step cleanse schedule provided with your order.",
     usageFr:
       "Suivez le programme de nettoyage étape par étape fourni avec votre commande.",
@@ -341,14 +370,17 @@ export const seedProducts: SiteProduct[] = [
     unitFr: "500 ml",
     badge: "Herbal",
     badgeFr: "Plantes",
+    // Item 09 of the Shop / Herbal Catalog guide: fertility is no longer presented as a
+    // predictable product outcome. The "500 mL bottle" detail the old copy carried is
+    // not lost - the unit field already shows 500 mL beside the price.
     shortDescription:
-      "Supports women's reproductive health and may help improve fertility.",
+      "A herbal formula designed to support women's reproductive wellness and general fertility-focused care as part of an individualized health approach.",
     shortDescriptionFr:
-      "Soutient la santé reproductive des femmes et peut aider à améliorer la fertilité.",
+      "Une formule à base de plantes conçue pour soutenir le bien-être reproductif des femmes et une prise en charge générale axée sur la fertilité, dans le cadre d'une approche de santé individualisée.",
     description:
-      "Supports women's reproductive health and may help improve fertility. 500 mL bottle for sustained daily use as part of a reproductive wellness plan.",
+      "A herbal formula designed to support women's reproductive wellness and general fertility-focused care as part of an individualized health approach.",
     descriptionFr:
-      "Soutient la santé reproductive des femmes et peut aider à améliorer la fertilité. Flacon de 500 ml pour une utilisation quotidienne soutenue dans le cadre d'un plan de bien-être reproductif.",
+      "Une formule à base de plantes conçue pour soutenir le bien-être reproductif des femmes et une prise en charge générale axée sur la fertilité, dans le cadre d'une approche de santé individualisée.",
     usage: "Take as recommended during your consultation.",
     usageFr:
       "À prendre selon les recommandations de votre consultation.",
@@ -369,14 +401,19 @@ export const seedProducts: SiteProduct[] = [
     unitFr: "125 ml",
     badge: "100% Cold-Pressed",
     badgeFr: "100 % pressée à froid",
+    // Item 07 of the Shop / Herbal Catalog guide. The old copy ran through seven
+    // conditions and named asthma, sinusitis and allergies in parentheses, which is
+    // the "independently treats" reading the guide forbids. The "100%" claim is not
+    // repeated in the description because the badge and the ingredients line already
+    // state it and the guide covers neither field.
     shortDescription:
-      "Supports healthy blood-sugar and blood-pressure levels, weight loss, respiratory wellness, skin, cholesterol, and heart health.",
+      "Cold-pressed black seed oil for general metabolic, respiratory, skin and cardiovascular wellness.",
     shortDescriptionFr:
-      "Soutient des taux sains de glycémie et de tension artérielle, la perte de poids, le bien-être respiratoire, la peau, le cholestérol et la santé cardiaque.",
+      "Huile de nigelle pressée à froid pour le bien-être métabolique, respiratoire, cutané et cardiovasculaire général.",
     description:
-      "100% cold-pressed black seed oil supporting healthy blood-sugar and blood-pressure levels, weight loss, respiratory wellness (asthma, sinusitis, and allergies), skin health, healthy cholesterol, and heart health.",
+      "Cold-pressed black seed oil for general metabolic, respiratory, skin and cardiovascular wellness. May complement healthy nutrition and lifestyle measures.",
     descriptionFr:
-      "Huile de nigelle 100 % pressée à froid soutenant des taux sains de glycémie et de tension artérielle, la perte de poids, le bien-être respiratoire (asthme, sinusite et allergies), la santé de la peau, un cholestérol sain et la santé cardiaque.",
+      "Huile de nigelle pressée à froid pour le bien-être métabolique, respiratoire, cutané et cardiovasculaire général. Elle peut compléter des mesures de nutrition et de mode de vie saines.",
     usage: "One teaspoon daily, directly or with food or warm water.",
     usageFr:
       "Une cuillère à café par jour, directement ou avec de la nourriture ou de l'eau tiède.",
@@ -451,14 +488,16 @@ export const seedProducts: SiteProduct[] = [
     price: 2500,
     badge: "Natural",
     badgeFr: "Naturel",
-    shortDescription:
-      "For smoother, brighter-looking skin. Also treats facial & skin acne, rashes, and fungal infections.",
-    shortDescriptionFr:
-      "Pour une peau plus lisse et plus éclatante. Traite également l'acné du visage et de la peau, les éruptions cutanées et les infections fongiques.",
+    // Item 08 of the Shop / Herbal Catalog guide: "Also treats" and "helping to treat"
+    // claim the soap independently treats acne, rashes and fungal infections, which
+    // the guide's DO NOT CHANGE rules out. The first sentence is short enough to
+    // stand alone on a product card.
+    shortDescription: "For smoother, brighter-looking skin.",
+    shortDescriptionFr: "Pour une peau plus lisse et plus éclatante.",
     description:
-      "A natural bathing soap for smoother, brighter-looking skin. Gently cleanses while helping to treat facial and body acne, rashes, and fungal infections.",
+      "For smoother, brighter-looking skin. Helps cleanse the skin and supports everyday care for acne-prone, irritated or blemish-prone skin.",
     descriptionFr:
-      "Un savon de bain naturel pour une peau plus lisse et plus éclatante. Nettoie en douceur tout en aidant à traiter l'acné du visage et du corps, les éruptions cutanées et les infections fongiques.",
+      "Pour une peau plus lisse et plus éclatante. Aide à nettoyer la peau et soutient le soin quotidien des peaux à imperfections, irritées ou sujettes aux boutons.",
     usage: "Use daily when bathing. Lather over the skin and rinse well.",
     usageFr:
       "Utilisez quotidiennement au bain. Faites mousser sur la peau puis rincez abondamment.",
@@ -505,14 +544,17 @@ export const seedProducts: SiteProduct[] = [
     price: 5000,
     badge: "Men's Health",
     badgeFr: "Santé masculine",
+    // Item 11 of the Shop / Herbal Catalog guide: the old copy opened by naming four
+    // specific dysfunctions, which the guide's DO NOT CHANGE rules out. The product
+    // name and the "Men's Health" badge are untouched.
     shortDescription:
-      "Supports weak erections, premature ejaculation, sperm count, and sperm motility.",
+      "A men's wellness formula designed to support sexual health, erectile function and male reproductive wellness, including sperm health.",
     shortDescriptionFr:
-      "Soutient les érections faibles, l'éjaculation précoce, le nombre de spermatozoïdes et leur mobilité.",
+      "Une formule de bien-être pour homme conçue pour soutenir la santé sexuelle, la fonction érectile et le bien-être reproductif masculin, y compris la santé des spermatozoïdes.",
     description:
-      "Herbal support for men's sexual and reproductive wellness, including weak erections, premature ejaculation, sperm count, and sperm motility.",
+      "A men's wellness formula designed to support sexual health, erectile function and male reproductive wellness, including sperm health.",
     descriptionFr:
-      "Soutien à base de plantes pour le bien-être sexuel et reproductif masculin, notamment les érections faibles, l'éjaculation précoce, le nombre de spermatozoïdes et leur mobilité.",
+      "Une formule de bien-être pour homme conçue pour soutenir la santé sexuelle, la fonction érectile et le bien-être reproductif masculin, y compris la santé des spermatozoïdes.",
     usage: "Follow the dosing schedule provided with your pack.",
     usageFr:
       "Suivez le programme de dosage fourni avec votre pack.",
@@ -531,14 +573,17 @@ export const seedProducts: SiteProduct[] = [
     price: 5000,
     badge: "Brain Support",
     badgeFr: "Soutien cérébral",
+    // Item 12 of the Shop / Herbal Catalog guide: the old copy opened by promising
+    // "relief from headaches" and then boosting memory, which the guide's DO NOT
+    // CHANGE rules out. The product name and "Brain Support" badge are untouched.
     shortDescription:
-      "Supports relief from headaches, stress, insomnia, and mental fatigue. Helps boost memory and brain function.",
+      "A herbal wellness formula designed to support relaxation, sleep quality, mental clarity and general brain and nervous-system wellness during periods of stress or mental fatigue.",
     shortDescriptionFr:
-      "Soutient le soulagement des maux de tête, du stress, de l'insomnie et de la fatigue mentale. Aide à stimuler la mémoire et les fonctions cérébrales.",
+      "Une formule de bien-être à base de plantes conçue pour soutenir la relaxation, la qualité du sommeil, la clarté mentale et le bien-être général du cerveau et du système nerveux pendant les périodes de stress ou de fatigue mentale.",
     description:
-      "Supports relief from headaches, stress, insomnia, and mental fatigue. Helps boost memory and support healthy brain function.",
+      "A herbal wellness formula designed to support relaxation, sleep quality, mental clarity and general brain and nervous-system wellness during periods of stress or mental fatigue.",
     descriptionFr:
-      "Soutient le soulagement des maux de tête, du stress, de l'insomnie et de la fatigue mentale. Aide à stimuler la mémoire et à soutenir le bon fonctionnement du cerveau.",
+      "Une formule de bien-être à base de plantes conçue pour soutenir la relaxation, la qualité du sommeil, la clarté mentale et le bien-être général du cerveau et du système nerveux pendant les périodes de stress ou de fatigue mentale.",
     usage: "Take as directed in your treatment plan.",
     usageFr:
       "À prendre selon les instructions de votre plan de traitement.",
@@ -557,14 +602,18 @@ export const seedProducts: SiteProduct[] = [
     price: 0,
     badge: "Standardized",
     badgeFr: "Standardisée",
+    // Item 03 of the Shop / Herbal Catalog guide: "Naturally burns fat" is an
+    // absolute the guide forbids, and "Contact S19 for pricing" survives on the
+    // price row itself, so it is not repeated here. shortDescription is the first
+    // sentence of the approved description - see the note at the top of this file.
     shortDescription:
-      "Naturally burns fat, cleanses and tones the stomach, and supports metabolism, healthy weight, and regular bowel movement.",
+      "A herbal tea formulated to support healthy weight-management goals, digestion, regular bowel movement and normal metabolic function when used alongside appropriate nutrition and lifestyle measures.",
     shortDescriptionFr:
-      "Brûle naturellement les graisses, nettoie et tonifie l'estomac, et soutient le métabolisme, un poids sain et un transit régulier.",
+      "Un thé à base de plantes formulé pour soutenir des objectifs de gestion saine du poids, la digestion, un transit régulier et une fonction métabolique normale lorsqu'il est utilisé avec une nutrition et des mesures de mode de vie appropriées.",
     description:
-      "Naturally burns fat, cleanses and tones the stomach, and supports metabolism. Helps reduce belly fat and bloating, supports digestive cleansing and detoxification, promotes healthy digestion and regular bowel movement, and supports healthy weight balance. Contact S19 for pricing.",
+      "A herbal tea formulated to support healthy weight-management goals, digestion, regular bowel movement and normal metabolic function when used alongside appropriate nutrition and lifestyle measures.",
     descriptionFr:
-      "Brûle naturellement les graisses, nettoie et tonifie l'estomac, et soutient le métabolisme. Aide à réduire la graisse du ventre et les ballonnements, soutient le nettoyage digestif et la détoxification, favorise une digestion saine et un transit régulier, et soutient un poids équilibré. Contactez S19 pour la tarification.",
+      "Un thé à base de plantes formulé pour soutenir des objectifs de gestion saine du poids, la digestion, un transit régulier et une fonction métabolique normale lorsqu'il est utilisé avec une nutrition et des mesures de mode de vie appropriées.",
     usage: "Steep one sachet in hot water for 10 minutes. Drink once daily, ideally after the main meal.",
     usageFr:
       "Infusez un sachet dans de l'eau chaude pendant 10 minutes. Buvez une fois par jour, idéalement après le repas principal.",

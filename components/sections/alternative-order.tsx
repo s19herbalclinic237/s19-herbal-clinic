@@ -22,6 +22,13 @@ export async function AlternativeOrderSection() {
             <p className="mt-4 text-[15px] leading-relaxed text-ink/80">
               {t("shop.alternativeOrder.details")}
             </p>
+            {/* Item 14 of the Shop / Herbal Catalog guide. The screenshot workflow
+                above is unchanged; this is the guide's third approved sentence and
+                the one that keeps the screenshot route from reading as a promise
+                that anything ships anywhere. */}
+            <p className="mt-4 text-[15px] leading-relaxed text-ink/80">
+              {t("shop.alternativeOrder.international")}
+            </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <a
                 href={waLink(

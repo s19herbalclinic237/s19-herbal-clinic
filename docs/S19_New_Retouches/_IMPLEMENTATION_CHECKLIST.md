@@ -12,7 +12,7 @@ implemented, in the order the master checklist §20 prescribes.
 | 1 | `S19_Sitewide_Footer_Navigation_Consistency_Developer_Guide.md` | DONE — items 01 & 13 closed by guide 2 |
 | 2 | `S19_FAQ_Page_Concise_Updated_v2.md` | DONE — awaiting S19 verification |
 | 3 | `S19_Contact_Accommodation_…` + `S19_TeleHealth_…` + `S19_Cameroon_International_Delivery_…` | DONE — awaiting S19 verification; blog seed re-run outstanding |
-| 4 | `S19_Shop_Herbal_Catalog_…` | not started |
+| 4 | `S19_Shop_Herbal_Catalog_Copy_Paste_Developer_Guide.md` | DONE - awaiting S19 verification |
 | 5 | `S19_Patient_Stories_…` | not started |
 | 6 | `S19_Terms_Privacy_…` | not started |
 | 7 | `S19_Patient_Portal_Developer_Recommendations.md` | not started |
@@ -278,3 +278,142 @@ reintroduced promise still fails:
 2. **The USD figure.** See decision 2 above.
 3. **Two international wordings.** See decision 1 above.
 4. **`booking.connectDr` renamed.** See decision 3 above.
+
+## Guide 4 - Shop / Herbal Product Catalog
+
+`S19_Shop_Herbal_Catalog_Copy_Paste_Developer_Guide.md`
+
+### What the guide asked for
+
+A preservation-first pass over the catalog. No redesign, no new products, no price
+changes - ten product descriptions that made claims the guide rules out, one added
+sentence in the ordering section, one new safety note, and a referral-section tweak.
+
+### The ten rewritten products
+
+Each description is the guide's approved paragraph, verbatim, EN and FR:
+
+| Product | What the old copy said | Guide's reason |
+|---|---|---|
+| Flat Tummy & Weight Loss Tea | "Naturally burns fat... reduce belly fat" | absolute |
+| Vision - Herbal Eye Drops | "support for glaucoma, cataracts, conjunctivitis" | claims treatment |
+| Malaria & Typhoid Combo | "powerful... boosting the immune system" | implies part of treating |
+| Liver Support (Détox Foie) | "Supports hepatitis B and C... fatty-liver" | claims treatment |
+| Black Seed Oil (BSO) | seven conditions, "asthma, sinusitis, allergies" | implies independent treatment |
+| Natural Bathing Soap | "Also treats... fungal infections" | claims treatment |
+| Feminine Fertility Booster | "may help improve fertility" | outcome as product claim |
+| Parasite Cleanse Combo | "elimination of parasites at egg, larval, and adult stages" | evidence-free efficacy |
+| Man Pikin | four named dysfunctions | outcome as product claim |
+| Neuro-Protect | "relief from headaches... boost memory" | outcome as product claim |
+
+Product **names, categories, images, prices, badges, usage instructions and
+ingredients are untouched** - verified mechanically against `HEAD`
+(10 products changed, 4 fields each, the other 12 byte-for-byte identical).
+
+### Decisions taken
+
+1. **`shortDescription` is the first sentence of the approved paragraph**, for the
+   ten only. The guide supplies one paragraph per product; a card shows
+   `shortDescription`. Setting both fields to the same text would put two sentences on
+   every card. No wording is invented - the card text is a mechanical truncation of
+   approved copy - and every limitation the guide adds (eye-care evaluation, medical
+   diagnosis, clinical evaluation, parasitic evaluation) survives in the full
+   description on the product page. The page-level safety note covers the caveats at
+   card level. **This is the one judgment call in the guide and is worth S19's eye.**
+2. **The delivery block keeps its guide-3 position.** Delivery guide item 03 asked for
+   it directly below the product collection; shop guide §15 asked for it close to the
+   WhatsApp ordering area. Below the grid satisfies both, since the ordering section is
+   the next block down. The two guides' sentences differ slightly, and the shop guide's
+   now stand, being the more specific authority for this page.
+3. **Items 01, 13, 17 and 18 were already satisfied** and were left alone. §1's catalog
+   lead and §18's mission sentence had already been set to that exact wording in guide
+   1; §17's "Integrative Cancer Support" was guide 1's footer item.
+4. **`usage` and `ingredients` are left alone** on all ten. The guide covers neither,
+   and §20 forbids inventing dosage instructions.
+5. **The seed is not the live catalog.** `/shop` and `/shop/[slug]` read MongoDB first
+   (`lib/catalog.ts`) and only fall back to `lib/data/products.ts`, so editing the seed
+   alone changes nothing a customer sees. New `scripts/backfill-product-copy.ts`
+   writes only the four description fields on the ten named products.
+
+### The backfill script - why it is not `npm run seed`
+
+`scripts/seed.ts` does `Product.deleteMany({})` then `insertMany`. Running it would
+discard stock levels, reorder thresholds and targets, `createdAt` (which drives the
+catalog sort order), and any admin-panel edits. The new script is dry-run by default,
+writes only behind `--apply`, is idempotent, and aborts if any target slug is missing
+from the seed.
+
+```
+npm run backfill:product-copy              # dry run, prints before/after
+npm run backfill:product-copy -- --apply   # writes
+```
+
+**Run with S19's approval** (it was approved and applied: 10 products, 40 fields, and a
+second dry run then reported all ten "current").
+
+### Verification
+
+- `tsc --noEmit` 0 errors; `eslint app components lib tests` 0 errors, 19 pre-existing
+  warnings; `npm test` **406/406** (388 → 406); `next build` succeeds.
+- Rendered in EN and FR with `cookie: s19_locale`: **545 assertions pass, 0 fail**
+  across the ten product pages, `/shop`, and the twelve KEEP products.
+- Surgical-diff check: exactly the ten products, only `description` /
+  `shortDescription` and their FR pairs. All twelve KEEP products byte-for-byte
+  identical to `HEAD`.
+
+### New tests (`tests/public-content-guard.test.ts`, 388 → 406)
+
+One suite, 18 tests, `describe("Shop / Herbal Catalog guide")`:
+
+- The ten approved paragraphs pinned **verbatim**, so an improvised rewording fails.
+- The twelve KEEP descriptions pinned in full. A substring check would let a rewrite
+  through by keeping its first clause.
+- `shortDescription` must be the approved paragraph or its opening sentence - it can
+  never become separate wording.
+- The guide's four added cautions asserted present, so dropping one fails.
+- The six §20 words banned in the ten descriptions.
+- §19: the safety note must render **exactly once** on `/shop` and **not** in
+  `product-card.tsx`, which is how "one compact note" is enforced.
+- A test that fails if the backfill script is renamed or deleted, and that it contains
+  no `deleteMany` / `insertMany`. Comments are stripped before that check, because the
+  script explains at length why it avoids those calls.
+
+### Findings for S19 - not actioned
+
+1. **The Diabetes Support Package is not in the live catalog.** The seed has 22
+   products; the `products` collection has 21. There is no document for it, so §13's
+   product does not appear on `/shop` even though its page resolves. Adding it would be
+   adding a product, which §20 forbids, so it has not been added. The guide's §21
+   "22-product catalog structure is preserved" is true of the seed and not of the live
+   site. **Needs an S19 decision.**
+2. **Eight products have pre-existing DB/seed drift** - `oral-miracle`, `sea-salt`,
+   `activated-charcoal`, `diabetes-support-package`, `shea-butter`, `sozo`,
+   `hoodie-men`, `hoodie-women`. In seven of them the live `shortDescription` holds the
+   seed's longer `description`; in `oral-miracle` both differ. **All eight are KEEP
+   products**, so the guide says leave them alone and nothing was touched. Flagged
+   because the unit tests pin the *seed* text for these twelve, and for eight of them
+   that is not what the site serves.
+3. **The Fertility Booster's "500 mL bottle" sentence is gone** from the description,
+   because §9 replaces the description wholesale. Nothing is lost: the `unit` field
+   already shows 500 mL beside the price.
+4. **`Black Seed Oil`'s "100%" claim** no longer appears in the description, because the
+   approved copy says "Cold-pressed". The `100% Cold-Pressed` badge and the
+   `ingredients` line both still state it, and the guide covers neither field.
+
+### Test-script lessons (recorded so they are not repeated)
+
+- **Strip `<script>` before counting.** Next embeds the RSC flight payload in a
+  `<script>`, so every visible string appears **twice** in the raw HTML. The §19 safety
+  note first measured as 2 occurrences instead of 1.
+- **The clinic's own registered name contains "Cure"** - "S19 King of Cure", in the
+  Organization JSON-LD. A blanket ban on `cure` over a whole page flags the brand. Scope
+  word bans to the copy that is supposed to avoid them.
+- **`EVERY_COUNTRY` matched the footer tagline** until "Worldwide Tele-Health" and its
+  French twin "Télé-santé mondiale" were excluded. Same trap the delivery-guide suite hit:
+  consultation reach really is worldwide; only *shipping* is bounded.
+- **`href` counting needs raw HTML, not stripped text.** `visibleText()` removes the tags
+  the links live in, so the link count came back 0 against a page with 63 of them.
+- **PowerShell mangling.** Accented FR needles written inline come through as `?` and
+  produce false misses; the verification script is a UTF-8 `.mjs` run with `node`.
+- **Assertion style.** Assert the promise, not its refutation. Pin the approved sentence;
+  do not merely assert the old sentence is gone.
