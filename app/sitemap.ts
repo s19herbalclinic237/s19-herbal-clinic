@@ -24,6 +24,9 @@ const STATIC_ROUTES: {
   { path: "/telehealth", priority: 0.8, changeFrequency: "monthly" },
   { path: "/location", priority: 0.8, changeFrequency: "monthly" },
   { path: "/contact", priority: 0.8, changeFrequency: "monthly" },
+  // Answers real search queries ("does S19 cure cancer", "S19 Cameroon delivery"),
+  // so this is a landing page rather than a policy page.
+  { path: "/faq", priority: 0.8, changeFrequency: "monthly" },
   { path: "/blog", priority: 0.8, changeFrequency: "weekly" },
   { path: "/patient-stories", priority: 0.7, changeFrequency: "monthly" },
   { path: "/live-reviews", priority: 0.6, changeFrequency: "monthly" },

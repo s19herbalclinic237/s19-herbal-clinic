@@ -27,6 +27,9 @@ const treatmentLinks: { key: TranslationKey; href: string }[] = [
 const companyLinks: { key: TranslationKey; href: string }[] = [
   { key: "footer.home", href: "/" },
   { key: "footer.approach", href: "/about" },
+  // Item 13 of the footer/navigation guide: FAQ linked from the footer as well
+  // as the navigation, so it is never buried inside an account screen.
+  { key: "footer.faq", href: "/faq" },
   { key: "footer.catalog", href: "/shop" },
   { key: "footer.blog", href: "/blog" },
   { key: "footer.library", href: "/health-library" },

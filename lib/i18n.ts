@@ -15,6 +15,10 @@ const dict = {
   "nav.blog": { en: "Blog", fr: "Blog" },
   "nav.videos": { en: "Videos", fr: "Vidéos" },
   "nav.about": { en: "About", fr: "À propos" },
+  // Items 01 and 13 of the footer/navigation guide, unblocked now that /faq
+  // exists. The guide wants FAQ "clearly visible" in the main navigation and
+  // linked from the footer as well, not buried in an account screen.
+  "nav.faq": { en: "FAQ", fr: "FAQ" },
   "nav.stories": { en: "Testimonials", fr: "Témoignages" },
   "nav.account": { en: "My Account", fr: "Mon compte" },
   "nav.cart": { en: "Shopping cart", fr: "Panier" },
@@ -455,6 +459,7 @@ const dict = {
   "footer.gastritis": { en: "Gastritis & Digestive Disorders", fr: "Gastrite et troubles digestifs" },
   "footer.cancer": { en: "Integrative Cancer Support", fr: "Soutien intégratif du cancer" },
   "footer.liveReviews": { en: "Live Reviews", fr: "Avis vidéo" },
+  "footer.faq": { en: "Frequently Asked Questions", fr: "Questions fréquemment posées" },
 
   "refer.kicker": { en: "Kindness that heals", fr: "Une bonté qui guérit" },
   "refer.title": { en: "Refer a Loved One to S19", fr: "Parrainez un proche vers S19" },
@@ -1504,6 +1509,40 @@ const dict = {
     fr: "Consultez nos {terms} complètes pour plus d'informations.",
   },
   "refund.tos": { en: "Terms of Use", fr: "Conditions d'utilisation" },
+
+  // Page chrome for /faq. The 22 questions and answers live in lib/data/faq.ts
+  // because that is approved prose, not UI labels — see the note at the top of
+  // that file.
+  "faq.metaTitle": { en: "Frequently Asked Questions", fr: "Questions fréquemment posées" },
+  "faq.metaDescription": {
+    en: "Answers to common questions about S19 Herbal Clinic in Bafoussam, Cameroon: consultations, herbal support, safety, Tele-Health, international patients, accommodation, delivery and urgent care.",
+    fr: "Réponses aux questions fréquentes sur la Clinique S19 à Bafoussam, Cameroun : consultations, soutien herbal, sécurité, Télé-santé, patients internationaux, hébergement, livraison et soins urgents.",
+  },
+  "faq.hero.eyebrow": { en: "Frequently Asked Questions", fr: "Questions fréquemment posées" },
+  "faq.hero.title": { en: "Your Questions. Clear Answers.", fr: "Vos questions. Des réponses claires." },
+  "faq.hero.lead": {
+    en: "Choosing the right support for your health is an important decision. Here are answers to common questions about S19 Herbal Clinic, our approach, consultations, herbal support, Tele-Health and patient services.",
+    fr: "Choisir le bon soutien pour votre santé est une décision importante. Voici des réponses aux questions fréquentes sur la Clinique S19, notre approche, les consultations, le soutien herbal, la Télé-santé et les services aux patients.",
+  },
+  "faq.hero.sub": {
+    en: "Still have a question? Talk to S19 on WhatsApp or book a consultation.",
+    fr: "Encore une question ? Parlez à S19 sur WhatsApp ou réservez une consultation.",
+  },
+  // Mid-page CTA, rendered after Question 14 as the guide requires.
+  "faq.midCta.text": {
+    en: "Not sure whether S19 is right for your condition? Start with a consultation. Tell us about your health concerns and let us review your situation before you decide on the next step.",
+    fr: "Vous ne savez pas si S19 convient à votre état ? Commencez par une consultation. Dites-nous ce qui vous préoccupe et laissez-nous examiner votre situation avant que vous ne décidiez de la prochaine étape.",
+  },
+  // Final CTA, rendered after Question 22.
+  "faq.finalCta.title": { en: "Still Have Questions?", fr: "Encore des questions ?" },
+  "faq.finalCta.text": {
+    en: "Every patient is different. If your question is specific to your diagnosis, medications, laboratory results or treatment history, the best next step is an individualized consultation.",
+    fr: "Chaque patient est différent. Si votre question porte sur votre diagnostic, vos médicaments, vos résultats de laboratoire ou votre historique de traitement, la meilleure étape suivante est une consultation individualisée.",
+  },
+  "faq.finalCta.statement": {
+    en: "Do Not Treat Blindly. Investigate. Understand. Personalize. Monitor.",
+    fr: "Ne traitez pas à l'aveugle. Investiguez. Comprenez. Personnalisez. Surveillez.",
+  },
 
   "account.metaTitle": { en: "Your account", fr: "Votre compte" },
   "account.metaDescription": {

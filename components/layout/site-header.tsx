@@ -41,6 +41,9 @@ const nav = [
   { key: "nav.videos", href: "/live-reviews" },
   { key: "nav.stories", href: "/patient-stories" },
   { key: "nav.about", href: "/about" },
+  // Item 01 of the footer/navigation guide. Added once the FAQ page was
+  // published; the guide says not to remove anything else to make room for it.
+  { key: "nav.faq", href: "/faq" },
 ] as const;
 
 export function AnnouncementBar() {

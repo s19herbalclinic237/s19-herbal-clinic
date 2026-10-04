@@ -29,6 +29,7 @@ import {
   accommodationAmenities,
 } from "@/lib/data/home-content";
 import { testimonials as staticTestimonials } from "@/lib/data/testimonials";
+import { faqSections, faqEntries, FAQ_MID_CTA_AFTER } from "@/lib/data/faq";
 
 const LOCALES = ["en", "fr"] as const;
 
@@ -687,6 +688,178 @@ describe("bilingual parity for the new content", () => {
         assert.ok(p.short.trim().length > 40, `${p.slug} ${locale} summary is too short`);
         assert.ok(p.detail.trim().length > 60, `${p.slug} ${locale} description is too short`);
         assert.ok(p.conditions.length >= 4, `${p.slug} ${locale} needs at least four supports`);
+      }
+    }
+  });
+});
+
+describe("FAQ page: the approved 22-question structure holds", () => {
+  // Source: docs/S19_New_Retouches/S19_FAQ_Page_Concise_Updated_v2.md
+  //
+  // Most of this guide is a refusal to say something, so it fails the same way
+  // the Programs brief does: a well-designed page can still publish a cure claim
+  // because nothing in the JSX stops it. These read the copy the page renders.
+
+  test("there are exactly 22 questions, numbered 1 to 22 without a gap", () => {
+    assert.equal(faqEntries.length, 22);
+    assert.deepEqual(
+      faqEntries.map((q) => q.n),
+      Array.from({ length: 22 }, (_, i) => i + 1)
+    );
+  });
+
+  test("the seven approved sections appear in the approved order", () => {
+    assert.deepEqual(
+      faqSections.map((s) => s.title),
+      [
+        "About S19",
+        "Consultation & Care",
+        "Herbs, Medications & Safety",
+        "Diabetes, Hypertension & Cancer",
+        "Tele-Health, International Patients & Travel",
+        "Working with S19",
+        "Ordering, Results & Urgent Care",
+      ]
+    );
+  });
+
+  test("the mid-page CTA is placed after Question 14, where the guide requires it", () => {
+    assert.equal(FAQ_MID_CTA_AFTER, 14);
+    const q14 = faqEntries.find((q) => q.n === 14);
+    assert.ok(q14, "Question 14 must exist for the CTA anchor to mean anything");
+    // And it really is the last question of its section, so the CTA falls
+    // between Question 14 and Question 15 exactly as the guide writes it.
+    const lastOfSection = Math.max(
+      ...faqSections.find((s) => s.id === "conditions")!.items.map((i) => i.n)
+    );
+    assert.equal(q14.n, lastOfSection);
+  });
+
+  test("every question and answer is translated, not copied from English", () => {
+    for (const q of faqEntries) {
+      assert.ok(q.questionFr.trim().length > 0, `Q${q.n} has no French question`);
+      assert.notEqual(q.questionFr, q.question, `Q${q.n} question is untranslated`);
+      assert.equal(
+        q.answerFr.length,
+        q.answer.length,
+        `Q${q.n} has ${q.answer.length} English paragraphs but ${q.answerFr.length} French ones`
+      );
+      for (const p of q.answerFr) {
+        assert.ok(p.trim().length > 0, `Q${q.n} has an empty French paragraph`);
+      }
+    }
+    for (const s of faqSections) {
+      assert.ok(s.titleFr.trim().length > 0, `${s.title} has no French heading`);
+      assert.notEqual(s.titleFr, s.title, `${s.title} heading is untranslated`);
+    }
+  });
+
+  test("no FAQ answer promises a cure, a reversal or a guaranteed result", () => {
+    // The guide's DO NOT IMPROVISE list, as patterns. Deliberately narrower than
+    // BANNED_CLAIMS: Q9 legitimately says herbs "can have meaningful effects", and
+    // Q7, Q11 and Q21 must each *refuse* a guarantee ("rather than promising a
+    // guaranteed result", "no individual outcome should be guaranteed"). Asserting
+    // on the bare word "guaranteed" would fail the very sentences that keep the
+    // page honest, so these match the promise itself and not its refutation.
+    const FORBIDDEN = [
+      /\bwe (can|could|will|would) guarantee\b/i,
+      /\bguaranteed to (cure|heal|reverse|recover)\b/i,
+      /\bwe cure\b/i,
+      /\bcures cancer\b/i,
+      /\breverse (your |the )?(diabetes|cancer|tumou?r)\b/i,
+      /\bpermanent cure\b/i,
+      /\bwill definitely\b/i,
+      /\b100% (effective|guaranteed)\b/i,
+    ];
+    for (const locale of LOCALES) {
+      const text = faqEntries
+        .flatMap((q) => (locale === "fr" ? q.answerFr : q.answer))
+        .join(" ");
+      assertNone(text, FORBIDDEN, `FAQ answers [${locale}]`);
+    }
+  });
+
+  test("the safety answers keep their boundaries in both languages", () => {
+    const byN = (n: number) => faqEntries.find((q) => q.n === n)!;
+
+    // Q22 must say S19 is not an emergency service. The footer/navigation guide
+    // forbids the opposite claim, and this is the one page where a visitor is
+    // looking for urgent help, so it is asserted in both languages.
+    assert.match(byN(22).answer[0], /not an emergency medical service/i);
+    assert.match(byN(22).answerFr[0], /n'est pas un service médical d'urgence/i);
+
+    // Q12 must refuse to present herbs as insulin replacement.
+    assert.match(byN(12).answer[0], /^No\./);
+    assert.match(byN(12).answer[0], /never be presented as a replacement for lifesaving insulin/i);
+    assert.match(byN(12).answerFr[0], /ne doit jamais être présentée comme un substitut/i);
+
+    // Q10 must not let a patient stop prescribed medication on their own.
+    assert.match(byN(10).answer[0], /should not be independently stopped or reduced/i);
+    assert.match(byN(10).answerFr[0], /ne doit être ni arrêté ni réduit de sa propre initiative/i);
+
+    // Q7 must refuse a fixed timeline.
+    assert.match(byN(7).answer[0], /no responsible fixed timeline/i);
+    assert.match(byN(7).answerFr[0], /Il n'existe pas de délai fixe et responsable/i);
+  });
+
+  test("Q15 keeps the international-patient paragraph at the approved strength", () => {
+    // The guide adds this question specifically for S19's experience receiving
+    // patients from the United States, and explicitly forbids strengthening it
+    // into a treatment-success claim. So the country and the three conditions
+    // must be present, and no outcome language may sit near them.
+    const q15 = faqEntries.find((q) => q.n === 15)!;
+    // Locale-specific patterns on purpose: the French says "Télé-santé" and
+    // "hébergement", so an English-only regex would fail the translation rather
+    // than the copy, which is the opposite of what this test is for.
+    for (const [locale, text, telehealth, accommodation, betterOutcome] of [
+      ["en", q15.answer.join(" "), /Tele-Health/i, /accommodation/i, /better outcomes?/i],
+      [
+        "fr",
+        q15.answerFr.join(" "),
+        /Télé-santé/i,
+        /hébergement/i,
+        /meilleurs résultats/i,
+      ],
+    ] as const) {
+      assert.match(text, telehealth, `Q15 [${locale}] must mention Tele-Health`);
+      assert.match(text, accommodation, `Q15 [${locale}] must link accommodation to travel`);
+      assert.doesNotMatch(
+        text,
+        betterOutcome,
+        `Q15 [${locale}] must not imply travel guarantees a better outcome`
+      );
+    }
+    assert.match(q15.answer[1], /United States/);
+    assert.match(q15.answer[1], /cancer, diabetes and Lyme disease/);
+    assert.match(q15.answerFr[1], /États-Unis/);
+    assert.match(q15.answerFr[1], /cancer, le diabète et la maladie de Lyme/);
+  });
+
+  test("Q17 states supported destinations rather than worldwide delivery", () => {
+    const q17 = faqEntries.find((q) => q.n === 17)!;
+    assert.match(q17.answer[0], /supported international destinations/i);
+    assert.match(q17.answerFr[0], /destinations internationales prises en charge/i);
+    for (const [locale, text] of [
+      ["en", q17.answer[0]],
+      ["fr", q17.answerFr[0]],
+    ] as const) {
+      assert.doesNotMatch(text, /worldwide/i, `Q17 [${locale}] must not promise worldwide delivery`);
+    }
+  });
+
+  test("the healthcare-professional and referral questions are retained", () => {
+    // The guide's checklist requires professional recruitment and professional
+    // referral to stay in. Deleting either would quietly drop a recruitment
+    // channel, so they are pinned by question number.
+    assert.match(faqEntries.find((q) => q.n === 19)!.question, /healthcare professional/i);
+    assert.match(faqEntries.find((q) => q.n === 20)!.question, /refer patients or partner/i);
+  });
+
+  test("every contextual link points at a real S19 destination", () => {
+    for (const q of faqEntries) {
+      for (const l of q.links ?? []) {
+        assert.ok(l.href.startsWith("/"), `Q${q.n} link ${l.href} is not a site path`);
+        assert.ok(l.labelFr.trim().length > 0, `Q${q.n} link ${l.href} has no French label`);
       }
     }
   });
