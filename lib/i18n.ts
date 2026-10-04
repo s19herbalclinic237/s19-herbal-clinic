@@ -32,7 +32,10 @@ const dict = {
   "aria.closeMenu": { en: "Close menu", fr: "Fermer le menu" },
   "aria.account": { en: "Account", fr: "Compte" },
 
-  "common.bookConsultation": { en: "Book Consultation", fr: "Réserver une consultation" },
+  // Items 02 and 03 of the footer/navigation guide. The header renders
+  // common.bookConsultation as its principal CTA, so this label is the one most
+  // visitors read; it used to read "Book Consultation" without the article.
+  "common.bookConsultation": { en: "Book a Consultation", fr: "Réserver une consultation" },
   "common.bookConsultationLower": { en: "Book a Consultation", fr: "Réserver une consultation" },
   "common.viewCatalog": { en: "View full catalog", fr: "Voir le catalogue complet" },
   "common.browseCatalog": { en: "Browse Catalog", fr: "Parcourir le catalogue" },
@@ -40,7 +43,11 @@ const dict = {
   "common.contactPricing": { en: "Contact S19 for pricing", fr: "Contactez S19 pour le prix" },
   "common.orderWhatsApp": { en: "Order via WhatsApp", fr: "Commander via WhatsApp" },
   "common.view": { en: "View", fr: "Voir" },
-  "common.whatsappDr": { en: "WhatsApp / Dr Consultation", fr: "WhatsApp / Consultation Dr" },
+  // Item 03. This was "WhatsApp / Dr Consultation" and is the footer's WhatsApp
+  // link on every page, so it read as a second clinical booking CTA. Ordering
+  // pages keep "Order via WhatsApp" (common.orderWhatsApp / cart.orderWhatsApp),
+  // which the guide explicitly allows.
+  "common.whatsappDr": { en: "Talk to S19 on WhatsApp", fr: "Parlez à S19 sur WhatsApp" },
   "common.readMore": { en: "Read article", fr: "Lire l'article" },
   "common.backHome": { en: "Back to Home", fr: "Retour à l'accueil" },
   "common.contactPage": { en: "Contact", fr: "Contact" },
@@ -77,7 +84,7 @@ const dict = {
   // rather than borrowing a generic CTA string that could drift.
   "home.hero.ctaBook": { en: "Book a Consultation", fr: "Réserver une consultation" },
   "home.hero.ctaPrograms": { en: "Explore Our Programs", fr: "Découvrir nos programmes" },
-  "home.hero.whatsapp": { en: "WhatsApp the Clinic", fr: "Écrire à la clinique sur WhatsApp" },
+  "home.hero.whatsapp": { en: "Talk to S19 on WhatsApp", fr: "Parlez à S19 sur WhatsApp" },
   "home.hero.claim": {
     en: "Specialized Support for Diabetes and Cancer Care.",
     fr: "Soutien spécialisé pour le diabète et les soins du cancer.",
@@ -407,6 +414,14 @@ const dict = {
   "footer.treatment": { en: "Treatment Focus", fr: "Domaines de traitement" },
   "footer.clinicContact": { en: "Clinic & Contact", fr: "Clinique & Contact" },
   "footer.explore": { en: "Explore", fr: "Explorer" },
+  // Item 07 of the footer/navigation guide: one compact site-wide delivery line.
+  // "Supported destinations" is deliberate - the guide forbids guaranteeing
+  // worldwide delivery. Do not shorten this back to "worldwide delivery".
+  "footer.deliveryHeading": { en: "Delivery", fr: "Livraison" },
+  "footer.delivery": {
+    en: "Nationwide Delivery Across Cameroon | International Shipping — USA, Canada, UK, UAE, Africa & Other Supported Destinations",
+    fr: "Livraison nationale au Cameroun | Expédition internationale — USA, Canada, Royaume-Uni, Émirats arabes unis, Afrique et autres destinations prises en charge",
+  },
   "footer.rights": {
     en: "© {year} {brand} ({slogan}). All rights reserved.",
     fr: "© {year} {brand} ({slogan}). Tous droits réservés.",
@@ -422,10 +437,16 @@ const dict = {
   "footer.library": { en: "Health Library", fr: "Bibliothèque santé" },
   "footer.contactUs": { en: "Contact Us", fr: "Contactez-nous" },
   "footer.trackOrder": { en: "Track Your Order", fr: "Suivre votre commande" },
-  "footer.refundReturns": { en: "Refund & Returns", fr: "Remboursements & Retours" },
+  // Legal link labels follow the footer/navigation guide, item 08. They were
+  // "Terms of Service" and "Refund & Returns", which did not name the exchange
+  // part of the returns policy the links point at.
+  "footer.refundReturns": {
+    en: "Refund, Return & Exchange Policy",
+    fr: "Politique de remboursement, de retour et d'échange",
+  },
   "footer.stories": { en: "Patient Stories", fr: "Histoires de patients" },
   "footer.privacy": { en: "Privacy Policy", fr: "Politique de confidentialité" },
-  "footer.terms": { en: "Terms of Service", fr: "Conditions d'utilisation" },
+  "footer.terms": { en: "Terms of Use", fr: "Conditions d'utilisation" },
   "footer.cookies": { en: "Cookie Policy", fr: "Politique de cookies" },
   "footer.diabetes": { en: "Diabetes & Metabolic Health", fr: "Diabète et santé métabolique" },
   "footer.hypertension": { en: "Hypertension & Heart Health", fr: "Hypertension et santé cardiaque" },
@@ -533,7 +554,7 @@ const dict = {
     en: "This package is personalized to your consultation. Contact S19 to discuss your condition and receive your individual protocol and pricing.",
     fr: "Ce pack est personnalisé pour votre consultation. Contactez S19 pour discuter de votre état et recevoir votre protocole et prix individuels.",
   },
-  "product.contactWhatsApp": { en: "Contact S19 on WhatsApp", fr: "Contacter S19 sur WhatsApp" },
+  "product.contactWhatsApp": { en: "Talk to S19 on WhatsApp", fr: "Parlez à S19 sur WhatsApp" },
   "product.contactWhatsAppInfo": {
     en: "Hello S19, I would like more information about the {name}.",
     fr: "Bonjour S19, je souhaite plus d'informations sur {name}.",
@@ -555,9 +576,13 @@ const dict = {
     en: "Browse the S19 Herbal Clinic standardized product catalog - treatment packs, herbal teas, extracts and oils, and wellness essentials. Pickup in Bafoussam and worldwide delivery.",
     fr: "Parcourez le catalogue de produits standardisés de la clinique S19 - packs de traitement, tisanes, extraits et huiles, et essentiels de bien-être. Retrait à Bafoussam et livraison mondiale.",
   },
+  // Item 10 of the footer/navigation guide. The old line ended "and worldwide
+  // delivery", which the guide forbids. shop.meta.description below still carries
+  // the older wording - meta copy is out of scope for this guide and is raised
+  // with S19 separately.
   "shop.hero.lead": {
-    en: "Carefully formulated botanical solutions. Available for pickup in Bafoussam and worldwide delivery.",
-    fr: "Des solutions botaniques soigneusement formulées. Disponibles au retrait à Bafoussam et en livraison mondiale.",
+    en: "Carefully formulated botanical solutions. Available for pickup in Bafoussam, delivery across Cameroon, and shipping to supported international destinations.",
+    fr: "Des solutions botaniques soigneusement formulées. Disponibles au retrait à Bafoussam, à la livraison dans tout le Cameroun et à l'expédition vers des destinations internationales prises en charge.",
   },
   "shop.search.placeholder": { en: "Search the catalog...", fr: "Rechercher dans le catalogue..." },
   "shop.sort.featured": { en: "Featured", fr: "En vedette" },
@@ -811,7 +836,7 @@ const dict = {
   "programs.badge": { en: "Program", fr: "Programme" },
   "programs.supports": { en: "Supports", fr: "Soutient" },
   "programs.inquire": { en: "Inquire via WhatsApp", fr: "S'informer via WhatsApp" },
-  "programs.bookCta": { en: "Book a consultation", fr: "Réserver une consultation" },
+  "programs.bookCta": { en: "Book a Consultation", fr: "Réserver une consultation" },
   // Brief §7. "Important" / "Safety" prefix is part of the label, so a reader
   // scanning the card sees the boundary before they read the detail.
   "programs.noteImportant": { en: "Important:", fr: "Important :" },
@@ -907,9 +932,15 @@ const dict = {
     en: "Fill in the form to request a priority appointment or Tele-Health consultation. Our clinical team confirms your booking by phone or WhatsApp.",
     fr: "Remplissez le formulaire pour demander un rendez-vous prioritaire ou une consultation de Télé-santé. Notre équipe clinique confirme votre réservation par téléphone ou WhatsApp.",
   },
-  "contact.chatWhatsApp": { en: "Chat directly on WhatsApp", fr: "Discuter directement sur WhatsApp" },
+  "contact.chatWhatsApp": { en: "Talk to S19 on WhatsApp", fr: "Parlez à S19 sur WhatsApp" },
   "contact.phoneLabel": { en: "Phone & WhatsApp", fr: "Téléphone & WhatsApp" },
-  "contact.phoneSub": { en: "Tele-Health emergency line 24/7", fr: "Ligne d'urgence Télé-santé 24h/24" },
+  // Was "Tele-Health emergency line 24/7". S19 is not an emergency service and
+  // does not answer 24/7, which the footer/navigation guide forbids twice
+  // (§11 and §17). Replaced with what the line actually does.
+  "contact.phoneSub": {
+    en: "Tele-Health and WhatsApp enquiries, answered during clinic hours",
+    fr: "Demandes de Télé-santé et WhatsApp, traitées pendant les heures d'ouverture",
+  },
   "contact.emailLabel": { en: "Email", fr: "E-mail" },
   "contact.emailSub": { en: "We reply within 24 hours", fr: "Nous répondons sous 24 heures" },
   "contact.addressLabel": { en: "Clinic Address", fr: "Adresse de la clinique" },
@@ -952,7 +983,15 @@ const dict = {
     en: "Relax and unwind with cable TV in your room.",
     fr: "Détendez-vous avec la TV câblée dans votre chambre.",
   },
+  // Item 12 of the footer/navigation guide. The old note told patients to ask when
+  // booking but never said rooms are limited, which read as a guarantee. The guide
+  // requires "subject to availability" and forbids publishing a room price, so the
+  // booking instruction is kept as its own line rather than merged.
   "contact.accommodation.note": {
+    en: "Travelling to Bafoussam? Ask S19 about patient accommodation within the clinic premises, subject to availability.",
+    fr: "Vous vous rendez à Bafoussam ? Demandez à S19 un hébergement pour patients au sein de la clinique, selon les disponibilités.",
+  },
+  "contact.accommodation.bookingNote": {
     en: "Just let us know when booking your appointment if you will need a room.",
     fr: "Indiquez-nous simplement, lors de la réservation de votre rendez-vous, si vous aurez besoin d'une chambre.",
   },
@@ -980,7 +1019,11 @@ const dict = {
   "location.info.address": { en: "Exact Physical Address", fr: "Adresse physique exacte" },
   "location.info.hours": { en: "Opening Hours", fr: "Heures d'ouverture" },
   "location.info.hoursLine2": { en: "In-house consultation & pharmacy pickup", fr: "Consultation sur place & retrait en pharmacie" },
-  "location.info.hoursLine3": { en: "Tele-Health emergency line 24/7 via WhatsApp", fr: "Ligne d'urgence Télé-santé 24h/24 via WhatsApp" },
+  // Was "Tele-Health emergency line 24/7 via WhatsApp" - see contact.phoneSub.
+  "location.info.hoursLine3": {
+    en: "Tele-Health consultations by appointment",
+    fr: "Consultations de Télé-santé sur rendez-vous",
+  },
   "location.info.logistics": { en: "Dispatch / Logistics", fr: "Expédition / Logistique" },
   "location.info.logisticsLine1": {
     en: "Fast dispatch of prescribed herbal packs anywhere in Cameroon",
@@ -1155,9 +1198,13 @@ const dict = {
     en: "Choose an online consultation if traveling is difficult or you live outside Bafoussam or Cameroon and want to discuss your case remotely.",
     fr: "Choisissez une consultation en ligne si les déplacements sont difficiles ou si vous vivez hors de Bafoussam ou du Cameroun et souhaitez discuter de votre cas à distance.",
   },
+  // Item 11 of the footer/navigation guide: the same Tele-Health safety principle
+  // wherever remote consultation is promoted. This paragraph already sat in the
+  // "in person or online" section but did not carry the not-an-emergency-service
+  // limitation, which until now appeared only in the Terms.
   "tele.options.note": {
-    en: "For some health conditions, the S19 team may recommend that you obtain certain laboratory tests, scans or an in-person medical evaluation before a complete treatment plan is developed.",
-    fr: "Pour certaines conditions de santé, l'équipe S19 peut recommander d'effectuer certains tests de laboratoire, des scanners ou une évaluation médicale en personne avant qu'un plan de traitement complet ne soit élaboré.",
+    en: "Tele-Health is not an emergency service. Some health situations may require physical examination, urgent medical care, specialist evaluation or other in-person assessment. Where necessary, the S19 team will advise you accordingly.",
+    fr: "La Télé-santé n'est pas un service d'urgence. Certaines situations de santé peuvent nécessiter un examen physique, des soins urgents, une évaluation spécialisée ou toute autre évaluation en personne. Lorsque c'est nécessaire, l'équipe S19 vous le confirmera.",
   },
   "tele.steps.kicker": { en: "How remote care works", fr: "Comment fonctionnent les soins à distance" },
   "tele.steps.title": { en: "From consultation to follow-up, wherever you are.", fr: "De la consultation au suivi, où que vous soyez." },
@@ -1522,7 +1569,9 @@ const dict = {
     en: "Book a consultation - in the clinic or by video call - and a qualified practitioner will guide you.",
     fr: "Réservez une consultation - à la clinique ou en visioconférence - et un praticien qualifié vous guidera.",
   },
-  "library.cta.button": { en: "Book a consultation", fr: "Réserver une consultation" },
+  // Item 02: the health library's closing CTA button was the last clinical CTA on
+  // the site still labelled without the article.
+  "library.cta.button": { en: "Book a Consultation", fr: "Réserver une consultation" },
 
   // ── Account / auth screens (front-end only) ────────────────────────────
   "auth.checkingSession": { en: "Checking your session…", fr: "Vérification de votre session…" },

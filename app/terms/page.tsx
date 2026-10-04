@@ -60,7 +60,11 @@ const sections = [
   },
   {
     title: "Shipping & Delivery",
-    body: "We dispatch nationwide across Cameroon and worldwide via express courier. Local pickup is available at our Bafoussam clinic during opening hours. Delivery times vary by destination; our team keeps you updated by WhatsApp and SMS.",
+    // Item 09 of the footer/navigation guide. The old sentence said S19 dispatches
+    // "worldwide via express courier", promising a service to every country and a
+    // courier S19 does not name. The replacement states the destination-dependent
+    // terms the guide requires.
+    body: "We dispatch nationwide across Cameroon and to supported international destinations. Local pickup is available at our Bafoussam clinic during opening hours. International shipping availability, delivery charges and estimated delivery times depend on the destination and are confirmed with each order.",
   },
   {
     title: "Returns & Refunds",

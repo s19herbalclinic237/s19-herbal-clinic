@@ -199,6 +199,9 @@ export default async function ContactPage() {
                     <p className="text-sm leading-relaxed text-forest-900">
                       {t("contact.accommodation.note")}
                     </p>
+                    <p className="mt-2 text-sm leading-relaxed text-forest-900/80">
+                      {t("contact.accommodation.bookingNote")}
+                    </p>
                   </div>
                   <p className="font-display text-xl font-semibold leading-snug text-forest-900 md:text-2xl">
                     {t("contact.accommodation.tagline")}

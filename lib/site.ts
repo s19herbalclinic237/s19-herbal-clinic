@@ -66,10 +66,15 @@ export const CLINIC = {
   slogan: "Natural Healing, Lasting Wellness",
   sloganFr: "Guérison naturelle, Bien-être durable",
   tagline: "Science-Based Herbalism & Root-Cause Healthcare",
+  // Site-wide footer mission. Replaced under the footer/navigation guide, item 05:
+  // the old sentence opened "To provide safe, natural and effective herbal
+  // solutions", which the guide forbids because it asserts every S19 product and
+  // intervention is safe and effective. Also feeds the root meta description in
+  // app/layout.tsx, which is intentional - the old claim was published there too.
   mission:
-    "To provide safe, natural and effective herbal solutions that support long-term health and wellbeing through science-based herbalism, individualized assessment, nutrition, lifestyle medicine, and continuous monitoring.",
+    "To provide evidence-informed herbal and integrative wellness support through individualized assessment, nutrition, lifestyle guidance, health education and continuous monitoring.",
   missionFr:
-    "Fournir des solutions à base de plantes sûres, naturelles et efficaces qui soutiennent la santé et le bien-être à long terme grâce à une phytothérapie fondée sur la science, une évaluation individualisée, la nutrition, la médecine du mode de vie et un suivi continu.",
+    "Fournir un soutien herbal et intégratif de bien-être fondé sur les données probantes, au moyen d'une évaluation individualisée, de la nutrition, de conseils de mode de vie, de l'éducation à la santé et d'un suivi continu.",
   phone: "+237 672 595 989",
   phoneHref: "+237672595989",
   whatsappNumber: "237672595989",

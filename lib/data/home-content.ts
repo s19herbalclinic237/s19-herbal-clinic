@@ -130,7 +130,7 @@ export const herbalSafetyKeywords: { text: string; textFr: string }[] = [
   { text: "Individual health status", textFr: "État de santé individuel" },
 ];
 
-/** Section 7 — the eight elements a personalized plan is built from. */
+/** Section 7 — the nine elements a personalized plan is built from. */
 export const personalizedCareElements: { text: string; textFr: string }[] = [
   { text: "Medical History Review", textFr: "Revue de l'historique médical" },
   { text: "Laboratory Assessment", textFr: "Évaluation de laboratoire" },

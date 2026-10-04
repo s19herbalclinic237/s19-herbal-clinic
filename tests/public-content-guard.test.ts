@@ -441,9 +441,22 @@ describe("home page: required sections and boundaries", () => {
 });
 
 describe("home page: the brief's list sections are complete", () => {
-  test("section 2 lists all eight components of care", () => {
-    assert.equal(careComponents.length, 8);
-    assert.match(careComponents[7].text, /referral to conventional healthcare/i);
+  test("section 2 lists every component of care, including clinic-based therapies", () => {
+    // Nine, not the brief's original eight: the in-clinic device therapies were
+    // added as a ninth component rather than folded into an existing line, so the
+    // list stays scannable and the referral boundary stays last.
+    assert.equal(careComponents.length, 9);
+    // Indexed, not positional: adding the device therapies moved the referral
+    // boundary down a slot, and its position matters more than its index.
+    assert.equal(
+      careComponents[careComponents.length - 1].text,
+      "Collaboration with or referral to conventional healthcare when appropriate",
+      "the conventional-care referral must remain the last component of care"
+    );
+    assert.ok(
+      careComponents.some((c) => /specialized high-technology devices/i.test(c.text)),
+      "the components of care must name the clinic-based device therapies"
+    );
   });
 
   test("section 4 shows exactly the six program areas the brief names", () => {
@@ -518,10 +531,16 @@ describe("home page: the brief's list sections are complete", () => {
     );
   });
 
-  test("section 7 shows all eight personalization elements", () => {
-    assert.equal(personalizedCareElements.length, 8);
+  test("section 7 shows every personalization element, including clinic-based therapies", () => {
+    // Nine, not the brief's original eight, for the same reason as the components
+    // of care above: clinic-based therapies became their own element.
+    assert.equal(personalizedCareElements.length, 9);
     assert.equal(personalizedCareElements[0].text, "Medical History Review");
-    assert.equal(personalizedCareElements[7].text, "Follow-Up");
+    assert.equal(personalizedCareElements[8].text, "Follow-Up");
+    assert.ok(
+      personalizedCareElements.some((e) => e.text === "Clinic-Based Therapies"),
+      "a personalized plan must include the clinic-based device therapies"
+    );
   });
 
   test("section 9 shows all four accommodation amenities", () => {

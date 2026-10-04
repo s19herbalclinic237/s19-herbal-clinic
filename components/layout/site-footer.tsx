@@ -155,6 +155,15 @@ export async function SiteFooter() {
       </Container>
 
       <div className="relative z-10 border-t border-forest-900/80">
+        <Container className="flex flex-col gap-1.5 py-4 text-xs leading-relaxed text-forest-300 sm:flex-row sm:items-baseline sm:gap-3">
+          <span className="shrink-0 font-bold uppercase tracking-wide text-gold-400">
+            {t("footer.deliveryHeading")}
+          </span>
+          <span className="max-w-4xl">{t("footer.delivery")}</span>
+        </Container>
+      </div>
+
+      <div className="relative z-10 border-t border-forest-900/80">
         <Container className="flex flex-col gap-3 py-5 text-xs text-forest-400 sm:flex-row sm:items-center sm:justify-between">
           <p>{t("footer.rights", { year: new Date().getFullYear(), brand: clinic.brand, slogan: clinic.slogan })}</p>
           <div className="flex items-center gap-3">
