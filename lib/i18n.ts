@@ -62,8 +62,8 @@ const dict = {
     fr: "Où le bien-être naturel rencontre les soins personnalisés.",
   },
   "home.hero.lead": {
-    en: "At S19 Herbal Clinic, we combine evidence-informed herbal medicine with individualized assessment, nutrition, lifestyle support, health education and continuous monitoring.",
-    fr: "À la Clinique de phytothérapie S19, nous associons une phytothérapie fondée sur les données probantes à une évaluation individualisée, un soutien nutritionnel, un accompagnement du mode de vie, une éducation à la santé et un suivi continu.",
+    en: "At S19 Herbal Clinic, we combine evidence-informed herbal medicine with individualized assessment, nutrition, lifestyle support, health education, continuous monitoring and clinic-based supportive therapies using specialized high-technology devices.",
+    fr: "À la Clinique de phytothérapie S19, nous associons une phytothérapie fondée sur les données probantes à une évaluation individualisée, un soutien nutritionnel, un accompagnement du mode de vie, une éducation à la santé, un suivi continu et des thérapies de soutien en clinique utilisant des appareils spécialisés de haute technologie.",
   },
   "home.hero.lead2": {
     en: "We don't believe in treating blindly. Before developing a personalized care plan, we seek to understand your medical history, current medications, laboratory findings, lifestyle, nutrition and the wider factors that may be contributing to your health condition.",
@@ -262,8 +262,8 @@ const dict = {
   /**
    * Consent and privacy disclaimer for patient video testimonials. Kept apart
    * from `stories.disclaimer` on purpose: that one is about what results mean,
-   * this one is about permission to publish a person at all. Both appear on
-   * every page that shows a patient video.
+   * this one is about permission to publish a person at all. Rendered only on
+   * the video testimonial page (/live-reviews).
    */
   "stories.consent.title": {
     en: "Patient Video Testimonial & Privacy Disclaimer",
@@ -604,8 +604,8 @@ const dict = {
     fr: "Phytothérapie fondée sur la science. Soins de la cause racine. Éducation. Investigation. Personnalisation. Suivi.",
   },
   "about.position.statement": {
-    en: "S19 Herbal Clinic combines science-based herbal medicine, laboratory investigation, nutrition, lifestyle medicine, patient education, continuous monitoring and in-clinic non-invasive supportive therapies to provide personalized healthcare focused on identifying and addressing important contributing factors.",
-    fr: "La Clinique S19 associe une phytothérapie fondée sur la science, l'investigation de laboratoire, la nutrition, la médecine du mode de vie, l'éducation du patient, un suivi continu et des therapies de soutien non invasives en clinique, afin d'offrir des soins personnalisés axés sur l'identification et le traitement de facteurs contributifs importants.",
+    en: "S19 Herbal Clinic combines science-based herbal medicine, laboratory investigation, nutrition, lifestyle medicine, patient education, continuous monitoring and clinic-based supportive therapies using specialized high-technology devices to provide personalized healthcare focused on identifying and addressing important contributing factors.",
+    fr: "La Clinique S19 associe une phytothérapie fondée sur la science, l'investigation de laboratoire, la nutrition, la médecine du mode de vie, l'éducation du patient, un suivi continu et des thérapies de soutien en clinique utilisant des appareils spécialisés de haute technologie, afin d'offrir des soins personnalisés axés sur l'identification et le traitement de facteurs contributifs importants.",
   },
   "about.position.question": {
     en: "We do not simply ask: “What medicine treats this disease?” We ask: what is happening inside this person, what factors are contributing to it, what can be changed, and how can we measure whether those changes are working?",
@@ -707,10 +707,6 @@ const dict = {
   },
   "about.pillars.kicker": { en: "How we work", fr: "Comment nous travaillons" },
   "about.pillars.title": { en: "Herbs are only one part of S19.", fr: "Les plantes ne sont qu'une partie de S19." },
-  "about.pillars.text": {
-    en: "A major mistake would be to present S19 as a place that simply gives patients herbal mixtures. Our philosophy is much broader.",
-    fr: "Une grossière erreur serait de présenter S19 comme un endroit qui se contente de donner des mélanges de plantes aux patients. Notre philosophie est bien plus large.",
-  },
   "about.education.kicker": { en: "Education before medication", fr: "L'éducation avant le médicament" },
   "about.education.text": {
     en: "This does not mean S19 is against pharmaceutical medicine - medicines can be essential and lifesaving. But healthcare becomes incomplete when long-term treatment focuses only on medication while modifiable contributors such as nutrition, obesity, insulin resistance, inactivity, smoking, alcohol, stress and poor sleep are ignored.",
@@ -830,12 +826,12 @@ const dict = {
   },
 
   // Brief §5. Deliberately names no test, panel or sequence: those are
-  // proprietary and must not be published.
+  // proprietary and must not be published. Opens on the statement itself -
+  // there is no "we do not treat blindly" headline or lead-in above it.
   "programs.investigation.kicker": { en: "Investigations", fr: "Examens" },
-  "programs.investigation.title": { en: "We Do Not Treat Blindly", fr: "Nous ne traitons pas à l'aveugle" },
   "programs.investigation.text": {
-    en: "At S19, we do not treat blindly. Depending on your health condition and individual situation, relevant laboratory tests, imaging or other medical investigations may be requested before or during your program. These investigations help us better understand your health, monitor progress and guide appropriate adjustments to your care plan.",
-    fr: "Chez S19, nous ne traitons pas à l'aveugle. Selon votre état de santé et votre situation individuelle, les analyses de laboratoire, l'imagerie ou d'autres examens médicaux pertinents peuvent être demandés avant ou pendant votre programme. Ces examens nous aident à mieux comprendre votre santé, à suivre les progrès et à orienter les ajustements appropriés de votre plan de soins.",
+    en: "Depending on your health condition and individual situation, relevant laboratory tests, imaging or other medical investigations may be requested before or during your program. These investigations help us better understand your health, monitor progress and guide appropriate adjustments to your care plan.",
+    fr: "Selon votre état de santé et votre situation individuelle, les analyses de laboratoire, l'imagerie ou d'autres examens médicaux pertinents peuvent être demandés avant ou pendant votre programme. Ces examens nous aident à mieux comprendre votre santé, à suivre les progrès et à orienter les ajustements appropriés de votre plan de soins.",
   },
 
   // Brief §6 - programs are clinical pathways, not retail bundles.
@@ -845,8 +841,8 @@ const dict = {
     fr: "Des programmes personnalisés, pas des produits universels",
   },
   "programs.notRetail.text": {
-    en: "An S19 clinical program begins with consultation and assessment. Depending on the patient's needs, the plan may include individualized herbal support, nutrition and lifestyle guidance, health education, relevant investigations, monitoring and follow-up. Products or formulations are selected according to the individual care plan and are not necessarily the same for every patient with the same diagnosis.",
-    fr: "Un programme clinique S19 commence par une consultation et une évaluation. Selon les besoins du patient, le plan peut inclure un soutien herbal individualisé, des conseils nutritionnels et de mode de vie, une éducation à la santé, des examens pertinents, un suivi et des contrôles. Les produits ou formulations sont sélectionnés selon le plan de soins individuel et ne sont pas nécessairement les mêmes pour chaque patient présentant le même diagnostic.",
+    en: "An S19 clinical program begins with consultation and assessment. Depending on the patient's needs, the plan may include individualized herbal support, clinic-based scientific therapies, nutrition and lifestyle guidance, health education, relevant investigations, monitoring and follow-up. Products or formulations are selected according to the individual care plan and are not necessarily the same for every patient with the same diagnosis.",
+    fr: "Un programme clinique S19 commence par une consultation et une évaluation. Selon les besoins du patient, le plan peut inclure un soutien herbal individualisé, des thérapies scientifiques en clinique, des conseils nutritionnels et de mode de vie, une éducation à la santé, des examens pertinents, un suivi et des contrôles. Les produits ou formulations sont sélectionnés selon le plan de soins individuel et ne sont pas nécessairement les mêmes pour chaque patient présentant le même diagnostic.",
   },
 
   "programs.notSure.title": { en: "Not Sure Where to Start?", fr: "Vous ne savez pas par où commencer ?" },
@@ -869,21 +865,17 @@ const dict = {
   // Brief §7. "Complement - not replace -" is mandatory here: this is the one
   // place a reader might infer the therapies stand on their own.
   "programs.therapies.text": {
-    en: "Beyond herbal medicine, S19 may incorporate selected in-clinic supportive therapies as part of an individualized care plan. These therapies are used to complement - not replace - appropriate medical assessment, nutrition, lifestyle support and medically necessary conventional treatment.",
-    fr: "Au-delà de la phytothérapie, S19 peut intégrer des thérapies de soutien en clinique sélectionnées dans le cadre d'un plan de soins individualisé. Ces thérapies servent à compléter - et non à remplacer - l'évaluation médicale appropriée, la nutrition, le soutien de mode de vie et le traitement conventionnel médicalement nécessaire.",
+    en: "Beyond herbal medicine, S19 may incorporate selected in-clinic supportive therapies as part of an individualized care plan, including electromolecular medicine delivered with specialized high-technology devices. These therapies are used to complement - not replace - appropriate medical assessment, nutrition, lifestyle support and medically necessary conventional treatment.",
+    fr: "Au-delà de la phytothérapie, S19 peut intégrer des thérapies de soutien en clinique sélectionnées dans le cadre d'un plan de soins individualisé, notamment la médecine électromoléculaire administrée au moyen d'appareils spécialisés de haute technologie. Ces thérapies servent à compléter - et non à remplacer - l'évaluation médicale appropriée, la nutrition, le soutien de mode de vie et le traitement conventionnel médicalement nécessaire.",
   },
   "programs.therapies.sessions": { en: "How sessions support your program", fr: "Comment les séances soutiennent votre programme" },
   "programs.therapies.item1": {
-    en: "Relaxation sessions complementing your herbal and nutrition protocol.",
-    fr: "Des séances de relaxation complétant votre protocole à base de plantes et de nutrition.",
+    en: "Using electromolecular medicine with specialized high-technology devices as part of our clinic-based supportive therapies to support the body's natural processes and promote overall physiological balance (healing).",
+    fr: "Utilisation de la médecine électromoléculaire avec des appareils spécialisés de haute technologie dans le cadre de nos thérapies de soutien en clinique, afin de soutenir les processus naturels de l'organisme et de promouvoir un équilibre physiologique global (guérison).",
   },
   "programs.therapies.item2": {
-    en: "Supportive care alongside medical assessment and conventional treatment.",
-    fr: "Des soins de soutien aux côtés de l'évaluation médicale et du traitement conventionnel.",
-  },
-  "programs.therapies.item3": {
-    en: "Lifestyle and wellness coaching to reinforce long-term habits.",
-    fr: "Un coaching de mode de vie et de bien-être pour renforcer les habitudes à long terme.",
+    en: "Relaxation sessions complementing your herbal and nutrition protocol.",
+    fr: "Des séances de relaxation complétant votre protocole à base de plantes et de nutrition.",
   },
   "programs.cta.title": {
     en: "Talk to the clinic about your condition",
@@ -981,8 +973,8 @@ const dict = {
   "location.hero.eyebrow": { en: "Visit Our Physical Facility", fr: "Visitez nos installations physiques" },
   "location.hero.title": { en: "S19 Herbal Clinic, Bafoussam.", fr: "Clinique de phytothérapie S19, Bafoussam." },
   "location.hero.lead": {
-    en: "In-house consultation, pharmacy pickup, and dispatch logistics - at the heart of Bafoussam, Cameroon.",
-    fr: "Consultation sur place, retrait en pharmacie et logistique d'expédition - au cœur de Bafoussam, Cameroun.",
+    en: "In-house consultation, pharmacy pickup, and dispatch logistics - at the heart of Bafoussam, Cameroon. Our clinic-based supportive therapies use specialized high-technology devices alongside herbal medicine, nutrition and lifestyle care.",
+    fr: "Consultation sur place, retrait en pharmacie et logistique d'expédition - au cœur de Bafoussam, Cameroun. Nos thérapies de soutien en clinique utilisent des appareils spécialisés de haute technologie, en complément de la phytothérapie, de la nutrition et des soins de mode de vie.",
   },
   "location.hero.alt": { en: "S19 Herbal Clinic location in Bafoussam, Cameroon", fr: "Emplacement de la clinique S19 à Bafoussam, Cameroun" },
   "location.info.address": { en: "Exact Physical Address", fr: "Adresse physique exacte" },

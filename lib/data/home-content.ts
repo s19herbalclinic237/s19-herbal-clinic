@@ -19,6 +19,10 @@ export const careComponents: { text: string; textFr: string }[] = [
   { text: "Herbal medicine", textFr: "Phytothérapie" },
   { text: "Nutrition support", textFr: "Soutien nutritionnel" },
   { text: "Lifestyle modification", textFr: "Modification du mode de vie" },
+  {
+    text: "Clinic-based supportive therapies using specialized high-technology devices",
+    textFr: "Thérapies de soutien en clinique utilisant des appareils spécialisés de haute technologie",
+  },
   { text: "Health education", textFr: "Éducation à la santé" },
   { text: "Monitoring and follow-up", textFr: "Suivi et contrôle" },
   {
@@ -131,6 +135,7 @@ export const personalizedCareElements: { text: string; textFr: string }[] = [
   { text: "Medical History Review", textFr: "Revue de l'historique médical" },
   { text: "Laboratory Assessment", textFr: "Évaluation de laboratoire" },
   { text: "Herbal Support", textFr: "Soutien herbal" },
+  { text: "Clinic-Based Therapies", textFr: "Thérapies en clinique" },
   { text: "Nutrition", textFr: "Nutrition" },
   { text: "Lifestyle Medicine", textFr: "Médecine du mode de vie" },
   { text: "Health Education", textFr: "Éducation à la santé" },

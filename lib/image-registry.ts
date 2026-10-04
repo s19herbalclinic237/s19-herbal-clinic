@@ -172,7 +172,7 @@ export const CLINIC_PHOTOS = {
     },
     caption: {
       en: "A non-invasive supportive therapy session at S19 Herbal Clinic.",
-      fr: "Une séance de therapy de soutien non invasive à la Clinique S19.",
+      fr: "Une séance de thérapie de soutien non invasive à la Clinique S19.",
     },
     pages: ["/programs"],
   }),

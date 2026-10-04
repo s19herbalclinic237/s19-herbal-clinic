@@ -108,8 +108,7 @@ export default async function ProgramsPage() {
             <FaFlask className="mt-1 h-6 w-6 shrink-0 text-forest-700" aria-hidden />
             <div>
               <Kicker>{t("programs.investigation.kicker")}</Kicker>
-              <h2 className="mt-3">{t("programs.investigation.title")}</h2>
-              <p className="mt-4 text-[15px] leading-relaxed text-ink/80">
+              <p className="mt-3 text-[15px] leading-relaxed text-ink/80">
                 {t("programs.investigation.text")}
               </p>
             </div>
@@ -249,7 +248,6 @@ export default async function ProgramsPage() {
                     {[
                       t("programs.therapies.item1"),
                       t("programs.therapies.item2"),
-                      t("programs.therapies.item3"),
                     ].map((item) => (
                       <li key={item} className="flex items-start gap-3">
                         <FaRegCircleCheck

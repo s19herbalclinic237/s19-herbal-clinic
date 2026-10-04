@@ -67,9 +67,8 @@ export const traditionalPlusModern = "Traditional Herbal Knowledge + Modern Scie
 /**
  * The pillars of care, in order of emphasis. Herbal medicine leads because
  * naming the practice accurately is both honest and a stronger position than
- * leading with a category the clinic does not primarily occupy - a major
- * mistake would be presenting S19 as a place that simply hands out herbal
- * mixtures. Non-Conventional Therapies sits last: selected approaches used
+ * leading with a category the clinic does not primarily occupy.
+ * Non-Conventional Therapies sits last: selected approaches used
  * alongside herbal medicine, nutrition and lifestyle, never instead of them.
  */
 export const healthPillars = [
@@ -103,7 +102,7 @@ export const healthPillars = [
   },
   {
     title: "Non-Conventional Therapies",
-    text: "Selected non-conventional therapies may form part of individualized care. When appropriate, they are used alongside herbal medicine, nutrition and lifestyle interventions to support symptom management, recovery and overall well-being.",
+    text: "Selected non-conventional therapies may form part of individualized care. When appropriate, they - including electromolecular medicine delivered with specialized high-technology devices - are used alongside herbal medicine, nutrition and lifestyle interventions to support symptom management, recovery and overall well-being.",
   },
 ];
 
@@ -229,11 +228,11 @@ export const patientJourney = [
   },
   {
     step: "Address",
-    text: "Develop an individualized care plan combining herbal medicine, nutrition, lifestyle strategies and other appropriate supportive therapies.",
+    text: "Develop an individualized care plan combining herbal medicine, nutrition, lifestyle strategies and clinic-based supportive therapies using specialized high-technology devices.",
   },
   {
     step: "Support",
-    text: "Begin the treatment program with clear instructions, patient education and, where appropriate, in-clinic non-invasive supportive therapies.",
+    text: "Begin the treatment program with clear instructions, patient education and, where appropriate, in-clinic supportive therapies delivered with specialized high-technology devices.",
   },
   {
     step: "Monitor",
@@ -260,8 +259,8 @@ export const careBeyond = [
     text: "Food is one of the most powerful influences on metabolism, so nutrition is built into every program.",
   },
   {
-    title: "In-clinic non-invasive supportive therapies",
-    text: "Wellness sessions that complement herbal and nutritional protocols during in-clinic programs.",
+    title: "In-clinic supportive therapies",
+    text: "Clinic-based supportive therapies using specialized high-technology devices, delivered alongside herbal and nutritional protocols during in-clinic programs.",
   },
   {
     title: "Treatment duration & progress tracking",
@@ -286,7 +285,7 @@ export const careBeyond = [
 ];
 
 export const centralMessage =
-  "S19 Herbal Clinic combines science-based herbal medicine, laboratory investigation, nutrition, lifestyle medicine, patient education, continuous monitoring and in-clinic non-invasive supportive therapies to provide personalized healthcare focused on identifying and addressing important contributing factors.";
+  "S19 Herbal Clinic combines science-based herbal medicine, laboratory investigation, nutrition, lifestyle medicine, patient education, continuous monitoring and clinic-based supportive therapies using specialized high-technology devices to provide personalized healthcare focused on identifying and addressing important contributing factors.";
 
 export const philosophyTagline =
   "Science-Based Herbalism. Root-Cause Healthcare. Education. Investigation. Personalization. Monitoring.";
@@ -353,10 +352,10 @@ export const homePathway: PathwayStep[] = [
   },
   {
     step: "Address & Support",
-    text: "Develop an individualized plan that may combine herbal medicine, nutrition, lifestyle interventions and appropriate supportive therapies.",
+    text: "Develop an individualized plan that may combine herbal medicine, nutrition, lifestyle interventions and clinic-based supportive therapies using specialized high-technology devices.",
     stepFr: "Agir & Soutenir",
     textFr:
-      "Élaborer un plan individualisé pouvant combiner phytothérapie, nutrition, interventions de mode de vie et thérapies de soutien appropriées.",
+      "Élaborer un plan individualisé pouvant combiner phytothérapie, nutrition, interventions de mode de vie et thérapies de soutien en clinique utilisant des appareils spécialisés de haute technologie.",
   },
   {
     step: "Monitor",
@@ -399,10 +398,10 @@ export const programsPathway: PathwayStep[] = [
   },
   {
     step: "Support",
-    text: "Begin your program with clear instructions, health education and, where appropriate, supportive in-clinic therapies.",
+    text: "Begin your program with clear instructions, health education and, where appropriate, clinic-based supportive therapies using specialized high-technology devices.",
     stepFr: "Soutenir",
     textFr:
-      "Commencer votre programme avec des consignes claires, une éducation à la santé et, le cas échéant, des thérapies de soutien en clinique.",
+      "Commencer votre programme avec des consignes claires, une éducation à la santé et, le cas échéant, des thérapies de soutien en clinique utilisant des appareils spécialisés de haute technologie.",
   },
   {
     step: "Monitor",

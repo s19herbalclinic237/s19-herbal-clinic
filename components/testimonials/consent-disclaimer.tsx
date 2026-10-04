@@ -4,8 +4,11 @@ import { FaLock } from "react-icons/fa6";
 /**
  * Patient video testimonials show a real person. Permission to publish someone
  * is a different question from whether their result is typical, so this block
- * is deliberately separate from the results disclaimer and is rendered on
- * every page that puts a patient video in front of a visitor.
+ * is deliberately separate from the results disclaimer in `stories.disclaimer`.
+ *
+ * Lives only on the video testimonial page (/live-reviews). The written
+ * Patient Stories page carries the results disclaimer but not this one: those
+ * testimonials are text, and only this page is built around patient videos.
  *
  * Four points, in the clinic's own wording:
  *   1. Every video was shared with the patient's consent.

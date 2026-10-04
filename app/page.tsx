@@ -45,6 +45,7 @@ import {
   FaShieldHalved,
   FaBookOpen,
   FaStethoscope,
+  FaBolt,
   FaAppleWhole,
   FaPersonRunning,
   FaGraduationCap,
@@ -53,7 +54,7 @@ import {
 } from "react-icons/fa6";
 
 /**
- * Section 7's eight elements, one icon each, in the order the brief lists them.
+ * Section 7's elements, one icon each, in the order the brief lists them.
  * Keyed to the element rather than picked by index, so inserting or reordering
  * an element cannot leave the wrong icon beside it.
  */
@@ -61,6 +62,7 @@ const CARE_ELEMENT_ICONS = [
   FaStethoscope, // Medical History Review
   FaFlask, // Laboratory Assessment
   FaPersonCircleCheck, // Herbal Support
+  FaBolt, // Clinic-Based Therapies
   FaAppleWhole, // Nutrition
   FaPersonRunning, // Lifestyle Medicine
   FaGraduationCap, // Health Education

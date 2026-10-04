@@ -3,7 +3,6 @@ import { Container, Section } from "@/components/ui/container";
 import { Kicker } from "@/components/ui/heading";
 import { Reveal } from "@/components/ui/motion";
 import { StoriesForm } from "@/components/testimonials/stories-form";
-import { ConsentDisclaimer } from "@/components/testimonials/consent-disclaimer";
 import { StoryVideo } from "@/components/testimonials/story-video";
 import { getApprovedTestimonials } from "@/lib/testimonials";
 import { isVideoEmbedBlocked } from "@/lib/video-probe";
@@ -71,11 +70,6 @@ export default async function PatientStoriesPage() {
         <div className="rounded-lg border border-gold-200 bg-gold-50/60 px-5 py-4">
           <p className="text-xs leading-relaxed text-gold-900/90">{t("stories.disclaimer")}</p>
         </div>
-      </Section>
-
-      {/* CONSENT AND PRIVACY */}
-      <Section className="!pt-0">
-        <ConsentDisclaimer />
       </Section>
 
       {/* GRID */}

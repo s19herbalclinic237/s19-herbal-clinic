@@ -527,7 +527,7 @@ A complete inventory of what **Cameroon Digital Agency** implemented to take thi
 - Blog: listing with search + featured filter, bilingual articles
 - Patient Stories: public grid + moderated submission form
 - Live Reviews: video wall (YouTube/Drive/Vimeo proxied streaming) + **Testimonials** button across to the written stories
-- **Patient Video Testimonial & Privacy Disclaimer** on both video pages (consent is voluntary, taking part is optional, anyone who prefers privacy is never published, nothing goes out without authorisation)
+- **Patient Video Testimonial & Privacy Disclaimer** on the Live Reviews video page only (consent is voluntary, taking part is optional, anyone who prefers privacy is never published, nothing goes out without authorisation)
 - Booking/contact form → inquiry + email + WhatsApp handoff
 - Newsletter subscribe/unsubscribe
 - Legal pages: privacy, terms, cookies, refund & returns

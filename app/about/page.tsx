@@ -310,9 +310,6 @@ export default async function AboutPage() {
           <div className="mx-auto max-w-2xl text-center">
             <Kicker center>{t("about.pillars.kicker")}</Kicker>
             <h2 className="mt-4">{t("about.pillars.title")}</h2>
-            <p className="mt-4 text-[15px] leading-relaxed text-muted">
-              {t("about.pillars.text")}
-            </p>
           </div>
         </Reveal>
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
