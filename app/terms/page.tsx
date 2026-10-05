@@ -44,7 +44,7 @@ const sections = [
   },
   {
     title: "Online Consultations (Telemedicine)",
-    body: `Video consultations are provided over secure meeting links for follow-up, education and care coordination. Telemedicine is not an emergency service and is not suitable for life-threatening conditions; in an emergency please contact emergency services or visit a hospital. The clinic may refuse, postpone or end a session that is technically unsuitable or where remote care is not appropriate, and you may be advised to attend in person. Video sessions are not recorded. By joining a session you confirm you are in a private, suitable location.`,
+    body: `Online consultations and follow-up may be provided by phone, WhatsApp or secure video, depending on what is clinically appropriate and agreed with you. Remote care is for follow-up, education and care coordination. Online consultations (tele-health) are not an emergency service and are not suitable for life-threatening conditions; in an emergency, please contact local emergency services or go to the nearest hospital immediately. The clinic may refuse, postpone or end a remote consultation if it is technically unsuitable or if remote care is not clinically appropriate, and in such cases you may be advised to attend in person. Video sessions are not recorded. By joining a session, you confirm that you are in a private, secure and suitable location.`,
   },
   {
     title: "Appointments & Reminders",
@@ -52,7 +52,7 @@ const sections = [
   },
   {
     title: "Medical Records & Prescriptions",
-    body: "Medical records and prescriptions are prepared by your care team for your information and follow-up. They support, and do not replace, professional advice, and should be discussed with your provider. Follow dosage and usage instructions exactly and contact the clinic before changing or stopping any treatment. Records and prescriptions may be downloaded for personal use and shared with other providers at your discretion; herbal products referenced may be ordered through the clinic or the shop.",
+    body: "Medical records and prescriptions are created and maintained by your care team for your information, follow-up and continuity of care. They support, but do not replace, professional medical advice and should be discussed with your provider. You should follow dosage and usage instructions exactly and contact the clinic before changing or stopping any treatment. Records and prescriptions may be downloaded for personal use and shared with other providers at your discretion. Herbal products referenced in prescriptions may be ordered through the clinic or the shop. Where applicable, copies of prescriptions may be provided in line with your care plan.",
   },
   {
     title: "Orders & Payment",
@@ -64,11 +64,11 @@ const sections = [
     // "worldwide via express courier", promising a service to every country and a
     // courier S19 does not name. The replacement states the destination-dependent
     // terms the guide requires.
-    body: "We dispatch nationwide across Cameroon and to supported international destinations. Local pickup is available at our Bafoussam clinic during opening hours. International shipping availability, delivery charges and estimated delivery times depend on the destination and are confirmed with each order.",
+    body: "We dispatch nationwide across Cameroon and to supported international destinations. Local pickup is available at our Bafoussam clinic during opening hours. International shipping availability, delivery charges and estimated delivery times depend on the destination and are confirmed with each order. Our team may provide delivery updates through the communication details supplied with your order.",
   },
   {
     title: "Returns & Refunds",
-    body: "Refunds, returns and exchanges are handled according to our Refund, Return & Exchange Policy. Damaged, defective or incorrectly supplied products should be reported within 48 hours of receipt. Because S19 products are intended for personal health use, opened, used or consumed items are generally not eligible for voluntary return or refund. Personalized and custom preparations are generally final sale once preparation has commenced.",
+    body: "Refunds, returns and exchanges are handled in accordance with our Refund, Return & Exchange Policy. Damaged, defective or incorrectly supplied products must be reported within 48 hours of receipt, with supporting evidence (such as photos and your order details). For hygiene and safety reasons, opened, used or consumed products are generally not eligible for a voluntary return or refund. Certain items, including personalized, compounded or custom preparations, are final sale once preparation has commenced or, where applicable, once opened. Return eligibility, time limits and any shipping costs depend on the specific circumstances and are assessed in line with that policy.",
   },
   {
     title: "Family Accounts & Children",
@@ -92,7 +92,7 @@ const sections = [
   },
   {
     title: "Changes to These Terms",
-    body: "We may update these terms from time to time to reflect new features, legal requirements or operational changes. The current version, with its last-updated date, is always available on this page, and continued use of the website after changes means you accept them.",
+    body: "We may update these Terms of Use from time to time to reflect new features, legal requirements or operational changes. The current version, with its last-updated date, is always available on this page. Your continued use of the website after any changes become effective constitutes your acceptance of the updated terms.",
   },
 ];
 
