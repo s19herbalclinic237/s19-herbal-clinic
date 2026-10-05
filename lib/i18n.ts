@@ -277,8 +277,8 @@ const dict = {
     fr: "Histoires et avis de patients de la clinique S19",
   },
   "stories.disclaimer": {
-    en: "The testimonials shared here represent the personal experiences and views of individual S19 clients. Results may differ from person to person and should not be considered typical or guaranteed. These testimonials are provided for general informational purposes only and should not be interpreted as medical advice or as a promise that others will experience the same outcomes. Some of these experiences were shared with us through text messages, phone calls, comments, and emails. For clarity and better understanding, some have been lightly edited to improve grammar and readability or translated into English, while preserving the original meaning and experience shared by the client.",
-    fr: "Les témoignages présentés ici reflètent les expériences et opinions personnelles de clients individuels de S19. Les résultats peuvent varier d'une personne à l'autre et ne doivent pas être considérés comme typiques ou garantis. Ces témoignages sont fournis à titre d'information générale uniquement et ne doivent pas être interprétés comme un avis médical ni comme une promesse que d'autres obtiendront les mêmes résultats. Certaines de ces expériences nous ont été partagées par messages texte, appels téléphoniques, commentaires et e-mails. Par souci de clarté et de compréhension, certains ont été légèrement retouchés pour améliorer la grammaire et la lisibilité, ou traduits en anglais, tout en préservant le sens et l'expérience d'origine partagés par le client.",
+    en: "The experiences shared on this page are personal accounts from individual S19 patients and clients. Individual experiences and outcomes vary, and the results described should not be considered typical, guaranteed or expected for every patient. Testimonials do not establish that an S19 product, herbal formulation or treatment program caused a reported improvement or outcome. They are shared for informational purposes and should not be interpreted as medical advice or as a substitute for individualized medical assessment. Some testimonials may have been lightly edited for spelling, grammar, length or clarity, or translated from another language, while preserving the patient's intended meaning. Patients taking prescribed medication should not stop or reduce their medication based on another patient's experience. Medication changes should be made only with appropriate clinical supervision.",
+    fr: "Les expériences partagées sur cette page sont des récits personnels de patients et de clients individuels de S19. Les expériences et les résultats varient d'une personne à l'autre, et les résultats décrits ne doivent pas être considérés comme typiques, garantis ou attendus pour tous les patients. Les témoignages n'établissent pas qu'un produit S19, une formulation à base de plantes ou un programme de traitement a provoqué une amélioration ou un résultat rapporté. Ils sont partagés à des fins d'information uniquement et ne doivent pas être interprétés comme un avis médical ni comme un substitut à une évaluation médicale individualisée. Certains témoignages peuvent avoir été légèrement édités pour l'orthographe, la grammaire, la longueur ou la clarté, ou traduits d'une autre langue, tout en préservant le sens voulu par le patient. Les patients prenant des médicaments prescrits ne doivent pas arrêter ou réduire leur médication sur la base de l'expérience d'un autre patient. Toute modification de traitement doit être faite uniquement sous supervision clinique appropriée.",
   },
   /**
    * Consent and privacy disclaimer for patient video testimonials. Kept apart
@@ -287,24 +287,24 @@ const dict = {
    * the video testimonial page (/live-reviews).
    */
   "stories.consent.title": {
-    en: "Patient Video Testimonial & Privacy Disclaimer",
-    fr: "Vidéos-témoignages de patients et confidentialité",
+    en: "Patient Privacy & Consent",
+    fr: "Confidentialité et consentement des patients",
   },
   "stories.consent.p1": {
-    en: "All patient video testimonials displayed on the S19 Herbal Clinic website are shared with the patient's voluntary consent and permission.",
-    fr: "Toutes les vidéos de patients publiées sur le site de S19 Herbal Clinic le sont avec le consentement et l'accord volontaire du patient.",
+    en: "Testimonials published on this page are shared with the patient's consent.",
+    fr: "Les témoignages publiés sur cette page sont partagés avec le consentement du patient.",
   },
   "stories.consent.p2": {
-    en: "Participation in a video testimonial is completely optional. No patient is required or obligated to provide a testimonial, and choosing not to participate does not affect the care or services they receive from S19 Herbal Clinic.",
-    fr: "La participation à une vidéo-témoignage est entièrement facultative. Aucun patient n'est tenu de fournir un témoignage, et le choix de ne pas participer n'a aucune incidence sur les soins ou les services reçus de S19 Herbal Clinic.",
+    en: "Participation is entirely voluntary, and no patient is required to provide a testimonial.",
+    fr: "La participation est entièrement volontaire et aucun patient n'est tenu de fournir un témoignage.",
   },
   "stories.consent.p3": {
-    en: "We respect the privacy of patients who prefer not to share their experiences publicly. Their testimonials, images, videos, or personal information will not be published or shared without their consent.",
-    fr: "Nous respectons la vie privée des patients qui préfèrent ne pas partager publiquement leur expérience. Leurs témoignages, images, vidéos ou informations personnelles ne seront ni publiés ni partagés sans leur consentement.",
+    en: "Some patients choose to keep their experiences private, and S19 respects that decision.",
+    fr: "Certains patients préfèrent garder leurs expériences privées et S19 respecte cette décision.",
   },
   "stories.consent.p4": {
-    en: "S19 Herbal Clinic will never knowingly publish or distribute a patient's video testimonial without the patient's authorization.",
-    fr: "S19 Herbal Clinic ne publiera ni ne diffusera jamais, en connaissance de cause, la vidéo d'un patient sans son autorisation.",
+    en: "S19 does not publish or share a patient's testimonial, photograph or video without appropriate consent.",
+    fr: "S19 ne publie ni ne partage le témoignage, la photographie ou la vidéo d'un patient sans son consentement approprié.",
   },
   "liveReviews.cta.title": {
     en: "Would you rather read it first?",
@@ -321,8 +321,8 @@ const dict = {
   "stories.share.kicker": { en: "Share your experience", fr: "Partagez votre expérience" },
   "stories.share.title": { en: "Your story matters.", fr: "Votre histoire compte." },
   "stories.share.text": {
-    en: "Treated by S19 or used our products? Tell others how it went - no account needed. Your review is checked by our clinic before it is published.",
-    fr: "Traitement avec S19 ou utilisation de nos produits ? Dites aux autres comment cela s'est passé - aucun compte requis. Votre avis est vérifié par notre clinique avant publication.",
+    en: "Treated by S19 or used our products? Tell others how it went - no account needed. Your review is checked by our clinic before it is published. By submitting a testimonial, you may be contacted by S19 to confirm your permission and how you would like your story, name, image or video to be displayed. Submission does not automatically mean the testimonial will be published.",
+    fr: "Vous avez été traité(e) par S19 ou avez utilisé nos produits ? Dites aux autres comment cela s'est passé - aucun compte requis. Votre avis est vérifié par notre clinique avant publication. En soumettant un témoignage, vous pouvez être contacté(e) par S19 pour confirmer votre autorisation et la manière dont vous souhaitez que votre histoire, votre nom, votre image ou votre vidéo soient affichés. L'envoi ne signifie pas automatiquement que le témoignage sera publié.",
   },
   "stories.name": { en: "Your name", fr: "Votre nom" },
   "stories.namePh": { en: "e.g. Marie Ndongo", fr: "ex. Marie Ndongo" },
@@ -419,8 +419,8 @@ const dict = {
 
   "cta.title": { en: "Start your consultation", fr: "Commencez votre consultation" },
   "cta.text": {
-    en: "Book a clinic appointment or a phone/WhatsApp consultation with the S19 clinic today.",
-    fr: "Réservez dès aujourd'hui un rendez-vous prioritaire en clinique ou une télé-consultation avec la clinique S19.",
+    en: "Your health journey is personal. Book a consultation to discuss your individual health concerns and determine the appropriate next step with S19.",
+    fr: "Votre parcours de santé est personnel. Réservez une consultation pour discuter de vos préoccupations de santé individuelles et déterminer la prochaine étape appropriée avec S19.",
   },
   "cta.primary": { en: "Book a Consultation", fr: "Réserver une consultation" },
   "cta.secondary": { en: "WhatsApp: +237 672 595 989", fr: "WhatsApp : +237 672 595 989" },

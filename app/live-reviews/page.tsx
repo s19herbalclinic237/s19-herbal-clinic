@@ -94,6 +94,9 @@ export default async function LiveReviewsPage() {
           terms sit directly under them rather than only on the linked page. */}
       <Section className="!pt-0">
         <ConsentDisclaimer />
+      <div className="mt-8 rounded-lg border border-line bg-white p-5 text-sm leading-relaxed text-ink/80 shadow-card">
+        <strong>Video Testimonial Consent:</strong> Patients featured in published testimonial videos have voluntarily consented to S19 displaying their videos. Patients who do not consent are not required to provide a video testimonial, and their decision does not affect their care.
+      </div>
       </Section>
 
       <CTABand />

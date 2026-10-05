@@ -72,6 +72,34 @@ export default async function PatientStoriesPage() {
         </div>
       </Section>
 
+      <Section className="!py-0">
+        <div className="mx-auto max-w-3xl rounded-lg border border-line bg-white p-6 shadow-card">
+          <div className="flex items-start gap-3">
+            <div>
+              <h2 className="font-display text-lg font-semibold text-ink">{t("stories.consent.title")}</h2>
+              <ul className="mt-3 space-y-2.5">
+                <li className="flex gap-2.5 text-sm leading-relaxed text-ink/75">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-forest-400" aria-hidden />
+                  <span>{t("stories.consent.p1")}</span>
+                </li>
+                <li className="flex gap-2.5 text-sm leading-relaxed text-ink/75">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-forest-400" aria-hidden />
+                  <span>{t("stories.consent.p2")}</span>
+                </li>
+                <li className="flex gap-2.5 text-sm leading-relaxed text-ink/75">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-forest-400" aria-hidden />
+                  <span>{t("stories.consent.p3")}</span>
+                </li>
+                <li className="flex gap-2.5 text-sm leading-relaxed text-ink/75">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-forest-400" aria-hidden />
+                  <span>{t("stories.consent.p4")}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </Section>
+
       {/* GRID */}
       <Section>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
