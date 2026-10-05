@@ -2247,6 +2247,19 @@ const dict = {
   "dash.messages.replyPh": { en: "Write a reply for the clinic…", fr: "Écrivez une réponse pour la clinique…" },
   "dash.messages.sendReply": { en: "Send reply", fr: "Envoyer la réponse" },
   "dash.messages.replyError": { en: "Could not send your reply.", fr: "Impossible d'envoyer votre réponse." },
+  "dash.messages.responseTime": {
+    en: "We aim to reply during clinic hours. Response time is typically within the same day or next business day.",
+    fr: "Nous visons à répondre pendant les heures de la clinique. Le délai de réponse est généralement le jour même ou le jour ouvrable suivant.",
+  },
+  "dash.messages.emergencyNote": {
+    en: "This is not an emergency channel. If you have a medical emergency, call local emergency services or go to the nearest hospital immediately.",
+    fr: "Ce n'est pas un canal d'urgence. En cas d'urgence médicale, appelez les services d'urgence locaux ou rendez-vous immédiatement à l'hôpital le plus proche.",
+  },
+  "dash.messages.urgentHeading": { en: "Urgent medical matters", fr: "Urgences médicales" },
+  "dash.messages.urgentBody": {
+    en: "Do not wait for a portal reply if you're experiencing a medical emergency. Call emergency services or go to the nearest hospital right away.",
+    fr: "N'attendez pas une réponse du portail en cas d'urgence médicale. Appelez les services d'urgence ou rendez-vous immédiatement à l'hôpital le plus proche.",
+  },
 
   /* ── Dashboard: appointments ────────────────────────────────────────────── */
 
@@ -2606,6 +2619,20 @@ const dict = {
   "dash.testimonials.ratingOkay": { en: "Okay", fr: "Moyen" },
   "dash.testimonials.ratingPoor": { en: "Poor", fr: "Faible" },
   "dash.testimonials.ratingVeryPoor": { en: "Very poor", fr: "Très faible" },
+  "dash.testimonials.ratingNone": { en: "Select a rating", fr: "Sélectionnez une note" },
+  "dash.testimonials.consentTitle": { en: "Publication Consent", fr: "Consentement à la publication" },
+  "dash.testimonials.consentText": {
+    en: "By submitting this testimonial, you consent to S19 Herbal Clinic publishing it on our website (including patient stories and reviews). We may display your name, city/country, program and your comments as provided.",
+    fr: "En soumettant ce témoignage, vous acceptez que S19 Herbal Clinic le publie sur notre site web (y compris les témoignages et avis des patients). Nous pouvons afficher votre nom, votre ville/pays, le programme et vos commentaires tels que fournis.",
+  },
+  "dash.testimonials.consentWithdraw": {
+    en: "You can withdraw your consent at any time by contacting us and we will remove it promptly.",
+    fr: "Vous pouvez retirer votre consentement à tout moment en nous contactant et nous le supprimerons rapidement.",
+  },
+  "dash.testimonials.consentCheckbox": {
+    en: "I consent to having my testimonial published as described above.",
+    fr: "J'accepte que mon témoignage soit publié tel que décrit ci-dessus.",
+  },
   "dash.testimonials.testimony": { en: "Your Testimony", fr: "Votre témoignage" },
   "dash.testimonials.testimonyHint": { en: "Share your experience in at least 20 characters.", fr: "Partagez votre expérience en au moins 20 caractères." },
   "dash.testimonials.testimonyPh": { en: "How did S19 help you?...", fr: "Comment S19 vous a-t-il aidé(e) ?..." },

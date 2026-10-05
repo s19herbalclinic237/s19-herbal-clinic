@@ -31,7 +31,8 @@ export function TestimonialsTab() {
   const [country, setCountry] = useState("");
   const [program, setProgram] = useState("");
   const [text, setText] = useState("");
-  const [rating, setRating] = useState(5);
+  const [rating, setRating] = useState(0);
+  const [consent, setConsent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -70,6 +71,8 @@ export function TestimonialsTab() {
       setCountry("");
       setProgram("");
       setText("");
+      setRating(0);
+      setConsent(false);
       toast.success(t("dash.testimonials.saved"));
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t("dash.testimonials.saveError"));
@@ -79,15 +82,17 @@ export function TestimonialsTab() {
   }
 
   const ratingLabel =
-    rating === 5
-      ? t("dash.testimonials.ratingExcellent")
-      : rating === 4
-        ? t("dash.testimonials.ratingGood")
-        : rating === 3
-          ? t("dash.testimonials.ratingOkay")
-          : rating === 2
-            ? t("dash.testimonials.ratingPoor")
-            : t("dash.testimonials.ratingVeryPoor");
+    rating === 0
+      ? t("dash.testimonials.ratingNone")
+      : rating === 5
+        ? t("dash.testimonials.ratingExcellent")
+        : rating === 4
+          ? t("dash.testimonials.ratingGood")
+          : rating === 3
+            ? t("dash.testimonials.ratingOkay")
+            : rating === 2
+              ? t("dash.testimonials.ratingPoor")
+              : t("dash.testimonials.ratingVeryPoor");
 
   return (
     <div className="space-y-5">
@@ -151,8 +156,23 @@ export function TestimonialsTab() {
               />
             </Field>
           </div>
+          <div className="mt-4 rounded-lg border border-line bg-mist p-4 text-xs text-muted">
+            <p className="font-semibold text-ink">{t("dash.testimonials.consentTitle")}</p>
+            <p className="mt-1">{t("dash.testimonials.consentText")}</p>
+            <p className="mt-2">{t("dash.testimonials.consentWithdraw")}</p>
+            <label className="mt-3 flex items-start gap-2">
+              <input
+                type="checkbox"
+                checked={consent}
+                onChange={(e) => setConsent(e.target.checked)}
+                required
+                className="mt-0.5 h-4 w-4 rounded border-line text-forest-700 focus:ring-forest-600"
+              />
+              <span>{t("dash.testimonials.consentCheckbox")}</span>
+            </label>
+          </div>
           <div className="mt-4 flex flex-wrap items-center gap-3">
-            <Button type="submit" disabled={submitting}>
+            <Button type="submit" disabled={submitting || !consent || rating === 0}>
               {submitting ? t("dash.testimonials.submitting") : t("dash.testimonials.submit")}
             </Button>
             <button

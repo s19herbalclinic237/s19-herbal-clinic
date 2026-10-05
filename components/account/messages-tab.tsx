@@ -103,8 +103,12 @@ export function MessagesTab() {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-muted">{t("dash.messages.intro")}</p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="text-sm text-muted">{t("dash.messages.intro")}</p>
+          <p className="mt-2 text-xs text-muted">{t("dash.messages.responseTime")}</p>
+          <p className="mt-1 text-xs font-medium text-red-700">{t("dash.messages.emergencyNote")}</p>
+        </div>
         <Button size="sm" onClick={() => setComposing((v) => !v)}>
           {composing ? t("dash.messages.cancel") : (
             <>
@@ -120,12 +124,18 @@ export function MessagesTab() {
       ) : null}
 
       {composing ? (
-        <NewThreadForm
-          onSent={() => {
-            setComposing(false);
-            load();
-          }}
-        />
+        <div className="space-y-3">
+          <div className="rounded-lg border border-gold-200 bg-gold-50/60 p-3 text-xs text-ink">
+            <p className="font-semibold">{t("dash.messages.urgentHeading")}</p>
+            <p className="mt-1">{t("dash.messages.urgentBody")}</p>
+          </div>
+          <NewThreadForm
+            onSent={() => {
+              setComposing(false);
+              load();
+            }}
+          />
+        </div>
       ) : null}
 
       {!messages ? (
