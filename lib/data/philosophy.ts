@@ -5,24 +5,7 @@ export const philosophyQuote =
 
 export const whyQuestion = "We also ask: “Why is this happening?”";
 
-export const philosophyDrivers = [
-  "Insulin resistance and metabolic dysfunction",
-  "Poor nutrition",
-  "Chronic inflammation",
-  "Oxidative stress",
-  "Hormonal imbalance",
-  "Nutrient deficiencies",
-  "Poor sleep",
-  "Chronic psychological stress",
-  "Sedentary lifestyle",
-  "Obesity and visceral fat",
-  "Digestive and gut dysfunction",
-  "Kidney or liver dysfunction",
-  "Environmental and lifestyle exposures",
-  "Persistent or recurrent infections",
-  "Medication history",
-  "Genetic and family risk factors",
-];
+export const philosophyDrivers: string[] = [];
 
 /** Compact form of the care pathway, used in the root-cause section. */
 export const rootCauseSteps = [
@@ -142,7 +125,7 @@ export const diabetesGoals = [
 export const diabetesJourney = "Management → Remission → Durable Metabolic Health";
 
 export const type1Warning =
-  "Type 1 diabetes is fundamentally different. People with Type 1 diabetes require insulin replacement; herbal medicine must never be presented as a substitute for lifesaving insulin.";
+  "Type 1 diabetes requires insulin replacement. Herbal medicine must never be presented as a substitute for lifesaving insulin therapy.";
 
 export const measurableOutcomes = [
   "Did HbA1c improve?",

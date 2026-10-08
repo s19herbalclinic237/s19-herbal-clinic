@@ -16,6 +16,7 @@ implemented, in the order the master checklist §20 prescribes.
 | 5 | `S19_Patient_Stories_…` | not started |
 | 6 | `S19_Terms_Privacy_…` | not started |
 | 7 | `S19_Patient_Portal_Developer_Recommendations.md` | not started |
+| 8 | `S19_About_Page_Developer_Implementation_Brief.md` | DONE — About/Our Approach page aligned to brief |
 | — | Blog article rewrites + S19 Clinical Observations addendum | no guide file in this folder |
 
 Workflow: one guide at a time — implement fully, typecheck / lint / test / build,

@@ -131,71 +131,37 @@ export default async function AboutPage() {
         alt={t("about.hero.alt")}
       />
 
-      {/* WHAT WE ARE ABOUT — the position statement, placed immediately after the
-          hero so a first-time visitor knows what S19 is within about 30 seconds,
-          before any detail. Everything below expands on this. */}
+      {/* SECTION 1 - HERO / WHO WE ARE */}
       <Section>
         <Reveal>
-          <div className="mx-auto max-w-4xl text-center">
-            <Kicker center>{t("about.position.kicker")}</Kicker>
-            <p className="mt-5 font-display text-2xl font-semibold leading-snug text-ink md:text-3xl">
-              {t("about.position.tagline")}
+          <div className="mx-auto max-w-4xl">
+            <h1 className="font-display text-4xl font-semibold leading-snug text-ink md:text-5xl">
+              About S19 Herbal Clinic
+            </h1>
+            <p className="mt-3 font-display text-xl font-semibold text-forest-800 md:text-2xl">
+              Science-Based Herbalism. Personalized Care.
             </p>
-            <p className="mt-7 text-[15px] leading-relaxed text-ink/85 md:text-base">
-              {t("about.position.statement")}
-            </p>
-            <p className="mt-6 border-l-2 border-gold-400 pl-5 text-left text-[15px] leading-relaxed text-muted md:text-base">
-              {t("about.position.question")}
-            </p>
-            <p className="mt-8 font-display text-xl font-semibold text-forest-800">
-              {t("about.position.goal")}
-            </p>
+            <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-ink/85 md:text-base">
+              <p>
+                {t("about.hero.lead", { brand: CLINIC.brand })}
+              </p>
+            </div>
           </div>
         </Reveal>
       </Section>
 
-      {/* THE S19 PHILOSOPHY */}
-      <Section>
-        <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
-          <RevealLeft>
+      {/* SECTION 2 - OUR PHILOSOPHY */}
+      <Section className="bg-white">
+        <Reveal>
+          <div className="mx-auto max-w-4xl">
             <Kicker>{t("about.phil.kicker")}</Kicker>
-            <p className="mt-4 font-display text-2xl font-semibold leading-snug text-ink">
-              {philosophyQuote}
-            </p>
-            <p className="mt-5 text-[15px] leading-relaxed text-muted">
-              {t("about.phil.p1")}
-            </p>
-            <p className="mt-3 text-[15px] leading-relaxed text-ink/85">
-              {whyQuestion}
-            </p>
-            <p className="mt-5 text-[15px] leading-relaxed text-muted">
-              {t("about.phil.p2")}
-            </p>
-            <Link href="/programs" className={buttonLinkClasses("primary", "md", "mt-8")}>
-              {t("about.phil.explorePrograms")}
-              <FaArrowRight className="h-3.5 w-3.5" aria-hidden />
-            </Link>
-          </RevealLeft>
-
-          <RevealRight delay={0.1}>
-            <div className="rounded-lg border border-line bg-white p-6 shadow-card md:p-8">
-              <h3 className="flex items-center gap-2.5 text-lg font-bold text-ink">
-                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-forest-800 text-gold-400">
-                  <FaMagnifyingGlass className="h-4 w-4" aria-hidden />
-                </span>
-                {t("about.phil.drivers")}
-              </h3>
-              <ul className="mt-6 grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
-                {philosophyDrivers.map((d) => (
-                  <li key={d} className="flex items-start gap-2 text-sm leading-relaxed text-ink/80">
-                    <FaCircleCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-forest-600" aria-hidden />
-                    {d}
-                  </li>
-                ))}
-              </ul>
+            <h2 className="mt-4">{t("about.blind.title")}</h2>
+            <div className="mt-5 space-y-3 text-[15px] leading-relaxed text-muted md:text-base">
+              <p>{t("about.phil.p1")}</p>
+              <p>{t("about.phil.p2")}</p>
             </div>
-          </RevealRight>
-        </div>
+          </div>
+        </Reveal>
       </Section>
 
       {/* ROOT-CAUSE METHOD */}
@@ -256,233 +222,120 @@ export default async function AboutPage() {
         </div>
       </Section>
 
-      {/* WE DO NOT TREAT BLINDLY + SCIENCE-BASED HERBALISM */}
+      {/* SECTION 3 - SCIENCE-BASED HERBALISM */}
       <Section>
-        <div className="grid gap-6 lg:grid-cols-2">
-          <Reveal>
-            <div className="h-full rounded-lg border border-line bg-white p-7 shadow-card md:p-9">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-forest-200 bg-forest-50 text-forest-800">
-                <FaVial className="h-5 w-5" aria-hidden />
-              </div>
-              <h2 className="mt-5 text-2xl font-bold text-ink">{t("about.blind.title")}</h2>
-              <p className="mt-3 text-[15px] leading-relaxed text-muted">
-                {t("about.blind.text")}
-              </p>
-              <ul className="mt-6 grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
-                {assessmentAreas.map((a) => (
-                  <li key={a} className="flex items-start gap-2 text-sm leading-relaxed text-ink/80">
-                    <FaRegCircleCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-forest-600" aria-hidden />
-                    {a}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.1}>
-            <div className="h-full rounded-lg border border-line bg-white p-7 shadow-card md:p-9">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-forest-200 bg-forest-50 text-forest-800">
-                <FaFlask className="h-5 w-5" aria-hidden />
-              </div>
-              <h2 className="mt-5 text-2xl font-bold text-ink">{t("about.science.title")}</h2>
-              <p className="mt-3 text-[15px] leading-relaxed text-muted">
-                {t("about.science.text")}
-              </p>
-              <ul className="mt-6 grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
-                {herbalismConsiderations.map((c) => (
-                  <li key={c} className="flex items-start gap-2 text-sm leading-relaxed text-ink/80">
-                    <FaRegCircleCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-forest-600" aria-hidden />
-                    {c}
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-6 rounded-lg border border-gold-300 bg-gold-50 px-4 py-3 text-sm font-bold text-forest-900">
-                {traditionalPlusModern}
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </Section>
-
-      {/* HERBS ARE ONLY ONE PART */}
-      <Section className="bg-white">
         <Reveal>
-          <div className="mx-auto max-w-2xl text-center">
-            <Kicker center>{t("about.pillars.kicker")}</Kicker>
-            <h2 className="mt-4">{t("about.pillars.title")}</h2>
+          <div className="mx-auto max-w-4xl">
+            <Kicker>{t("about.sciencebased.kicker")}</Kicker>
+            <h2 className="mt-4">{t("about.sciencebased.title")}</h2>
+            <div className="mt-5 space-y-3 text-[15px] leading-relaxed text-muted md:text-base">
+              <p>{t("about.sciencebased.p1")}</p>
+              <p>{t("about.sciencebased.p2")}</p>
+              <p>
+                At S19, herbs are selected and used within a broader clinical context rather than simply matched to symptoms.
+              </p>
+            </div>
           </div>
         </Reveal>
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {healthPillars.map((p, i) => (
-            <Reveal key={p.title} delay={i * 0.06}>
-              <div className="group h-full rounded-lg border border-line bg-cream p-7 transition-all hover:border-forest-300 hover:shadow-lift">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-forest-200 bg-forest-50 text-forest-800 transition-transform group-hover:scale-110">
-                  {/* Fallback so adding a ninth pillar cannot silently drop its
-                      icon - a plain index lookup would render an empty box. */}
-                  {pillarIcons[i] ?? (
-                    <FaCircleCheck key={`pillar-${i}`} className="h-5 w-5" aria-hidden />
-                  )}
-                </div>
-                <h3 className="mt-5 text-lg font-bold text-ink">{p.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{p.text}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
       </Section>
 
-      {/* EDUCATION BEFORE MEDICATION + NOT ANTI-MEDICINE */}
-      <section className="relative overflow-hidden border-y border-forest-900 bg-forest-950 py-16 md:py-24">
-        <div className="pointer-events-none absolute -top-24 right-0 h-72 w-72 rounded-full bg-gold-400/10 blur-3xl" />
-        <div className="pointer-events-none absolute bottom-0 left-1/4 h-64 w-64 rounded-full bg-emerald-400/10 blur-3xl" />
-        <Container className="relative z-10">
-          <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
-            <div>
-              <Reveal>
-                <Kicker dark>{t("about.education.kicker")}</Kicker>
-                <p className="mt-4 flex items-start gap-3 font-display text-2xl font-semibold leading-snug text-white">
-                  <FaQuoteLeft className="mt-1 h-6 w-6 shrink-0 text-gold-400" aria-hidden />
-                  “{educationQuote}”
-                </p>
-                <p className="mt-5 text-[15px] leading-relaxed text-forest-200">
-                  {t("about.education.text")}
-                </p>
-                <ul className="mt-8 grid gap-x-8 gap-y-3 sm:grid-cols-2">
-                  {educationQuestions.map((q) => (
-                    <li key={q} className="flex items-start gap-2.5 text-sm leading-relaxed text-forest-100">
-                      <FaCircleCheck className="mt-0.5 h-4 w-4 shrink-0 text-gold-400" aria-hidden />
-                      {q}
-                    </li>
-                  ))}
-                </ul>
-              </Reveal>
-            </div>
-            <Reveal delay={0.1}>
-              <div className="rounded-lg border border-forest-800 bg-forest-900/70 p-7 md:p-9">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gold-400 text-forest-950">
-                  <FaScaleBalanced className="h-5 w-5" aria-hidden />
-                </div>
-                <h2 className="mt-5 text-2xl font-bold text-white">{t("about.notAnti.title")}</h2>
-                <p className="mt-3 text-[15px] leading-relaxed text-forest-100/90">
-                  {t("about.notAnti.text")}
-                </p>
-                <p className="mt-4 rounded-md border border-gold-400/40 bg-gold-400/10 px-4 py-3 font-display text-lg font-semibold text-gold-400">
-                  {rightIntervention}
-                </p>
-                <p className="mt-3 text-[15px] leading-relaxed text-forest-100/80">
-                  {t("about.notAnti.goal")}
-                </p>
-              </div>
-            </Reveal>
-          </div>
-        </Container>
-      </section>
-
-      {/* CHRONIC & METABOLIC DISEASE */}
-      <Section>
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
-          <Reveal>
-            <Kicker>{t("about.metabolic.kicker")}</Kicker>
-            <h2 className="mt-4">{t("about.metabolic.title")}</h2>
-            <p className="mt-5 text-[15px] leading-relaxed text-muted">
-              {t("about.metabolic.p1", { diabetesIntro })}
-            </p>
-            <div className="mt-8 rounded-lg border border-line bg-white p-7 shadow-card">
-              <h3 className="flex items-center gap-2.5 text-lg font-bold text-ink">
-                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-forest-800 text-gold-400">
-                  <FaHeartPulse className="h-4 w-4" aria-hidden />
-                </span>
-                {t("about.metabolic.diabetesTitle")}
-              </h3>
-              <ol className="mt-5 space-y-4">
-                {diabetesGoals.map((g, i) => (
-                  <li key={g.title} className="flex gap-4">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-forest-100 text-xs font-bold text-forest-900">
-                      {i + 1}
-                    </span>
-                    <div>
-                      <p className="text-sm font-bold text-ink">{g.title}</p>
-                      <p className="mt-0.5 text-sm leading-relaxed text-muted">{g.text}</p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-              <p className="mt-5 border-t border-line pt-4 text-sm font-bold text-forest-800">
-                {diabetesJourney}
-              </p>
-              <p className="mt-3 rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-relaxed text-amber-900">
-                {type1Warning}
-              </p>
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.1}>
-            <div className="rounded-lg border border-line bg-white p-7 shadow-card md:p-9">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-forest-200 bg-forest-50 text-forest-800">
-                <FaChartLine className="h-5 w-5" aria-hidden />
-              </div>
-              <h2 className="mt-5 text-2xl font-bold text-ink">{t("about.measure.title")}</h2>
-              <p className="mt-3 text-[15px] leading-relaxed text-muted">
-                {t("about.measure.text")}
-              </p>
-              <ul className="mt-6 grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
-                {measurableOutcomes.map((o) => (
-                  <li key={o} className="flex items-start gap-2 text-sm leading-relaxed text-ink/80">
-                    <FaRegCircleCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-forest-600" aria-hidden />
-                    {o}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Reveal>
-        </div>
-      </Section>
-
-      {/* PERSONALIZED & PARTICIPATORY */}
+      {/* SECTION 4 - HERBS ARE ONLY ONE PART OF S19 */}
       <Section className="bg-white">
-        <div className="grid gap-6 lg:grid-cols-3">
-          <Reveal>
-            <div className="h-full rounded-lg border border-line bg-white p-7 shadow-card">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-forest-200 bg-forest-50 text-forest-800">
-                <FaUserGear className="h-5 w-5" aria-hidden />
-              </div>
-              <h3 className="mt-5 text-xl font-bold text-ink">{t("about.personalized.title")}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted">
-                {t("about.personalized.text")}
+        <Reveal>
+          <div className="mx-auto max-w-4xl">
+            <Kicker>{t("about.pillars.kicker")}</Kicker>
+            <h2 className="mt-4">{t("about.pillars.title")}</h2>
+            <div className="mt-5 space-y-3 text-[15px] leading-relaxed text-muted md:text-base">
+              <p>
+                S19 care may include individualized herbal support, nutrition and lifestyle guidance, health education, review of medical information, relevant investigations where appropriate, monitoring and follow-up.
+              </p>
+              <p>
+                The purpose is not simply to dispense herbs. It is to help patients understand their health, participate in their care and follow a structured, individualized plan.
               </p>
             </div>
-          </Reveal>
-          <Reveal delay={0.07}>
-            <div className="h-full rounded-lg border border-line bg-white p-7 shadow-card">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-forest-200 bg-forest-50 text-forest-800">
-                <FaUsers className="h-5 w-5" aria-hidden />
-              </div>
-              <h3 className="mt-5 text-xl font-bold text-ink">{t("about.participation.title")}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted">
-                {t("about.participation.text")}
-              </p>
-              <ul className="mt-4 space-y-2">
-                {participation.map((p) => (
-                  <li key={p} className="flex items-center gap-2 text-sm text-ink/80">
-                    <FaRegCircleCheck className="h-3.5 w-3.5 shrink-0 text-forest-600" aria-hidden />
-                    {p}
-                  </li>
-                ))}
-              </ul>
+          </div>
+        </Reveal>
+      </Section>
+
+      {/* SECTION 6 - EDUCATION BEFORE INTERVENTION */}
+      <Section>
+        <Reveal>
+          <div className="mx-auto max-w-4xl">
+            <Kicker>{t("about.education.kicker")}</Kicker>
+            <h2 className="mt-4">{t("about.education.kicker")}</h2>
+            <div className="mt-5 space-y-3 text-[15px] leading-relaxed text-muted md:text-base">
+              <p>{t("about.education.text")}</p>
             </div>
-          </Reveal>
-          <Reveal delay={0.14}>
-            <div className="h-full rounded-lg border border-line bg-white p-7 shadow-card">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-forest-200 bg-forest-50 text-forest-800">
-                <FaArrowsRotate className="h-5 w-5" aria-hidden />
-              </div>
-              <h3 className="mt-5 text-xl font-bold text-ink">{t("about.monitoring.title")}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted">
-                {t("about.monitoring.text")}
+          </div>
+        </Reveal>
+      </Section>
+
+      {/* SECTION 8 - NOT ANTI-CONVENTIONAL MEDICINE */}
+      <Section className="bg-white">
+        <Reveal>
+          <div className="mx-auto max-w-4xl">
+            <Kicker>{t("about.notAnti.title")}</Kicker>
+            <h2 className="mt-4">{t("about.notAnti.title")}</h2>
+            <div className="mt-5 space-y-3 text-[15px] leading-relaxed text-muted md:text-base">
+              <p>{t("about.notAnti.text")}</p>
+            </div>
+          </div>
+        </Reveal>
+      </Section>
+
+      {/* SECTION 7 - MEASUREMENT MATTERS */}
+      <Section>
+        <Reveal>
+          <div className="mx-auto max-w-4xl">
+            <Kicker>{t("about.measure.title")}</Kicker>
+            <h2 className="mt-4">{t("about.measure.title")}</h2>
+            <div className="mt-5 space-y-3 text-[15px] leading-relaxed text-muted md:text-base">
+              <p>{t("about.measure.text")}</p>
+            </div>
+          </div>
+        </Reveal>
+      </Section>
+
+      {/* SECTION 11 - TYPE 1 DIABETES SAFETY NOTE */}
+      <Section className="bg-white">
+        <Reveal>
+          <div className="mx-auto max-w-4xl">
+            <p className="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-relaxed text-amber-900">
+              {type1Warning}
+            </p>
+          </div>
+        </Reveal>
+      </Section>
+
+      {/* SECTION 9 - PERSONALIZED CARE & PATIENT PARTICIPATION */}
+      <Section>
+        <Reveal>
+          <div className="mx-auto max-w-4xl">
+            <Kicker>{t("about.personalized.title")}</Kicker>
+            <h2 className="mt-4">{t("about.personalized.title")}</h2>
+            <div className="mt-5 space-y-3 text-[15px] leading-relaxed text-muted md:text-base">
+              <p>
+                Two people can have the same diagnosis and still have very different health histories, medications, nutritional patterns, lifestyle factors and treatment needs.
+              </p>
+              <p>
+                For that reason, S19 does not rely on a one-size-fits-all approach. Patient participation is also essential. Following agreed nutrition and lifestyle guidance, taking treatment as directed, providing requested updates and attending follow-up all contribute to better continuity of care.
               </p>
             </div>
-          </Reveal>
-        </div>
+          </div>
+        </Reveal>
+      </Section>
+
+      {/* SECTION 10 - CONTINUOUS MONITORING */}
+      <Section className="bg-white">
+        <Reveal>
+          <div className="mx-auto max-w-4xl">
+            <Kicker>{t("about.monitoring.title")}</Kicker>
+            <h2 className="mt-4">{t("about.monitoring.title")}</h2>
+            <div className="mt-5 space-y-3 text-[15px] leading-relaxed text-muted md:text-base">
+              <p>{t("about.monitoring.text")}</p>
+            </div>
+          </div>
+        </Reveal>
       </Section>
 
       {/* WHAT MAKES S19 DIFFERENT */}
