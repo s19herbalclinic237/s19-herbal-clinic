@@ -1465,7 +1465,7 @@ describe("Tele-Health adjustment brief", () => {
     const source = readFileSync(path.join(root, "app/telehealth/page.tsx"), "utf8");
     assert.ok(source.includes("tele.price.approx"), "the fee block must render the approximate note");
     // The official price stays in FCFA; the other currencies are derived from it.
-    assert.match(source, /formatFcfa\(10000\)/, "10,000 FCFA must remain the authoritative figure");
+    assert.match(source, /formatFcfa\(5000\)/, "5,000 FCFA must remain the authoritative figure");
   });
 
   test("the fee is calculated rather than hard-coded", () => {

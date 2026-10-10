@@ -1946,6 +1946,7 @@ const dict = {
   "dash.shell.nav.adminUsers": { en: "Users", fr: "Utilisateurs" },
   "dash.shell.nav.adminRoles": { en: "Staff & Roles", fr: "Équipe et rôles" },
   "dash.shell.nav.adminBackups": { en: "Data Backups", fr: "Sauvegardes des données" },
+  "dash.shell.nav.adminStorage": { en: "Storage", fr: "Stockage" },
   "dash.shell.nav.adminLogs": { en: "Error Log", fr: "Journal d'erreurs" },
   "dash.shell.nav.doctorAppointments": { en: "Appointments", fr: "Rendez-vous" },
   "dash.shell.nav.doctorRecords": { en: "Medical Records", fr: "Dossier médical" },
@@ -2072,6 +2073,11 @@ const dict = {
   "dash.shell.h.adminBackups.sub": {
     en: "Daily automated and manual full-database backups, emailed to the clinic admin",
     fr: "Sauvegardes complètes de la base automatiques et manuelles, envoyées par e-mail à l'administrateur",
+  },
+  "dash.shell.h.adminStorage.title": { en: "Storage", fr: "Stockage" },
+  "dash.shell.h.adminStorage.sub": {
+    en: "How much database and media space is used, and how much is left",
+    fr: "L'espace de base de données et de médias utilisé, et ce qu'il reste",
   },
   "dash.shell.h.adminLogs.title": { en: "Error Log", fr: "Journal d'erreurs" },
   "dash.shell.h.adminLogs.sub": {

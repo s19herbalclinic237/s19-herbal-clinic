@@ -38,6 +38,7 @@ import { TreatmentAlertsTab } from "@/components/admin/treatment-alerts-tab";
 import { RolesTab } from "@/components/admin/roles-tab";
 import { UsersTab } from "@/components/admin/users-tab";
 import { BackupsTab } from "@/components/admin/backups-tab";
+import { StorageTab } from "@/components/admin/storage-tab";
 import { LogsTab } from "@/components/admin/logs-tab";
 import { buttonLinkClasses } from "@/components/ui/button";
 import { S19_ASSETS } from "@/lib/site-assets";
@@ -56,6 +57,7 @@ import {
   FaFileCircleXmark,
   FaFolderOpen,
   FaGear,
+  FaHardDrive,
   FaHouse,
   FaNewspaper,
   FaPeopleGroup,
@@ -92,6 +94,7 @@ type TabId =
   | "admin-users"
   | "admin-roles"
   | "admin-backups"
+  | "admin-storage"
   | "admin-logs";
 
 interface NavItem {
@@ -233,6 +236,11 @@ const adminTabs: NavItem[] = [
     id: "admin-backups",
     labelKey: "dash.shell.nav.adminBackups",
     icon: <FaBoxArchive className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "admin-storage",
+    labelKey: "dash.shell.nav.adminStorage",
+    icon: <FaHardDrive className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-logs",
@@ -720,6 +728,18 @@ export function DashboardScreen() {
             />
             <div className="px-4 sm:px-0">
               <BackupsTab />
+            </div>
+          </>
+        ) : null;
+      case "admin-storage":
+        return isAdmin ? (
+          <>
+            <PageHeader
+              title={t("dash.shell.h.adminStorage.title")}
+              subtitle={t("dash.shell.h.adminStorage.sub")}
+            />
+            <div className="px-4 sm:px-0">
+              <StorageTab />
             </div>
           </>
         ) : null;
