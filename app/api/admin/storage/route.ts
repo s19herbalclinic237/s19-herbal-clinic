@@ -39,7 +39,7 @@ interface CloudinaryUsage {
   storage?: UsageNumber | number;
   bandwidth?: UsageNumber | number;
   transformations?: UsageNumber | number;
-  objects?: number;
+  objects?: UsageNumber | number;
   resources?: number;
 }
 
@@ -107,7 +107,7 @@ export async function GET() {
         bandwidthLimit: bandwidth.limit,
         transformation: transformations.usage,
         transformationLimit: transformations.limit,
-        objects: num(usage.objects ?? usage.resources),
+        objects: meter(usage.objects).usage || num(usage.resources),
         credits: typeof usage.credits?.usage === "number" ? usage.credits.usage : null,
       };
     }
