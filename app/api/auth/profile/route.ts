@@ -154,7 +154,9 @@ export async function PATCH(request: Request) {
           ...(dobProvided && dob ? { dob } : {}),
           ...(genderProvided && gender ? { gender } : {}),
           ...(addressProvided && address ? { address } : {}),
-          ...(ecProvided ? { emergencyContact: { name: ecName, phone: ecPhone, relation: ecRelation } } : {}),
+          ...(ecProvided && (ecName || ecPhone || ecRelation)
+            ? { emergencyContact: { name: ecName, phone: ecPhone, relation: ecRelation } }
+            : {}),
           ...(idCardProvided && idCardUrl ? { idCardUrl } : {}),
           ...(idCardFrontProvided && idCardFrontUrl ? { idCardFrontUrl } : {}),
           ...(idCardBackProvided && idCardBackUrl ? { idCardBackUrl } : {}),
@@ -167,9 +169,7 @@ export async function PATCH(request: Request) {
         ...(dobProvided && !dob ? { $unset: { dob: 1 } } : {}),
         ...(genderProvided && !gender ? { $unset: { gender: 1 } } : {}),
         ...(addressProvided && !address ? { $unset: { address: 1 } } : {}),
-        ...(ecProvided && !ecName && !ecPhone && !ecRelation
-          ? { $unset: { emergencyContact: 1 } }
-          : {}),
+        ...(ecProvided && !ecName && !ecPhone && !ecRelation ? { $unset: { emergencyContact: 1 } } : {}),
         ...(idCardProvided && !idCardUrl ? { $unset: { idCardUrl: 1 } } : {}),
         ...(idCardFrontProvided && !idCardFrontUrl ? { $unset: { idCardFrontUrl: 1 } } : {}),
         ...(idCardBackProvided && !idCardBackUrl ? { $unset: { idCardBackUrl: 1 } } : {}),
