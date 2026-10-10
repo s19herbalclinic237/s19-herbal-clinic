@@ -2,7 +2,7 @@ import { Schema, model, models, type Model } from "mongoose";
 
 export type UserRole = "admin" | "doctor" | "user";
 
-export type PersonGender = "male" | "female" | "other";
+export type PersonGender = "male" | "female";
 
 export interface EmergencyContact {
   name?: string;
@@ -81,7 +81,7 @@ const UserSchema = new Schema<IUser>(
     verifyTokenHash: { type: String },
     verifyExpires: { type: Date },
     dob: { type: String, trim: true },
-    gender: { type: String, enum: ["male", "female", "other"] },
+    gender: { type: String, enum: ["male", "female"] },
     address: { type: String, trim: true },
     emergencyContact: {
       name: { type: String, trim: true },
@@ -96,7 +96,7 @@ const UserSchema = new Schema<IUser>(
       {
         name: { type: String, required: true, trim: true },
         dob: { type: String, trim: true },
-        gender: { type: String, enum: ["male", "female", "other"] },
+        gender: { type: String, enum: ["male", "female"] },
         relation: {
           type: String,
           enum: ["child", "spouse", "parent", "sibling", "other"],

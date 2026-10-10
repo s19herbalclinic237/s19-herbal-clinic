@@ -1502,7 +1502,7 @@ describe("Tele-Health adjustment brief", () => {
       assert.ok(source.includes(key), `the Tele-Health page must still render ${key}`);
     }
     assert.equal(translate("en", "tele.advantages.title"), "Advantages of an Online Consultation");
-    assert.equal(translate("en", "tele.price.text"), "The same standard consultation fee applies for both online and in-person consultations.");
+    assert.equal(translate("en", "tele.price.text"), "The standard consultation fee is 5,000 FCFA. The same standard consultation fee applies for both online and in-person consultations.");
   });
 });
 

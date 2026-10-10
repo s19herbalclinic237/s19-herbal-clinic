@@ -19,6 +19,8 @@ export interface IBlogPost {
   excerptFr?: string;
   bodyFr?: string;
   authorFr?: string;
+  gallery?: string[];
+  videos?: string[];
 }
 
 const BlogPostSchema = new Schema<IBlogPost>(
@@ -36,6 +38,8 @@ const BlogPostSchema = new Schema<IBlogPost>(
     excerptFr: { type: String, trim: true },
     bodyFr: { type: String, trim: true },
     authorFr: { type: String, trim: true },
+    gallery: [{ type: String }],
+    videos: [{ type: String }],
   },
   { timestamps: true }
 );

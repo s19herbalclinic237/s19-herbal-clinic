@@ -370,8 +370,8 @@ const dict = {
   },
   "home.consultFee.title": { en: "Standard Consultation", fr: "Consultation standard" },
   "home.consultFee.note": {
-    en: "The same standard consultation fee applies for both online and in-person consultations.",
-    fr: "Les mêmes frais de consultation standard s'appliquent aux consultations en ligne et en personne.",
+    en: "The standard consultation fee is 5,000 FCFA. The same standard consultation fee applies for both online and in-person consultations.",
+    fr: "Les frais de consultation standard sont de 5 000 FCFA. Les mêmes frais de consultation standard s'appliquent aux consultations en ligne et en personne.",
   },
   "home.booking.accommodation": {
     en: "Travelling to Bafoussam? Affordable on-site accommodation is available — with free Starlink internet & cable TV.",
@@ -1280,8 +1280,8 @@ const dict = {
   "tele.hero.alt": { en: "Doctor preparing for a remote Tele-Health consultation", fr: "Médecin se préparant pour une consultation de Télé-santé à distance" },
   "tele.price.title": { en: "Standard Consultation", fr: "Consultation standard" },
   "tele.price.text": {
-    en: "The same standard consultation fee applies for both online and in-person consultations.",
-    fr: "Les mêmes frais de consultation standard s'appliquent aux consultations en ligne et en personne.",
+    en: "The standard consultation fee is 5,000 FCFA. The same standard consultation fee applies for both online and in-person consultations.",
+    fr: "Les frais de consultation standard sont de 5 000 FCFA. Les mêmes frais de consultation standard s'appliquent aux consultations en ligne et en personne.",
   },
   // The brief keeps 10,000 FCFA as the authoritative price and requires the foreign
   // figures to be marked approximate. The values themselves come from EXCHANGE in

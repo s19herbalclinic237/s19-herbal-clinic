@@ -6,7 +6,7 @@ import { User, type PersonGender } from "@/lib/models/User";
 type Params = { params: Promise<{ id: string }> };
 
 const RELATIONS = ["child", "spouse", "parent", "sibling", "other"] as const;
-const GENDERS = ["male", "female", "other"] as const;
+const GENDERS = ["male", "female"] as const;
 
 export async function PATCH(request: Request, { params }: Params) {
   const user = await getSessionUser();

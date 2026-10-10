@@ -99,10 +99,10 @@ export default async function TelehealthPage() {
             </div>
             <div className="shrink-0 text-center sm:text-right">
               <p className="font-display text-2xl font-bold text-forest-900">
-                {formatFcfa(10000)}
+                {formatFcfa(5000)}
               </p>
               <p className="text-sm text-muted">
-                ≈ {formatUsd(10000)} · {formatEur(10000)}
+                ≈ {formatUsd(5000)} · {formatEur(5000)}
               </p>
               {/* The brief requires the foreign figures to be visibly approximate,
                   not just prefixed with a symbol. */}

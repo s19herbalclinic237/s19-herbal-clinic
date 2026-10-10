@@ -34,7 +34,10 @@ interface BlogPost {
   authorFr?: string;
 }
 
-type PostDraft = Omit<BlogPost, "_id" | "publishedAt" | "createdAt" | "updatedAt">;
+type PostDraft = Omit<BlogPost, "_id" | "publishedAt" | "createdAt" | "updatedAt"> & {
+  gallery?: string[];
+  videos?: string[];
+};
 
 const emptyDraft: PostDraft = {
   title: "",
@@ -49,6 +52,8 @@ const emptyDraft: PostDraft = {
   excerptFr: "",
   bodyFr: "",
   authorFr: "",
+  gallery: [],
+  videos: [],
 };
 
 function toSlug(value: string): string {

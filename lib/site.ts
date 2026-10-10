@@ -158,6 +158,8 @@ export interface SiteBlogPost {
   excerptFr?: string;
   bodyFr?: string;
   authorFr?: string;
+  gallery?: string[];
+  videos?: string[];
 }
 
 export type LocalizedBlogPost = Pick<

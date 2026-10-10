@@ -72,6 +72,18 @@ export async function POST(request: Request) {
     if (exists) {
       return NextResponse.json({ error: "A post with that slug already exists." }, { status: 409 });
     }
+    const gallery = Array.isArray(body.gallery)
+      ? body.gallery
+          .map((g) => String(g || "").trim())
+          .filter((g) => g.length > 0)
+          .slice(0, 20)
+      : undefined;
+    const videos = Array.isArray(body.videos)
+      ? body.videos
+          .map((g) => String(g || "").trim())
+          .filter((g) => g.length > 0)
+          .slice(0, 20)
+      : undefined;
     const post = await BlogPost.create({
       title,
       slug,
@@ -91,6 +103,8 @@ export async function POST(request: Request) {
       excerptFr,
       bodyFr,
       authorFr: typeof body.authorFr === "string" && body.authorFr.trim() ? body.authorFr.trim() : undefined,
+      gallery,
+      videos,
     });
     return NextResponse.json({ success: true, post }, { status: 201 });
   } catch (error) {

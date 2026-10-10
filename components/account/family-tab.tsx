@@ -149,7 +149,6 @@ function FamilyForm({
             <option value="">{t("dash.family.genderUndisclosed")}</option>
             <option value="male">{t("dash.family.male")}</option>
             <option value="female">{t("dash.family.female")}</option>
-            <option value="other">{t("dash.family.other")}</option>
           </Select>
         </Field>
         <Field label={t("dash.family.relationship")} required>

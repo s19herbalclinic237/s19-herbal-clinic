@@ -438,7 +438,7 @@ export default async function HomePage() {
                       {t("home.consultFee.title")}
                     </p>
                     <p className="font-display text-lg font-bold text-gold-400">
-                      {formatFcfa(10000)}
+                      {formatFcfa(5000)}
                     </p>
                   </div>
                   <p className="mt-1 text-sm text-forest-100/90">{t("home.consultFee.note")}</p>

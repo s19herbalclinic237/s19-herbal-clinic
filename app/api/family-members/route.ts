@@ -4,7 +4,7 @@ import { getSessionUser } from "@/lib/auth-server";
 import { User, type FamilyMember, type PersonGender } from "@/lib/models/User";
 
 const RELATIONS = ["child", "spouse", "parent", "sibling", "other"] as const;
-const GENDERS = ["male", "female", "other"] as const;
+const GENDERS = ["male", "female"] as const;
 
 function cleanMember(body: Record<string, unknown>) {
   const name = String(body.name || "").trim();

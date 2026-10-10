@@ -104,6 +104,27 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
   if (body.featured !== undefined) patch.featured = Boolean(body.featured);
 
+  if (body.gallery !== undefined) {
+    if (Array.isArray(body.gallery)) {
+      patch.gallery = body.gallery
+        .map((g) => String(g || "").trim())
+        .filter((g) => g.length > 0)
+        .slice(0, 20);
+    } else {
+      patch.gallery = [];
+    }
+  }
+  if (body.videos !== undefined) {
+    if (Array.isArray(body.videos)) {
+      patch.videos = body.videos
+        .map((g) => String(g || "").trim())
+        .filter((g) => g.length > 0)
+        .slice(0, 20);
+    } else {
+      patch.videos = [];
+    }
+  }
+
   try {
     const post = await BlogPost.findByIdAndUpdate(id, { $set: patch }, { new: true, runValidators: true }).lean();
     return NextResponse.json({ success: true, post });
