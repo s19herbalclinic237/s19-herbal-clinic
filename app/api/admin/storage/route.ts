@@ -47,6 +47,40 @@ function num(value: unknown): number {
   return typeof value === "number" && Number.isFinite(value) ? value : 0;
 }
 
+/**
+ * Free-tier plan quotas, used as the display denominator when the provider does
+ * not report one. MongoDB exposes no quota at all, and Cloudinary returns
+ * `limit: 0` on the credit-based free plan, so without these the bars would
+ * never render. All are overridable by environment variables.
+ *
+ *   MongoDB Atlas M0 (free)      → 512 MB
+ *   Cloudinary free plan         → 25 GB storage / 25 GB bandwidth
+ */
+const FREE_MONGO_BYTES = 512 * 1024 * 1024;
+const FREE_CLOUDINARY_STORAGE_BYTES = 25 * 1024 * 1024 * 1024;
+const FREE_CLOUDINARY_BANDWIDTH_BYTES = 25 * 1024 * 1024 * 1024;
+
+/** Reads a positive number from env, else null. */
+function envNumber(name: string): number | null {
+  const raw = Number(process.env[name]);
+  return Number.isFinite(raw) && raw > 0 ? raw : null;
+}
+
+/** First configured override wins (interpreted as gigabytes); otherwise the
+ *  free-tier default. */
+function limitBytes(overrides: string[], fallback: number): number {
+  for (const name of overrides) {
+    const n = envNumber(name);
+    if (n !== null) return Math.round(n * 1024 * 1024 * 1024);
+  }
+  return fallback;
+}
+
+function bytesFromMbEnv(name: string): number | null {
+  const mb = envNumber(name);
+  return mb !== null ? Math.round(mb * 1024 * 1024) : null;
+}
+
 /** Cloudinary returns some counters as `{ usage, limit }` objects and others as
  *  bare numbers depending on plan, so unwrap either shape. */
 function meter(value: UsageNumber | number | undefined): { usage: number; limit: number | null } {
@@ -70,7 +104,6 @@ export async function GET() {
       mongo = { ok: false, error: "No database connection." };
     } else {
       const stats = await db.stats();
-      const limitGb = Number(process.env.MONGO_STORAGE_LIMIT_GB);
       mongo = {
         ok: true,
         dataSize: num(stats.dataSize),
@@ -80,7 +113,8 @@ export async function GET() {
         objectCount: num(stats.objects),
         collections: num(stats.collections),
         limitBytes:
-          Number.isFinite(limitGb) && limitGb > 0 ? Math.round(limitGb * 1024 * 1024 * 1024) : null,
+          bytesFromMbEnv("MONGO_STORAGE_LIMIT_MB") ??
+          limitBytes(["MONGO_STORAGE_LIMIT_GB"], FREE_MONGO_BYTES),
       };
     }
   } catch (error) {
@@ -102,9 +136,13 @@ export async function GET() {
         ok: true,
         plan: usage.plan,
         storage: storage.usage,
-        storageLimit: storage.limit,
+        storageLimit:
+          storage.limit ??
+          limitBytes(["CLOUDINARY_STORAGE_LIMIT_GB"], FREE_CLOUDINARY_STORAGE_BYTES),
         bandwidth: bandwidth.usage,
-        bandwidthLimit: bandwidth.limit,
+        bandwidthLimit:
+          bandwidth.limit ??
+          limitBytes(["CLOUDINARY_BANDWIDTH_LIMIT_GB"], FREE_CLOUDINARY_BANDWIDTH_BYTES),
         transformation: transformations.usage,
         transformationLimit: transformations.limit,
         objects: meter(usage.objects).usage || num(usage.resources),
