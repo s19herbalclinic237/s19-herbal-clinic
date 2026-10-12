@@ -1931,6 +1931,7 @@ const dict = {
   "dash.shell.nav.testimonials": { en: "Your Stories", fr: "Vos témoignages" },
   "dash.shell.nav.settings": { en: "Settings", fr: "Paramètres" },
   "dash.shell.nav.adminProducts": { en: "Products", fr: "Produits" },
+  "dash.shell.nav.adminServices": { en: "Services", fr: "Services" },
   "dash.shell.nav.adminDoctors": { en: "Staff", fr: "Équipe" },
   "dash.shell.nav.adminAppointments": { en: "Appointments", fr: "Rendez-vous" },
   "dash.shell.nav.adminRecords": { en: "Medical Records", fr: "Dossier médical" },

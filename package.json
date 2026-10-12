@@ -14,6 +14,7 @@
     "seed:testimonials": "tsx scripts/seed-testimonials.ts",
     "seed:blog": "tsx scripts/seed-blog.ts",
     "seed:health": "tsx scripts/seed-health.ts",
+    "seed:services": "tsx scripts/seed-services.ts",
     "create-admin": "tsx scripts/create-admin.ts",
     "fix:blog-covers": "tsx scripts/fix-blog-cover-paths.ts",
     "audit:blog-covers": "tsx scripts/audit-blog-covers.ts",

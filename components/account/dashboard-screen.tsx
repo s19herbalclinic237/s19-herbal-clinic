@@ -23,6 +23,7 @@ import { PrescriptionsTab } from "@/components/account/prescriptions-tab";
 import { TreatmentTab } from "@/components/account/treatment-tab";
 import { FamilyTab } from "@/components/account/family-tab";
 import { ProductsTab } from "@/components/admin/products-tab";
+import { ServicesTab } from "@/components/admin/services-tab";
 import { AdminOrdersTab } from "@/components/admin/orders-tab";
 import { AdminTestimonialsTab } from "@/components/admin/testimonials-tab";
 import { MessagingTab } from "@/components/admin/messaging-tab";
@@ -50,6 +51,7 @@ import {
   FaCalendarCheck,
   FaCalendarDays,
   FaCheck,
+  FaClipboardList,
   FaCommentDots,
   FaEnvelope,
   FaFileMedical,
@@ -79,6 +81,7 @@ import {
 type TabId =
   | PatientTabId
   | "admin-products"
+  | "admin-services"
   | "admin-orders"
   | "admin-testimonials"
   | "admin-messaging"
@@ -161,6 +164,11 @@ const adminTabs: NavItem[] = [
     id: "admin-products",
     labelKey: "dash.shell.nav.adminProducts",
     icon: <FaTags className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "admin-services",
+    labelKey: "dash.shell.nav.adminServices",
+    icon: <FaClipboardList className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-doctors",
@@ -585,6 +593,12 @@ export function DashboardScreen() {
         return isAdmin ? (
           <div className="px-4 sm:px-0">
             <ProductsTab />
+          </div>
+        ) : null;
+      case "admin-services":
+        return isAdmin ? (
+          <div className="px-4 sm:px-0">
+            <ServicesTab />
           </div>
         ) : null;
       case "admin-orders":

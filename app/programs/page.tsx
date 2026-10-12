@@ -5,7 +5,7 @@ import { Kicker } from "@/components/ui/heading";
 import { buttonLinkClasses } from "@/components/ui/button";
 import { CTABand } from "@/components/sections/cta-band";
 import { Reveal, RevealLeft, StaggerGroup, StaggerItem } from "@/components/ui/motion";
-import { localizedPrograms } from "@/lib/data/programs";
+import { getLocalizedServices } from "@/lib/services";
 import { localizedProgramsPathway } from "@/lib/data/philosophy";
 import { CLINIC, waLink } from "@/lib/site";
 import { FaWhatsapp, FaRegCircleCheck, FaArrowRight, FaFlask, FaShieldHalved } from "react-icons/fa6";
@@ -40,7 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ProgramsPage() {
   const t = await serverT();
   const locale = await getServerLocale();
-  const treatmentPrograms = localizedPrograms(locale);
+  const treatmentPrograms = await getLocalizedServices(locale);
   const pathway = localizedProgramsPathway(locale);
 
   
