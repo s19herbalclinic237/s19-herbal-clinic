@@ -243,7 +243,7 @@ describe("programs page: conventional-care boundaries stay visible", () => {
   });
 
   test("a note is classified as Safety or Important, and the two are distinguishable", () => {
-    // `app/programs/page.tsx` picks the label from `noteKind`. Only the
+    // `app/services/page.tsx` picks the label from `noteKind`. Only the
     // medication note may claim "Safety": that word is the warning itself, and
     // a note that renders as "Important" where it means "stop changing your
     // antihypertensive without supervision" has been softened into something the
@@ -520,8 +520,8 @@ describe("home page: the brief's list sections are complete", () => {
       assert.ok(slugs.has(card.slug), `${card.slug} is not a program on the Programs page`);
     }
     for (const card of localizedHomePrograms("en")) {
-      if (card.href !== "/programs") {
-        const anchor = card.href.slice("/programs#".length);
+      if (card.href !== "/services") {
+        const anchor = card.href.slice("/services#".length);
         assert.ok(slugs.has(anchor), `${card.href} is not a program on the Programs page`);
       }
     }
@@ -534,7 +534,7 @@ describe("home page: the brief's list sections are complete", () => {
     // to the index, where both appear in order.
     const merged = homePrograms.find((c) => c.title === "Digestive & Liver Health");
     assert.ok(merged, "the Digestive & Liver Health card is missing");
-    assert.equal(merged.href, "/programs");
+    assert.equal(merged.href, "/services");
     // And the Programs page really does still carry both halves.
     const slugs = new Set(treatmentPrograms.map((p) => p.slug));
     assert.ok(slugs.has("digestive-gut-health"));
@@ -544,7 +544,7 @@ describe("home page: the brief's list sections are complete", () => {
   test("every home program card has an href in both locales", () => {
     for (const locale of ["en", "fr"] as const) {
       for (const card of localizedHomePrograms(locale)) {
-        assert.ok(card.href.startsWith("/programs"), `${locale}: ${card.slug} has href ${card.href}`);
+        assert.ok(card.href.startsWith("/services"), `${locale}: ${card.slug} has href ${card.href}`);
       }
     }
   });

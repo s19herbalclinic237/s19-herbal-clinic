@@ -70,7 +70,7 @@ describe("dynamic services: the admin API is guarded and complete", () => {
 });
 
 describe("dynamic services: the public page reads live data with a fallback", () => {
-  const page = read("app", "programs", "page.tsx");
+  const page = read("app", "services", "page.tsx");
   const helper = read("lib", "services.ts");
 
   test("the Services page uses the database-backed helper", () => {

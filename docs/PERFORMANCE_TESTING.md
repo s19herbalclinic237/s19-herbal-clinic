@@ -104,7 +104,7 @@ Do not force a dashboard to meet the public-page JavaScript budget: the applicat
 
 | Class | Representative routes |
 | --- | --- |
-| Home/marketing | `/`, `/about`, `/programs`, `/telehealth` |
+| Home/marketing | `/`, `/about`, `/services`, `/telehealth` |
 | Catalog/content | `/shop`, `/shop/[slug]`, `/health-library`, `/blog`, `/blog/[slug]` |
 | Conversion | `/contact`, `/cart`, `/checkout`, `/track` |
 | Legal | `/privacy`, `/terms`, `/cookies`, `/refund-and-returns` |

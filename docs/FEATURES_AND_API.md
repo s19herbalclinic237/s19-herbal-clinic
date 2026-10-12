@@ -18,7 +18,7 @@ This document describes the features and route handlers present in the repositor
 | --- | --- |
 | `/` | Home page, brand positioning, featured products/programs, calls to action, booking snippets, testimonials, health content, and video carousel. |
 | `/about` | Clinic story, mission, approach, values, and contact-oriented calls to action. |
-| `/programs` | Browse treatment/wellness programs and select a program for booking. |
+| `/services` | Browse treatment/wellness services and select one for booking. |
 | `/telehealth` | Telehealth positioning and consultation call to action. |
 | `/health-library` | Searchable/filterable educational health-library experience. Educational content is not presented here as a substitute for diagnosis or emergency care. |
 | `/blog` | Published blog index, search/filtering, and featured-post behavior. |

@@ -424,7 +424,7 @@ describe("structured data matches the images on the page", () => {
     // Declaring an image a visitor cannot see is the fastest way to have a rich
     // result rejected, so the gallery must be driven by the same `pages` field
     // the sitemap uses.
-    for (const page of ["/", "/about", "/programs", "/shop"]) {
+    for (const page of ["/", "/about", "/services", "/shop"]) {
       const gallery = imageGalleryJsonLd(page, "en");
       assert.ok(gallery, `no gallery for ${page}`);
       assert.equal(gallery["@type"], "ImageGallery");

@@ -128,7 +128,7 @@ export const CLINIC_PHOTOS = {
       en: "A consultation at S19 Herbal Clinic, Bafoussam.",
       fr: "Une consultation à la Clinique S19, Bafoussam.",
     },
-    pages: ["/programs", "/health-library", "/patient-stories", "/faq"],
+    pages: ["/services", "/health-library", "/patient-stories", "/faq"],
   }),
 
   bloodPressure: photo({
@@ -174,7 +174,7 @@ export const CLINIC_PHOTOS = {
       en: "A non-invasive supportive therapy session at S19 Herbal Clinic.",
       fr: "Une séance de thérapie de soutien non invasive à la Clinique S19.",
     },
-    pages: ["/programs"],
+    pages: ["/services"],
   }),
 
   cupboardProducts: photo({

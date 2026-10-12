@@ -593,6 +593,11 @@ const dict = {
     en: "This package is personalized to your consultation. Contact S19 to discuss your condition and receive your individual protocol and pricing.",
     fr: "Ce pack est personnalisé pour votre consultation. Contactez S19 pour discuter de votre état et recevoir votre protocole et prix individuels.",
   },
+  "product.outOfStock": { en: "Out of stock", fr: "En rupture de stock" },
+  "product.outOfStockNote": {
+    en: "This product is currently out of stock. Order it on WhatsApp and we will let you know as soon as it is available again.",
+    fr: "Ce produit est actuellement en rupture de stock. Commandez-le sur WhatsApp et nous vous informerons dès qu'il sera de nouveau disponible.",
+  },
   "product.contactWhatsApp": { en: "Talk to S19 on WhatsApp", fr: "Parlez à S19 sur WhatsApp" },
   "product.contactWhatsAppInfo": {
     en: "Hello S19, I would like more information about the {name}.",

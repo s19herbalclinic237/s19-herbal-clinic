@@ -115,6 +115,23 @@ export async function getSessionUser(): Promise<AuthUser | null> {
       await Session.deleteOne({ _id: session._id }).exec();
       return null;
     }
+
+    // Idle timeout. A session untouched for the configured window is destroyed
+    // even while its absolute expiry is still in the future, so an abandoned
+    // device does not stay signed in. Active users send a heartbeat, so this
+    // never punishes real use.
+    const idleMinutes = Math.max(1, Number(process.env.SESSION_IDLE_MINUTES) || 30);
+    const lastActive = session.lastActiveAt ?? session.createdAt;
+    const lastActiveMs = lastActive ? new Date(lastActive).getTime() : Date.now();
+    if (Date.now() - lastActiveMs > idleMinutes * 60 * 1000) {
+      await Session.deleteOne({ _id: session._id }).exec();
+      return null;
+    }
+    // Rolling heartbeat, written at most once a minute to keep this cheap.
+    if (Date.now() - lastActiveMs > 60 * 1000) {
+      await Session.updateOne({ _id: session._id }, { $set: { lastActiveAt: new Date() } }).exec();
+    }
+
     const u = session.user as (AuthUserPick & { _id: unknown });
     if (!u || !u._id) return null;
     return toAuthUser({

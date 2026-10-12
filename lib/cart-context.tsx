@@ -25,7 +25,7 @@ interface CartContextValue {
   items: CartItem[];
   count: number;
   subtotal: number;
-  addItem: (item: Omit<CartItem, "quantity">, quantity?: number) => void;
+  addItem: (item: Omit<CartItem, "quantity"> & { stock?: number }, quantity?: number) => void;
   removeItem: (slug: string) => void;
   updateQuantity: (slug: string, quantity: number) => void;
   clearCart: () => void;
@@ -109,7 +109,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return () => clearTimeout(timer);
   }, [items, user?.id, hydrated, saveCart]);
 
-  const addItem = useCallback((item: Omit<CartItem, "quantity">, quantity = 1) => {
+  const addItem = useCallback((item: Omit<CartItem, "quantity"> & { stock?: number }, quantity = 1) => {
+    // Never let an out-of-stock or quote-only product into the cart. The shop
+    // already hides these, so reaching here means stale state or a direct call.
+    if (item.price <= 0 || (typeof item.stock === "number" && item.stock <= 0)) {
+      toast.error("This product is currently out of stock.");
+      return;
+    }
     setItems((prev) => {
       const existing = prev.find((i) => i.slug === item.slug);
       if (existing) {

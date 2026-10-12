@@ -3,7 +3,7 @@ import "server-only";
 import { connectDb } from "@/lib/db";
 import { Product, type IProduct } from "@/lib/models/Product";
 import { Category, type ICategory } from "@/lib/models/Category";
-import type { SiteProduct, SiteCategory } from "@/lib/site";
+import { isPubliclyAvailable, type SiteProduct, type SiteCategory } from "@/lib/site";
 import {
   getStaticCategories,
   getStaticFeaturedProducts,
@@ -51,59 +51,68 @@ function toSiteCategory(c: ICategory): SiteCategory {
   };
 }
 
+/** A static product only when it is publicly listable (in stock). */
+function publiclyAvailableStatic(slug: string): SiteProduct | undefined {
+  const product = getStaticProductBySlug(slug);
+  return product && isPubliclyAvailable(product) ? product : undefined;
+}
+
 export async function getProducts(): Promise<SiteProduct[]> {
-  if (dbUnavailable) return getStaticProducts();
+  if (dbUnavailable) return getStaticProducts().filter(isPubliclyAvailable);
   const conn = await connectDb();
   if (!conn) {
     dbUnavailable = true;
-    return getStaticProducts();
+    return getStaticProducts().filter(isPubliclyAvailable);
   }
   try {
     const docs = await Product.find({ active: true })
       .sort({ featured: -1, createdAt: 1 })
       .lean<IProduct[]>();
-    if (!docs.length) return getStaticProducts();
-    return docs.map(toSiteProduct);
+    if (!docs.length) return getStaticProducts().filter(isPubliclyAvailable);
+    return docs.map(toSiteProduct).filter(isPubliclyAvailable);
   } catch {
     dbUnavailable = true;
-    return getStaticProducts();
+    return getStaticProducts().filter(isPubliclyAvailable);
   }
 }
 
 export async function getFeaturedProducts(): Promise<SiteProduct[]> {
-  if (dbUnavailable) return getStaticFeaturedProducts();
+  if (dbUnavailable) return getStaticFeaturedProducts().filter(isPubliclyAvailable);
   const conn = await connectDb();
   if (!conn) {
     dbUnavailable = true;
-    return getStaticFeaturedProducts();
+    return getStaticFeaturedProducts().filter(isPubliclyAvailable);
   }
   try {
     const docs = await Product.find({ active: true, featured: true })
       .sort({ createdAt: 1 })
       .limit(8)
       .lean<IProduct[]>();
-    if (!docs.length) return getStaticFeaturedProducts();
-    return docs.map(toSiteProduct);
+    if (!docs.length) return getStaticFeaturedProducts().filter(isPubliclyAvailable);
+    return docs.map(toSiteProduct).filter(isPubliclyAvailable);
   } catch {
     dbUnavailable = true;
-    return getStaticFeaturedProducts();
+    return getStaticFeaturedProducts().filter(isPubliclyAvailable);
   }
 }
 
 export async function getProductBySlug(slug: string): Promise<SiteProduct | undefined> {
-  if (dbUnavailable) return getStaticProductBySlug(slug);
+  if (dbUnavailable) return publiclyAvailableStatic(slug);
   const conn = await connectDb();
   if (!conn) {
     dbUnavailable = true;
-    return getStaticProductBySlug(slug);
+    return publiclyAvailableStatic(slug);
   }
   try {
     const doc = await Product.findOne({ slug, active: true }).lean<IProduct>();
-    if (!doc) return getStaticProductBySlug(slug);
-    return toSiteProduct(doc);
+    if (!doc) return publiclyAvailableStatic(slug);
+    const product = toSiteProduct(doc);
+    // An out-of-stock product is hidden from the shop, so its detail page 404s
+    // rather than staying reachable and sellable by direct link.
+    return isPubliclyAvailable(product) ? product : undefined;
   } catch {
     dbUnavailable = true;
-    return getStaticProductBySlug(slug);
+    return publiclyAvailableStatic(slug);
   }
 }
 

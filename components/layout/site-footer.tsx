@@ -16,12 +16,12 @@ import {
 } from "react-icons/fa6";
 
 const treatmentLinks: { key: TranslationKey; href: string }[] = [
-  { key: "footer.diabetes", href: "/programs#diabetes-metabolic" },
-  { key: "footer.hypertension", href: "/programs#hypertension-cardiovascular" },
-  { key: "footer.prostate", href: "/programs#prostate-mens-health" },
-  { key: "footer.womens", href: "/programs#womens-health-hormones" },
-  { key: "footer.gastritis", href: "/programs#digestive-gut-health" },
-  { key: "footer.cancer", href: "/programs#integrative-cancer-support" },
+  { key: "footer.diabetes", href: "/services#diabetes-metabolic" },
+  { key: "footer.hypertension", href: "/services#hypertension-cardiovascular" },
+  { key: "footer.prostate", href: "/services#prostate-mens-health" },
+  { key: "footer.womens", href: "/services#womens-health-hormones" },
+  { key: "footer.gastritis", href: "/services#digestive-gut-health" },
+  { key: "footer.cancer", href: "/services#integrative-cancer-support" },
 ];
 
 const companyLinks: { key: TranslationKey; href: string }[] = [

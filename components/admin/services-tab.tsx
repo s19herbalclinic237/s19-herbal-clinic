@@ -291,7 +291,7 @@ export function ServicesTab() {
                   {s.title}
                 </p>
                 <p className="truncate text-xs text-muted">
-                  /programs#{s.slug} · {formatDate(s.updatedAt ?? s.createdAt)}
+                  /services#{s.slug} · {formatDate(s.updatedAt ?? s.createdAt)}
                 </p>
               </div>
               <span
@@ -411,7 +411,7 @@ function ServiceForm({
             maxLength={160}
           />
         </Field>
-        <Field label="Slug" required hint="Used for the direct link (e.g. /programs#your-slug). Auto-generated from the English title.">
+        <Field label="Slug" required hint="Used for the direct link (e.g. /services#your-slug). Auto-generated from the English title.">
           <Input value={draft.slug} onChange={(e) => set("slug", e.target.value)} required maxLength={80} />
         </Field>
         <Field label="Order" hint="Lower numbers appear first on the Services page.">

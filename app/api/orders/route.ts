@@ -3,6 +3,7 @@ import { connectDb } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth-server";
 import { Order, type IOrder } from "@/lib/models/Order";
 import { User } from "@/lib/models/User";
+import { Product } from "@/lib/models/Product";
 import { sendOrderConfirmation } from "@/lib/email";
 import { notifyPatientWhatsApp, whatsappFirstName } from "@/lib/whatsapp";
 import { generateOrderReference } from "@/lib/utils";
@@ -86,6 +87,41 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: "Our ordering service is temporarily unavailable. Please order via WhatsApp." },
       { status: 503 }
+    );
+  }
+
+  // Re-check every line against the live catalogue before an order is created.
+  // The cart is client state, so this is the only place that can stop an
+  // out-of-stock, withdrawn or quote-only product from being bought.
+  const slugs = Array.from(new Set(payload.items.map((i) => i.slug)));
+  let catalogue: { slug: string; name: string; price: number; stock: number; active: boolean }[] = [];
+  try {
+    catalogue = await Product.find({ slug: { $in: slugs } })
+      .select("slug name price stock active")
+      .lean<{ slug: string; name: string; price: number; stock: number; active: boolean }[]>();
+  } catch (error) {
+    console.error("[orders] catalogue check failed:", error);
+    return NextResponse.json(
+      { error: "Could not verify your items are in stock. Please try again." },
+      { status: 503 }
+    );
+  }
+  const bySlug = new Map(catalogue.map((p) => [p.slug, p]));
+  const unavailable: string[] = [];
+  for (const item of payload.items) {
+    const product = bySlug.get(item.slug);
+    if (!product || !product.active || product.price <= 0 || product.stock <= 0) {
+      unavailable.push(item.name || item.slug);
+    } else if (item.quantity > product.stock) {
+      unavailable.push(`${item.name || item.slug} (only ${product.stock} left)`);
+    }
+  }
+  if (unavailable.length > 0) {
+    return NextResponse.json(
+      {
+        error: `Some items are no longer available: ${unavailable.join(", ")}. Please remove them from your cart and try again.`,
+      },
+      { status: 409 }
     );
   }
 

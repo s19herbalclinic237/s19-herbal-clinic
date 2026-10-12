@@ -71,7 +71,7 @@ Files were **moved, not re-encoded** — no bytes changed, no visual regression 
 |---|---|
 | `components/ui/page-hero.tsx` | `<img loading="eager">` → `<Image fill sizes="100vw" loading="eager" fetchPriority="high">`. **This one change covers 18 hero images across 14 pages.** |
 | `app/page.tsx` | 3 full-bleed photographs → `ClinicPhotoFill`, alt localised |
-| `app/programs/page.tsx`, `app/patient-stories/page.tsx`, `components/auth/coming-soon.tsx` | → `ClinicPhotoFill` |
+| `app/services/page.tsx`, `app/patient-stories/page.tsx`, `components/auth/coming-soon.tsx` | → `ClinicPhotoFill` |
 | `components/layout/site-header.tsx`, `site-footer.tsx`, `components/auth/auth-shell.tsx` | wordmark → `ClinicLogoImage` with real dimensions |
 | `components/ui/site-loader.tsx` | icon → `next/image` |
 | `app/blog/[slug]/page.tsx` | cover → `next/image` **when the cover is a registry photograph**; conditional, explained in the file |

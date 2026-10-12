@@ -35,6 +35,26 @@ export interface SiteCategory {
   nameFr?: string;
 }
 
+/**
+ * A product can only be bought while it is priced and in stock. Quote-only
+ * items (price 0) are a separate concept: they are requested through the
+ * clinic, never stocked or added to a cart.
+ */
+export function isPurchasable(product: Pick<SiteProduct, "price" | "stock">): boolean {
+  return product.price > 0 && product.stock > 0;
+}
+
+/**
+ * Whether a product belongs in a public listing.
+ *
+ * A product with no stock is hidden from the shop and its detail page, so it
+ * cannot be browsed or reached by a direct link. This applies to every product,
+ * priced or quote-only: an empty stock line reads as "not available right now".
+ */
+export function isPubliclyAvailable(product: Pick<SiteProduct, "price" | "stock">): boolean {
+  return product.stock > 0;
+}
+
 export interface TreatmentProgram {
   slug: string;
   title: string;

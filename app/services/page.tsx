@@ -33,11 +33,11 @@ export async function generateMetadata(): Promise<Metadata> {
       "traitement naturel du diabète",
       "remède naturel pour la prostate",
     ],
-    ...canonicalMeta("/programs"),
+    ...canonicalMeta("/services"),
   };
 }
 
-export default async function ProgramsPage() {
+export default async function ServicesPage() {
   const t = await serverT();
   const locale = await getServerLocale();
   const treatmentPrograms = await getLocalizedServices(locale);

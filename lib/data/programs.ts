@@ -2,7 +2,7 @@ import type { TreatmentProgram } from "@/lib/site";
 import type { Locale } from "@/lib/i18n";
 
 /**
- * The services offered on the Services page (route `/programs`).
+ * The services offered on the Services page (route `/services`).
  *
  * Source of truth: docs/S19_Programs_Page_Developer_Implementation_Brief.md.
  * Three things in that brief constrain this file and are enforced by
@@ -204,9 +204,9 @@ export const treatmentPrograms: TreatmentProgram[] = [
     slug: "electromolecular-bioelectromagnetic",
     title: "Electromolecular Medicine & Bioelectromagnetic Therapies",
     short:
-      "We use highly-advanced devices inspired by Nikola Tesla's. These devices use electrical stimulation, electromagnetic fields and plasma-based frequencies as complementary wellness therapies.",
+      "We use highly advanced devices that utilize electrical stimulation, electromagnetic fields, and plasma-based frequencies as complementary wellness therapies.",
     detail:
-      "These therapies are intended to support the body's natural processes and promote overall well-being. They complement, and never replace, medical care, and are offered around your individualized S19 plan.",
+      "These therapies are intended to support the body's natural processes and promote overall well-being. They complement, and never replace, medical care, and are offered as part of your individualized S19 plan.",
     conditions: [
       "Electrical stimulation",
       "Electromagnetic field therapy",
@@ -215,9 +215,9 @@ export const treatmentPrograms: TreatmentProgram[] = [
     ],
     titleFr: "Médecine électromoléculaire et thérapies bioélectromagnétiques",
     shortFr:
-      "Nous utilisons des appareils de pointe inspirés de ceux de Nikola Tesla. Ces appareils utilisent la stimulation électrique, les champs électromagnétiques et les fréquences à base de plasma comme thérapies de bien-être complémentaires.",
+      "Nous utilisons des appareils de très haute technologie qui utilisent la stimulation électrique, les champs électromagnétiques et les fréquences à base de plasma comme thérapies de bien-être complémentaires.",
     detailFr:
-      "Ces thérapies visent à soutenir les processus naturels du corps et à favoriser le bien-être général. Elles complètent, sans jamais remplacer, les soins médicaux, et s'inscrivent autour de votre plan S19 individualisé.",
+      "Ces thérapies visent à soutenir les processus naturels du corps et à favoriser le bien-être général. Elles complètent, sans jamais remplacer, les soins médicaux, et sont proposées dans le cadre de votre plan S19 individualisé.",
     conditionsFr: [
       "Stimulation électrique",
       "Thérapie par champs électromagnétiques",

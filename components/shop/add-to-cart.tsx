@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/cart-context";
 import type { SiteProduct } from "@/lib/site";
-import { localizedProduct } from "@/lib/site";
+import { isPurchasable, localizedProduct } from "@/lib/site";
 import { waLink } from "@/lib/utils";
 import { useLocale } from "@/components/i18n/locale-provider";
 import { FaMinus, FaPlus, FaBagShopping, FaWhatsapp } from "react-icons/fa6";
@@ -14,6 +14,29 @@ export function AddToCart({ product }: { product: SiteProduct }) {
   const { t, locale } = useLocale();
   const p = localizedProduct(product, locale);
   const [qty, setQty] = useState(1);
+
+  // Defence in depth: the shop hides and 404s out-of-stock products, but an item
+  // can sell out while this page is open. Never offer a cart button for
+  // something that cannot be fulfilled.
+  if (!isPurchasable(product)) {
+    return (
+      <div className="mt-6 rounded-lg border border-line bg-cream p-5">
+        <p className="text-sm font-bold uppercase tracking-wide text-forest-800">
+          {t("product.outOfStock")}
+        </p>
+        <p className="mt-2 text-sm leading-relaxed text-muted">{t("product.outOfStockNote")}</p>
+        <a
+          href={waLink(`Hello S19, I would like to order the ${p.name}.`)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 inline-flex h-14 items-center justify-center gap-2 rounded-lg bg-forest-800 px-5 text-sm font-semibold text-white transition-colors hover:bg-forest-900 sm:h-12"
+        >
+          <FaWhatsapp className="h-4 w-4 text-gold-400" aria-hidden />
+          {t("common.orderWhatsApp")}
+        </a>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-6">

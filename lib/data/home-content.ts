@@ -104,7 +104,7 @@ export const homePrograms: HomeProgramCard[] = [
     // links to the Programs index: an anchor to one of them would misdescribe
     // what the card covers.
     slug: "digestive-gut-health",
-    href: "/programs",
+    href: "/services",
     title: "Digestive & Liver Health",
     text: "Individualized support for digestive health, nutrition, liver wellness and related metabolic factors.",
     titleFr: "Santé digestive et hépatique",
@@ -158,7 +158,7 @@ export const accommodationAmenities: { text: string; textFr: string }[] = [
 export function localizedHomePrograms(locale: Locale) {
   return homePrograms.map((p) => ({
     slug: p.slug,
-    href: p.href ?? `/programs#${p.slug}`,
+    href: p.href ?? `/services#${p.slug}`,
     title: locale === "fr" ? p.titleFr : p.title,
     text: locale === "fr" ? p.textFr : p.text,
   }));

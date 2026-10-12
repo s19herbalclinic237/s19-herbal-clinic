@@ -3,7 +3,7 @@ import { Schema, model, models, type Model } from "mongoose";
 export type ServiceStatus = "draft" | "published";
 
 /**
- * A service offered on the public Services page (`/programs`).
+ * A service offered on the public Services page (`/services`).
  *
  * This is the admin-managed version of the old static `treatmentPrograms`
  * array in `lib/data/programs.ts`, which is kept as the seed source and the

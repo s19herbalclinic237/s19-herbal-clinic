@@ -94,7 +94,7 @@ export const faqSections: FaqSection[] = [
         answerFr: [
           "Parce que la phytothérapie ne doit pas relever du hasard. Deux personnes présentant le même diagnostic peuvent avoir des antécédents médicaux, des traitements, des résultats de laboratoire et des besoins de santé très différents. S19 met l'accent sur l'évaluation, la personnalisation, l'éducation et le suivi, plutôt que sur la simple vente d'une plante parce que quelqu'un mentionne une maladie.",
         ],
-        links: [{ label: "Programs", labelFr: "Programmes", href: "/programs" }],
+        links: [{ label: "Services", labelFr: "Services", href: "/services" }],
       },
     ],
   },
@@ -117,7 +117,7 @@ export const faqSections: FaqSection[] = [
         ],
         links: [
           { label: "Book a Consultation", labelFr: "Réserver une consultation", href: "/contact" },
-          { label: "Programs", labelFr: "Programmes", href: "/programs" },
+          { label: "Services", labelFr: "Services", href: "/services" },
         ],
       },
       {
@@ -222,8 +222,8 @@ export const faqSections: FaqSection[] = [
           "S19 fournit un soutien individualisé pour le diabète de type 2, la santé métabolique et l'hypertension par la nutrition, les mesures de mode de vie, un soutien herbal approprié, l'éducation et le suivi. Certains patients peuvent obtenir des améliorations substantielles du contrôle de la glycémie ou de la tension artérielle, et les besoins en médicaments peuvent parfois évoluer sous supervision clinique appropriée. Toutefois, aucun résultat individuel ne doit être garanti avant l'évaluation.",
         ],
         links: [
-          { label: "Diabetes Program", labelFr: "Programme diabète", href: "/programs#diabetes-metabolic" },
-          { label: "Hypertension Program", labelFr: "Programme hypertension", href: "/programs#hypertension-cardiovascular" },
+          { label: "Diabetes Program", labelFr: "Programme diabète", href: "/services#diabetes-metabolic" },
+          { label: "Hypertension Program", labelFr: "Programme hypertension", href: "/services#hypertension-cardiovascular" },
         ],
       },
       {
@@ -238,7 +238,7 @@ export const faqSections: FaqSection[] = [
           "Non. Le diabète de type 1 nécessite un remplacement par l'insuline. S19 peut fournir un soutien complémentaire en nutrition, en mode de vie, en suivi et en soins de support, mais la phytothérapie ne doit jamais être présentée comme un substitut à l'insuline qui sauve des vies.",
         ],
         links: [
-          { label: "Diabetes Program", labelFr: "Programme diabète", href: "/programs#diabetes-metabolic" },
+          { label: "Diabetes Program", labelFr: "Programme diabète", href: "/services#diabetes-metabolic" },
         ],
       },
       {
@@ -261,7 +261,7 @@ export const faqSections: FaqSection[] = [
           {
             label: "Integrative Cancer Support",
             labelFr: "Soutien intégratif du cancer",
-            href: "/programs#integrative-cancer-support",
+            href: "/services#integrative-cancer-support",
           },
         ],
       },

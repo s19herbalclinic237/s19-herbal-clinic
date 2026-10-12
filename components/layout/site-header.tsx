@@ -34,7 +34,7 @@ function useMounted() {
 
 const nav = [
   { key: "nav.home", href: "/" },
-  { key: "nav.programs", href: "/programs" },
+  { key: "nav.programs", href: "/services" },
   { key: "nav.telehealth", href: "/telehealth" },
   { key: "nav.shop", href: "/shop" },
   { key: "nav.blog", href: "/blog" },

@@ -19,7 +19,7 @@ const STATIC_ROUTES: {
   changeFrequency: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
 }[] = [
   { path: "", priority: 1.0, changeFrequency: "weekly" },
-  { path: "/programs", priority: 0.9, changeFrequency: "monthly" },
+  { path: "/services", priority: 0.9, changeFrequency: "monthly" },
   { path: "/shop", priority: 0.9, changeFrequency: "weekly" },
   { path: "/telehealth", priority: 0.8, changeFrequency: "monthly" },
   { path: "/location", priority: 0.8, changeFrequency: "monthly" },

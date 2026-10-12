@@ -114,6 +114,67 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, [loading]);
 
+  // Idle auto-logout. Patients share devices, so a session left open must not
+  // stay usable indefinitely. Any real activity resets the clock; when it
+  // lapses the session is destroyed server-side and the UI returns to the
+  // signed-out state (AccountScreen already switches on `user`).
+  useEffect(() => {
+    if (!user) return;
+
+    const idleMs =
+      Math.max(1, Number(process.env.NEXT_PUBLIC_IDLE_TIMEOUT_MINUTES) || 30) * 60 * 1000;
+    const heartbeatMs = 5 * 60 * 1000;
+    let lastActivity = Date.now();
+    let lastHeartbeat = Date.now();
+    let ended = false;
+
+    const onActivity = () => {
+      lastActivity = Date.now();
+      // Keep the server-side idle clock fresh for genuinely active users, at
+      // most once every five minutes.
+      if (Date.now() - lastHeartbeat >= heartbeatMs) {
+        lastHeartbeat = Date.now();
+        void api("/api/auth/me").catch(() => {});
+      }
+    };
+
+    const endSession = async () => {
+      if (ended) return;
+      ended = true;
+      try {
+        await api("/api/auth/logout", { method: "POST" });
+      } catch {
+        /* even if the call fails, drop the client session */
+      }
+      setUser(null);
+      toast("You were signed out after a period of inactivity.", {
+        icon: "🔒",
+        duration: 8000,
+      });
+    };
+
+    const check = () => {
+      if (Date.now() - lastActivity >= idleMs) void endSession();
+    };
+
+    // Background timers are throttled, so a tab hidden while the user was away
+    // is re-checked the moment it comes back.
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") check();
+    };
+
+    const activityEvents = ["mousemove", "mousedown", "keydown", "scroll", "touchstart", "wheel", "click"];
+    activityEvents.forEach((event) => window.addEventListener(event, onActivity, { passive: true }));
+    document.addEventListener("visibilitychange", onVisibility);
+    const interval = window.setInterval(check, 60_000);
+
+    return () => {
+      activityEvents.forEach((event) => window.removeEventListener(event, onActivity));
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.clearInterval(interval);
+    };
+  }, [user]);
+
   const login = useCallback(async (identifier: string, password: string, bot?: string) => {
     try {
       const data = await api<ApiResult>("/api/auth/login", {

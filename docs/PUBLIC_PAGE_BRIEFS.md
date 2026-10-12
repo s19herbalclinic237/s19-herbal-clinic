@@ -49,7 +49,7 @@ repeat?** Only then does it come out.
 | Block | Verdict | Why |
 |---|---|---|
 | **Location section** | **Removed** | Section 8 renders `clinic.address` and `clinic.hours`, which are the *same two strings* the block hardcoded ("Immeuble Cathédrale, 3rd Floor, Apartment E305, Bafoussam, Cameroon" and "Monday – Saturday: 8:00 AM – 6:00 PM"), and the hero trust line already says "In-person care in Bafoussam". Its third card restated "Worldwide product delivery". Only the city list was new, and that lives on `/location`, which `/contact` links to. |
-| **Global `CTABand`** | **Removed from the home page** | It renders "Start your consultation" + a Book button + a WhatsApp button — the same three jobs section 11 already does, twenty lines below it. Still used on `/about`, `/programs`, `/location`, `/telehealth`, `/live-reviews`, `/health-library`. |
+| **Global `CTABand`** | **Removed from the home page** | It renders "Start your consultation" + a Book button + a WhatsApp button — the same three jobs section 11 already does, twenty lines below it. Still used on `/about`, `/services`, `/location`, `/telehealth`, `/live-reviews`, `/health-library`. |
 | **Featured products** | **Kept** | None of the eleven shows a product. Section 4 lists clinical *programs*; section 2's closing line is explicitly about not selling products as the goal. A catalogue is different content, not a restatement. |
 | **FAQ** | **Kept** | 3 of its 5 questions restate section 6 or section 8 — but "How should I take my herbal remedies?" and "What payment methods do you accept?" appear in none of the eleven, and `app/page.tsx` is the **only** consumer of `faqs`. Deleting the block deletes those answers from the entire site. Overlap noted, not fatal. |
 
@@ -60,7 +60,7 @@ removals hold and the two retentions cannot be dropped by accident.
 
 ## 2. Programs page
 
-Rebuilt in `app/programs/page.tsx`:
+Rebuilt in `app/services/page.tsx`:
 
 1. Hero — the brief's three statements plus the supporting line
    `Do Not Treat Blindly. Investigate. Understand. Personalize. Monitor.`
@@ -160,11 +160,11 @@ program page" has no single answer here.
 
 Anchoring the card to `#digestive-gut-health` would claim the card is about the
 digestive program alone, which its own title and description contradict. It
-therefore carries an explicit `href: "/programs"` — the index, where both
+therefore carries an explicit `href: "/services"` — the index, where both
 programs are listed in order — while the other five cards keep their
-`/programs#<slug>` anchors. `localizedHomePrograms()` resolves the href in both
-locales, and tests assert that every card href is either `/programs` or an
-anchor that exists on the Programs page.
+`/services#<slug>` anchors. `localizedHomePrograms()` resolves the href in both
+locales, and tests assert that every card href is either `/services` or an
+anchor that exists on the Services page.
 
 **2. Two testimonials say "detox" in the patient's own words — settled, left as
 they are.** `lib/data/testimonials.ts` — Kelly and Joseph Kamdem both describe a
@@ -198,8 +198,8 @@ Not "the build passed" — the rendered HTML was read back from a production bui
   "Delivery Coverage" and "Start your consultation" return **zero** matches on
   the home page in both locales; the address string now appears exactly once in
   the page body (section 8) plus the footer and the JSON-LD, instead of twice;
-  `href="/programs#digestive-gut-health"` survives only as the *footer* link,
-  with the merged card itself carrying `href="/programs"`.
+  `href="/services#digestive-gut-health"` survives only as the *footer* link,
+  with the merged card itself carrying `href="/services"`.
 - Mobile: no `min-w-[…px]`, no `<table>`, no grid that splits before `sm`. The
   only `whitespace-nowrap` elements are desktop-only nav items behind
   `hidden … xl:flex`.

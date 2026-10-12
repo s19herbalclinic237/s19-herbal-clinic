@@ -80,7 +80,7 @@ You do not need an account for any of this.
 | Menu | Page | Purpose |
 |---|---|---|
 | Home | `/` | Hero, videos, programs, featured remedies, booking form, stories, FAQ |
-| Programs | `/programs` | Treatment programs (diabetes, hypertension, women's health…) |
+| Services | `/services` | Treatment services (diabetes, hypertension, women's health…) |
 | Tele-Health | `/telehealth` | Online consultation service |
 | Shop | `/shop` | The product catalog |
 | Blog | `/blog` | Health articles |

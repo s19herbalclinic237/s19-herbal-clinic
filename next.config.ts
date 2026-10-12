@@ -39,6 +39,14 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      // The Programs page was renamed to Services. Keep the old URL working for
+      // bookmarks and search results with a permanent (308) redirect.
+      { source: "/programs", destination: "/services", permanent: true },
+      { source: "/programs/:path*", destination: "/services/:path*", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

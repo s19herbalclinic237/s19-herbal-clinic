@@ -184,7 +184,7 @@ export default async function HomePage() {
                 {t("home.hero.ctaBook")}
                 <FaArrowRight className="h-4 w-4" aria-hidden />
               </Link>
-              <Link href="/programs" className={buttonLinkClasses("glass", "xl")}>
+              <Link href="/services" className={buttonLinkClasses("glass", "xl")}>
                 {t("home.hero.ctaPrograms")}
                 <FaArrowRight className="h-4 w-4" aria-hidden />
               </Link>
@@ -277,7 +277,7 @@ export default async function HomePage() {
               <h2 className="mt-4">{t("home.areas.title")}</h2>
               <p className="mt-4 text-[15px] leading-relaxed text-muted">{t("home.areas.lead")}</p>
             </div>
-            <PrimaryCta href="/programs">{t("home.areas.cta")}</PrimaryCta>
+            <PrimaryCta href="/services">{t("home.areas.cta")}</PrimaryCta>
           </div>
         </Reveal>
         <StaggerGroup className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
