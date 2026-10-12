@@ -168,11 +168,21 @@ describe("programs page: the three renames are applied", () => {
     assert.equal(bySlug["integrative-cancer-care"], undefined);
   });
 
-  test("Other Health Concerns replaces Other Health Complications", () => {
-    assert.ok(bySlug["other-health-concerns"], "other-health-concerns slug must exist");
-    assert.equal(bySlug["other-health-concerns"].title, "Other Health Concerns");
-    assert.equal(bySlug["other-health-concerns"].titleFr, "Autres préoccupations de santé");
+  test("Other Health Concerns was removed and two new services were added", () => {
+    // The clinic removed the generic "unlisted concerns" card and added two
+    // named services in its place.
+    assert.equal(bySlug["other-health-concerns"], undefined);
     assert.equal(bySlug["other-health-complications"], undefined);
+    assert.ok(
+      bySlug["electromolecular-bioelectromagnetic"],
+      "electromolecular-bioelectromagnetic slug must exist"
+    );
+    assert.equal(
+      bySlug["electromolecular-bioelectromagnetic"].title,
+      "Electromolecular Medicine & Bioelectromagnetic Therapies"
+    );
+    assert.ok(bySlug["meditation-mindfulness"], "meditation-mindfulness slug must exist");
+    assert.equal(bySlug["meditation-mindfulness"].title, "Meditation & Mindfulness");
   });
 
   test("'cleansing' and 'complications' appear in no program title", () => {
@@ -365,7 +375,7 @@ describe("home page: the testimonial disclaimer is required copy", () => {
       );
       assert.doesNotMatch(s.programFr ?? "", /nettoyage|détox|soins intégratifs du cancer/i);
     }
-    assert.ok(slugs.size === 10, "programs list changed; re-check testimonial labels");
+    assert.ok(slugs.size === 11, "programs list changed; re-check testimonial labels");
   });
 
   test("the booking form's concern labels follow the renames", () => {

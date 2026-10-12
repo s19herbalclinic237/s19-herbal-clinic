@@ -108,12 +108,12 @@ export const faqSections: FaqSection[] = [
         n: 4,
         question: "How much is a consultation, and what happens after I book?",
         answer: [
-          "The standard S19 consultation fee is 10,000 FCFA for an in-person or online consultation. Bring or send any medical reports, laboratory results, scans and medication information you already have. After reviewing your situation, S19 may recommend additional investigations and an individualized program involving herbal support, nutrition and lifestyle measures, health education, monitoring and follow-up. Treatment products, investigations, accommodation and delivery are separate where applicable.",
+          "The standard S19 consultation fee is 5,000 FCFA for an in-person or online consultation. Bring or send any medical reports, laboratory results, scans and medication information you already have. After reviewing your situation, S19 may recommend additional investigations and an individualized program involving herbal support, nutrition and lifestyle measures, health education, monitoring and follow-up. Treatment products, investigations, accommodation and delivery are separate where applicable.",
         ],
         questionFr:
           "Combien coûte une consultation, et que se passe-t-il après la réservation ?",
         answerFr: [
-          "Le tarif standard d'une consultation S19 est de 10 000 FCFA, pour une consultation en personne ou en ligne. Apportez ou envoyez les rapports médicaux, les résultats de laboratoire, les scanners et les informations sur vos médicaments dont vous disposez déjà. Après l'examen de votre situation, S19 peut recommander des investigations complémentaires et un programme individualisé comprenant un soutien herbal, la nutrition et des mesures de mode de vie, l'éducation à la santé, le suivi et le contrôle. Les produits de traitement, les investigations, l'hébergement et la livraison sont facturés séparément, le cas échéant.",
+          "Le tarif standard d'une consultation S19 est de 5 000 FCFA, pour une consultation en personne ou en ligne. Apportez ou envoyez les rapports médicaux, les résultats de laboratoire, les scanners et les informations sur vos médicaments dont vous disposez déjà. Après l'examen de votre situation, S19 peut recommander des investigations complémentaires et un programme individualisé comprenant un soutien herbal, la nutrition et des mesures de mode de vie, l'éducation à la santé, le suivi et le contrôle. Les produits de traitement, les investigations, l'hébergement et la livraison sont facturés séparément, le cas échéant.",
         ],
         links: [
           { label: "Book a Consultation", labelFr: "Réserver une consultation", href: "/contact" },

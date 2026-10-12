@@ -9,7 +9,7 @@ export interface LocaleEntry {
 
 const dict = {
   "nav.home": { en: "Home", fr: "Accueil" },
-  "nav.programs": { en: "Programs", fr: "Programmes" },
+  "nav.programs": { en: "Services", fr: "Services" },
   "nav.telehealth": { en: "Tele-Health", fr: "Télé-santé" },
   "nav.shop": { en: "Shop", fr: "Boutique" },
   "nav.blog": { en: "Blog", fr: "Blog" },
@@ -43,7 +43,7 @@ const dict = {
   "common.bookConsultationLower": { en: "Book a Consultation", fr: "Réserver une consultation" },
   "common.viewCatalog": { en: "View full catalog", fr: "Voir le catalogue complet" },
   "common.browseCatalog": { en: "Browse Catalog", fr: "Parcourir le catalogue" },
-  "common.viewAllPrograms": { en: "View all programs", fr: "Voir tous les programmes" },
+  "common.viewAllPrograms": { en: "View all services", fr: "Voir tous les services" },
   "common.contactPricing": { en: "Contact S19 for pricing", fr: "Contactez S19 pour le prix" },
   "common.orderWhatsApp": { en: "Order via WhatsApp", fr: "Commander via WhatsApp" },
   "common.view": { en: "View", fr: "Voir" },
@@ -93,7 +93,7 @@ const dict = {
   // Brief §2.1 gives these two labels verbatim, so they get their own keys
   // rather than borrowing a generic CTA string that could drift.
   "home.hero.ctaBook": { en: "Book a Consultation", fr: "Réserver une consultation" },
-  "home.hero.ctaPrograms": { en: "Explore Our Programs", fr: "Découvrir nos programmes" },
+  "home.hero.ctaPrograms": { en: "Explore Our Services", fr: "Découvrir nos services" },
   "home.hero.whatsapp": { en: "Talk to S19 on WhatsApp", fr: "Parlez à S19 sur WhatsApp" },
   "home.hero.claim": {
     en: "Specialized Support for Diabetes and Cancer Care.",
@@ -134,7 +134,7 @@ const dict = {
     en: "Each program begins with an assessment and is built around the individual, not a fixed bundle.",
     fr: "Chaque programme commence par une évaluation et se construit autour de l'individu, non autour d'un ensemble fixe.",
   },
-  "home.areas.cta": { en: "Explore All Programs", fr: "Découvrir tous les programmes" },
+  "home.areas.cta": { en: "Explore All Services", fr: "Découvrir tous les services" },
 
   // SECTION 5 - Science-Based Herbalism.
   "home.science.kicker": { en: "Science-based herbalism", fr: "Phytothérapie fondée sur la science" },
@@ -928,13 +928,13 @@ const dict = {
     en: "Healthy green leaves representing herbal treatment programs",
     fr: "Feuilles vertes représentant les programmes de traitement à base de plantes",
   },
-  "programs.kicker": { en: "Programs", fr: "Programmes" },
-  "programs.title": { en: "Choose the program closest to your situation.", fr: "Choisissez le programme le plus proche de votre situation." },
+  "programs.kicker": { en: "Services", fr: "Services" },
+  "programs.title": { en: "Services We Offer at S19 Herbal Clinic", fr: "Services offerts par S19 Herbal Clinic" },
   "programs.intro": {
     en: "Start with a consultation and we will build the right protocol around you.",
     fr: "Commencez par une consultation et nous construirons le bon protocole autour de vous.",
   },
-  "programs.badge": { en: "Program", fr: "Programme" },
+  "programs.badge": { en: "Service", fr: "Service" },
   "programs.supports": { en: "Supports", fr: "Soutient" },
   "programs.inquire": { en: "Inquire via WhatsApp", fr: "S'informer via WhatsApp" },
   "programs.bookCta": { en: "Book a Consultation", fr: "Réserver une consultation" },
@@ -1283,10 +1283,10 @@ const dict = {
     en: "The standard consultation fee is 5,000 FCFA. The same standard consultation fee applies for both online and in-person consultations.",
     fr: "Les frais de consultation standard sont de 5 000 FCFA. Les mêmes frais de consultation standard s'appliquent aux consultations en ligne et en personne.",
   },
-  // The brief keeps 10,000 FCFA as the authoritative price and requires the foreign
-  // figures to be marked approximate. The values themselves come from EXCHANGE in
-  // lib/utils.ts, so they follow the rate rather than going stale; this line is the
-  // disclaimer the brief asks for.
+  // The clinic sets 5,000 FCFA as the authoritative consultation price and requires
+  // the foreign figures to be marked approximate. The values themselves come from
+  // EXCHANGE in lib/utils.ts, so they follow the rate rather than going stale; this
+  // line is the disclaimer the brief asks for.
   "tele.price.approx": {
     en: "Approximate equivalent - exchange rates may vary.",
     fr: "Équivalent approximatif - les taux de change peuvent varier.",

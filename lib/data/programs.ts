@@ -2,11 +2,11 @@ import type { TreatmentProgram } from "@/lib/site";
 import type { Locale } from "@/lib/i18n";
 
 /**
- * The ten clinical programs.
+ * The services offered on the Services page (route `/programs`).
  *
  * Source of truth: docs/S19_Programs_Page_Developer_Implementation_Brief.md.
  * Three things in that brief constrain this file and are enforced by
- * tests/programs-content.test.ts:
+ * tests/public-content-guard.test.ts:
  *
  * 1. No named product. Programs are not defined by a pack or a tea; product
  *    selection belongs inside the individualized care plan. So no "S19
@@ -201,25 +201,54 @@ export const treatmentPrograms: TreatmentProgram[] = [
     ],
   },
   {
-    // Renamed from `other-health-complications`. "Complications" reads as a
-    // clinical severity claim on a page where we have not assessed anyone.
-    slug: "other-health-concerns",
-    title: "Other Health Concerns",
+    slug: "electromolecular-bioelectromagnetic",
+    title: "Electromolecular Medicine & Bioelectromagnetic Therapies",
     short:
-      "If your condition is not listed above, you can still book an assessment. Each case is reviewed individually before S19 determines whether and how we may appropriately support you.",
+      "We use highly-advanced devices inspired by Nikola Tesla's. These devices use electrical stimulation, electromagnetic fields and plasma-based frequencies as complementary wellness therapies.",
     detail:
-      "Bring or submit your relevant medical history and available records. Further investigations may be requested where appropriate. If your needs fall outside the scope of S19 care, referral to an appropriate conventional healthcare professional may be recommended.",
-    conditions: ["Unlisted health concerns", "Individual case review", "General consultation", "Referral where appropriate"],
-    titleFr: "Autres préoccupations de santé",
+      "These therapies are intended to support the body's natural processes and promote overall well-being. They complement, and never replace, medical care, and are offered around your individualized S19 plan.",
+    conditions: [
+      "Electrical stimulation",
+      "Electromagnetic field therapy",
+      "Plasma-based frequency therapy",
+      "Complementary wellness support",
+    ],
+    titleFr: "Médecine électromoléculaire et thérapies bioélectromagnétiques",
     shortFr:
-      "Si votre affection ne figure pas dans la liste ci-dessus, vous pouvez tout de même demander une évaluation. Chaque cas est revu individuellement avant que S19 ne détermine si et comment nous pouvons vous apporter un soutien approprié.",
+      "Nous utilisons des appareils de pointe inspirés de ceux de Nikola Tesla. Ces appareils utilisent la stimulation électrique, les champs électromagnétiques et les fréquences à base de plasma comme thérapies de bien-être complémentaires.",
     detailFr:
-      "Apportez ou transmettez votre historique médical pertinent et les dossiers disponibles. Des examens complémentaires peuvent être demandés, le cas échéant. Si vos besoins sortent du champ des soins S19, une orientation vers un professionnel de santé conventionnel approprié peut être recommandée.",
+      "Ces thérapies visent à soutenir les processus naturels du corps et à favoriser le bien-être général. Elles complètent, sans jamais remplacer, les soins médicaux, et s'inscrivent autour de votre plan S19 individualisé.",
     conditionsFr: [
-      "Préoccupations non listées",
-      "Revue individuelle du cas",
-      "Consultation générale",
-      "Orientation si nécessaire",
+      "Stimulation électrique",
+      "Thérapie par champs électromagnétiques",
+      "Thérapie par fréquences de plasma",
+      "Soutien de bien-être complémentaire",
+    ],
+  },
+  {
+    slug: "meditation-mindfulness",
+    title: "Meditation & Mindfulness",
+    short: "Guided relaxation techniques to support mental, emotional and physical well-being.",
+    detail:
+      "These practices help patients manage stress, improve emotional balance, enhance sleep quality, and develop greater awareness of their thoughts, emotions and lifestyle habits.",
+    conditions: [
+      "Guided relaxation",
+      "Stress management",
+      "Emotional balance",
+      "Sleep-quality support",
+      "Mindful awareness",
+    ],
+    titleFr: "Méditation et pleine conscience",
+    shortFr:
+      "Techniques de relaxation guidée pour soutenir le bien-être mental, émotionnel et physique.",
+    detailFr:
+      "Ces pratiques aident les patients à gérer le stress, à améliorer l'équilibre émotionnel, à améliorer la qualité du sommeil et à développer une plus grande conscience de leurs pensées, de leurs émotions et de leurs habitudes de vie.",
+    conditionsFr: [
+      "Relaxation guidée",
+      "Gestion du stress",
+      "Équilibre émotionnel",
+      "Soutien de la qualité du sommeil",
+      "Pleine conscience",
     ],
   },
 ];

@@ -32,11 +32,12 @@ export const careComponents: { text: string; textFr: string }[] = [
 ];
 
 /**
- * Section 4 — the six principal program areas surfaced on the home page.
+ * Section 4 — the six principal service areas surfaced on the home page.
  *
- * Deliberately only six of the ten programs. The brief names these six; the
- * remaining four (Health Assessment, Nutrition & Lifestyle, Malaria & Typhoid,
- * Other Health Concerns) are reached through the Programs page rather than
+ * Deliberately only six of the services. The brief names these six; the
+ * remaining services (Health Assessment & Review, Nutrition & Lifestyle
+ * Support, Electromolecular Medicine & Bioelectromagnetic Therapies, and
+ * Meditation & Mindfulness) are reached through the Services page rather than
  * crowding this grid.
  */
 export interface HomeProgramCard {
