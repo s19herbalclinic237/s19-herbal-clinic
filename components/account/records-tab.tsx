@@ -136,8 +136,14 @@ function RecordCard({
           <FaFileMedical className="h-4 w-4" aria-hidden />
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block truncate text-sm font-bold text-ink">{record.title}</span>
+          {/* A record kept for a family member leads with that member's name,
+              so the list stays readable when "All" mixes several people. The
+              account holder's own records keep the record title as the lead. */}
+          <span className="block truncate text-base font-bold text-ink">
+            {record.forMember || record.title}
+          </span>
           <span className="mt-0.5 block text-xs text-muted">
+            {record.forMember ? `${record.title} · ` : ""}
             {typeKey ? t(typeKey) : record.type} · {formatDayDate(record.date)}
             {record.doctorName ? ` · ${record.doctorName}` : ""}
           </span>
