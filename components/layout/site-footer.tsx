@@ -13,6 +13,7 @@ import {
   FaEnvelope,
   FaInstagram,
   FaFacebookF,
+  FaTelegram,
 } from "react-icons/fa6";
 
 const treatmentLinks: { key: TranslationKey; href: string }[] = [
@@ -86,6 +87,15 @@ export async function SiteFooter() {
               className="flex h-9 w-9 items-center justify-center rounded-full border border-forest-700 text-forest-300 transition-colors hover:border-gold-400 hover:text-gold-400"
             >
               <FaFacebookF className="h-3.5 w-3.5" aria-hidden />
+            </a>
+            <a
+              href={clinic.telegram}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={t("aria.telegram")}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-forest-700 text-forest-300 transition-colors hover:border-gold-400 hover:text-gold-400"
+            >
+              <FaTelegram className="h-3.5 w-3.5" aria-hidden />
             </a>
             <a
               href={`tel:${clinic.phoneHref}`}

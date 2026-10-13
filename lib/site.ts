@@ -109,6 +109,7 @@ export const CLINIC = {
   currency: "FCFA",
   instagram: "https://www.instagram.com/s19_kingofcure",
   facebook: "https://www.facebook.com/share/p/1LhrR7ogQE/",
+  telegram: "https://t.me/s19kingofcure",
 };
 
 /**

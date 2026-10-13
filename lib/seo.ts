@@ -287,7 +287,11 @@ export function clinicJsonLd() {
           },
         ],
         areaServed,
-        sameAs: ["https://www.instagram.com/s19_kingofcure", "https://www.facebook.com/share/p/1LhrR7ogQE/"],
+        sameAs: [
+          "https://www.instagram.com/s19_kingofcure",
+          "https://www.facebook.com/share/p/1LhrR7ogQE/",
+          "https://t.me/s19kingofcure",
+        ],
         contactPoint: {
           "@type": "ContactPoint",
           telephone: "+237672595989",

@@ -19,6 +19,7 @@ import {
   FaPhone,
   FaInstagram,
   FaFacebookF,
+  FaTelegram,
   FaRegUser,
 } from "react-icons/fa6";
 
@@ -77,6 +78,15 @@ export function AnnouncementBar() {
               className="flex h-6 w-6 items-center justify-center rounded-full border border-forest-700 text-forest-300 transition-colors hover:border-gold-400 hover:text-gold-400"
             >
               <FaFacebookF className="h-3 w-3" aria-hidden />
+            </a>
+            <a
+              href={CLINIC.telegram}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={t("aria.telegram")}
+              className="flex h-6 w-6 items-center justify-center rounded-full border border-forest-700 text-forest-300 transition-colors hover:border-gold-400 hover:text-gold-400"
+            >
+              <FaTelegram className="h-3 w-3" aria-hidden />
             </a>
           </div>
           <a href={`tel:${CLINIC.phoneHref}`} className="flex items-center gap-1.5 font-medium text-white hover:text-gold-400">

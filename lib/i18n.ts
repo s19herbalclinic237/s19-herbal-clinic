@@ -31,6 +31,7 @@ const dict = {
 
   "aria.instagram": { en: "S19 on Instagram", fr: "S19 sur Instagram" },
   "aria.facebook": { en: "S19 on Facebook", fr: "S19 sur Facebook" },
+  "aria.telegram": { en: "S19 on Telegram", fr: "S19 sur Telegram" },
   "aria.whatsapp": { en: "Chat with S19 on WhatsApp", fr: "Discuter avec S19 sur WhatsApp" },
   "aria.openMenu": { en: "Open menu", fr: "Ouvrir le menu" },
   "aria.closeMenu": { en: "Close menu", fr: "Fermer le menu" },
