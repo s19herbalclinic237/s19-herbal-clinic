@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/form";
+import { DateField } from "@/components/ui/date-field";
 import { formatDate, RecordTypeClass, RecordTypeKeys } from "@/components/account/badges";
 import { useLocale } from "@/components/i18n/locale-provider";
 import type { TranslationKey } from "@/lib/i18n";
@@ -160,7 +161,7 @@ function RecordForm({
           </Select>
         </Field>
         <Field label="Date" required>
-          <Input type="date" value={date} max={new Date().toISOString().slice(0, 10)} onChange={(e) => setDate(e.target.value)} required />
+          <DateField value={date} max={new Date().toISOString().slice(0, 10)} onChange={setDate} required />
         </Field>
         <div className="sm:col-span-2 lg:col-span-3">
           <Field label="Title" required>
@@ -279,9 +280,12 @@ function RecordRow({
           <FaFileMedical className="h-4 w-4" aria-hidden />
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block truncate text-sm font-bold text-ink">{r.title}</span>
+          {/* The client is what staff scan for first, so the name leads and the
+              record title (the condition) and date follow underneath. */}
+          <span className="block truncate text-base font-bold text-ink">{r.user?.name || "Unknown"}</span>
           <span className="mt-0.5 block truncate text-xs text-muted">
-            {r.user?.name || "Unknown"} · {typeKey ? t(typeKey) : r.type} · {formatDate(r.date)}
+            {r.title}
+            {typeKey ? ` · ${t(typeKey)}` : ""} · {formatDate(r.date)}
           </span>
         </span>
         {expanded ? <FaChevronUp className="h-3.5 w-3.5 shrink-0 text-muted" aria-hidden /> : <FaChevronDown className="h-3.5 w-3.5 shrink-0 text-muted" aria-hidden />}

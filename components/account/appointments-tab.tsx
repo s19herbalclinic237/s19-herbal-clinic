@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select } from "@/components/ui/form";
+import { DateField } from "@/components/ui/date-field";
 import { AppointmentStatusBadge, formatDayDate } from "@/components/account/badges";
 import { useLocale } from "@/components/i18n/locale-provider";
 import { waLink } from "@/lib/site";
@@ -192,12 +193,11 @@ function BookAppointment({
             </Select>
           </Field>
           <Field label={t("dash.appointments.stepDate")} required>
-            <Input
-              type="date"
+            <DateField
               min={todayISO()}
               value={date}
-              onChange={(e) => {
-                setDate(e.target.value);
+              onChange={(v) => {
+                setDate(v);
                 setTime("");
               }}
               required
@@ -421,12 +421,11 @@ function RescheduleForm({
       <p className="text-xs font-bold text-ink">{t("dash.appointments.rescheduleTitle")}</p>
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
         <Field label={t("dash.appointments.newDate")}>
-          <Input
-            type="date"
+          <DateField
             min={todayISO()}
             value={date}
-            onChange={(e) => {
-              setDate(e.target.value);
+            onChange={(v) => {
+              setDate(v);
               setTime("");
             }}
             required

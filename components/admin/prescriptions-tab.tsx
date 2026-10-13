@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/form";
+import { DateField } from "@/components/ui/date-field";
 import { formatDate, PrescriptionStatusBadge } from "@/components/account/badges";
 import { ResponsiveTable } from "@/components/ui/responsive-table";
 import { validateImageFile } from "@/lib/image-upload";
@@ -302,10 +303,10 @@ function PrescriptionForm({
           </Select>
         </Field>
         <Field label="Issued date" required>
-          <Input type="date" value={issuedDate} onChange={(e) => setIssuedDate(e.target.value)} required />
+          <DateField value={issuedDate} onChange={setIssuedDate} required />
         </Field>
         <Field label="Valid until">
-          <Input type="date" value={expiresAt} onChange={(e) => setExpiresAt(e.target.value)} />
+          <DateField value={expiresAt} onChange={setExpiresAt} />
         </Field>
         <Field label="Clinician">
           <Input value={doctorName} onChange={(e) => setDoctorName(e.target.value)} maxLength={100} placeholder="e.g. Dr. Nguema" />

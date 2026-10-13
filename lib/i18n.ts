@@ -36,6 +36,15 @@ const dict = {
   "aria.openMenu": { en: "Open menu", fr: "Ouvrir le menu" },
   "aria.closeMenu": { en: "Close menu", fr: "Fermer le menu" },
   "aria.account": { en: "Account", fr: "Compte" },
+  "aria.chooseDate": { en: "Open the date picker", fr: "Ouvrir le sélecteur de date" },
+  "field.dateInvalid": {
+    en: "Enter the date as dd/mm/yyyy.",
+    fr: "Saisissez la date au format jj/mm/aaaa.",
+  },
+  "field.dateOutOfRange": {
+    en: "Pick a date within the allowed range.",
+    fr: "Choisissez une date dans la plage autorisée.",
+  },
 
   // Items 02 and 03 of the footer/navigation guide. The header renders
   // common.bookConsultation as its principal CTA, so this label is the one most

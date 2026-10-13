@@ -4,6 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/form";
+import { DateField } from "@/components/ui/date-field";
 import { useLocale } from "@/components/i18n/locale-provider";
 import type { TranslationKey } from "@/lib/i18n";
 import {
@@ -135,10 +136,9 @@ function FamilyForm({
           />
         </Field>
         <Field label={t("dash.family.dob")}>
-          <Input
-            type="date"
+          <DateField
             value={form.dob}
-            onChange={(e) => setForm((f) => ({ ...f, dob: e.target.value }))}
+            onChange={(v) => setForm((f) => ({ ...f, dob: v }))}
           />
         </Field>
         <Field label={t("dash.family.gender")}>

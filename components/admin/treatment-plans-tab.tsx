@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/form";
+import { DateField } from "@/components/ui/date-field";
 import { formatDate, TreatmentPhaseBadge } from "@/components/account/badges";
 import { localDateString } from "@/lib/dates";
 import { TreatmentPlanDetail } from "@/components/admin/treatment-plan-detail";
@@ -500,10 +501,10 @@ function TreatmentPlanForm({
         </Field>
         <div />
         <Field label="Start date" required>
-          <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} required />
+          <DateField value={startDate} onChange={setStartDate} required />
         </Field>
         <Field label="End date" required>
-          <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required />
+          <DateField value={endDate} onChange={setEndDate} required />
         </Field>
 
         <div className="sm:col-span-2">

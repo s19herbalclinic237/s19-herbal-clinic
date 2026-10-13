@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/form";
+import { DateField } from "@/components/ui/date-field";
 import { PasswordInput } from "@/components/ui/password-input";
 import { UserAvatar } from "@/components/account/user-avatar";
 import { useLocale } from "@/components/i18n/locale-provider";
@@ -269,11 +270,10 @@ export function SettingsTab() {
             />
           </Field>
           <Field label={t("dash.settings.dob")}>
-            <Input
-              type="date"
+            <DateField
               value={dob}
               max={new Date().toISOString().slice(0, 10)}
-              onChange={(e) => setDob(e.target.value)}
+              onChange={setDob}
             />
           </Field>
           <Field label={t("dash.settings.gender")} required>

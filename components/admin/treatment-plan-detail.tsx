@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { formatDayDate } from "@/components/account/badges";
 import { localDateString } from "@/lib/dates";
 import { cn } from "@/lib/utils";
+import { DateField } from "@/components/ui/date-field";
 import {
   FaBell,
   FaCalendarCheck,
@@ -508,7 +509,7 @@ function FollowUpSection({ plan, onChanged }: { plan: AdminPlan; onChanged: () =
           <div className="mt-3 grid gap-3 sm:grid-cols-3">
             <label className="space-y-1.5">
               <span className="block text-[11px] font-semibold uppercase tracking-wide text-ink">Date *</span>
-              <input type="date" value={form.date} onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))} className={miniInput()} required />
+              <DateField value={form.date} onChange={(v) => setForm((f) => ({ ...f, date: v }))} className={miniInput()} required />
             </label>
             <label className="space-y-1.5">
               <span className="block text-[11px] font-semibold uppercase tracking-wide text-ink">Milestone *</span>
@@ -769,7 +770,7 @@ function RemindersSection({ plan }: { plan: AdminPlan }) {
             </label>
             <label className="space-y-1.5">
               <span className="block text-[11px] font-semibold uppercase tracking-wide text-ink">Due date *</span>
-              <input type="date" value={form.dueDate} onChange={(e) => setForm((f) => ({ ...f, dueDate: e.target.value }))} className={miniInput()} required />
+              <DateField value={form.dueDate} onChange={(v) => setForm((f) => ({ ...f, dueDate: v }))} className={miniInput()} required />
             </label>
           </div>
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
