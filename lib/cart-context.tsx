@@ -110,8 +110,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [items, user?.id, hydrated, saveCart]);
 
   const addItem = useCallback((item: Omit<CartItem, "quantity"> & { stock?: number }, quantity = 1) => {
-    // Never let an out-of-stock or quote-only product into the cart. The shop
-    // already hides these, so reaching here means stale state or a direct call.
+    // Defence in depth: quote-only products (price 0) and sold-out products have
+    // their buy controls disabled, so reaching here means stale state or a
+    // direct call. Never put something that cannot be fulfilled into the cart.
     if (item.price <= 0 || (typeof item.stock === "number" && item.stock <= 0)) {
       toast.error("This product is currently out of stock.");
       return;

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/heading";
 import { buttonLinkClasses } from "@/components/ui/button";
 import type { SiteProduct } from "@/lib/site";
-import { localizedProduct } from "@/lib/site";
+import { isSoldOut, localizedProduct } from "@/lib/site";
 import { waLink } from "@/lib/utils";
 import { MultiCurrencyPrice } from "@/components/ui/price";
 import { useLocale } from "@/components/i18n/locale-provider";
@@ -14,6 +14,9 @@ import { FaBagShopping } from "react-icons/fa6";
 export function ProductCard({ product }: { product: SiteProduct }) {
   const { t, locale } = useLocale();
   const p = localizedProduct(product, locale);
+  // Out-of-stock products are still listed and browsable. The card marks them
+  // clearly and greys the order shortcut so nothing looks buyable.
+  const soldOut = isSoldOut(product);
   return (
     <article className="group relative flex flex-col rounded-lg border border-line bg-white transition-colors hover:border-forest-300">
       <Link href={`/shop/${p.slug}`} className="relative block aspect-[4/3] overflow-hidden rounded-t-lg bg-forest-50">
@@ -22,8 +25,16 @@ export function ProductCard({ product }: { product: SiteProduct }) {
           alt={p.name}
           fill
           sizes="(min-width: 1024px) 320px, (min-width: 640px) 50vw, 100vw"
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          className={
+            "object-cover transition-transform duration-300 group-hover:scale-105" +
+            (soldOut ? " opacity-50 grayscale" : "")
+          }
         />
+        {soldOut ? (
+          <span className="absolute left-3 top-3 rounded-full bg-forest-950/85 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
+            {t("product.outOfStock")}
+          </span>
+        ) : null}
       </Link>
       <div className="flex flex-1 flex-col gap-2 p-4">
         <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1.5">
@@ -44,14 +55,23 @@ export function ProductCard({ product }: { product: SiteProduct }) {
           </Link>
         </div>
       </div>
-      <Link
-        href={waLink(`Hello S19, I am interested in ordering the ${p.name}.`)}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="rounded-b-lg border-t border-line bg-mist px-4 py-2 text-xs font-semibold text-forest-700 hover:bg-forest-50"
-      >
-        {t("common.orderWhatsApp")}
-      </Link>
+      {soldOut ? (
+        <span
+          aria-disabled="true"
+          className="cursor-not-allowed rounded-b-lg border-t border-line bg-mist px-4 py-2 text-center text-xs font-semibold text-muted"
+        >
+          {t("product.outOfStock")}
+        </span>
+      ) : (
+        <Link
+          href={waLink(t("product.orderMessage", { name: p.name }))}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="rounded-b-lg border-t border-line bg-mist px-4 py-2 text-xs font-semibold text-forest-700 hover:bg-forest-50"
+        >
+          {t("common.orderWhatsApp")}
+        </Link>
+      )}
     </article>
   );
 }

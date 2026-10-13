@@ -607,6 +607,11 @@ const dict = {
     en: "Hello S19, I am interested in ordering the {name}.",
     fr: "Bonjour S19, je souhaite commander {name}.",
   },
+  "product.notifyWhatsApp": { en: "Notify me on WhatsApp", fr: "Prévenez-moi sur WhatsApp" },
+  "product.restockMessage": {
+    en: "Hello S19, please let me know when the {name} is back in stock.",
+    fr: "Bonjour S19, veuillez me prévenir lorsque {name} est de nouveau disponible.",
+  },
   "notFound.title": { en: "Page not found", fr: "Page introuvable" },
   "notFound.text": {
     en: "The page you are looking for does not exist or has been moved.",

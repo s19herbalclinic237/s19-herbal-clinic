@@ -45,14 +45,17 @@ export function isPurchasable(product: Pick<SiteProduct, "price" | "stock">): bo
 }
 
 /**
- * Whether a product belongs in a public listing.
+ * A priced product that has run out of stock.
  *
- * A product with no stock is hidden from the shop and its detail page, so it
- * cannot be browsed or reached by a direct link. This applies to every product,
- * priced or quote-only: an empty stock line reads as "not available right now".
+ * Out-of-stock products are NOT hidden: they stay listed and reachable so
+ * customers can see what the clinic offers and ask when it returns. Instead,
+ * their buying controls are disabled and greyed out.
+ *
+ * Quote-only packages (price 0) are never "sold out": they have no stock line
+ * at all, and show their own contact-for-pricing treatment.
  */
-export function isPubliclyAvailable(product: Pick<SiteProduct, "price" | "stock">): boolean {
-  return product.stock > 0;
+export function isSoldOut(product: Pick<SiteProduct, "price" | "stock">): boolean {
+  return product.price > 0 && product.stock <= 0;
 }
 
 export interface TreatmentProgram {
