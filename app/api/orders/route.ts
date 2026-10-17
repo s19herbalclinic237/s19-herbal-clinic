@@ -187,7 +187,11 @@ export async function POST(request: Request) {
       console.error("[orders] stock reserve failed:", error);
     }
 
-    sendOrderConfirmation(order.toObject() as unknown as IOrder).catch(() => {});
+    // Awaited (not fire-and-forget): on serverless hosts the function freezes as
+    // soon as the response returns, so an un-awaited send is killed mid-flight and
+    // neither the customer nor the admin receives the order email. safeSend never
+    // throws, so awaiting keeps it best-effort without failing the request.
+    await sendOrderConfirmation(order.toObject() as unknown as IOrder);
     // WhatsApp is fire-and-forget: a missing account, a missing opt-in or a
     // Meta outage must never turn a placed order into a failed request.
     void (async () => {

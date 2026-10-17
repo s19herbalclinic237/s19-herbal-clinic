@@ -60,7 +60,11 @@ export async function POST(request: Request) {
     }
   }
 
-  sendBookingNotification({
+  // Awaited (not fire-and-forget): on serverless hosts the function is frozen as
+  // soon as the response is returned, so an un-awaited send is killed mid-flight
+  // and neither the admin nor the sender ever receives the email. safeSend never
+  // throws, so awaiting keeps delivery best-effort without failing the request.
+  await sendBookingNotification({
     fullName: data.fullName.trim(),
     phone: data.phone.trim(),
     city: data.city?.trim(),
@@ -68,7 +72,7 @@ export async function POST(request: Request) {
     mode: data.mode,
     concern: data.concern,
     message: data.message ?? "",
-  }).catch(() => {});
+  });
 
   return NextResponse.json({ ok: true }, { status: 201 });
 }
