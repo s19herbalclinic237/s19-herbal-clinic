@@ -45,6 +45,10 @@ const nav = [
   // Item 01 of the footer/navigation guide. Added once the FAQ page was
   // published; the guide says not to remove anything else to make room for it.
   { key: "nav.faq", href: "/faq" },
+  // S19-CARE: the donation page from docs/S19_CARE_Developer_Brief.md. The
+  // brief asks for the section and the navigation link to be renamed to
+  // S19-CARE, so the label carries the full name rather than a bare "Care".
+  { key: "nav.care", href: "/s19-care" },
 ] as const;
 
 export function AnnouncementBar() {

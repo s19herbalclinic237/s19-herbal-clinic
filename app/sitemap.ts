@@ -29,6 +29,9 @@ const STATIC_ROUTES: {
   { path: "/faq", priority: 0.8, changeFrequency: "monthly" },
   { path: "/blog", priority: 0.8, changeFrequency: "weekly" },
   { path: "/patient-stories", priority: 0.7, changeFrequency: "monthly" },
+  // S19-CARE: the donation page. A landing page people arrive on from search
+  // and from social posts, so it is listed with the other content pages.
+  { path: "/s19-care", priority: 0.8, changeFrequency: "monthly" },
   { path: "/live-reviews", priority: 0.6, changeFrequency: "monthly" },
   { path: "/about", priority: 0.6, changeFrequency: "monthly" },
   { path: "/privacy", priority: 0.2, changeFrequency: "yearly" },

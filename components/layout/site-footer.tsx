@@ -37,6 +37,9 @@ const companyLinks: { key: TranslationKey; href: string }[] = [
   { key: "footer.stories", href: "/patient-stories" },
   { key: "footer.liveReviews", href: "/live-reviews" },
   { key: "footer.contactUs", href: "/contact" },
+  // S19-CARE: the donation page. Linked from the footer as well as the
+  // navigation so the section is reachable from every page.
+  { key: "footer.care", href: "/s19-care" },
   { key: "footer.trackOrder", href: "/track" },
   { key: "footer.refundReturns", href: "/refund-and-returns" },
   { key: "footer.privacy", href: "/privacy" },

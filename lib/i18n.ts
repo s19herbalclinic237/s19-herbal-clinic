@@ -2781,6 +2781,234 @@ const dict = {
   "dash.settings.idSaved": { en: "{side} - saved", fr: "{side} - enregistré" },
   "dash.settings.chooseSide": { en: "Choose {side}", fr: "Choisir : {side}" },
 
+  /* ── S19-CARE (donations) ─────────────────────────────────────────────────
+     Section 1-5 of docs/S19_CARE_Developer_Brief.md.
+
+     The approved message is reproduced verbatim in English; the French is a
+     translation of it, not a rewrite. The three fund names and their
+     descriptions are NOT here: they live in lib/data/donation-funds.ts,
+     because the admin donation log files every donation against the same
+     three purposes and the two lists must not be able to drift apart. */
+
+  "nav.care": { en: "S19-CARE", fr: "S19-CARE" },
+  "footer.care": { en: "S19-CARE", fr: "S19-CARE" },
+
+  "s19care.metaTitle": {
+    en: "S19-CARE | Donate to S19 Herbal Clinic",
+    fr: "S19-CARE | Faire un don à la Clinique S19",
+  },
+  "s19care.metaDescription": {
+    en: "Your kindness can help someone heal. Donate to S19-CARE by MTN Mobile Money to support treatment plans, essential tests, transport, accommodation and mobile data for the patients who cannot afford them.",
+    fr: "Votre générosité peut aider quelqu'un à guérir. Faites un don à S19-CARE par MTN Mobile Money pour soutenir les plans de traitement, les examens essentiels, le transport, l'hébergement et les données mobiles des patients qui ne peuvent pas les financer.",
+  },
+
+  "s19care.hero.eyebrow": { en: "S19-CARE", fr: "S19-CARE" },
+  "s19care.hero.title": {
+    en: "Your Kindness Can Help Someone Heal.",
+    fr: "Votre générosité peut aider quelqu'un à guérir.",
+  },
+  "s19care.hero.lead": {
+    en: "Many village parents and families living in poverty cannot afford the healthcare they need. Some struggle to pay for S19 treatment plans or medical tests. Others cannot afford transportation, accommodation, or even mobile data for follow-up.",
+    fr: "De nombreux parents et familles vivant dans la pauvreté ne peuvent pas se permettre les soins dont ils ont besoin. Certains peinent à payer les plans de traitement S19 ou les examens médicaux. D'autres ne peuvent pas financer le transport, l'hébergement, ni même les données mobiles pour le suivi.",
+  },
+  "s19care.hero.ctaDonate": { en: "Donate now", fr: "Faire un don maintenant" },
+  "s19care.hero.ctaOther": { en: "Other ways to donate", fr: "Autres façons de donner" },
+
+  "s19care.message.title": {
+    en: "Through S19-CARE, your donation can help.",
+    fr: "Grâce à S19-CARE, votre don peut aider.",
+  },
+  "s19care.message.p2": {
+    en: "Your gift can support treatment plans, essential tests, transport to the clinic, accommodation, and mobile data so patients can stay in touch with our care team. It can also support other practical needs during care.",
+    fr: "Votre don peut soutenir les plans de traitement, les examens essentiels, le transport jusqu'à la clinique, l'hébergement et les données mobiles afin que les patients restent en contact avec notre équipe soignante. Il peut également soutenir d'autres besoins pratiques pendant les soins.",
+  },
+  "s19care.message.p3": {
+    en: "No donation is too small. Together, we can help more families access care.",
+    fr: "Aucun don n'est trop petit. Ensemble, nous pouvons aider davantage de familles à accéder aux soins.",
+  },
+  "s19care.message.tagline": {
+    en: "Give Hope. Support a Family. Help Save Lives.",
+    fr: "Donnez de l'espoir. Soutenez une famille. Aidez à sauver des vies.",
+  },
+
+  "s19care.purposes.eyebrow": { en: "Donation purposes", fr: "Objets des dons" },
+  "s19care.purposes.title": {
+    en: "Choose where your donation goes",
+    fr: "Choisissez l'affectation de votre don",
+  },
+  "s19care.purposes.lead": {
+    en: "Every donation is filed under one of these three purposes, so the clinic can account for patient support separately from clinic development.",
+    fr: "Chaque don est enregistré sous l'un de ces trois objets, afin que la clinique puisse distinguer l'aide aux patients du développement de la clinique.",
+  },
+
+  "s19care.momo.eyebrow": { en: "Direct MTN Mobile Money donations", fr: "Dons directs par MTN Mobile Money" },
+  "s19care.momo.title": {
+    en: "Send your donation with MTN MoMo",
+    fr: "Envoyez votre don par MTN MoMo",
+  },
+  "s19care.momo.lead": {
+    en: "Send any amount to the official MTN MoMo number below, then confirm the payment on WhatsApp so our team can verify it against the transaction record.",
+    fr: "Envoyez le montant de votre choix au numéro MTN MoMo officiel ci-dessous, puis confirmez le paiement sur WhatsApp afin que notre équipe puisse le vérifier à partir de l'enregistrement de la transaction.",
+  },
+  "s19care.momo.numberLabel": { en: "Official MTN MoMo", fr: "MTN MoMo officiel" },
+  "s19care.momo.whatsappLabel": { en: "Official WhatsApp", fr: "WhatsApp officiel" },
+  "s19care.momo.referenceLabel": { en: "Payment reference code", fr: "Code de référence du paiement" },
+  "s19care.momo.copy": { en: "Copy", fr: "Copier" },
+  "s19care.momo.copied": { en: "Copied", fr: "Copié" },
+  "s19care.momo.copyNumber": { en: "Copy the MTN MoMo number", fr: "Copier le numéro MTN MoMo" },
+  "s19care.momo.copyReference": { en: "Copy the reference code", fr: "Copier le code de référence" },
+  "s19care.momo.referenceHint": {
+    en: "Enter this code in the reference field of your Mobile Money payment so we can match your transaction.",
+    fr: "Saisissez ce code dans le champ référence de votre paiement Mobile Money afin que nous puissions rapprocher votre transaction.",
+  },
+  "s19care.momo.stepsTitle": { en: "How to donate in four steps", fr: "Comment donner en quatre étapes" },
+  "s19care.momo.step1.title": {
+    en: "Select a purpose and send any amount",
+    fr: "Choisissez un objet et envoyez le montant de votre choix",
+  },
+  "s19care.momo.step1.text": {
+    en: "Select donation purpose and send any amount to the MTN MoMo number.",
+    fr: "Sélectionnez l'objet du don et envoyez le montant de votre choix au numéro MTN MoMo.",
+  },
+  "s19care.momo.step2.title": { en: "Take a screenshot", fr: "Prenez une capture d'écran" },
+  "s19care.momo.step2.text": {
+    en: "Take a screenshot of the completed payment.",
+    fr: "Prenez une capture d'écran du paiement effectué.",
+  },
+  "s19care.momo.step3.title": {
+    en: "Send the confirmation on WhatsApp",
+    fr: "Envoyez la confirmation sur WhatsApp",
+  },
+  "s19care.momo.step3.text": {
+    en: "Click Send Donation Confirmation on WhatsApp, then attach the screenshot.",
+    fr: "Cliquez sur Envoyer la confirmation du don sur WhatsApp, puis joignez la capture d'écran.",
+  },
+  "s19care.momo.step4.title": { en: "We verify, then acknowledge", fr: "Nous vérifions, puis accusons réception" },
+  "s19care.momo.step4.text": {
+    en: "S19 verifies the transaction before sending an acknowledgment.",
+    fr: "S19 vérifie la transaction avant d'envoyer un accusé de réception.",
+  },
+
+  "s19care.panel.purposeLabel": { en: "Choose your donation purpose", fr: "Choisissez l'objet de votre don" },
+  "s19care.panel.purposeHint": {
+    en: "Your choice is written into the WhatsApp message so our team files the donation under the right fund.",
+    fr: "Votre choix est inscrit dans le message WhatsApp afin que notre équipe enregistre le don dans le bon fonds.",
+  },
+  "s19care.panel.amountLabel": { en: "Amount (optional)", fr: "Montant (facultatif)" },
+  "s19care.panel.amountHint": {
+    en: "The amount you are sending, in FCFA. Leave it empty if you have not decided yet.",
+    fr: "Le montant que vous envoyez, en FCFA. Laissez vide si vous n'avez pas encore décidé.",
+  },
+  "s19care.panel.previewLabel": { en: "Your WhatsApp message", fr: "Votre message WhatsApp" },
+  "s19care.panel.previewHint": {
+    en: "Attach the payment screenshot yourself once WhatsApp opens - our team cannot see it until you send it.",
+    fr: "Joignez vous-même la capture d'écran du paiement une fois WhatsApp ouvert - notre équipe ne peut pas la voir avant que vous l'envoyiez.",
+  },
+  "s19care.panel.confirmCta": {
+    en: "Send Donation Confirmation on WhatsApp",
+    fr: "Envoyer la confirmation du don sur WhatsApp",
+  },
+  "s19care.panel.copyMessage": { en: "Copy the message", fr: "Copier le message" },
+
+  "s19care.other.eyebrow": { en: "Other ways to donate", fr: "Autres façons de donner" },
+  "s19care.other.title": {
+    en: "Prefer a different payment method?",
+    fr: "Vous préférez un autre moyen de paiement ?",
+  },
+  "s19care.other.text": {
+    en: "If you prefer Orange Mobile Money, Cash App, Zelle, PayPal, or bank transfer, kindly contact us on WhatsApp by clicking below. Our team will share the appropriate payment instructions.",
+    fr: "Si vous préférez Orange Mobile Money, Cash App, Zelle, PayPal ou le virement bancaire, contactez-nous volontiers sur WhatsApp en cliquant ci-dessous. Notre équipe vous transmettra les instructions de paiement appropriées.",
+  },
+  "s19care.other.cta": {
+    en: "Ask About Other Donation Methods",
+    fr: "Demander les autres moyens de paiement",
+  },
+  "s19care.other.note": {
+    en: "Only the MTN MoMo number is published on this site. Payment details for every other method are shared privately on WhatsApp.",
+    fr: "Seul le numéro MTN MoMo est publié sur ce site. Les informations de paiement de tous les autres moyens sont transmises en privé sur WhatsApp.",
+  },
+
+  "s19care.ways.eyebrow": { en: "Ways to support S19-CARE", fr: "Comment soutenir S19-CARE" },
+  "s19care.ways.title": {
+    en: "Donate, volunteer, or partner with S19",
+    fr: "Faire un don, être bénévole ou devenir partenaire de S19",
+  },
+  "s19care.ways.donate.title": { en: "Donate", fr: "Faire un don" },
+  "s19care.ways.donate.text": {
+    en: "Give any amount to the MTN MoMo number and confirm it on WhatsApp, so we can verify the payment and acknowledge your gift.",
+    fr: "Envoyez le montant de votre choix au numéro MTN MoMo et confirmez sur WhatsApp, afin que nous puissions vérifier le paiement et accuser réception de votre don.",
+  },
+  "s19care.ways.donate.cta": { en: "Donate with MTN MoMo", fr: "Donner avec MTN MoMo" },
+  "s19care.ways.volunteer.title": { en: "Volunteer", fr: "Bénévolat" },
+  "s19care.ways.volunteer.text": {
+    en: "Offer your time at the clinic or in the community - in administration, health education, outreach or patient support - and tell us what you are able to do.",
+    fr: "Proposez votre temps à la clinique ou dans la communauté - en administration, en éducation à la santé, en sensibilisation ou en accompagnement des patients - et dites-nous ce que vous pouvez faire.",
+  },
+  // "Devenir bénévole chez S19" wrapped onto a second line in a three-up card
+  // at tablet width while the other two calls to action stayed on one, so the
+  // row of buttons looked uneven. The shorter form still says who to join -
+  // the card heading and the section around it already name S19.
+  "s19care.ways.volunteer.cta": { en: "Volunteer with S19", fr: "Devenir bénévole" },
+  "s19care.ways.partner.title": { en: "Partner", fr: "Partenaire" },
+  "s19care.ways.partner.text": {
+    en: "Organisations, laboratories, pharmacies and healthcare professionals can refer patients to S19 or work with us on health education, outreach and shared services.",
+    fr: "Les organisations, laboratoires, pharmacies et professionnels de santé peuvent orienter des patients vers S19 ou travailler avec nous sur l'éducation à la santé, la sensibilisation et des services communs.",
+  },
+  "s19care.ways.partner.cta": { en: "Discuss a partnership", fr: "Parler d'un partenariat" },
+
+  "s19care.transparency.eyebrow": { en: "How your donation is handled", fr: "Le traitement de votre don" },
+  "s19care.transparency.title": {
+    en: "What happens to every donation",
+    fr: "Ce qui arrive à chaque don",
+  },
+  "s19care.transparency.separate.title": {
+    en: "Patient support and clinic development are accounted for separately",
+    fr: "L'aide aux patients et le développement de la clinique sont comptabilisés séparément",
+  },
+  "s19care.transparency.separate.text": {
+    en: "Patient Assistance Fund donations and S19 Development Fund donations are recorded and reported under separate headings, so support for a family is never counted as clinic spending.",
+    fr: "Les dons du Fonds d'assistance aux patients et les dons du Fonds de développement S19 sont enregistrés et présentés sous des rubriques distinctes, afin que l'aide à une famille ne soit jamais comptabilisée comme une dépense de la clinique.",
+  },
+  "s19care.transparency.private.title": {
+    en: "Some donations benefit the private clinic",
+    fr: "Certains dons profitent à la clinique privée",
+  },
+  "s19care.transparency.private.text": {
+    en: "S19 Herbal Clinic is a private clinic. Donations to the S19 Development Fund go towards clinic equipment, infrastructure, training, education, outreach and healthcare services, so part of what you give benefits the clinic itself.",
+    fr: "La Clinique S19 est une clinique privée. Les dons au Fonds de développement S19 servent à l'équipement de la clinique, aux infrastructures, à la formation, à l'éducation, à la sensibilisation et aux services de santé : une part de votre don profite donc à la clinique elle-même.",
+  },
+  "s19care.transparency.verify.title": {
+    en: "Every payment is verified against the transaction record",
+    fr: "Chaque paiement est vérifié à partir de l'enregistrement de la transaction",
+  },
+  "s19care.transparency.verify.text": {
+    en: "A screenshot is not proof of payment. Staff check the actual Mobile Money record before a donation is marked as verified and before any acknowledgment is sent.",
+    fr: "Une capture d'écran ne prouve pas un paiement. Le personnel vérifie l'enregistrement Mobile Money réel avant qu'un don ne soit marqué comme vérifié et avant tout envoi d'accusé de réception.",
+  },
+  "s19care.transparency.confidential.title": {
+    en: "Donor details stay confidential",
+    fr: "Les informations du donateur restent confidentielles",
+  },
+  "s19care.transparency.confidential.text": {
+    en: "Donor names and contact details are held by the clinic only, are never published, and are visible in the donation log only to the staff who need them.",
+    fr: "Les noms et coordonnées des donateurs sont conservés uniquement par la clinique, ne sont jamais publiés et ne sont visibles dans le registre des dons que par le personnel qui en a besoin.",
+  },
+  "s19care.transparency.tax.title": {
+    en: "No promise of tax-deductibility",
+    fr: "Aucune promesse de déductibilité fiscale",
+  },
+  "s19care.transparency.tax.text": {
+    en: "S19-CARE is run by S19 Herbal Clinic. We do not claim registered charitable status, and we cannot promise that a donation is tax-deductible. Please ask us before you treat a donation as a tax deduction.",
+    fr: "S19-CARE est géré par la Clinique S19. Nous ne revendiquons pas le statut d'organisation caritative enregistrée et ne pouvons pas promettre qu'un don est déductible des impôts. Merci de nous interroger avant de considérer un don comme une déduction fiscale.",
+  },
+
+  "dash.shell.nav.adminDonations": { en: "Donations", fr: "Dons" },
+  "dash.shell.h.adminDonations.title": { en: "Donation log", fr: "Registre des dons" },
+  "dash.shell.h.adminDonations.sub": {
+    en: "Every donation received, with its fund, verification status and acknowledgment.",
+    fr: "Chaque don reçu, avec son fonds, son statut de vérification et son accusé de réception.",
+  },
+
   /* ── System error pages ───────────────────────────────────────────────── */
 
   "sys.error.title": { en: "Something went wrong", fr: "Une erreur est survenue" },

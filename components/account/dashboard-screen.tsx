@@ -29,6 +29,7 @@ import { AdminTestimonialsTab } from "@/components/admin/testimonials-tab";
 import { MessagingTab } from "@/components/admin/messaging-tab";
 import { PostsTab } from "@/components/admin/posts-tab";
 import { SubscribersTab } from "@/components/admin/subscribers-tab";
+import { DonationsTab } from "@/components/admin/donations-tab";
 import { AdminVideosTab } from "@/components/admin/video-reviews-tab";
 import { DoctorsTab } from "@/components/admin/doctors-tab";
 import { AdminAppointmentsTab } from "@/components/admin/admin-appointments-tab";
@@ -60,6 +61,7 @@ import {
   FaFolderOpen,
   FaGear,
   FaHardDrive,
+  FaHandHoldingHeart,
   FaHouse,
   FaNewspaper,
   FaPeopleGroup,
@@ -87,6 +89,7 @@ type TabId =
   | "admin-messaging"
   | "admin-posts"
   | "admin-subscribers"
+  | "admin-donations"
   | "admin-videos"
   | "admin-doctors"
   | "admin-appointments"
@@ -224,6 +227,11 @@ const adminTabs: NavItem[] = [
     id: "admin-subscribers",
     labelKey: "dash.shell.nav.adminSubscribers",
     icon: <FaUsers className="h-4 w-4" aria-hidden />,
+  },
+  {
+    id: "admin-donations",
+    labelKey: "dash.shell.nav.adminDonations",
+    icon: <FaHandHoldingHeart className="h-4 w-4" aria-hidden />,
   },
   {
     id: "admin-videos",
@@ -630,6 +638,18 @@ export function DashboardScreen() {
           <div className="px-4 sm:px-0">
             <SubscribersTab />
           </div>
+        ) : null;
+      case "admin-donations":
+        return isAdmin ? (
+          <>
+            <PageHeader
+              title={t("dash.shell.h.adminDonations.title")}
+              subtitle={t("dash.shell.h.adminDonations.sub")}
+            />
+            <div className="px-4 sm:px-0">
+              <DonationsTab />
+            </div>
+          </>
         ) : null;
       case "admin-videos":
         return isAdmin ? (
