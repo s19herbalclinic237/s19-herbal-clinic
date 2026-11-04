@@ -5,7 +5,6 @@ import { Reveal } from "@/components/ui/motion";
 import { StoriesForm } from "@/components/testimonials/stories-form";
 import { StoryVideo } from "@/components/testimonials/story-video";
 import { getApprovedTestimonials } from "@/lib/testimonials";
-import { isVideoEmbedBlocked } from "@/lib/video-probe";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { serverT, getServerLocale } from "@/lib/i18n-server";
 import { canonicalMeta } from "@/lib/seo";
@@ -13,7 +12,7 @@ import { clinicPhoto } from "@/lib/image-registry";
 import { ClinicPhotoFill } from "@/components/seo/clinic-photo-image";
 import { FaQuoteLeft, FaStar } from "react-icons/fa6";
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await serverT();
@@ -40,7 +39,6 @@ export default async function PatientStoriesPage() {
   const t = await serverT();
   const locale = await getServerLocale();
   const stories = await getApprovedTestimonials(60, locale);
-  const blockedVideo = await Promise.all(stories.map((s) => isVideoEmbedBlocked(s.videoUrl)));
 
   return (
     <>
@@ -121,7 +119,7 @@ export default async function PatientStoriesPage() {
                 &ldquo;{test.text}&rdquo;
               </blockquote>
               {test.videoUrl ? (
-                <StoryVideo url={test.videoUrl} blocked={blockedVideo[i]} />
+                <StoryVideo url={test.videoUrl} />
               ) : null}
               <figcaption className="mt-6 border-t border-line pt-4 text-sm">
                 <span className="font-bold text-ink">{test.name}</span>

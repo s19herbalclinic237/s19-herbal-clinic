@@ -6,13 +6,12 @@ import { CTABand } from "@/components/sections/cta-band";
 import { StoryVideo } from "@/components/testimonials/story-video";
 import { ConsentDisclaimer } from "@/components/testimonials/consent-disclaimer";
 import { getActiveVideoReviews } from "@/lib/video-reviews";
-import { isVideoEmbedBlocked } from "@/lib/video-probe";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { serverT } from "@/lib/i18n-server";
 import { canonicalMeta } from "@/lib/seo";
 import { FaCirclePlay, FaQuoteLeft } from "react-icons/fa6";
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await serverT();
@@ -36,9 +35,6 @@ const HERO_IMG = S19_ASSETS.photos.bloodPressure;
 export default async function LiveReviewsPage() {
   const t = await serverT();
   const videos = await getActiveVideoReviews();
-  const items = await Promise.all(
-    videos.map(async (v) => ({ video: v, blocked: await isVideoEmbedBlocked(v.url) }))
-  );
 
   return (
     <>
@@ -74,16 +70,16 @@ export default async function LiveReviewsPage() {
       </Section>
 
       <Section>
-        {items.length === 0 ? (
+        {videos.length === 0 ? (
           <div className="mx-auto max-w-xl rounded-lg border border-line bg-white p-10 text-center">
             <FaCirclePlay className="mx-auto h-8 w-8 text-forest-300" aria-hidden />
             <p className="mt-4 text-sm text-muted">{t("liveReviews.empty")}</p>
           </div>
         ) : (
           <div className="columns-1 gap-6 sm:columns-2 lg:columns-3">
-            {items.map(({ video: v, blocked }) => (
+            {videos.map((v) => (
               <div key={v.id} className="mb-6 break-inside-avoid">
-                <StoryVideo url={v.url} blocked={blocked} bare />
+                <StoryVideo url={v.url} bare />
               </div>
             ))}
           </div>

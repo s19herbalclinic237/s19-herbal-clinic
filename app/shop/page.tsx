@@ -14,7 +14,7 @@ import { serverT } from "@/lib/i18n-server";
 import { canonicalMeta } from "@/lib/seo";
 import { FaCircleInfo, FaGlobe, FaMapLocationDot, FaWhatsapp } from "react-icons/fa6";
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await serverT();

@@ -9,7 +9,6 @@ import { cn } from "@/lib/utils";
 export interface HomeVideoItem {
   url: string;
   title?: string;
-  blocked: boolean;
 }
 
 /**
@@ -72,7 +71,7 @@ export function VideoCarousel({ items }: { items: HomeVideoItem[] }) {
               className="w-[82%] shrink-0 snap-start sm:w-[400px]"
             >
               <div className="overflow-hidden rounded-2xl border border-white/15 bg-forest-900/50 shadow-lift">
-                <StoryVideo url={item.url} blocked={item.blocked} bare />
+                <StoryVideo url={item.url} bare />
               </div>
               {item.title ? (
                 <p className="mt-3.5 text-sm font-semibold leading-snug text-white">

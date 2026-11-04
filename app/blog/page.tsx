@@ -6,8 +6,9 @@ import { BlogExplorer } from "@/components/blog/blog-explorer";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { serverT } from "@/lib/i18n-server";
 import { canonicalMeta } from "@/lib/seo";
+import { getPublishedPosts } from "@/lib/blog";
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await serverT();
@@ -28,32 +29,9 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-interface BlogPost {
-  _id: string;
-  title: string;
-  slug: string;
-  excerpt: string;
-  cover?: string;
-  author: string;
-  featured?: boolean;
-  publishedAt?: string;
-}
-
 export default async function BlogPage() {
   const t = await serverT();
-  let posts: BlogPost[] = [];
-
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/api/blog`, {
-      next: { revalidate: 60 },
-    });
-    if (res.ok) {
-      const data = (await res.json()) as { posts?: BlogPost[] };
-      posts = Array.isArray(data.posts) ? data.posts : [];
-    }
-  } catch {
-    posts = [];
-  }
+  const posts = await getPublishedPosts();
 
   return (
     <>

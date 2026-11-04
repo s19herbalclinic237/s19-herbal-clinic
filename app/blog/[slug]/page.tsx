@@ -8,56 +8,17 @@ import { NewsletterForm } from "@/components/blog/newsletter-form";
 import { getServerLocale, serverT } from "@/lib/i18n-server";
 import { localizedBlogPost } from "@/lib/site";
 import { canonicalMeta } from "@/lib/seo";
+import { getPublishedPost, getPublishedSlugs } from "@/lib/blog";
 import { findClinicPhotoBySrc, clinicPhotoSrc } from "@/lib/image-registry";
 import { ClinicPhotoImage } from "@/components/seo/clinic-photo-image";
 import { FaArrowLeft, FaClock, FaRegNewspaper, FaUserPen } from "react-icons/fa6";
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export const dynamicParams = true;
 
-interface BlogPost {
-  _id: string;
-  title: string;
-  slug: string;
-  excerpt: string;
-  body: string;
-  cover?: string;
-  author: string;
-  featured: boolean;
-  publishedAt?: string;
-  titleFr?: string;
-  excerptFr?: string;
-  bodyFr?: string;
-  authorFr?: string;
-}
-
-const API_BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-
-const fetchPost = async (slug: string): Promise<BlogPost | null> => {
-  try {
-    const res = await fetch(`${API_BASE}/api/blog/${slug}`, { cache: "no-store" });
-    if (!res.ok) return null;
-    const data = (await res.json()) as { post?: BlogPost };
-    return data.post ?? null;
-  } catch {
-    return null;
-  }
-};
-
-const fetchSlugs = async (): Promise<string[]> => {
-  try {
-    const res = await fetch(`${API_BASE}/api/blog`, { next: { revalidate: 60 } });
-    if (!res.ok) return [];
-    const data = (await res.json()) as { posts?: { slug: string }[] };
-    return (data.posts ?? []).map((p) => p.slug);
-  } catch {
-    return [];
-  }
-};
-
 export async function generateStaticParams() {
-  const slugs = await fetchSlugs();
+  const slugs = await getPublishedSlugs();
   return slugs.map((slug) => ({ slug }));
 }
 
@@ -65,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const t = await serverT();
   const locale = await getServerLocale();
-  const post = await fetchPost(slug);
+  const post = await getPublishedPost(slug);
   if (!post) return { title: t("blogPost.notFound") };
   const localized = localizedBlogPost({
     id: post._id,
@@ -100,7 +61,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const { slug } = await params;
   const t = await serverT();
   const locale = await getServerLocale();
-  const post = await fetchPost(slug);
+  const post = await getPublishedPost(slug);
 
   if (!post) notFound();
 

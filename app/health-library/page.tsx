@@ -3,6 +3,7 @@ import { PageHero } from "@/components/ui/page-hero";
 import { Section } from "@/components/ui/container";
 import { CTABand } from "@/components/sections/cta-band";
 import { getActiveVideoReviews } from "@/lib/video-reviews";
+import { getPublishedPosts } from "@/lib/blog";
 import { S19_ASSETS } from "@/lib/site-assets";
 import { getServerLocale, serverT } from "@/lib/i18n-server";
 import { canonicalMeta } from "@/lib/seo";
@@ -14,7 +15,7 @@ import {
   type TopicKey,
 } from "@/components/health-library/library-explorer";
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 const HERO_IMG = S19_ASSETS.photos.consultationAdvice;
 
@@ -42,18 +43,7 @@ export default async function HealthLibraryPage() {
   const t = await serverT();
   const locale = await getServerLocale();
 
-  let posts: LibraryArticle[] = [];
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/api/blog`, {
-      next: { revalidate: 60 },
-    });
-    if (res.ok) {
-      const data = (await res.json()) as { posts?: LibraryArticle[] };
-      posts = Array.isArray(data.posts) ? data.posts : [];
-    }
-  } catch {
-    posts = [];
-  }
+  const posts: LibraryArticle[] = await getPublishedPosts();
 
   const videos: LibraryVideo[] = (await getActiveVideoReviews()).map((v) => ({
     id: v.id,

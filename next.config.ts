@@ -26,6 +26,13 @@ const nextConfig: NextConfig = {
     root: path.join(__dirname),
   },
   images: {
+    // Serve images exactly as stored instead of running them through Vercel's
+    // Image Optimization API. On Hobby, Image Transformations are capped at
+    // 5,000 per month; this site exceeded that, and each optimised request is
+    // also extra origin traffic. The files in /public are already sized for the
+    // slots they fill. If a future redesign needs resizing, use a custom loader
+    // (Cloudinary/Unsplash) rather than re-enabling Vercel's optimiser.
+    unoptimized: true,
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "res.cloudinary.com" },

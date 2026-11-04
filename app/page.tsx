@@ -10,7 +10,6 @@ import { VideoCarousel } from "@/components/home/video-carousel";
 import { getProducts } from "@/lib/catalog";
 import { getApprovedTestimonials } from "@/lib/testimonials";
 import { getActiveVideoReviews } from "@/lib/video-reviews";
-import { isVideoEmbedBlocked } from "@/lib/video-probe";
 import { localizedFaqs } from "@/lib/data/programs";
 import { localizedHomePathway } from "@/lib/data/philosophy";
 import {
@@ -28,7 +27,7 @@ import { resolveClinicPhoto } from "@/lib/image-registry";
 import { ClinicPhotoFill } from "@/components/seo/clinic-photo-image";
 import { JsonLd } from "@/components/seo/json-ld";
 
-export const revalidate = 60;
+export const revalidate = 3600;
 import {
   FaWhatsapp,
   FaGlobe,
@@ -132,13 +131,10 @@ export default async function HomePage() {
     .filter((p): p is NonNullable<typeof p> => typeof p !== "undefined");
   const testimonials = await getApprovedTestimonials(12, locale);
   const videoReviews = await getActiveVideoReviews();
-  const videoItems = await Promise.all(
-    videoReviews.map(async (v) => ({
-      url: v.url,
-      title: v.title,
-      blocked: await isVideoEmbedBlocked(v.url),
-    }))
-  );
+  const videoItems = videoReviews.map((v) => ({
+    url: v.url,
+    title: v.title,
+  }));
 
   return (
     <>
